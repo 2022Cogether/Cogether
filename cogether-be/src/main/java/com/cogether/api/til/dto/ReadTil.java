@@ -1,5 +1,6 @@
 package com.cogether.api.til.dto;
 
+import com.cogether.api.user.dto.Follow;
 import lombok.*;
 import javax.persistence.*;
 
@@ -20,5 +21,7 @@ public class ReadTil {
     @JoinColumn(name = "Til_id")
     private Til til;
 
-    private int followId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "follow_id")
+    private Follow follow;
 }
