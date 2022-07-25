@@ -1,7 +1,7 @@
 package com.cogether.api.study.dto;
 
+import com.cogether.api.user.dto.User;
 import lombok.*;
-import org.apache.catalina.User;
 
 import javax.persistence.*;
 
