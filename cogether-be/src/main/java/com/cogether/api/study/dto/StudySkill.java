@@ -14,14 +14,14 @@ public class StudySkill {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT UNSIGNED")
+    @Column(columnDefinition = "INT UNSIGNED", nullable = false)
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Study_id")
     private Study study;
 
-    @Column(name = "skill_id")
+    @Column(name = "skill_id", nullable = false)
     private int skillId;
 
 }

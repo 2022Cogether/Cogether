@@ -1,5 +1,6 @@
 package com.cogether.api.project.dto;
 
+import com.cogether.api.user.dto.User;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -17,32 +18,32 @@ public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT UNSIGNED")
+    @Column(columnDefinition = "INT UNSIGNED", nullable = false)
     private int id;
 
-    @Column(name = "user_id")
-    private int userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "start")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime start;
 
-    @Column(name = "total_mem")
+    @Column(name = "total_mem",nullable = false)
     private int totalMem;
 
-    @Column(name = "cur_mem")
+    @Column(name = "cur_mem", nullable = false)
     private int curMem;
 
-    @Column(name = "online")
+    @Column(name = "online", nullable = false)
     private boolean online;
 
-    @Column(name = "title")
+    @Column(name = "title", length = 100, nullable = false)
     private String title;
 
-    @Column(name = "content")
+    @Column(name = "content", length = 2000, nullable = false)
     private String content;
 
     @Column(name = "created_at", updatable = false, insertable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 }

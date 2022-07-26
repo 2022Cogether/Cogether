@@ -1,5 +1,6 @@
 package com.cogether.api.til.dto;
 
+import com.cogether.api.user.dto.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -16,20 +17,21 @@ import java.time.LocalDateTime;
 public class Til {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT UNSIGNED")
+    @Column(columnDefinition = "INT UNSIGNED", nullable = false)
     private int id;
 
-    @Column(name = "title")
+    @Column(name = "title", length = 100, nullable = false)
     private String title;
 
-    @Column(name = "content")
+    @Column(name = "content", length = 1000, nullable = false)
     private String content;
 
-    @Column (name = "user_id")
-    private String userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
 
     @Column (name = "created_at", updatable = false, insertable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
 }
