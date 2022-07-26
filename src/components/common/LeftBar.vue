@@ -23,7 +23,7 @@
           <div class="col-8 align-self-center menu-text">구인</div>
         </div>
       </a>
-      <a href="">
+      <a href="#/challenge">
         <div class="row">
           <div class="col-4">
             <font-awesome-icon
