@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import MainView from "../views/MainView.vue";
 import SignView from "../views/SignView.vue";
+import RecruitView from "../views/RecruitView.vue";
 
 const routes = [
   {
@@ -31,6 +32,11 @@ const routes = [
         component: () => import("@/components/challenge/CoopList.vue"),
       },
     ],
+  },
+  {
+    path: "/recruit",
+    name: "recruit",
+    component: RecruitView,
   },
 ];
 
