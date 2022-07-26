@@ -3,10 +3,11 @@
     <nav-bar />
     <div class="row main-area">
       <left-bar class="col-3" />
-      <div class="col-6"></div>
+      <div class="center col-6">
+        <router-view />
+      </div>
       <right-bar class="col-3" />
     </div>
-    <router-view />
   </div>
 </template>
 
@@ -39,5 +40,9 @@ export default {
 
 nav-bar {
   height: 10vh;
+}
+
+.center {
+  margin-left: 25vw;
 }
 </style>

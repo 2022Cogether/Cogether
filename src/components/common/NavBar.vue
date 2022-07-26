@@ -4,7 +4,9 @@
     <div class="col-6 d-flex justify-content-center">
       <div class="text-center align-self-center logo-area">
         <span>
-          <img class="logo" src="../../assets/logo.png" alt="로고" />
+          <a href="#">
+            <img class="logo" src="../../assets/logo.png" alt="로고" />
+          </a>
         </span>
         <span> COGETHER </span>
       </div>

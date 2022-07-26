@@ -19,6 +19,19 @@ const routes = [
     name: "signview",
     component: SignView,
   },
+  {
+    path: "/challenge",
+    name: "challenge",
+    component: () => import("@/views/ChallengeView.vue"),
+    redirect: "/challenge/list",
+    children: [
+      {
+        path: "list",
+        name: "CoopList",
+        component: () => import("@/components/challenge/CoopList.vue"),
+      },
+    ],
+  },
 ];
 
 const router = createRouter({
