@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class LiveCoopMember {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT UNSIGNED")
+    @Column(columnDefinition = "INT UNSIGNED", nullable = false)
     private int id;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -28,6 +28,6 @@ public class LiveCoopMember {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column
+    @Column(name = "code", length = 20000)
     private String code;
 }
