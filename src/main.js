@@ -16,6 +16,7 @@ import {
   faClipboardQuestion,
   faUser,
   faComments,
+  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -28,7 +29,8 @@ library.add(
   faTrophy,
   faClipboardQuestion,
   faUser,
-  faComments
+  faComments,
+  faMagnifyingGlass
 );
 
 createApp(App)

@@ -2,11 +2,11 @@
   <div class="body">
     <nav-bar />
     <div class="row main-area">
-      <left-bar class="col-3" />
+      <left-bar class="left col-3" />
       <div class="center col-6">
         <router-view />
       </div>
-      <right-bar class="col-3" />
+      <right-bar class="right col-3" />
     </div>
   </div>
 </template>
@@ -29,13 +29,16 @@ export default {
 <style>
 .body {
   font-family: "Noto Sans KR", sans-serif;
-  background-color: #fafafa;
 }
 
 .main-area {
+  padding-top: 7vh;
+  background-color: #fafafa;
+}
+
+.left,
+.right {
   position: fixed;
-  top: 7vh;
-  height: 90vh;
 }
 
 nav-bar {
