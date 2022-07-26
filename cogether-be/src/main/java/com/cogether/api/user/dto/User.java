@@ -41,25 +41,25 @@ public class User {
     @Column(name="refresh_token" ,length=500)
     private String refreshToken;
 
-    @Column(name="git_url")
+    @Column(name="git_url", length=100)
     private String gitUrl;
 
-    @Column(name="velog_url")
+    @Column(name="velog_url", length=100)
     private String velogUrl;
 
-    @Column(name="tistory_url")
+    @Column(name="tistory_url", length=100)
     private String tistoryUrl;
 
-    @Column(name="notion_url")
+    @Column(name="notion_url", length =150)
     private String notionUrl;
 
-    @Column(name="etc_url")
+    @Column(name="etc_url" ,length=200)
     private String etcUrl;
 
-    @Column(name="intro")
+    @Column(name="intro", length=100)
     private String intro;
 
-    @Column(name="img_url")
+    @Column(name="img_url", length =300)
     private String imgUrl;
 
     @Column(name="resign")
