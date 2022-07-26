@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class LiveComp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT UNSIGNED")
+    @Column(columnDefinition = "INT UNSIGNED", nullable = false)
     private int id;
 
     @OneToOne(fetch = FetchType.LAZY)

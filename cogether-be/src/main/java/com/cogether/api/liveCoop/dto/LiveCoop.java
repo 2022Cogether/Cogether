@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class LiveCoop {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT UNSIGNED")
+    @Column(columnDefinition = "INT UNSIGNED", nullable = false)
     private int id;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -26,17 +26,17 @@ public class LiveCoop {
     @Column(name = "mem_num", nullable = false)
     private int memNum;
 
-    @Column(nullable = false)
+    @Column(name = "duration", nullable = false)
     @JsonFormat(pattern = "HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     private LocalDate duration;
 
-    @Column(nullable = false)
+    @Column(name = "title", length = 100, nullable = false)
     private String title;
 
-    @Column
+    @Column(name = "content", length = 2000, nullable = false)
     private String content;
 
-    @Column(name = "in_progress")
+    @Column(name = "in_progress", nullable = false)
     private boolean inProgress;
 
 }
