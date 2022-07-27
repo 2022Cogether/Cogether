@@ -23,12 +23,22 @@ const routes = [
     path: "/challenge",
     name: "challenge",
     component: () => import("@/views/ChallengeView.vue"),
-    redirect: "/challenge/list",
+    redirect: "/challenge/main",
     children: [
+      {
+        path: "main",
+        name: "ChallengeMain",
+        component: () => import("@/components/challenge/ChallengeMain.vue"),
+      },
       {
         path: "list",
         name: "CoopList",
         component: () => import("@/components/challenge/CoopList.vue"),
+      },
+      {
+        path: "create",
+        name: "CoopCreate",
+        component: () => import("@/components/challenge/CoopCreate.vue"),
       },
     ],
   },
