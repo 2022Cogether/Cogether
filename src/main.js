@@ -17,8 +17,11 @@ import {
   faUser,
   faComments,
   faMagnifyingGlass,
+  faHandshake,
+  faPenClip,
+  faPlus,
   faEllipsisVertical,
-  faXmark,
+  faPeopleGroup,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -33,8 +36,11 @@ library.add(
   faUser,
   faComments,
   faMagnifyingGlass,
+  faHandshake,
+  faPenClip,
+  faPlus,
   faEllipsisVertical,
-  faXmark
+  faPeopleGroup
 );
 
 createApp(App)
