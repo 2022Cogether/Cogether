@@ -45,7 +45,7 @@
           <div class="col-8 align-self-center menu-text">Q&A</div>
         </div>
       </a>
-      <a href="">
+      <a href="#/ranking">
         <div class="row">
           <div class="col-4">
             <font-awesome-icon

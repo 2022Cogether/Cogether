@@ -27,7 +27,6 @@ import {
   faCompress,
   faExpand,
   faPaperPlane,
->>>>>>> src/main.js
 } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -49,7 +48,7 @@ library.add(
   faEllipsisVertical,
   faPeopleGroup,
   faBookmark,
-  faAddressBook
+  faAddressBook,
   faXmark,
   faCompress,
   faExpand,
