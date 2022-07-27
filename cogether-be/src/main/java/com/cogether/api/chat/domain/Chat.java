@@ -1,8 +1,7 @@
-package com.cogether.api.chat.dto;
+package com.cogether.api.chat.domain;
 
-import com.cogether.api.liveCoop.dto.LiveCoop;
+
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,16 +12,24 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "ChatRoom")
-public class ChatRoom {
+@Table(name = "Chat")
+public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "INT UNSIGNED")
     private int id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id")
+    private ChatRoom chatRoom;
+
+    @Column(name = "send_user_id", nullable = false)
+    private int sendUserId;
+
     @Column
-    private boolean type;
+    private String message;
 
     @Column(name = "created_at", updatable = false, insertable = false)
     private LocalDateTime createdAt;
+
 }

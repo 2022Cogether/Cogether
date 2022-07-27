@@ -1,11 +1,9 @@
-package com.cogether.api.liveCoop.dto;
+package com.cogether.api.liveCoop.domain;
 
-import com.cogether.api.user.dto.User;
+import com.cogether.api.chat.domain.ChatRoom;
 import lombok.*;
 
 import javax.persistence.*;
-
-
 
 @Getter
 @Setter
@@ -13,8 +11,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "LiveCoopMember")
-public class LiveCoopMember {
+@Table(name = "LiveCoopRoom")
+public class LiveCoopRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "INT UNSIGNED", nullable = false)
@@ -25,9 +23,7 @@ public class LiveCoopMember {
     private LiveCoop liveCoop;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "chatroom_id")
+    private ChatRoom chatRoom;
 
-    @Column(name = "code", length = 20000)
-    private String code;
 }

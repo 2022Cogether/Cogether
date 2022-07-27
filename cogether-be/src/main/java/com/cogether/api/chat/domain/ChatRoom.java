@@ -1,5 +1,4 @@
-package com.cogether.api.chat.dto;
-
+package com.cogether.api.chat.domain;
 
 import lombok.*;
 
@@ -12,24 +11,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Chat")
-public class Chat {
+@Table(name = "ChatRoom")
+public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "INT UNSIGNED")
     private int id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id")
-    private ChatRoom chatRoom;
-
-    @Column(name = "send_user_id", nullable = false)
-    private int sendUserId;
-
     @Column
-    private String message;
+    private boolean type;
 
     @Column(name = "created_at", updatable = false, insertable = false)
     private LocalDateTime createdAt;
-
 }
