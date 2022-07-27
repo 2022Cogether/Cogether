@@ -29,4 +29,11 @@ public class TilController {
         return  ResponseEntity.ok().body(response);
     }
 
+    @DeleteMapping(path = "/til/{tilId}")
+    @ResponseStatus(value =  HttpStatus.OK)
+    public ResponseEntity<TilResponse.OnlyId> delete(@PathVariable int tilId){
+        TilResponse.OnlyId response = tilService.delete(tilId);
+        return ResponseEntity.ok().body(response);
+    }
+
 }
