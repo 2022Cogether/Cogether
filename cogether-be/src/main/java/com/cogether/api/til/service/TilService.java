@@ -11,6 +11,7 @@ import com.cogether.api.user.dto.User;
 import com.cogether.api.user.exception.UserNotFoundException;
 import com.cogether.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,6 +40,12 @@ public class TilService {
         til.setContent(update_til.getContent());
         Til savedTil = tilRepository.save(til);
         return TilResponse.OnlyId.build(savedTil);
+    }
+
+    public TilResponse.OnlyId delete(int tilId){
+        Til til = tilRepository.findById(tilId).orElseThrow(TilNotFoundException::new);
+        tilRepository.deleteById(tilId);
+        return TilResponse.OnlyId.build(til);
     }
 
 }
