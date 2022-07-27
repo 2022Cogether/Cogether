@@ -36,4 +36,39 @@ public class TilController {
         return ResponseEntity.ok().body(response);
     }
 
+    @PostMapping(path = "/til/like")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<TilResponse.OnlyLikeId> createLike(@RequestBody TilRequest.Create_TilLike tilLike){
+        TilResponse.OnlyLikeId response = tilService.createLike(tilLike);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping(path = "/til/like/{tilLikeId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<TilResponse.OnlyLikeId> deleteLike(@PathVariable int tilLikeId){
+        TilResponse.OnlyLikeId response = tilService.deleteLike(tilLikeId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping(path = "/til/comment")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<TilResponse.OnlyCommentId> createComment(@RequestBody TilRequest.Create_TilComment tilComment){
+        TilResponse.OnlyCommentId response = tilService.createComment(tilComment);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PutMapping(path = "/til/comment")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<TilResponse.OnlyCommentId> updateComment(@RequestBody TilRequest.Update_TilComment tilComment){
+        TilResponse.OnlyCommentId response = tilService.updateComment(tilComment);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping(path = "/til/comment/{tilCommentId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<TilResponse.OnlyCommentId> deleteComment(@PathVariable int tilCommentId){
+        TilResponse.OnlyCommentId response = tilService.deleteComment(tilCommentId);
+        return ResponseEntity.ok().body(response);
+    }
+
 }
