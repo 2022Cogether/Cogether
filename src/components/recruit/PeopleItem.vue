@@ -34,7 +34,7 @@
       <h3>꼬꼬</h3>
       <p>나 좀 데려가...</p>
     </div>
-    <div class="align-self-end">
+    <div class="d-flex align-self-end">
       <div class="tech-icon-box">
         <img
           class="tech-icon"
@@ -73,8 +73,6 @@
   <div
     class="modal fade"
     id="personDetailInfo"
-    data-bs-backdrop="static"
-    data-bs-keyboard="false"
     tabindex="-1"
     aria-labelledby="personDetailInfoLabel"
     aria-hidden="true"
@@ -89,7 +87,7 @@
           <div class="d-flex align-items-center">
             <div class="dropdown">
               <button
-                class="btn btn-primary"
+                class="btn"
                 type="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
@@ -110,17 +108,21 @@
           </div>
         </div>
         <div class="modal-body">
-          <div class="profile-detail-box d-flex justify-content-center">
-            <img src="@/assets/logo.png" alt="profile image" />
+          <div class="profile-detail-box d-flex">
+            <div class="image-box">
+              <img src="@/assets/logo.png" alt="profile image" />
+            </div>
             <div class="profile-detail-info">
               <h5 class="modal-title" id="personDetailInfoLabel">꼬꼬</h5>
               <p>나 좀 데려가...</p>
-              <div class="tech-icon-box">
-                <img
-                  class="tech-icon"
-                  src="@/assets/devicon/javascript-original.svg"
-                  alt="tech icon"
-                />
+              <div class="tech-icon-container d-flex">
+                <div class="tech-icon-box">
+                  <img
+                    class="tech-icon"
+                    src="@/assets/devicon/javascript-original.svg"
+                    alt="tech icon"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -131,7 +133,7 @@
           </div>
         </div>
         <div class="modal-footer justify-content-center">
-          <button type="button" class="btn btn-primary">
+          <button type="button" class="btn">
             <font-awesome-icon icon="fa-solid fa-comments" />
             DM 보내기
           </button>
@@ -146,6 +148,7 @@ export default {};
 </script>
 
 <style scoped>
+/* Profile Image */
 .profile-img-box {
   width: 50px;
   height: 50px;
@@ -160,23 +163,9 @@ export default {};
   height: 45px;
 }
 
+/* User Information */
 .user-info {
   margin-top: 10px;
-}
-
-.tech-icon-box {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background-color: #d8f3dc;
-  margin-bottom: 7px;
-}
-
-.tech-icon {
-  display: block;
-  width: 13px;
-  height: 13px;
-  margin: 0 auto;
 }
 
 h3 {
@@ -190,6 +179,22 @@ p {
   margin: 0;
 }
 
+/* Tech Stack */
+.tech-icon-box {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: #d8f3dc;
+  margin-bottom: 7px;
+}
+
+.tech-icon {
+  display: block;
+  width: 13px;
+  height: 13px;
+  margin: 5px auto;
+}
+
 .bookmark-icon {
   font-size: 25px;
   padding: 0 10px;
@@ -199,15 +204,32 @@ li {
   padding: 0;
 }
 
+/* Modal */
+.modal-content {
+  background-color: #eff7f6;
+}
+
 .dropdown > button {
   margin-right: 10px;
 }
 
-.profile-detail-box > img {
-  width: 60px;
-  height: 60px;
-  margin-right: 15px;
-  margin-top: 5px;
+.image-box {
+  width: 75px;
+  height: 75px;
+  border-radius: 70%;
+  overflow: hidden;
+  margin-right: 25px;
+  border: 3px solid gold;
+}
+
+.image-box > img {
+  width: 70px;
+  height: 70px;
+  margin: 5px auto;
+}
+
+.profile-detail-box {
+  margin-left: 80px;
 }
 
 .profile-detail-info > h5 {
@@ -215,11 +237,25 @@ li {
   font-weight: 700;
 }
 
+.tech-icon-container {
+  margin-top: 5px;
+}
+
 .user-introduction {
-  background-color: gray;
+  background-color: #2a9d8f;
   border: 1px solid white;
   border-radius: 10px;
   width: 300px;
-  margin: 30px auto 10px;
+  margin: 20px auto 10px;
+  padding: 10px;
+}
+
+.modal-header {
+  border: 0;
+}
+
+.modal-footer > .btn {
+  background-color: #2a9d8f;
+  color: #fff;
 }
 </style>

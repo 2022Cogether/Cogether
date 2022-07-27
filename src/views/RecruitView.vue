@@ -1,53 +1,56 @@
 <template>
-  <div class="row">
-    <div class="col-3"></div>
-    <div class="col-6">
-      <div class="searchbar">
-        <input class="input-search" type="text" />
-        <button class="btn-search">
-          <font-awesome-icon
-            class="searchicon"
-            icon=" fa-solid fa-magnifying-glass"
-          />
-        </button>
-      </div>
-      <div class="button-box d-flex justify-content-evenly">
-        <button type="button" class="btn btn-outline-primary">
-          <font-awesome-icon icon="fa-solid fa-handshake" />
-          프로젝트
-        </button>
-        <button type="button" class="btn btn-outline-primary">
-          <font-awesome-icon icon="fa-solid fa-pen-clip" />
-          스터디
-        </button>
-        <button type="button" class="btn btn-outline-primary">
-          <font-awesome-icon icon="fa-regular fa-bookmark" />
-          스크랩
-        </button>
-      </div>
-      <div class="d-flex">
-        <div class="icon-container">
-          <img
-            src="@/assets/devicon/javascript-original.svg"
-            alt="JS Icon"
-            class="icons"
-          />
-        </div>
-        <button class="plus-icon-box">
-          <font-awesome-icon icon="fa-solid fa-plus" class="scra" />
-        </button>
-      </div>
-      <div>
-        <h2>People</h2>
-        <PeopleList />
-      </div>
-      <div>
-        <h2>Project</h2>
-        <TeamList />
-      </div>
+  <div>
+    <div class="searchbar">
+      <input class="input-search" type="text" />
+      <button class="btn-search">
+        <font-awesome-icon
+          class="searchicon"
+          icon=" fa-solid fa-magnifying-glass"
+        />
+      </button>
     </div>
-    <div class="col-3"></div>
+    <div class="button-box d-flex justify-content-evenly">
+      <button type="button" class="btn">
+        <font-awesome-icon icon="fa-solid fa-handshake" />
+        프로젝트
+      </button>
+      <button type="button" class="btn">
+        <font-awesome-icon icon="fa-solid fa-pen-clip" />
+        스터디
+      </button>
+      <button type="button" class="btn">
+        <font-awesome-icon icon="fa-regular fa-bookmark" />
+        스크랩
+      </button>
+    </div>
+    <div class="d-flex">
+      <div class="icon-container">
+        <img
+          src="@/assets/devicon/javascript-original.svg"
+          alt="JS Icon"
+          class="icons"
+        />
+      </div>
+      <button class="plus-icon-box">
+        <font-awesome-icon icon="fa-solid fa-plus" class="scra" />
+      </button>
+    </div>
+    <div>
+      <h2>People</h2>
+      <PeopleList />
+    </div>
+    <div>
+      <h2>Project</h2>
+      <TeamList />
+    </div>
   </div>
+  <a href="#/recruit/create" class="write-icon-box">
+    <font-awesome-icon
+      icon="fa-solid fa-plus"
+      class="plus-icon align-self-start"
+    />
+    <font-awesome-icon icon="fa-solid fa-address-book" class="book-icon" />
+  </a>
 </template>
 
 <script>
@@ -93,6 +96,16 @@ export default {
   padding: 10px;
 }
 
+.btn {
+  color: #2a9d8f;
+  border: 2px solid #2a9d8f;
+}
+
+.btn:hover {
+  color: #fff;
+  background-color: #2a9d8f;
+}
+
 /* Icon Containers */
 .icon-container {
   width: 35px;
@@ -126,5 +139,31 @@ export default {
 h2 {
   font-family: "Nanum Gothic", sans-serif;
   font-weight: 700;
+}
+
+/* Write Icon */
+.write-icon-box {
+  border: 0px;
+  width: 60px;
+  height: 60px;
+  background-color: #2a9d8f;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 5px;
+  right: 25vw;
+  box-shadow: 0px 3px rgba(0, 0, 0, 0.3);
+}
+
+.plus-icon {
+  font-size: 12px;
+  padding-top: 10px;
+}
+
+.book-icon {
+  font-size: 30px;
 }
 </style>

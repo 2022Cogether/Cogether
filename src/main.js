@@ -22,11 +22,14 @@ import {
   faPlus,
   faEllipsisVertical,
   faPeopleGroup,
+  faAddressBook,
   faXmark,
   faCompress,
   faExpand,
   faPaperPlane,
+>>>>>>> src/main.js
 } from "@fortawesome/free-solid-svg-icons";
+import { faBookmark } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 library.add(
@@ -45,6 +48,8 @@ library.add(
   faPlus,
   faEllipsisVertical,
   faPeopleGroup,
+  faBookmark,
+  faAddressBook
   faXmark,
   faCompress,
   faExpand,
