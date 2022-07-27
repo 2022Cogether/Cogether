@@ -1,12 +1,11 @@
-package com.cogether.api.liveComp.dto;
+package com.cogether.api.chat.domain;
 
 import com.cogether.api.user.dto.User;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
@@ -14,20 +13,23 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "LiveComp")
-public class LiveComp {
+@Table(name = "ChatMember")
+public class ChatMember {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT UNSIGNED", nullable = false)
+    @Column(columnDefinition = "INT UNSIGNED")
     private int id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "total_time", nullable = false)
-    @JsonFormat(pattern = "HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
-    private LocalDate totalTime;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id")
+    private ChatRoom chatRoom;
+
+    @Column(name = "last_read_chat_id", nullable = false)
+    private int lastReadChatId;
 
     @Column(name = "created_at", updatable = false, insertable = false)
     private LocalDateTime createdAt;
