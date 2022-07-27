@@ -26,6 +26,34 @@ public class TilResponse {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class OnlyLikeId{
+        private int id;
+
+        public static TilResponse.OnlyLikeId build(TilLike tilLike){
+            return OnlyLikeId.builder()
+                    .id(tilLike.getId())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class OnlyCommentId{
+        private int id;
+
+        public static TilResponse.OnlyCommentId build(TilComment tilComment){
+            return OnlyCommentId.builder()
+                    .id(tilComment.getId())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class getTilImg{
         private int tilImgId;
         private int tilId;

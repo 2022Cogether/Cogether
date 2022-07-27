@@ -57,11 +57,13 @@ public class TilRequest {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Create_TilComment{
+        private int tilId;
         private String content;
         private int userId;
 
-        public TilComment toEntity(User user){
+        public TilComment toEntity(Til til, User user){
             return TilComment.builder()
+                    .til(til)
                     .content(content)
                     .user(user)
                     .build();
