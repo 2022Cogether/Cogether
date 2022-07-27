@@ -1,8 +1,8 @@
-package com.cogether.api.til.dto;
+package com.cogether.api.til.domain;
 
 import com.cogether.api.user.dto.User;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -31,7 +31,8 @@ public class Til {
     private User user;
 
 
-    @Column (name = "created_at", updatable = false, insertable = false)
+    @Column (name = "created_at", updatable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
 
 }

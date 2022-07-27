@@ -1,6 +1,5 @@
-package com.cogether.api.til.dto;
+package com.cogether.api.til.domain;
 
-import com.cogether.api.user.dto.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,8 +10,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "TilLike")
-public class TilLike {
+@Table(name = "TilImg")
+public class TilImg {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +22,13 @@ public class TilLike {
     @JoinColumn(name = "Til_id")
     private Til til;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "url", nullable = false)
+    private String url;
+
+    public static TilImg toEntity(Til til, String url){
+        return TilImg.builder()
+                .til(til)
+                .url(url)
+                .build();
+    }
 }

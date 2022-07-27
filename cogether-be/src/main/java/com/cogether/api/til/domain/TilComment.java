@@ -1,10 +1,9 @@
-package com.cogether.api.til.dto;
+package com.cogether.api.til.domain;
 
 import com.cogether.api.user.dto.User;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
