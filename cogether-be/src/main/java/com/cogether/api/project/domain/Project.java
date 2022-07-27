@@ -1,4 +1,4 @@
-package com.cogether.api.project.dto;
+package com.cogether.api.project.domain;
 
 import com.cogether.api.user.dto.User;
 import lombok.*;

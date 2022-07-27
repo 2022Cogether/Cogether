@@ -1,7 +1,6 @@
-package com.cogether.api.til.dto;
+package com.cogether.api.study.domain;
 
 import lombok.*;
-
 import javax.persistence.*;
 
 @Getter
@@ -10,8 +9,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "TilImg")
-public class TilImg {
+@Table(name = "StudySkill")
+public class StudySkill {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,9 +18,10 @@ public class TilImg {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Til_id")
-    private Til til;
+    @JoinColumn(name = "Study_id")
+    private Study study;
 
-    @Column(name = "url", nullable = false)
-    private String url;
+    @Column(name = "skill_id", nullable = false)
+    private int skillId;
+
 }

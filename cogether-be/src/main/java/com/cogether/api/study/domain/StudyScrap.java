@@ -1,5 +1,6 @@
-package com.cogether.api.project.dto;
+package com.cogether.api.study.domain;
 
+import com.cogether.api.user.dto.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,8 +11,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "ProjectSkill")
-public class ProjectSkill {
+@Table(name = "StudyScrap")
+public class StudyScrap {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,9 +20,10 @@ public class ProjectSkill {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Project_id")
-    private Project project;
+    @JoinColumn(name = "Study_id")
+    private Study study;
 
-    @Column(name = "skill_id", nullable = false)
-    private int skillId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "User_id")
+    private User user;
 }

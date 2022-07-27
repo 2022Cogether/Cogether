@@ -1,7 +1,7 @@
-package com.cogether.api.til.dto;
+package com.cogether.api.project.domain;
 
-import com.cogether.api.user.dto.Follow;
 import lombok.*;
+
 import javax.persistence.*;
 
 @Getter
@@ -10,18 +10,18 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "ReadTil")
-public class ReadTil {
+@Table(name = "ProjectSkill")
+public class ProjectSkill {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "INT UNSIGNED", nullable = false)
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Til_id")
-    private Til til;
+    @JoinColumn(name = "Project_id")
+    private Project project;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "follow_id")
-    private Follow follow;
+    @Column(name = "skill_id", nullable = false)
+    private int skillId;
 }
