@@ -1,4 +1,4 @@
-package com.cogether.api.project.dto;
+package com.cogether.api.til.domain;
 
 import com.cogether.api.user.dto.User;
 import lombok.*;
@@ -11,8 +11,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "ProjectScrap")
-public class ProjectScrap {
+@Table(name = "TilLike")
+public class TilLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,10 +20,10 @@ public class ProjectScrap {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Project_id")
-    private Project project;
+    @JoinColumn(name = "Til_id")
+    private Til til;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "User_id")
+    @JoinColumn(name = "user_id")
     private User user;
 }
