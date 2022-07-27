@@ -21,8 +21,6 @@
   <div
     class="modal fade"
     id="coopRoomDetail"
-    data-bs-backdrop="static"
-    data-bs-keyboard="false"
     tabindex="-1"
     aria-labelledby="coopRoomDetailLabel"
     aria-hidden="true"
@@ -61,7 +59,13 @@
           </div>
         </div>
         <div class="modal-footer justify-content-center">
-          <button type="button" class="btn btn-primary">
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            @click="btnEnter"
+          >
             <font-awesome-icon icon="fa-solid fa-comments" />
             DM 보내기
           </button>
@@ -72,11 +76,12 @@
 </template>
 
 <script>
+import router from "@/router";
 export default {
   name: "CoopItem",
   setup() {
     function btnEnter() {
-      alert("입장!");
+      router.push({ name: "CoopRoom" });
     }
 
     return { btnEnter };

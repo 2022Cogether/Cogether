@@ -32,11 +32,11 @@
         <label class="input-group-text" for="coop-time-hour">시간</label>
         <select v-model="state.hour" class="form-select">
           <option selected>시</option>
-          <option value="1">0</option>
-          <option value="2">1</option>
-          <option value="3">2</option>
-          <option value="4">3</option>
-          <option value="5">4</option>
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
           <option value="5">5</option>
           <option value="6">6</option>
           <option value="7">7</option>
@@ -59,7 +59,6 @@
     <textarea
       v-model="state.content"
       class="coop-content form-control"
-      aria-label="With textarea"
     ></textarea>
   </form>
 </template>
@@ -127,9 +126,6 @@ export default {
 
 .input-group {
   margin-right: 5%;
-}
-
-.input-group {
   width: 30%;
 }
 
@@ -152,6 +148,8 @@ export default {
 }
 
 .btn-register {
+  width: 100px;
+  height: 30px;
   border: 0px;
   float: right;
   background-color: #dbdbdb;

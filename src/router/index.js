@@ -41,6 +41,11 @@ const routes = [
         name: "CoopCreate",
         component: () => import("@/components/challenge/CoopCreate.vue"),
       },
+      {
+        path: "room",
+        name: "CoopRoom",
+        component: () => import("@/components/challenge/CoopRoom.vue"),
+      },
     ],
   },
   {
