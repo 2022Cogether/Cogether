@@ -47,5 +47,6 @@ nav-bar {
 
 .center {
   margin-left: 25vw;
+  background-color: #fafafa;
 }
 </style>
