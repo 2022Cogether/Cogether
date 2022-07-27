@@ -48,7 +48,7 @@
     <coop-list />
   </div>
   <a href="#/challenge/create" class="icon-body">
-    <font-awesome-icon icon="fa-solid fa-comments" class="chat-icon" />
+    <font-awesome-icon icon="fa-solid fa-gamepad" class="gamepad-icon" />
   </a>
 </template>
 
@@ -73,7 +73,6 @@ export default {
         today = new Date(today - getters.value.getCompeteStartTime);
         today.setHours(today.getHours() - 15);
         console.log(today.toISOString().substring(0, 19));
-        // console.log(today.toISOString().substring(0, 19));
       }
 
       store.commit(
@@ -81,11 +80,6 @@ export default {
         !getters.value.getIsCompeteStarted
       );
     }
-    // const btnCompete = () =>
-    //   store.commit(
-    //     "SET_IS_COMPETE_STARTED",
-    //     !getters.value.getIsCompeteStarted
-    //   );
 
     return { store, getters, btnCompete, now };
   },
@@ -239,7 +233,7 @@ button {
   box-shadow: 0px 3px rgba(0, 0, 0, 0.3);
 }
 
-.chat-icon {
+.gamepad-icon {
   font-size: 30px;
 }
 </style>

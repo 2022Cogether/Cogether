@@ -3,6 +3,7 @@ export const challengeStore = {
     //변수 선언
     isCompeteStarted: false,
     competeStartTime: null,
+    isCoopRoomExpand: true,
   },
   getters: {
     //변수 호출
@@ -12,6 +13,9 @@ export const challengeStore = {
     getCompeteStartTime(state) {
       return state.competeStartTime;
     },
+    getIsCoopRoomExpand(state) {
+      return state.isCoopRoomExpand;
+    },
   },
   mutations: {
     //변수값 수정
@@ -20,6 +24,9 @@ export const challengeStore = {
     },
     SET_COMPETE_START_TIME(state, competeStartTime) {
       state.competeStartTime = competeStartTime;
+    },
+    SET_IS_COOP_ROOM_EXPAND(state, isCoopRoomExpand) {
+      state.isCoopRoomExpand = isCoopRoomExpand;
     },
   },
   actions: {},
