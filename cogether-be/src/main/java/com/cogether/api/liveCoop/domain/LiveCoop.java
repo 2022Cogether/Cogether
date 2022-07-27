@@ -1,4 +1,4 @@
-package com.cogether.api.liveCoop.dto;
+package com.cogether.api.liveCoop.domain;
 
 import com.cogether.api.user.dto.User;
 import com.fasterxml.jackson.annotation.JsonFormat;

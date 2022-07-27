@@ -1,8 +1,8 @@
 package com.cogether.api.hunting.service;
 
-import com.cogether.api.hunting.dto.Hunting;
-import com.cogether.api.hunting.dto.HuntingRequest;
-import com.cogether.api.hunting.dto.HuntingResponse;
+import com.cogether.api.hunting.domain.Hunting;
+import com.cogether.api.hunting.domain.HuntingRequest;
+import com.cogether.api.hunting.domain.HuntingResponse;
 import com.cogether.api.hunting.exception.HuntingNotFoundException;
 import com.cogether.api.hunting.repository.HuntingRepository;
 import com.cogether.api.user.dto.User;
@@ -24,6 +24,12 @@ public class HuntingService {
         Hunting hunting = request.toEntity(user);
         Hunting savedHunting = huntingRepository.save(hunting);
         return HuntingResponse.OnlyId.build(savedHunting);
+    }
+
+    // TODO: 게시물유저 skill들, 로그인유저 스크랩여부 추가
+    public HuntingResponse.GetHunting getHunting(int id) {
+        Hunting hunting = huntingRepository.findById(id).orElseThrow(HuntingNotFoundException::new);
+        return HuntingResponse.GetHunting.build(hunting);
     }
 
     public HuntingResponse.OnlyId update(HuntingRequest.Update request) {

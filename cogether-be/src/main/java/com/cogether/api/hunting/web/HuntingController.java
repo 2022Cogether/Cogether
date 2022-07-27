@@ -1,7 +1,7 @@
 package com.cogether.api.hunting.web;
 
-import com.cogether.api.hunting.dto.HuntingRequest;
-import com.cogether.api.hunting.dto.HuntingResponse;
+import com.cogether.api.hunting.domain.HuntingRequest;
+import com.cogether.api.hunting.domain.HuntingResponse;
 import com.cogether.api.hunting.service.HuntingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +19,12 @@ public class HuntingController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<HuntingResponse.OnlyId> create(@RequestBody HuntingRequest.Create request) {
         HuntingResponse.OnlyId response = huntingService.create(request);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/hunting")
+    public ResponseEntity<HuntingResponse.GetHunting> getPost(@RequestParam int userId, @RequestParam int huntingId) {
+        HuntingResponse.GetHunting response = huntingService.getHunting(huntingId);
         return ResponseEntity.ok().body(response);
     }
 
