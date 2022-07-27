@@ -3,6 +3,7 @@ import HomeView from "../views/HomeView.vue";
 import MainView from "../views/MainView.vue";
 import SignView from "../views/SignView.vue";
 import RecruitView from "../views/RecruitView.vue";
+import RankingView from "../views/RankingView.vue";
 
 const routes = [
   {
@@ -52,6 +53,11 @@ const routes = [
     path: "/recruit",
     name: "recruit",
     component: RecruitView,
+  },
+  {
+    path: "/ranking",
+    name: "ranking",
+    component: RankingView,
   },
 ];
 
