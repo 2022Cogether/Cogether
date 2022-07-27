@@ -6,12 +6,12 @@ import RecruitView from "../views/RecruitView.vue";
 
 const routes = [
   {
-    path: "/",
+    path: "/homeview",
     name: "home",
     component: HomeView,
   },
   {
-    path: "/mainview",
+    path: "/",
     name: "mainview",
     component: MainView,
   },

@@ -22,7 +22,13 @@ import {
   faPlus,
   faEllipsisVertical,
   faPeopleGroup,
+  faEllipsis,
+  faHeart,
+  faBookmark as faBookmark_solid,
 } from "@fortawesome/free-solid-svg-icons";
+
+import { faBookmark as faBookmark_reg } from "@fortawesome/free-regular-svg-icons";
+
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 library.add(
@@ -40,7 +46,11 @@ library.add(
   faPenClip,
   faPlus,
   faEllipsisVertical,
-  faPeopleGroup
+  faPeopleGroup,
+  faEllipsis,
+  faHeart,
+  faBookmark_reg,
+  faBookmark_solid
 );
 
 createApp(App)
