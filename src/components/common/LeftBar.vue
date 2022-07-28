@@ -16,7 +16,7 @@
         <div class="row">
           <div class="col-4">
             <font-awesome-icon
-              icon="fa-solid fa-gamepad"
+              icon="fa-solid fa-people-roof"
               class="left-bar-icon fa-3x"
             />
           </div>
@@ -27,14 +27,14 @@
         <div class="row">
           <div class="col-4">
             <font-awesome-icon
-              icon="fa-solid fa-people-roof"
+              icon="fa-solid fa-gamepad"
               class="left-bar-icon fa-3x"
             />
           </div>
           <div class="col-8 align-self-center menu-text">챌린지</div>
         </div>
       </a>
-      <a href="">
+      <!-- <a href="">
         <div class="row">
           <div class="col-4">
             <font-awesome-icon
@@ -44,7 +44,7 @@
           </div>
           <div class="col-8 align-self-center menu-text">Q&A</div>
         </div>
-      </a>
+      </a> -->
       <a href="#/ranking">
         <div class="row">
           <div class="col-4">
@@ -69,6 +69,7 @@ export default {
   name: "LeftBar",
 };
 </script>
+
 <style scoped>
 a {
   text-decoration: none;

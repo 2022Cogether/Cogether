@@ -159,8 +159,9 @@ export default {};
 }
 
 .profile-img {
-  width: 45px;
-  height: 45px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* User Information */
@@ -223,8 +224,9 @@ li {
 }
 
 .image-box > img {
-  width: 70px;
-  height: 70px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   margin: 5px auto;
 }
 
