@@ -2,8 +2,8 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import MainView from "../views/MainView.vue";
 import SignView from "../views/SignView.vue";
-import RecruitView from "../views/RecruitView.vue";
 import RankingView from "../views/RankingView.vue";
+import ProfileMain from "../components/profile/ProfileMain.vue";
 
 const routes = [
   {
@@ -51,13 +51,31 @@ const routes = [
   },
   {
     path: "/recruit",
-    name: "recruit",
-    component: RecruitView,
+    name: "RecruitView",
+    component: () => import("@/views/RecruitView.vue"),
+    redirect: "/recruit/main",
+    children: [
+      {
+        path: "main",
+        name: "RecruitMain",
+        component: () => import("@/components/recruit/RecruitMain.vue"),
+      },
+      {
+        path: "create",
+        name: "RecruitCreate",
+        component: () => import("@/components/recruit/RecruitCreate.vue"),
+      },
+    ],
   },
   {
     path: "/ranking",
     name: "ranking",
     component: RankingView,
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    component: ProfileMain,
   },
 ];
 
