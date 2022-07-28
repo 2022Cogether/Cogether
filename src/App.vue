@@ -33,7 +33,6 @@ export default {
 
 .main-area {
   padding-top: 7vh;
-  background-color: #fafafa;
 }
 
 .left,
