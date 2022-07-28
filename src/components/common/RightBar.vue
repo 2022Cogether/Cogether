@@ -4,8 +4,29 @@
       <font-awesome-icon icon="fa-solid fa-comments" class="chat-icon" />
     </button>
     <div v-if="getters.getIsChatShow" class="chat-body">
-      <div class="chat-list-content">
+      <div v-if="getters.getChatUser == null" class="chat-content">
         <chat-item v-for="(i, index) in 20" :key="index" />
+      </div>
+      <div v-else class="chat-content">
+        <div class="chat-nav">
+          <div class="chat-profile">
+            <a href="#">
+              <img class="chat-picture" src="@/assets/logo.png" alt="로고" />
+            </a>
+          </div>
+          <div class="chat-name">이름</div>
+          <button class="btn-exit" @click="exit">
+            <font-awesome-icon icon="fa-solid fa-arrow-left" />
+          </button>
+        </div>
+        <hr />
+        <div class="box-talk">ss</div>
+        <div class="inputbar">
+          <textarea class="input" cols="30" rows="4"></textarea>
+          <button class="input-submit">
+            <font-awesome-icon icon="fa-solid fa-paper-plane" />
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -22,7 +43,10 @@ export default {
     function showChatList() {
       store.commit("SET_IS_CHAT_SHOW", !getters.value.getIsChatShow);
     }
-    return { showChatList, store, getters };
+    function exit() {
+      store.commit("SET_CHAT_USER", null);
+    }
+    return { showChatList, store, getters, exit };
   },
   components: {
     ChatItem,
@@ -68,7 +92,7 @@ export default {
   box-shadow: 3px 5px 3px -3px #bdbdbd;
 }
 
-.chat-list-content {
+.chat-content {
   height: 100%;
   widows: 100%;
   overflow: auto;
@@ -76,5 +100,68 @@ export default {
 
 ::-webkit-scrollbar {
   display: none;
+}
+
+.chat-profile {
+  float: left;
+  width: 15%;
+  margin-right: 3%;
+}
+
+.chat-picture {
+  border-radius: 70%;
+  border: 1px solid #dbdbdb;
+  margin: 3%;
+  width: 100%;
+}
+
+.chat-name {
+  float: left;
+}
+
+.btn-exit {
+  border: 0px;
+  background-color: transparent;
+  float: right;
+}
+
+.chat-nav {
+  display: inline-block;
+  width: 100%;
+}
+
+hr {
+  margin: 3px;
+}
+
+.box-talk {
+  height: calc(100% - 180px);
+}
+
+.inputbar {
+  border: 1px solid #bdbdbd;
+  margin-top: 10px;
+  width: 100%;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.input {
+  border-radius: 10px;
+  border: 0px;
+  width: calc(100% - 30px);
+  max-height: 95px;
+  resize: none;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.input-submit {
+  float: right;
+  border: 0px;
+  background-color: transparent;
+  width: 30px;
 }
 </style>

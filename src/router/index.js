@@ -59,6 +59,19 @@ const routes = [
     name: "ranking",
     component: RankingView,
   },
+  {
+    path: "/sign",
+    name: "sign",
+    component: () => import("@/views/SignView.vue"),
+    redirect: "/sign/signin",
+    children: [
+      {
+        path: "signin",
+        name: "SignIn",
+        component: () => import("@/components/sign/SignIn.vue"),
+      },
+    ],
+  },
 ];
 
 const router = createRouter({
