@@ -29,7 +29,7 @@
           <font-awesome-icon class="fs-3" icon="fa-solid fa-user" />
         </a>
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="">내 프로필</a>
+          <a class="dropdown-item" href="#/profile">내 프로필</a>
           <a class="dropdown-item" href="">비밀번호 변경</a>
           <a class="dropdown-item" href="">로그아웃</a>
         </div>

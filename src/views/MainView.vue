@@ -26,7 +26,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .search-bar-block {
   width: 100%;
   height: 60px;

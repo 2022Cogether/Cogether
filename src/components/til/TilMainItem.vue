@@ -33,7 +33,65 @@
       </div>
     </div>
     <!-- 첨부 이미지 캐러셀 -->
-    <div class="til-body"></div>
+    <div class="til-body">
+      <div
+        id="carouselExampleIndicators"
+        class="carousel slide"
+        data-bs-ride="false"
+      >
+        <div class="carousel-indicators">
+          <button
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide-to="0"
+            class="active"
+            aria-current="true"
+            aria-label="Slide 1"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide-to="1"
+            aria-label="Slide 2"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide-to="2"
+            aria-label="Slide 3"
+          ></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="@/assets/test1.jpg" class="d-block w-100" alt="..." />
+          </div>
+          <div class="carousel-item">
+            <img src="@/assets/test2.jpg" class="d-block w-100" alt="..." />
+          </div>
+          <div class="carousel-item">
+            <img src="@/assets/test3.jpg" class="d-block w-100" alt="..." />
+          </div>
+        </div>
+        <button
+          class="carousel-control-prev"
+          type="button"
+          data-bs-target="#carouselExampleIndicators"
+          data-bs-slide="prev"
+        >
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button
+          class="carousel-control-next"
+          type="button"
+          data-bs-target="#carouselExampleIndicators"
+          data-bs-slide="next"
+        >
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
     <!-- 4단 구성 / 좋아요, 스크랩/ 좋아요 몇개 / 내용 / 댓글 개수 -->
     <div class="til-footer">
       <!-- 좋아요 버튼 -->
@@ -107,7 +165,7 @@
         </div>
       </div>
       <span class="like-count"> 좋아요 0개 </span>
-      <div v-if="bookmarked" class="bookmark">
+      <!-- <div v-if="bookmarked" class="bookmark">
         <font-awesome-icon
           @click="bookmarkCheck"
           icon="fa-solid fa-bookmark"
@@ -120,7 +178,7 @@
           icon="fa-regular fa-bookmark"
           class="icon-bookmark"
         />
-      </div>
+      </div> -->
       <div class="til-content">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos
         recusandae, laborum numquam ab voluptatibus veritatis fuga. Quibusdam
