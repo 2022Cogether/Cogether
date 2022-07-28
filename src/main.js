@@ -54,7 +54,6 @@ library.add(
   faHeart,
   faBookmark_reg,
   faBookmark_solid,
-  faBookmark,
   faAddressBook,
   faXmark,
   faCompress,
