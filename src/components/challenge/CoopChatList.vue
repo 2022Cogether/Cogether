@@ -1,4 +1,6 @@
-<template><div></div></template>
+<template>
+  <div><div class="test">ss</div></div>
+</template>
 
 <script>
 export default {};
