@@ -44,7 +44,7 @@
     <div class="box-content">
       <div class="box-chat"></div>
       <div class="inputbar">
-        <div class="input"></div>
+        <textarea class="input" cols="30" rows="4"></textarea>
         <button class="input-submit">
           <font-awesome-icon icon="fa-solid fa-paper-plane" />
         </button>
@@ -67,7 +67,6 @@ export default {
     function changeExpand() {
       state.isExpand = !state.isExpand;
     }
-
     return { store, getters, state, changeExpand };
   },
   components: {},
@@ -159,7 +158,7 @@ export default {
   width: 50vw;
 }
 .box-chat {
-  height: 60vh;
+  height: calc(60vh - 70px);
   width: 100%;
   background-color: white;
 }
@@ -167,7 +166,6 @@ export default {
 .inputbar {
   margin-top: 10px;
   width: 100%;
-  height: 30px;
   background-color: white;
 }
 
@@ -175,6 +173,18 @@ export default {
   float: right;
   border: 0px;
   background-color: transparent;
-  width: 5%;
+  width: 30px;
+}
+
+.input {
+  border: 0px;
+  width: calc(100% - 30px);
+  max-height: 120px;
+  resize: none;
+  overflow-y: hidden;
+}
+
+.input:focus {
+  outline: none;
 }
 </style>

@@ -5,7 +5,7 @@
         <img class="chat-picture" src="@/assets/logo.png" alt="로고" />
       </a>
     </div>
-    <div class="chat-content">
+    <div class="chat-content" @click="clickItem">
       <div class="chat-name">이름</div>
       <div class="chat-text">내용</div>
     </div>
@@ -13,10 +13,22 @@
 </template>
 
 <script>
+import { computed, reactive } from "vue";
+import { useStore } from "vuex";
 export default {
   name: "ChatItem",
   setup() {
-    return {};
+    const store = useStore();
+    const getters = computed(() => store.getters);
+    const state = reactive({
+      chatUser: getters.value.chatUser,
+    });
+    function clickItem() {
+      console.log("event");
+      store.commit("SET_CHAT_USER", 1);
+      console.log(getters.value.chatUser);
+    }
+    return { clickItem, getters, store, state };
   },
 };
 </script>
@@ -30,6 +42,11 @@ export default {
 
 .chat-content {
   float: left;
+  width: 77%;
+}
+
+.chat-content:hover {
+  cursor: pointer;
 }
 
 .chat-picture {
@@ -40,6 +57,7 @@ export default {
 }
 
 .chat-item {
+  margin-bottom: 5px;
   display: flex;
   align-items: center;
 }
