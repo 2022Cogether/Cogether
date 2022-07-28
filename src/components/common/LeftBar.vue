@@ -1,6 +1,6 @@
 <template>
   <div class="left-bar d-flex flex-column justify-content-between">
-    <div class="menu">
+    <div class="menu container">
       <a href="">
         <div class="row">
           <div class="col-4">
@@ -16,7 +16,7 @@
         <div class="row">
           <div class="col-4">
             <font-awesome-icon
-              icon="fa-solid fa-gamepad"
+              icon="fa-solid fa-people-roof"
               class="left-bar-icon fa-3x"
             />
           </div>
@@ -27,7 +27,7 @@
         <div class="row">
           <div class="col-4">
             <font-awesome-icon
-              icon="fa-solid fa-people-roof"
+              icon="fa-solid fa-gamepad"
               class="left-bar-icon fa-3x"
             />
           </div>
@@ -115,5 +115,11 @@ a {
   margin-left: 15px;
   color: #b7b7b7;
   font-size: 0.7rem;
+}
+
+@media (max-width: 1400px) {
+  .menu-text {
+    display: none;
+  }
 }
 </style>
