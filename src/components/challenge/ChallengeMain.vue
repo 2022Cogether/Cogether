@@ -1,6 +1,10 @@
 <template>
   <!-- 경쟁모드 -->
   <div class="compete">
+    <button @click="test">actions 및 axios 실행</button>
+    <!--test 나중에 삭제-->
+    <button @click="test2">실행확인</button>
+    <!--test 나중에 삭제-->
     <div class="compete-nav-name fs-3">경쟁모드</div>
     <div class="compete-box round">
       <div class="row">
@@ -80,8 +84,16 @@ export default {
         !getters.value.getIsCompeteStarted
       );
     }
+    //test 나중에 삭제
+    function test() {
+      store.dispatch("test", 10);
+    }
+    //test 나중에 삭제
+    function test2() {
+      alert("JsonDate 10개:\n" + getters.value.gettest);
+    }
 
-    return { store, getters, btnCompete, now };
+    return { store, getters, btnCompete, now, test, test2 };
   },
   components: {
     CoopList,

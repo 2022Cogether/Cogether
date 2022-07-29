@@ -1,9 +1,12 @@
+import testaxios from "@/api/testaxios";
+
 export const challengeStore = {
   state: {
     //변수 선언
     isCompeteStarted: false,
     competeStartTime: null,
     isCoopRoomExpand: true,
+    test: [], //test 나중에 삭제
   },
   getters: {
     //변수 호출
@@ -15,6 +18,10 @@ export const challengeStore = {
     },
     getIsCoopRoomExpand(state) {
       return state.isCoopRoomExpand;
+    },
+    //test 나중에 삭제
+    gettest(state) {
+      return state.test;
     },
   },
   mutations: {
@@ -28,7 +35,24 @@ export const challengeStore = {
     SET_IS_COOP_ROOM_EXPAND(state, isCoopRoomExpand) {
       state.isCoopRoomExpand = isCoopRoomExpand;
     },
+    //test 나중에 삭제
+    Mutest(state, test) {
+      state.test = test;
+    },
   },
-  actions: {},
+  actions: {
+    //test 나중에 삭제
+    test({ commit }, param) {
+      testaxios
+        .get("/" + param)
+        .then(({ data }) => {
+          console.log("성공:" + commit);
+          commit("Mutest", data);
+        })
+        .catch((e) => {
+          console.log("에러: " + e);
+        });
+    },
+  },
   modules: {},
 };

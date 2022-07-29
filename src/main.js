@@ -24,7 +24,6 @@ import {
   faPeopleGroup,
   faEllipsis,
   faHeart,
-  faBookmark,
   faBookmark as faBookmark_solid,
   faAddressBook,
   faXmark,
