@@ -5,8 +5,12 @@
       <form id="login" class="input-group" action="">
         <input type="text" class="input" placeholder="Email" required />
         <input type="password" class="input" placeholder="Password" required />
-        <button class="submit">Login</button>
+        <button class="submit mt-2">Login</button>
       </form>
+    </div>
+    <div class="d-flex justify-content-center mt-3">
+      <p>아직 회원이 아니신가요?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+      <router-link to="signup/"> 회원가입 </router-link>
     </div>
     <div class="social-icons mt-5">
       <img
