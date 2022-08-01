@@ -20,12 +20,17 @@ const routes = [
     path: "/sign",
     name: "signview",
     component: () => import("@/views/SignView.vue"),
-    redirect: "/challenge/main",
+    redirect: "/",
     children: [
       {
         path: "signin",
         name: "SignIn",
         component: () => import("@/components/sign/SignIn.vue"),
+      },
+      {
+        path: "signup",
+        name: "SignUp",
+        component: () => import("@/components/sign/SignUp.vue"),
       },
     ],
   },

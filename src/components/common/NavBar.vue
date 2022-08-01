@@ -44,19 +44,19 @@
 </template>
 
 <script>
+import { ref } from "vue";
+
 export default {
   name: "NavBar",
-  data() {
-    return {
-      isLoggedIn: true,
-      // 아마 실제로는 store의 getters로 가져올 변수로 바뀔 듯
-    };
-  },
-  computed: {},
-  methods: {
-    checkOkay() {
+  setup() {
+    const isLoggedIn = ref(true);
+    // 아마 실제로는 store의 getters로 가져올 변수로 바뀔 듯
+
+    function checkOkay() {
       console.log("CLICKED!!");
-    },
+    }
+
+    return { isLoggedIn, checkOkay };
   },
 };
 </script>

@@ -2,15 +2,33 @@
   <div class="container">
     <div class="name fs-2">COGETHER</div>
     <div class="d-flex justify-content-center">
-      <form id="login" class="input-group" action="">
-        <input type="text" class="input" placeholder="Email" required />
-        <input type="password" class="input" placeholder="Password" required />
+      <form id="login" class="input-group" @submit.prevent="login">
+        <input
+          v-model="email"
+          type="text"
+          class="input"
+          placeholder="Email"
+          required
+        />
+        <input
+          v-model="password"
+          type="password"
+          class="input"
+          placeholder="Password"
+          required
+        />
         <button class="submit mt-2">Login</button>
       </form>
     </div>
     <div class="d-flex justify-content-center mt-3">
-      <p>아직 회원이 아니신가요?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-      <router-link to="signup/"> 회원가입 </router-link>
+      <div class="d-flex justify-content-between" style="width: 70%">
+        <div>
+          <p>아직 회원이 아니신가요?</p>
+        </div>
+        <div>
+          <router-link to="/sign/signup"> 회원가입 </router-link>
+        </div>
+      </div>
     </div>
     <div class="social-icons mt-5">
       <img
@@ -22,13 +40,22 @@
 </template>
 
 <script>
+import { ref } from "vue";
+
 export default {
   name: "SignIn",
   setup() {
-    function login() {}
+    const email = ref("");
+    const password = ref("");
+
+    function login() {
+      console.log(email.value);
+      console.log(password.value);
+    }
 
     function register() {}
-    return { login, register };
+
+    return { email, password, login, register };
   },
 };
 </script>
