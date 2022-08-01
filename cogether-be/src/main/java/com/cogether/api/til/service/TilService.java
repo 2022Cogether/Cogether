@@ -2,6 +2,7 @@ package com.cogether.api.til.service;
 
 import com.cogether.api.til.domain.*;
 import com.cogether.api.til.exception.TilCommentNotFoundException;
+import com.cogether.api.til.exception.TilLikeNotFoundException;
 import com.cogether.api.til.exception.TilNotFoundException;
 import com.cogether.api.til.repository.TilCommentRepository;
 import com.cogether.api.til.repository.TilImgRepository;
@@ -59,8 +60,7 @@ public class TilService {
     }
 
     public TilResponse.OnlyLikeId deleteLike(int tilLikeId){
-        //TODO: Throw안에 들어갈거 상의
-        TilLike tilLike = tilLikeRepository.findById(tilLikeId).orElseThrow();
+        TilLike tilLike = tilLikeRepository.findById(tilLikeId).orElseThrow(TilLikeNotFoundException::new);
         tilLikeRepository.deleteById(tilLikeId);
         return TilResponse.OnlyLikeId.build(tilLike);
     }
