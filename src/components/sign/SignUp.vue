@@ -2,56 +2,108 @@
   <div class="container">
     <div class="name fs-2">COGETHER</div>
     <div class="d-flex justify-content-center">
-      <form id="login" class="input-group" @submit.prevent="register">
-        <input
-          v-model="email"
-          type="email"
-          class="input"
-          placeholder="Email"
-          @keyup="checkValidEmail"
-          required
-        />
-        <div v-if="!isValidEmail" class="text-danger">
-          <p>올바른 이메일 주소를 입력해주세요</p>
+      <div id="login" class="input-group">
+        <div v-show="isPageOne">
+          <input
+            v-model="email"
+            type="email"
+            class="input"
+            placeholder="Email"
+            @keyup="checkValidEmail"
+            required
+          />
+          <div v-if="!isValidEmail" class="text-danger">
+            <p>올바른 이메일 주소를 입력해주세요</p>
+          </div>
+          <input
+            v-model="password"
+            type="password"
+            class="input"
+            placeholder="Password"
+            @keyup="checkPwdValid"
+            required
+          />
+          <div v-if="!isPwdValid" class="text-danger">
+            <p>비밀번호 형식을 지켜주세요</p>
+          </div>
+          <input
+            v-model="password2"
+            type="password"
+            class="input"
+            placeholder="Password Confirm"
+            @keyup="checkPwdSame"
+            required
+          />
+          <div v-if="!isPwdSame" class="text-danger">
+            <p>동일한 비밀번호를 입력해주세요</p>
+          </div>
+          <input
+            v-model="nickName"
+            type="text"
+            class="input"
+            placeholder="Nick Name"
+            @keyup="checkNickValid"
+            required
+          />
+          <div v-if="!isNickValid" class="text-danger">
+            <p>유효한 닉네임을 입력해주세요</p>
+          </div>
+          <input
+            type="checkbox"
+            class="checkbox my-3"
+            @click="checkTerm"
+          /><span>Terms and conditions</span>
+          <div class="mt-2 d-flex justify-content-between">
+            <button class="submit" @click="changePage">Next</button>
+            <button class="submit" @click="register">Register</button>
+          </div>
         </div>
-        <input
-          v-model="password"
-          type="password"
-          class="input"
-          placeholder="Password"
-          @keyup="checkPwdValid"
-          required
-        />
-        <div v-if="!isPwdValid" class="text-danger">
-          <p>비밀번호 형식을 지켜주세요</p>
+        <div v-show="!isPageOne">
+          <input
+            type="skill"
+            class="input"
+            placeholder="기술을 입력해주세요"
+            @keyup.enter="addLangSkills"
+            required
+          />
+          <div
+            class="d-flex justify-content-between mt-2"
+            v-for="langSkill in langSkills"
+            :key="langSkill.id"
+          >
+            <p>{{ langSkill }}</p>
+            <div class="btn btn-secondary" @click="delLangSkills(langSkill)">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-x"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div class="row d-flex justify-content-around">
+            <div class="col-5" v-for="lang in langSet" :key="lang.id">
+              <div
+                class="btn m-1 w-100"
+                style="background-color: #2a9d8f; color: white"
+                @click="addLangSkills(lang)"
+              >
+                {{ lang }}
+              </div>
+            </div>
+          </div>
+          <div class="mt-2 d-flex justify-content-between">
+            <button class="submit" @click="changePage">Prev</button>
+            <button class="submit" @click="register">Register</button>
+          </div>
         </div>
-        <input
-          v-model="password2"
-          type="password"
-          class="input"
-          placeholder="Password Confirm"
-          @keyup="checkPwdSame"
-          required
-        />
-        <div v-if="!isPwdSame" class="text-danger">
-          <p>동일한 비밀번호를 입력해주세요</p>
-        </div>
-        <input
-          v-model="nickName"
-          type="text"
-          class="input"
-          placeholder="Nick Name"
-          @keyup="checkNickValid"
-          required
-        />
-        <div v-if="!isNickValid" class="text-danger">
-          <p>유효한 닉네임을 입력해주세요</p>
-        </div>
-        <input type="checkbox" class="checkbox my-3" @click="checkTerm" /><span
-          >Terms and conditions</span
-        >
-        <button class="submit mt-2">REGISTER</button>
-      </form>
+      </div>
     </div>
     <div class="d-flex justify-content-center mt-3">
       <div class="d-flex justify-content-between" style="width: 70%">
@@ -73,11 +125,20 @@
 </template>
 
 <script>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+/>;
 import { ref } from "vue";
 
 export default {
   name: "SignUp",
   setup() {
+    const isPageOne = ref(true);
+    const changePage = () => {
+      isPageOne.value = !isPageOne.value;
+    };
+
     const email = ref("");
     const isValidEmail = ref(true);
     const checkValidEmail = () => {
@@ -103,7 +164,7 @@ export default {
     const nickName = ref("");
     const isNickValid = ref(true);
     const checkNickValid = () => {
-      const nickPattern = /^[a-zA-Z\d./_]{2,15}$/;
+      const nickPattern = /^[ㄱ-ㅎ가-힣a-zA-Z\d./_]{2,15}$/;
       isNickValid.value = nickPattern.test(nickName.value);
     };
 
@@ -111,6 +172,43 @@ export default {
     const checkTerm = () => {
       isCheckTerm.value = !isCheckTerm.value;
     };
+
+    const langSkills = ref([]);
+    const delLangSkills = (val) => {
+      if (langSkills.value.includes(val)) {
+        langSkills.value = langSkills.value.filter(
+          (element) => element !== val
+        );
+      } else {
+        alert("입력되지 않은 스킬입니다!");
+      }
+    };
+    const addLangSkills = (val) => {
+      if (typeof val == "object") {
+        if (langSkills.value.includes(val.target.value)) {
+          alert("이미 입력된 스킬입니다!");
+        } else {
+          langSkills.value.push(val.target.value);
+        }
+      } else {
+        if (langSkills.value.includes(val)) {
+          alert("이미 입력된 스킬입니다!");
+        } else {
+          langSkills.value.push(val);
+        }
+      }
+    };
+
+    const langSet = [
+      "C",
+      "C++",
+      "Python",
+      "Java",
+      "JavaScript",
+      "Spring",
+      "Django",
+      "R",
+    ];
 
     function register() {
       if (
@@ -124,12 +222,15 @@ export default {
           email: email.value,
           password: password.value,
           nickName: nickName.value,
+          langSkills: langSkills.value,
         };
         console.log(credentials);
       }
     }
 
     return {
+      isPageOne,
+      changePage,
       email,
       password,
       password2,
@@ -144,7 +245,11 @@ export default {
       checkNickValid,
       isCheckTerm,
       checkTerm,
+      langSkills,
+      delLangSkills,
+      addLangSkills,
       register,
+      langSet,
     };
   },
 };

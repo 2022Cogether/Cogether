@@ -31,7 +31,7 @@
         <div class="dropdown-menu">
           <a class="dropdown-item" href="#/profile">내 프로필</a>
           <a class="dropdown-item" href="">비밀번호 변경</a>
-          <a class="dropdown-item" href="">로그아웃</a>
+          <a class="dropdown-item" @click.prevent="logout">로그아웃</a>
         </div>
       </div>
       <!-- <img
@@ -45,6 +45,7 @@
 
 <script>
 import { ref } from "vue";
+import router from "@/router";
 
 export default {
   name: "NavBar",
@@ -56,7 +57,15 @@ export default {
       console.log("CLICKED!!");
     }
 
-    return { isLoggedIn, checkOkay };
+    const logout = () => {
+      const a = ref(true);
+      // axios 사용
+      if (a.value) {
+        router.push("/");
+      }
+    };
+
+    return { isLoggedIn, checkOkay, logout };
   },
 };
 </script>
