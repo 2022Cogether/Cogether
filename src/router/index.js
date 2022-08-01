@@ -61,9 +61,24 @@ const routes = [
         component: () => import("@/components/recruit/RecruitMain.vue"),
       },
       {
+        path: "study",
+        name: "StudyList",
+        component: () => import("@/components/recruit/StudyList.vue"),
+      },
+      {
         path: "create",
         name: "RecruitCreate",
         component: () => import("@/components/recruit/RecruitCreate.vue"),
+      },
+      {
+        path: "personcreate",
+        name: "PersonCreate",
+        component: () => import("@/components/recruit/PersonCreate.vue"),
+      },
+      {
+        path: "studycreate",
+        name: "StudyCreate",
+        component: () => import("@/components/recruit/StudyCreate.vue"),
       },
     ],
   },

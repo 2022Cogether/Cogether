@@ -10,11 +10,11 @@
       </button>
     </div>
     <div class="button-box d-flex justify-content-evenly">
-      <button type="button" class="btn">
+      <button type="button" class="btn" @click="onClickProject">
         <font-awesome-icon icon="fa-solid fa-handshake" />
         프로젝트
       </button>
-      <button type="button" class="btn">
+      <button type="button" class="btn" @click="onClickStudy">
         <font-awesome-icon icon="fa-solid fa-pen-clip" />
         스터디
       </button>
@@ -35,13 +35,21 @@
         <font-awesome-icon icon="fa-solid fa-plus" class="scra" />
       </button>
     </div>
-    <div>
-      <h2>People</h2>
-      <PeopleList />
+    <div v-show="currComp === 'project'">
+      <div>
+        <h2>People</h2>
+        <PeopleList />
+      </div>
+      <div>
+        <h2>Project</h2>
+        <TeamList />
+      </div>
     </div>
-    <div>
-      <h2>Project</h2>
-      <TeamList />
+    <div v-show="currComp === 'study'">
+      <div>
+        <h2>Study</h2>
+        <StudyList />
+      </div>
     </div>
   </div>
   <a href="#/recruit/create" class="write-icon-box">
@@ -51,17 +59,60 @@
     />
     <font-awesome-icon icon="fa-solid fa-address-book" class="book-icon" />
   </a>
+  <div>
+    <h2>Test</h2>
+    <a href="javacript:;" @click="getList">Test</a>
+  </div>
 </template>
 
 <script>
 import PeopleList from "@/components/recruit/PeopleList.vue";
 import TeamList from "@/components/recruit/TeamList.vue";
+import StudyList from "@/components/recruit/StudyList.vue";
+import axios from "axios";
 
 export default {
   name: "RecruitMain",
+  data() {
+    return {
+      currComp: "project",
+      list: [],
+    };
+  },
   components: {
     PeopleList,
     TeamList,
+    StudyList,
+  },
+  mounted() {
+    this.getList();
+  },
+  methods: {
+    onClickProject() {
+      this.currComp = "project";
+    },
+    onClickStudy() {
+      this.currComp = "study";
+    },
+    async getList() {
+      this.list = await this.api(
+        "https://21af139c-67f3-4c14-9e7d-69f6a8cb75b9.mock.pstmn.io/",
+        "get",
+        {}
+      );
+      console.log(this.list);
+    },
+    async api(url, method, data) {
+      return (
+        await axios({
+          methods: method,
+          url: url,
+          data: data,
+        }).catch((e) => {
+          console.log(e);
+        })
+      ).data;
+    },
   },
 };
 </script>
