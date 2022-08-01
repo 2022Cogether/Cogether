@@ -2,22 +2,19 @@
   <div class="container">
     <div class="name fs-2">COGETHER</div>
     <div class="d-flex justify-content-center">
-      <form id="login" class="input-group" @submit.prevent="login">
+      <form id="login" class="input-group" @submit.prevent="sendPassword">
         <input
           v-model="email"
-          type="text"
-          class="input"
+          type="email"
+          class="input p-1"
           placeholder="Email"
+          @keyup="checkValidEmail"
           required
         />
-        <input
-          v-model="password"
-          type="password"
-          class="input"
-          placeholder="Password"
-          required
-        />
-        <button class="submit mt-2">Login</button>
+        <div v-if="!isValidEmail" class="text-danger">
+          <p>올바른 이메일 주소를 입력해주세요</p>
+        </div>
+        <button class="submit mt-2">Send PW</button>
       </form>
     </div>
     <div class="d-flex justify-content-center mt-3">
@@ -30,32 +27,6 @@
         </div>
       </div>
     </div>
-    <div class="d-flex justify-content-center mt-3">
-      <div class="d-flex justify-content-between" style="width: 70%">
-        <div>
-          <p>비밀번호를 잊으셨나요?</p>
-        </div>
-        <div>
-          <router-link to="/sign/password"> 비밀번호 찾기 </router-link>
-        </div>
-      </div>
-    </div>
-    <div class="social-icons mt-5">
-      <div class="btn btn-success">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          fill="currentColor"
-          class="bi bi-google"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z"
-          />
-        </svg>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -63,19 +34,26 @@
 import { ref } from "vue";
 
 export default {
-  name: "SignIn",
+  name: "PassWord",
   setup() {
     const email = ref("");
-    const password = ref("");
+    const isValidEmail = ref(true);
+    const checkValidEmail = () => {
+      const emailPattern =
+        /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
+      isValidEmail.value = emailPattern.test(email.value);
+    };
 
-    function login() {
-      console.log(email.value);
-      console.log(password.value);
+    function sendPassword() {
+      if (isValidEmail.value) {
+        console.log(email.value);
+        alert("가입되지 않은 이메일입니다!");
+      } else {
+        alert("올바른 이메일을 입력해주세요!");
+      }
     }
 
-    function register() {}
-
-    return { email, password, login, register };
+    return { email, isValidEmail, checkValidEmail, sendPassword };
   },
 };
 </script>

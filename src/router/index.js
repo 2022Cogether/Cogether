@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import MainView from "../views/MainView.vue";
-import SignView from "../views/SignView.vue";
+// import SignView from "../views/SignView.vue";
 import RankingView from "../views/RankingView.vue";
 import ProfileMain from "../components/profile/ProfileMain.vue";
 
@@ -17,9 +17,27 @@ const routes = [
     component: MainView,
   },
   {
-    path: "/signview",
+    path: "/sign",
     name: "signview",
-    component: SignView,
+    component: () => import("@/views/SignView.vue"),
+    redirect: "/",
+    children: [
+      {
+        path: "signin",
+        name: "SignIn",
+        component: () => import("@/components/sign/SignIn.vue"),
+      },
+      {
+        path: "signup",
+        name: "SignUp",
+        component: () => import("@/components/sign/SignUp.vue"),
+      },
+      {
+        path: "password",
+        name: "PassWord",
+        component: () => import("@/components/sign/PassWord.vue"),
+      },
+    ],
   },
   {
     path: "/challenge",
