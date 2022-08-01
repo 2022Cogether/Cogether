@@ -6,7 +6,6 @@
 
 <script>
 import PeopleItem from "@/components/recruit/PeopleItem.vue";
-
 export default {
   components: {
     PeopleItem,

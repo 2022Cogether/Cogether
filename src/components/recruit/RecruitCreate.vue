@@ -4,14 +4,23 @@
       <font-awesome-icon class="icon-exit fs-3" icon="fa-solid fa-xmark" />
     </button>
   </div>
-  <div class="box-input2">
-    <div class="input-group mb-3">
-      <select v-model="state.createType" class="form-select" id="personnel">
-        <option selected>프로젝트 등록</option>
-        <option value="2">스터디 등록</option>
-        <option value="3">개인 등록</option>
-      </select>
-    </div>
+  <div class="dropdown">
+    <button
+      class="btn btn-secondary dropdown-toggle"
+      type="button"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+    >
+      프로젝트 등록
+    </button>
+    <ul class="dropdown-menu">
+      <li>
+        <a class="dropdown-item" href="#/recruit/studycreate">스터디 등록</a>
+      </li>
+      <li>
+        <a class="dropdown-item" href="#/recruit/personcreate">개인 등록</a>
+      </li>
+    </ul>
   </div>
   <form @submit="createCoop">
     <div class="box-register">
@@ -25,23 +34,43 @@
         placeholder="제목을 입력하세요.."
       />
     </div>
-    <div class="box-input2">
-      <div class="mb-3">
-        <label class="form-label" for="start-date">시작예정일</label>
-        <input type="date" id="start-date" />
+    <form class="row">
+      <div class="input-group mb-3">
+        <label class="input-group-text" for="startDate">시작예정일</label>
+        <input type="date" class="form-control" id="startDate" />
       </div>
       <div class="input-group mb-3">
-        <label class="input-group-text" for="personnel">인원</label>
+        <label class="input-group-text" for="currMem">현재 인원수</label>
+        <input type="number" class="form-control" id="currMem" />
+      </div>
+      <div class="input-group mb-3">
+        <label class="input-group-text" for="totalMem">전체 인원수</label>
+        <input type="number" class="form-control" id="totalMem" />
+      </div>
+      <div class="input-group mb-3">
+        <label class="input-group-text" for="totalMem">예상 기간</label>
+        <input type="text" class="form-control" id="totalMem" />
+      </div>
+      <div class="input-group mb-3">
+        <label class="input-group-text" for="totalMem">진행 방식</label>
         <select v-model="state.personnel" class="form-select" id="personnel">
           <option selected>선택</option>
-          <option value="2">2명</option>
-          <option value="3">3명</option>
-          <option value="4">4명</option>
-          <option value="5">5명</option>
-          <option value="6">6명</option>
+          <option value="2">온라인</option>
+          <option value="3">오프라인</option>
         </select>
       </div>
-    </div>
+      <div class="tech-icon-container d-flex">
+        <label class="input-group-text" for="techStack">사용 기술</label>
+        <div class="tech-icon-box">
+          <img
+            class="tech-icon"
+            src="@/assets/devicon/javascript-original.svg"
+            alt="tech icon"
+          />
+        </div>
+      </div>
+    </form>
+
     <textarea
       v-model="state.content"
       class="coop-content form-control"
@@ -77,7 +106,7 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           //취소하고 이동할 페이지
-          router.push({ name: "ChallengeMain" });
+          router.push({ name: "RecruitMain" });
         }
       });
     }
@@ -149,5 +178,21 @@ export default {
 
 .box-input1 {
   margin-bottom: 10px;
+}
+
+/* Tech Stack */
+.tech-icon-box {
+  width: 30px;
+  height: 30px;
+  background-color: #c1ebe6;
+  border-radius: 50%;
+  margin: 10px;
+}
+
+.tech-icon {
+  display: block;
+  width: 15px;
+  height: 15px;
+  margin: 7px auto;
 }
 </style>
