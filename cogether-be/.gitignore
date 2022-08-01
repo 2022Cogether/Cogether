@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### awsS3 ###
+**/src/main/resources/application-aws.properties
