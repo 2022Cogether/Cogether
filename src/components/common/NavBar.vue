@@ -18,7 +18,7 @@
       />
       <font-awesome-icon class="fs-3 icons" icon="fa-solid fa-bell" />
 
-      <div class="dropdown">
+      <div v-if="isLoggedIn" class="dropdown">
         <a
           href=""
           class="dropdown-toggle"
@@ -46,6 +46,12 @@
 <script>
 export default {
   name: "NavBar",
+  data() {
+    return {
+      isLoggedIn: true,
+      // 아마 실제로는 store의 getters로 가져올 변수로 바뀔 듯
+    };
+  },
   computed: {},
   methods: {
     checkOkay() {
