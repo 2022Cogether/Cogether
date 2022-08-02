@@ -1,29 +1,4 @@
 <template>
-  <div class="coop-room-item round">
-    <a href="#"
-      ><img class="coop-profile" src="@/assets/logo.png" alt="로고"
-    /></a>
-    <span class="coop-title fs-5">{{ room.title }}</span>
-    <span class="coop-time fs-6">{{ room.time }}분</span>
-    <div class="coop-bottom">
-      <span class="coop-people"
-        >{{ room.curPeople }} / {{ room.maxPeople }} 명</span
-      >
-      <span class="icon-people"></span>
-    </div>
-    <button
-      v-if="!room.isStarted"
-      id="1"
-      class="btn-coop-enter"
-      data-bs-toggle="modal"
-      data-bs-target="#coopRoomDetail"
-    >
-      입장
-    </button>
-    <button v-if="room.isStarted" class="btn-coop-enter">진행중</button>
-  </div>
-
-  <!-- Modal -->
   <div
     class="modal fade"
     id="coopRoomDetail"
@@ -83,71 +58,13 @@
 </template>
 
 <script>
-import router from "@/router";
 export default {
-  name: "CoopItem",
-  props: ["room", "tabState"],
-  setup() {
-    function btnEnter() {
-      router.push({ name: "CoopRoom" });
-    }
-    return { btnEnter };
-  },
-  components: {},
+  name: "CoopModal",
+  props: ["room"],
 };
 </script>
 
 <style scoped>
-.round {
-  border: 1px solid black;
-  border-radius: 10px;
-}
-.coop-room-item {
-  position: relative;
-  display: inline-block;
-  height: 150px;
-  width: 48%;
-  margin-bottom: 10px;
-  margin-left: 1%;
-  margin-right: 1%;
-  padding: 2%;
-  border: 1px solid #dbdbda;
-  box-shadow: 0px 5px 3px -3px #bdbdbd;
-  background-color: white;
-}
-
-.coop-profile {
-  margin: auto;
-  width: 10%;
-}
-
-.coop-title {
-  margin-left: 3%;
-}
-
-.coop-time {
-  float: right;
-  margin-right: 2%;
-}
-
-.coop-bottom {
-  position: absolute;
-  bottom: 7%;
-}
-
-.btn-coop-enter {
-  border: 1px solid #dbdbda;
-  background-color: transparent;
-  border-radius: 5px;
-  position: absolute;
-  bottom: 7%;
-  right: 7%;
-}
-
-.btn-coop-enter:hover {
-  background-color: #2a9d8f;
-  color: white;
-}
 /* Modal */
 .modal-content {
   background-color: #eff7f6;
