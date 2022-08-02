@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -27,9 +27,16 @@ public class LiveComp {
 
     @Column(name = "total_time", nullable = false)
     @JsonFormat(pattern = "HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
-    private LocalDate totalTime;
+    private LocalTime totalTime;
 
-    @Column(name = "created_at", updatable = false, insertable = false)
+    @Column(name = "created_at", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
+
+    public static LiveComp toEntity(User user, LocalTime totalTime) {
+        return LiveComp.builder()
+                .user(user)
+                .totalTime(totalTime)
+                .build();
+    }
 }

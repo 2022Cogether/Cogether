@@ -35,6 +35,9 @@ public class User {
     @Column(name="admin")
     private boolean admin;
 
+    @Column(name="comp")
+    private boolean comp;
+
     @Column(name="verified")
     private boolean verified;
 
