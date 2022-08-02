@@ -33,9 +33,19 @@ const routes = [
         component: () => import("@/components/sign/SignUp.vue"),
       },
       {
-        path: "password",
-        name: "PassWord",
-        component: () => import("@/components/sign/PassWord.vue"),
+        path: "passwordseek",
+        name: "PassWordSeek",
+        component: () => import("@/components/sign/PassWordSeek.vue"),
+      },
+      {
+        path: "passwordchange",
+        name: "PassWordChange",
+        component: () => import("@/components/sign/PassWordChange.vue"),
+      },
+      {
+        path: "withdrawal",
+        name: "WithDrawal",
+        component: () => import("@/components/sign/WithDrawal.vue"),
       },
     ],
   },

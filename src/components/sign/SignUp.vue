@@ -15,6 +15,13 @@
           <div v-if="!isValidEmail" class="text-danger">
             <p>올바른 이메일 주소를 입력해주세요</p>
           </div>
+          <div>
+            <div v-if="isEmailChecked" class="btn active">인증 완료!</div>
+            <div v-else class="btn disable" @click.prevent="certifyEmail">
+              이메일 인증
+            </div>
+          </div>
+
           <input
             v-model="password"
             type="password"
@@ -37,6 +44,7 @@
           <div v-if="!isPwdSame" class="text-danger">
             <p>동일한 비밀번호를 입력해주세요</p>
           </div>
+
           <input
             v-model="nickName"
             type="text"
@@ -48,14 +56,22 @@
           <div v-if="!isNickValid" class="text-danger">
             <p>유효한 닉네임을 입력해주세요</p>
           </div>
+          <div>
+            <div v-if="isNickChecked" class="btn active">인증 완료!</div>
+            <div v-else class="btn disable" @click.prevent="certifyNickName">
+              닉네임 인증
+            </div>
+          </div>
+
           <input
+            id="terms"
             type="checkbox"
             class="checkbox my-3"
             @click="checkTerm"
-          /><span>Terms and conditions</span>
+          /><label for="terms">Terms and conditions</label>
           <div class="mt-2 d-flex justify-content-between">
             <button class="submit" @click="changePage">Next</button>
-            <button class="submit" @click="register">Register</button>
+            <button class="submit" @click="goRegister">Register</button>
           </div>
         </div>
         <div v-show="!isPageOne">
@@ -68,7 +84,7 @@
           />
           <div
             class="d-flex justify-content-between mt-2"
-            v-for="langSkill in langSkills"
+            v-for="langSkill in userLangSkills"
             :key="langSkill.id"
           >
             <p>{{ langSkill }}</p>
@@ -100,7 +116,7 @@
           </div>
           <div class="mt-2 d-flex justify-content-between">
             <button class="submit" @click="changePage">Prev</button>
-            <button class="submit" @click="register">Register</button>
+            <button class="submit" @click="goRegister">Register</button>
           </div>
         </div>
       </div>
@@ -115,7 +131,7 @@
         </div>
       </div>
     </div>
-    <div class="social-icons mt-5">
+    <div class="social-icons my-5">
       <div class="btn btn-success">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -139,11 +155,15 @@
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
 />;
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useStore } from "vuex";
 
 export default {
   name: "SignUp",
   setup() {
+    const store = useStore();
+    const getters = computed(() => store.getters);
+
     const isPageOne = ref(true);
     const changePage = () => {
       isPageOne.value = !isPageOne.value;
@@ -151,10 +171,18 @@ export default {
 
     const email = ref("");
     const isValidEmail = ref(true);
+    const isEmailChecked = ref(false);
     const checkValidEmail = () => {
-      const emailPattern =
-        /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
-      isValidEmail.value = emailPattern.test(email.value);
+      isValidEmail.value = getters.value.getEmailPattern.test(email.value);
+      if (isEmailChecked.value) {
+        isEmailChecked.value = false;
+      }
+    };
+    const certifyEmail = () => {
+      store.dispatch("checkEmail", email.value);
+      if (getters.value.getBooleanValue) {
+        isEmailChecked.value = true;
+      }
     };
 
     const password = ref("");
@@ -162,10 +190,9 @@ export default {
 
     const isPwdValid = ref(true);
     const checkPwdValid = () => {
-      const pwdPattern =
-        /[a-zA-Z]+(?=.*\d)(?=.*[a-z])(?=.*[~!@#$]).[a-zA-Z\d~!@#$]{7,14}$/;
-      isPwdValid.value = pwdPattern.test(password.value);
+      isPwdValid.value = getters.value.getPwdPattern.test(password.value);
     };
+
     const isPwdSame = ref(true);
     const checkPwdSame = () => {
       isPwdSame.value = password.value == password2.value;
@@ -173,9 +200,18 @@ export default {
 
     const nickName = ref("");
     const isNickValid = ref(true);
+    const isNickChecked = ref(false);
     const checkNickValid = () => {
-      const nickPattern = /^[ㄱ-ㅎ가-힣a-zA-Z\d./_]{2,15}$/;
-      isNickValid.value = nickPattern.test(nickName.value);
+      isNickValid.value = getters.value.getNickPattern.test(nickName.value);
+      if (isNickChecked.value) {
+        isNickChecked.value = false;
+      }
+    };
+    const certifyNickName = () => {
+      store.dispatch("checkNickName", nickName.value);
+      if (getters.value.getBooleanValue) {
+        isNickChecked.value = true;
+      }
     };
 
     const isCheckTerm = ref(false);
@@ -183,10 +219,10 @@ export default {
       isCheckTerm.value = !isCheckTerm.value;
     };
 
-    const langSkills = ref([]);
+    const userLangSkills = ref([]);
     const delLangSkills = (val) => {
-      if (langSkills.value.includes(val)) {
-        langSkills.value = langSkills.value.filter(
+      if (userLangSkills.value.includes(val)) {
+        userLangSkills.value = userLangSkills.value.filter(
           (element) => element !== val
         );
       } else {
@@ -195,46 +231,48 @@ export default {
     };
     const addLangSkills = (val) => {
       if (typeof val == "object") {
-        if (langSkills.value.includes(val.target.value)) {
+        if (userLangSkills.value.includes(val.target.value)) {
           alert("이미 입력된 스킬입니다!");
         } else {
-          langSkills.value.push(val.target.value);
+          userLangSkills.value.push(val.target.value);
         }
       } else {
-        if (langSkills.value.includes(val)) {
+        if (userLangSkills.value.includes(val)) {
           alert("이미 입력된 스킬입니다!");
         } else {
-          langSkills.value.push(val);
+          userLangSkills.value.push(val);
         }
       }
     };
 
-    const langSet = [
-      "C",
-      "C++",
-      "Python",
-      "Java",
-      "JavaScript",
-      "Spring",
-      "Django",
-      "R",
-    ];
+    // created?
+    if (!getters.value.getSkillSet) {
+      store.dispatch("takeSkillSet");
+    }
+    const langSet = getters.value.getSkillSet;
+    console.log(getters.value.getSkillSet);
 
-    function register() {
+    function goRegister() {
       if (
         isValidEmail.value &&
         isPwdValid &&
         isPwdSame &&
         isNickValid &&
-        isCheckTerm
+        isNickChecked &&
+        isCheckTerm &&
+        !!email.value &&
+        !!password.value &&
+        !!nickName.value
       ) {
         const credentials = {
           email: email.value,
           password: password.value,
           nickName: nickName.value,
-          langSkills: langSkills.value,
+          skills: userLangSkills.value,
         };
-        console.log(credentials);
+        store.dispatch("register", credentials);
+      } else {
+        alert("입력되지 않은 정보가 있습니다!");
       }
     }
 
@@ -242,6 +280,8 @@ export default {
       isPageOne,
       changePage,
       email,
+      isEmailChecked,
+      certifyEmail,
       password,
       password2,
       nickName,
@@ -252,13 +292,15 @@ export default {
       isValidEmail,
       checkValidEmail,
       isNickValid,
+      isNickChecked,
       checkNickValid,
+      certifyNickName,
       isCheckTerm,
       checkTerm,
-      langSkills,
+      userLangSkills,
       delLangSkills,
       addLangSkills,
-      register,
+      goRegister,
       langSet,
     };
   },
