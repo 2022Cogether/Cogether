@@ -2,7 +2,7 @@
   <div class="container">
     <div class="name fs-2">COGETHER</div>
     <div class="d-flex justify-content-center">
-      <form id="login" class="input-group" @submit.prevent="login">
+      <form id="login" class="input-group" @submit.prevent="goLogin">
         <input
           v-model="email"
           type="text"
@@ -40,7 +40,7 @@
         </div>
       </div>
     </div>
-    <div class="social-icons mt-5">
+    <div class="social-icons my-5">
       <div class="btn btn-success">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -61,21 +61,31 @@
 
 <script>
 import { ref } from "vue";
+import { useStore } from "vuex";
 
 export default {
   name: "SignIn",
   setup() {
+    const $store = useStore();
     const email = ref("");
     const password = ref("");
 
-    function login() {
-      console.log(email.value);
-      console.log(password.value);
+    function goLogin() {
+      const credentials = {
+        email: email.value,
+        password: password.value,
+      };
+
+      $store.dispatch("login", credentials);
+
+      if ($store.getters["isLoggedIn"]) {
+        confirm("로그인 했습니다!");
+      } else {
+        confirm("로그인 실패했습니다!");
+      }
     }
 
-    function register() {}
-
-    return { email, password, login, register };
+    return { email, password, goLogin };
   },
 };
 </script>
@@ -85,7 +95,7 @@ export default {
   border: 1px solid #bdbdbd;
   border-radius: 10px;
   width: 50%;
-  height: 500px;
+  height: auto;
   position: relative;
   margin: 10% auto;
   background: white;

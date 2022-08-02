@@ -2,7 +2,7 @@
   <div class="container">
     <div class="name fs-2">COGETHER</div>
     <div class="d-flex justify-content-center">
-      <form id="login" class="input-group" @submit.prevent="sendPassword">
+      <form id="login" class="input-group" @submit.prevent="sendEmail">
         <input
           v-model="email"
           type="email"
@@ -31,29 +31,30 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useStore } from "vuex";
 
 export default {
-  name: "PassWord",
+  name: "PassWordSeek",
   setup() {
+    const store = useStore();
+    const getters = computed(() => store.getters);
+
     const email = ref("");
     const isValidEmail = ref(true);
     const checkValidEmail = () => {
-      const emailPattern =
-        /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
-      isValidEmail.value = emailPattern.test(email.value);
+      isValidEmail.value = getters.value.getEmailPattern.test(email.value);
     };
 
-    function sendPassword() {
+    function sendEmail() {
       if (isValidEmail.value) {
-        console.log(email.value);
-        alert("가입되지 않은 이메일입니다!");
+        store.dispatch("takePassWord", email.value);
       } else {
-        alert("올바른 이메일을 입력해주세요!");
+        alert("올바른 형식의 이메일을 입력해주세요!");
       }
     }
 
-    return { email, isValidEmail, checkValidEmail, sendPassword };
+    return { email, isValidEmail, checkValidEmail, sendEmail };
   },
 };
 </script>
