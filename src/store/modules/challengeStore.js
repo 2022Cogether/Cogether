@@ -1,4 +1,5 @@
-import testaxios from "@/api/testaxios";
+// import testaxios from "@/api/testaxios";
+// import axios from "axios";
 
 export const challengeStore = {
   state: {
@@ -6,7 +7,38 @@ export const challengeStore = {
     isCompeteStarted: false,
     competeStartTime: null,
     isCoopRoomExpand: true,
-    test: [], //test 나중에 삭제
+    competeTotal: "01:30:00",
+    competeRank: 7,
+    competePeople: 100,
+    rooms: [
+      {
+        host: "jinhoe",
+        title: "title",
+        time: "60",
+        curPeople: 4,
+        maxPeople: 6,
+        isStarted: false,
+        content: "설명입니다.설명입니다.설명입니다.설명입니다.설명입니다.",
+      },
+      {
+        host: "wlsghl",
+        title: "title2",
+        time: "50",
+        curPeople: 4,
+        maxPeople: 5,
+        isStarted: true,
+        content: "설명입니다2.",
+      },
+      {
+        host: "rlawlsghl",
+        title: "title3",
+        time: "40",
+        curPeople: 1,
+        maxPeople: 6,
+        isStarted: false,
+        content: "설명입니다3.",
+      },
+    ],
   },
   getters: {
     //변수 호출
@@ -19,9 +51,17 @@ export const challengeStore = {
     getIsCoopRoomExpand(state) {
       return state.isCoopRoomExpand;
     },
-    //test 나중에 삭제
-    gettest(state) {
-      return state.test;
+    getRooms(state) {
+      return state.rooms;
+    },
+    getCompeteTotal(state) {
+      return state.competeTotal;
+    },
+    getCompeteRank(state) {
+      return state.competeRank;
+    },
+    getCompetePeople(state) {
+      return state.competePeople;
     },
   },
   mutations: {
@@ -35,23 +75,12 @@ export const challengeStore = {
     SET_IS_COOP_ROOM_EXPAND(state, isCoopRoomExpand) {
       state.isCoopRoomExpand = isCoopRoomExpand;
     },
-    //test 나중에 삭제
-    Mutest(state, test) {
-      state.test = test;
-    },
   },
   actions: {
-    //test 나중에 삭제
-    test({ commit }, param) {
-      testaxios
-        .get("/" + param)
-        .then(({ data }) => {
-          console.log("성공:" + commit);
-          commit("Mutest", data);
-        })
-        .catch((e) => {
-          console.log("에러: " + e);
-        });
+    //경쟁 시간 보내기 (구현 예정)
+    sendCompeteTime({ commit }, param) {
+      console.log(commit);
+      console.log(param);
     },
   },
   modules: {},
