@@ -1,7 +1,7 @@
 <template>
   <div class="left-bar d-flex flex-column justify-content-between">
     <div class="menu container">
-      <a href="">
+      <a href="#/">
         <div class="row">
           <div class="col-4">
             <font-awesome-icon
