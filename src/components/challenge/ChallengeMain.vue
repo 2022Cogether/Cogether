@@ -72,16 +72,17 @@ export default {
     });
     function now() {
       let today = new Date();
-      store.commit("SET_COMPETE_START_TIME", today);
       today.setHours(today.getHours() + 9);
+      store.commit("SET_COMPETE_START_TIME", today);
       return today.toISOString().substring(11, 19);
     }
     function btnCompete() {
       if (getters.value.getIsCompeteStarted == true) {
-        let today = new Date();
-        today = new Date(today - getters.value.getCompeteStartTime);
-        today.setHours(today.getHours() - 15);
-        store.dispatch("sendCompeteTime", today.toISOString().substring(0, 19));
+        let end = new Date();
+        end.setHours(end.getHours() + 9);
+        let start = getters.value.getCompeteStartTime;
+        end = new Date(end - start);
+        store.dispatch("sendCompeteTime", end.toISOString().substring(0, 19));
       }
       store.commit(
         "SET_IS_COMPETE_STARTED",

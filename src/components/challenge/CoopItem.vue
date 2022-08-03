@@ -14,6 +14,7 @@
     <button
       v-if="!room.isStarted"
       id="1"
+      @click="openModal"
       class="btn-coop-enter"
       data-bs-toggle="modal"
       data-bs-target="#coopRoomDetail"
@@ -50,19 +51,20 @@
             </div>
             <div class="room-detail-info">
               <h5 class="modal-title" id="coopRoomDetailLabel">
-                {{ room.host }}
+                <!-- {{ room.host }} -->
               </h5>
               <div class="modal-box d-flex">
                 <div class="modal-people">
-                  {{ room.curPeople }} / {{ room.maxPeople }} 명
+                  <!-- {{ room.curPeople }} / {{ room.maxPeople }} 명 -->
                 </div>
-                <div class="modal-time">{{ room.time }}분</div>
+                <!-- <div class="modal-time">{{ room.time }}분</div> -->
+                <div class="modal-time"></div>
               </div>
             </div>
           </div>
           <div class="room-content">
             <p>
-              {{ room.content }}
+              <!-- {{ room.content }} -->
             </p>
           </div>
         </div>
@@ -84,14 +86,32 @@
 
 <script>
 import router from "@/router";
+import jQuery from "jquery";
+import { useStore } from "vuex";
+import { computed } from "vue";
 export default {
   name: "CoopItem",
   props: ["room", "tabState"],
-  setup() {
+  setup(props) {
+    const store = useStore();
+    const getters = computed(() => store.getters);
+    const $ = jQuery;
     function btnEnter() {
-      router.push({ name: "CoopRoom" });
+      router.push({
+        name: "CoopRoom",
+        params: { roomNo: getters.value.getRoomId },
+      });
     }
-    return { btnEnter };
+    function openModal() {
+      store.commit("SET_ROOM_ID", props.room.id);
+      $(".modal .modal-body .modal-title").html(props.room.title);
+      $(".modal .modal-body .modal-people").html(
+        props.room.curPeople + " / " + props.room.maxPeople
+      );
+      $(".modal .modal-body .modal-time").html(props.room.time + "분");
+      $(".modal .modal-body .room-content p").html(props.room.content);
+    }
+    return { btnEnter, openModal };
   },
   components: {},
 };

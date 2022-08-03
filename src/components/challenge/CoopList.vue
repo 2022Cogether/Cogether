@@ -1,5 +1,6 @@
 <template>
   <div class="coop-room-box">
+    <div>{{ getters.gettest }}</div>
     <span v-if="tabState == 1">
       <span v-for="(room, i) in getters.getRooms" :key="i">
         <span v-if="searchText == null || room.title.indexOf(searchText) != -1">
@@ -36,6 +37,7 @@ export default {
   },
   setup() {
     const store = useStore();
+    store.dispatch("getCoopRooms");
     const getters = computed(() => store.getters);
     return { store, getters };
   },
