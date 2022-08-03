@@ -1,6 +1,6 @@
 package com.cogether.api.liveCoop.domain;
 
-import com.cogether.api.user.dto.User;
+import com.cogether.api.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import java.time.LocalDate;

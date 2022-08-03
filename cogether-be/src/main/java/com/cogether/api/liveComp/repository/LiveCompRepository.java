@@ -1,7 +1,7 @@
 package com.cogether.api.liveComp.repository;
 
 import com.cogether.api.liveComp.domain.LiveComp;
-import com.cogether.api.user.dto.User;
+import com.cogether.api.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;

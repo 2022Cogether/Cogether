@@ -1,6 +1,6 @@
 package com.cogether.api.Noti.dto;
 
-import com.cogether.api.user.dto.User;
+import com.cogether.api.user.domain.User;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 

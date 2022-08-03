@@ -1,4 +1,4 @@
-package com.cogether.api.user.dto;
+package com.cogether.api.user.domain;
 
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,6 +21,9 @@ public class User {
 
     @Column(name="email",length = 50,nullable = false)
     private String email;
+
+    @Column(name="password",length=12,nullable = false)
+    private String password;
 
     @Column(name="nickname",length = 15,nullable = false)
     private String nickname;

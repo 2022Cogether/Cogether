@@ -8,11 +8,10 @@ import com.cogether.api.til.repository.TilCommentRepository;
 import com.cogether.api.til.repository.TilImgRepository;
 import com.cogether.api.til.repository.TilLikeRepository;
 import com.cogether.api.til.repository.TilRepository;
-import com.cogether.api.user.dto.User;
+import com.cogether.api.user.domain.User;
 import com.cogether.api.user.exception.UserNotFoundException;
 import com.cogether.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
