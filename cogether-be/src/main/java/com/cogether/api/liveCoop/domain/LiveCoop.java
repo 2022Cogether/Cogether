@@ -3,8 +3,10 @@ package com.cogether.api.liveCoop.domain;
 import com.cogether.api.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import java.time.LocalDate;
+
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -26,9 +28,11 @@ public class LiveCoop {
     @Column(name = "mem_num", nullable = false)
     private int memNum;
 
+    @Column(name = "now_mem_num", nullable = false)
+    private int nowMemNum;
+
     @Column(name = "duration", nullable = false)
-    @JsonFormat(pattern = "HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
-    private LocalDate duration;
+    private int duration;
 
     @Column(name = "title", length = 100, nullable = false)
     private String title;
@@ -38,5 +42,8 @@ public class LiveCoop {
 
     @Column(name = "in_progress", nullable = false)
     private boolean inProgress;
+
+    @Column(name = "created_at", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createdAt;
 
 }
