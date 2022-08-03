@@ -25,8 +25,14 @@ public class LiveCoopController {
     }
 
     @GetMapping("/LiveCoop/{LiveCoopId}")
-    public ResponseEntity<LiveCoopResponse.GetLiveCoop> getPost(@PathVariable int LiveCoopId) {
+    public ResponseEntity<LiveCoopResponse.GetLiveCoop> getLiveCoop(@PathVariable int LiveCoopId) {
         LiveCoopResponse.GetLiveCoop response = liveCoopService.getLiveCoop(LiveCoopId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/LiveCoop/list")
+    public ResponseEntity<LiveCoopResponse.GetLiveCoops> getLiveCoops() {
+        LiveCoopResponse.GetLiveCoops response = liveCoopService.getLiveCoops();
         return ResponseEntity.ok().body(response);
     }
 

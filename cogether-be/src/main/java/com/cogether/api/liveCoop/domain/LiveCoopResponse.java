@@ -3,6 +3,8 @@ package com.cogether.api.liveCoop.domain;
 import lombok.*;
 
 import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class LiveCoopResponse {
 
@@ -28,11 +30,11 @@ public class LiveCoopResponse {
     public static class GetLiveCoop {
         private int id;
         private int userId;
-        private String userNickname;
+        private String userName;
         private String userImgUrl;
-        private int memNum;
+        private int maxMemNum;
         private int nowMemNum;
-        private LocalTime duration;
+        private int duration;
         private String title;
         private String content;
         private boolean inProgress;
@@ -41,9 +43,9 @@ public class LiveCoopResponse {
             return GetLiveCoop.builder()
                     .id(liveCoop.getId())
                     .userId(liveCoop.getUser().getId())
-                    .userNickname(liveCoop.getUser().getNickname())
+                    .userName(liveCoop.getUser().getNickname())
                     .userImgUrl(liveCoop.getUser().getImgUrl())
-                    .memNum(liveCoop.getMemNum())
+                    .maxMemNum(liveCoop.getMemNum())
                     .nowMemNum(liveCoop.getNowMemNum())
                     .duration(liveCoop.getDuration())
                     .title(liveCoop.getTitle())
@@ -52,5 +54,50 @@ public class LiveCoopResponse {
                     .build();
         }
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class GetLiveCoopInfo {
+        private int id;
+        private int userId;
+        private String userName;
+        private String userImgUrl;
+        private int maxMemNum;
+        private int nowMemNum;
+        private int duration;
+        private String title;
+        private boolean inProgress;
+
+        public static GetLiveCoopInfo build(LiveCoop liveCoop) {
+            return GetLiveCoopInfo.builder()
+                    .id(liveCoop.getId())
+                    .userId(liveCoop.getUser().getId())
+                    .userName(liveCoop.getUser().getNickname())
+                    .userImgUrl(liveCoop.getUser().getImgUrl())
+                    .maxMemNum(liveCoop.getMemNum())
+                    .nowMemNum(liveCoop.getNowMemNum())
+                    .duration(liveCoop.getDuration())
+                    .title(liveCoop.getTitle())
+                    .inProgress(liveCoop.isInProgress())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class GetLiveCoops {
+        private List<GetLiveCoopInfo> liveCoops;
+
+        public static LiveCoopResponse.GetLiveCoops build(List<LiveCoop> liveCoops) {
+            return LiveCoopResponse.GetLiveCoops.builder()
+                    .liveCoops(liveCoops.stream().map(LiveCoopResponse.GetLiveCoopInfo::build).collect(Collectors.toList()))
+                    .build();
+        }
+    }
+
 
 }

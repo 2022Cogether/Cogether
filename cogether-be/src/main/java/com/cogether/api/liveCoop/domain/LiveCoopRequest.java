@@ -12,8 +12,8 @@ public class LiveCoopRequest {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Create {
         private int userId;
-        private int memNum;
-        private LocalTime duration;
+        private int maxMemNum;
+        private int duration;
         private String title;
         private String content;
         private boolean inProgress;
@@ -21,7 +21,7 @@ public class LiveCoopRequest {
         public LiveCoop toEntity(User user) {
             return LiveCoop.builder()
                     .user(user)
-                    .memNum(memNum)
+                    .memNum(maxMemNum)
                     .nowMemNum(1)
                     .duration(duration)
                     .title(title)
@@ -36,8 +36,8 @@ public class LiveCoopRequest {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Update {
         private int id;
-        private int memNum;
-        private LocalTime duration;
+        private int maxMemNum;
+        private int duration;
         private String title;
         private String content;
         private boolean inProgress;
