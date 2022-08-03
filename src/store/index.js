@@ -2,6 +2,7 @@ import { createStore } from "vuex";
 import { challengeStore } from "@/store/modules/challengeStore.js";
 import { chatStore } from "@/store/modules/chatStore.js";
 import { signStore } from "@/store/modules/signStore.js";
+import { tilStore } from "@/store/modules/tilStore.js";
 
 export default createStore({
   state: {},
@@ -12,5 +13,6 @@ export default createStore({
     challengeStore,
     chatStore,
     signStore,
+    tilStore,
   },
 });

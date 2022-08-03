@@ -21,13 +21,13 @@ import { ref } from "vue";
 import { useStore } from "vuex";
 
 export default {
-  name: "WithDrawal",
+  name: "SignOut",
   setup() {
     const store = useStore();
     const password = ref("");
 
     function withdraw() {
-      store.dispatch("withdrawal", password.value);
+      store.dispatch("logout", password.value);
     }
 
     return { password, withdraw };

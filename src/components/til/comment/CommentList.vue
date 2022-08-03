@@ -1,7 +1,28 @@
-<template><div></div></template>
+<template>
+  <div class="comment-list">
+    <comment-item
+      v-for="comment in comments"
+      :comment="comment"
+      :key="comment.pk"
+    >
+    </comment-item>
+  </div>
+</template>
 
 <script>
-export default {};
+import CommentItem from "@/components/til/comment/CommentItem.vue";
+
+export default {
+  name: "CommentList",
+  components: {
+    CommentItem,
+  },
+  props: { comments: Array },
+};
 </script>
 
-<style></style>
+<style>
+.comment-list {
+  border: 1px solid blue;
+}
+</style>
