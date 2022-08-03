@@ -62,7 +62,7 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           //취소하고 이동할 페이지
-          router.push({ name: "RecruitMain" });
+          router.push({ name: "mainview" });
         }
       });
     }
