@@ -17,6 +17,29 @@ const routes = [
     component: MainView,
   },
   {
+    path: "/til",
+    name: "TilView",
+    component: () => import("@/views/TilView.vue"),
+    redirect: "/",
+    children: [
+      {
+        path: "create",
+        name: "TilCreate",
+        component: () => import("@/components/til/TilCreate.vue"),
+      },
+      {
+        path: ":tilPK",
+        name: "TilDetail",
+        component: () => import("@/components/til/TilDetail.vue"),
+      },
+      {
+        path: ":tilPK/edit",
+        name: "TilUpdate",
+        component: () => import("@/components/til/TilUpdate.vue"),
+      },
+    ],
+  },
+  {
     path: "/sign",
     name: "signview",
     component: () => import("@/views/SignView.vue"),
@@ -43,9 +66,9 @@ const routes = [
         component: () => import("@/components/sign/PassWordChange.vue"),
       },
       {
-        path: "withdrawal",
-        name: "WithDrawal",
-        component: () => import("@/components/sign/WithDrawal.vue"),
+        path: "signout",
+        name: "SignOut",
+        component: () => import("@/components/sign/SignOut.vue"),
       },
     ],
   },
