@@ -46,6 +46,10 @@ export const signStore = {
     getSkillSet(state) {
       return state.skillSet;
     },
+    // 인증키로 헤더 세팅
+    authHeader(state) {
+      return { Authorization: `token ${state.token}` };
+    },
   },
   mutations: {
     SET_BOOLEANVALUE: (state) => {
@@ -139,9 +143,9 @@ export const signStore = {
     //   }
     // },
 
-    takePassWord({ commit }, email) {
+    takePassWord({ commit, getters }, email) {
       axios
-        .post("/sign/passwordseek/", email)
+        .post("/sign/passwordseek/", email, { headers: getters.authHeader })
         .then((res) => {
           if (res.data.status === 200) {
             alert("비밀번호를 성공적으로 보냈습니다!");
@@ -174,7 +178,7 @@ export const signStore = {
 
     takeSkillSet({ commit }) {
       axios
-        .post("/sign/skill/")
+        .get("/sign/skill/")
         .then((res) => {
           if (res.data.status === 200) {
             alert("스킬 셋을 성공적으로 받았습니다!");
@@ -202,7 +206,7 @@ export const signStore = {
 
     checkNickName({ commit }, nickName) {
       axios
-        .post("/sign/nickname/", nickName)
+        .get("/sign/nickname/", nickName)
         .then((res) => {
           if (res.data.status === 200) {
             alert("가능한 닉네임입니다!");
@@ -236,7 +240,7 @@ export const signStore = {
 
     checkEmail({ commit }, email) {
       axios
-        .post("/sign/email/", email)
+        .get("/sign/email/", email)
         .then((res) => {
           if (res.data.status === 200) {
             alert("가능한 이메일입니다!");
@@ -268,9 +272,9 @@ export const signStore = {
         });
     },
 
-    changePassword({ commit }, pwSet) {
+    changePassword({ commit, getters }, pwSet) {
       axios
-        .post("/sign/passwordchange/", pwSet)
+        .post("/sign/passwordchange/", pwSet, { headers: getters.authHeader })
         .then((res) => {
           if (res.data.status === 200) {
             alert("비밀번호를 변경했습니다!");
@@ -295,9 +299,9 @@ export const signStore = {
         });
     },
 
-    logout({ commit }, password) {
+    logout({ commit, getters }, password) {
       axios
-        .post("/sign/signout/", password)
+        .post("/sign/signout/", password, { headers: getters.authHeader })
         .then((res) => {
           if (res.data.status === 200) {
             alert("회원 탈퇴되었습니다!");

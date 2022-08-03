@@ -167,7 +167,8 @@
           </label>
         </div>
       </div>
-      <span class="like-count"> 좋아요 0개 </span>
+      <!-- 좋아요 갯수를 Til로 가늠하는 방법 필요 -->
+      <span class="like-count" @click="sendLike"> 좋아요 0개 </span>
       <!-- <div v-if="bookmarked" class="bookmark">
         <font-awesome-icon
           @click="bookmarkCheck"
@@ -205,8 +206,13 @@ export default {
 
     const tilContent = getters.value.getTilContent;
 
+    const sendLike = () => {
+      store.dispatch("likeTil", tilContent.pk);
+    };
+
     return {
       tilContent,
+      sendLike,
     };
   },
 };

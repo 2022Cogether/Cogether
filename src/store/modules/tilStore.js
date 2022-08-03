@@ -22,9 +22,9 @@ export const tilStore = {
     },
   },
   actions: {
-    removeTil({ commit }, tilPk) {
+    removeTil({ commit }, tilPK) {
       axios
-        .delete("/til/delete/", tilPk)
+        .delete("/til/delete/", tilPK)
         .then((res) => {
           if (res.status === 200) {
             alert("삭제 성공!");
@@ -46,6 +46,13 @@ export const tilStore = {
           }
           alert(errorMessage.join("\r\n"));
         });
+    },
+
+    likeTil({ commit, getters }, tilPk) {
+      axios
+        .post("/til/like/", tilPk, { headers: getters.authHeader })
+        .then((res) => commit("SET_TIL", res.data))
+        .catch((err) => console.error(err.response));
     },
   },
 };
