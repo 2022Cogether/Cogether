@@ -54,5 +54,12 @@ export const tilStore = {
         .then((res) => commit("SET_TIL", res.data))
         .catch((err) => console.error(err.response));
     },
+
+    createComment({ commit, getters }, payload) {
+      axios
+        .post("/til/commment/create", payload, { headers: getters.authHeader })
+        .then((res) => commit("SET_TIL", res.data))
+        .catch((err) => console.error(err.response));
+    },
   },
 };

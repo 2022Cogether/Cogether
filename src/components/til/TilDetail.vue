@@ -188,31 +188,53 @@
       </div>
     </div>
     <!-- 댓글 입력창 -->
+    <comment-list :comments="tilContent.comments"></comment-list>
     <div class="til-comment">
-      <input type="text" class="til-comment-input" />
+      <input
+        type="text"
+        class="til-comment-input"
+        @submit.prevent="onSubmit"
+        v-model="commentContent"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import { computed } from "vue";
+import CommentList from "@/components/til/comment/CommentList.vue";
+
+import { computed, ref } from "vue";
 import { useStore } from "vuex";
 
 export default {
   name: "TilDetail",
+  component: {
+    CommentList,
+  },
   setup() {
     const store = useStore();
     const getters = computed(() => store.getters);
 
     const tilContent = getters.value.getTilContent;
+    const commentContent = ref("");
 
     const sendLike = () => {
       store.dispatch("likeTil", tilContent.pk);
     };
 
+    const onSubmit = () => {
+      const payload = {
+        tilPK: tilContent.pk,
+        content: commentContent,
+      };
+      store.dispatch("createComment", payload);
+    };
+
     return {
       tilContent,
+      commentContent,
       sendLike,
+      onSubmit,
     };
   },
 };
