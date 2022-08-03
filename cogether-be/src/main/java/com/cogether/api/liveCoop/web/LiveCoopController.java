@@ -36,12 +36,12 @@ public class LiveCoopController {
         return ResponseEntity.ok().body(response);
     }
 
-    @PutMapping("/LiveCoop")
-    @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<LiveCoopResponse.OnlyId> update(@RequestBody LiveCoopRequest.Update request) {
-        LiveCoopResponse.OnlyId response = liveCoopService.update(request);
-        return ResponseEntity.ok().body(response);
-    }
+//    @PutMapping("/LiveCoop")
+//    @ResponseStatus(value = HttpStatus.OK)
+//    public ResponseEntity<LiveCoopResponse.OnlyId> update(@RequestBody LiveCoopRequest.Update request) {
+//        LiveCoopResponse.OnlyId response = liveCoopService.update(request);
+//        return ResponseEntity.ok().body(response);
+//    }
 
     @DeleteMapping("/LiveCoop/{LiveCoopId}")
     @ResponseStatus(value = HttpStatus.OK)

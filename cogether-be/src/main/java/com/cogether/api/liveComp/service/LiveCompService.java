@@ -23,30 +23,19 @@ public class LiveCompService {
 
     private final UserRepository userRepository;
 
+    // TODO: 시간 수정
+    private  final LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.of(0, 0, 0));//어제
+    private  final LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
+
     public LiveCompResponse.OnlyId update(LiveCompRequest.Update request) {
-        User user = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
-        LiveComp liveComp = findLiveComp(user);
-        liveComp.setTotalTime(liveComp.getTotalTime().plusHours(request.getPlusTime().getHour()).plusMinutes(request.getPlusTime().getMinute()).plusSeconds(request.getPlusTime().getSecond()));
+        LiveComp liveComp = findLiveComp(request.getUserId());
+        liveComp.setTotalTime(liveComp.getTotalTime() + 1);
         LiveComp savedLiveComp = liveCompRepository.save(liveComp);
         return LiveCompResponse.OnlyId.build(savedLiveComp);
     }
 
     public LiveCompResponse.GetLiveComp getLiveComp(int userId) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        // TODO: 시간 수정
-        LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.of(0, 0, 0));//어제
-        LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
-
-        int isExist = liveCompRepository.countAllByCreatedAtBetweenAndUser(startDatetime, endDatetime, user);
-
-        LiveComp liveComp;
-
-        if (isExist == 0) {
-            liveComp = LiveComp.toEntity(user, LocalTime.of(0, 0, 0));
-            liveCompRepository.save(liveComp);
-        }
-
-        liveComp = findLiveComp(user);
+        LiveComp liveComp = findLiveComp(userId);
 
         // TODO : 랭킹 구현
         int ranking = 0;
@@ -54,10 +43,16 @@ public class LiveCompService {
         return LiveCompResponse.GetLiveComp.build(liveComp, ranking, cnt);
     }
 
-    public LiveComp findLiveComp(User user){
-        // TODO: 시간 수정
-        LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.of(0, 0, 0));//어제
-        LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
+    public LiveComp findLiveComp(int userId){
+
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        int isExist = liveCompRepository.countAllByCreatedAtBetweenAndUser(startDatetime, endDatetime, user);
+        LiveComp liveComp;
+
+        if (isExist == 0) {
+            liveComp = LiveComp.toEntity(user);
+            liveCompRepository.save(liveComp);
+        }
 
         return liveCompRepository.findByCreatedAtBetweenAndUser(startDatetime, endDatetime, user);
     }
