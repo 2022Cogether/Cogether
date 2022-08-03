@@ -1,5 +1,45 @@
 package com.cogether.api.liveCoop.domain;
 
-public class LiveCoopRequest {
+import com.cogether.api.user.dto.User;
+import lombok.*;
 
+import java.time.LocalTime;
+
+public class LiveCoopRequest {
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Create {
+        private int userId;
+        private int memNum;
+        private LocalTime duration;
+        private String title;
+        private String content;
+        private boolean inProgress;
+
+        public LiveCoop toEntity(User user) {
+            return LiveCoop.builder()
+                    .user(user)
+                    .memNum(memNum)
+                    .nowMemNum(1)
+                    .duration(duration)
+                    .title(title)
+                    .content(content)
+                    .inProgress(inProgress)
+                    .build();
+        }
+    }
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Update {
+        private int id;
+        private int memNum;
+        private LocalTime duration;
+        private String title;
+        private String content;
+        private boolean inProgress;
+    }
 }
