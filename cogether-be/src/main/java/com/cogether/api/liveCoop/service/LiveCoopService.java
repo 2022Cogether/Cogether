@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,9 +39,15 @@ public class LiveCoopService {
         return LiveCoopResponse.GetLiveCoop.build(liveCoop);
     }
 
+    public LiveCoopResponse.GetLiveCoops getLiveCoops() {
+        // TODO : 목록 개수 제한
+        List<LiveCoop> liveCoops = liveCoopRepository.findAll();
+        return LiveCoopResponse.GetLiveCoops.build(liveCoops);
+    }
+
     public LiveCoopResponse.OnlyId update(LiveCoopRequest.Update request) {
         LiveCoop liveCoop = liveCoopRepository.findById(request.getId()).orElseThrow(LiveCoopNotFoundException::new);
-        liveCoop.setMemNum(request.getMemNum());
+        liveCoop.setMemNum(request.getMaxMemNum());
         liveCoop.setDuration(request.getDuration());
         liveCoop.setTitle(request.getTitle());
         liveCoop.setContent(request.getContent());

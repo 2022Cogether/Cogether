@@ -48,6 +48,7 @@ public class LiveCompService {
 
         liveComp = findLiveComp(user);
 
+        // TODO : 랭킹 구현
         int ranking = 0;
         int cnt = userRepository.countAllByCompIsTrue();
         return LiveCompResponse.GetLiveComp.build(liveComp, ranking, cnt);

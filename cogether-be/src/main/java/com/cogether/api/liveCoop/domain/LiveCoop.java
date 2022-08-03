@@ -32,8 +32,7 @@ public class LiveCoop {
     private int nowMemNum;
 
     @Column(name = "duration", nullable = false)
-    @JsonFormat(pattern = "HH:mm", shape = JsonFormat.Shape.STRING)
-    private LocalTime duration;
+    private int duration;
 
     @Column(name = "title", length = 100, nullable = false)
     private String title;
