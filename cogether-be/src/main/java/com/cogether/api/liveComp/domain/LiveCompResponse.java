@@ -13,11 +13,11 @@ public class LiveCompResponse {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class OnlyId {
-        private long id;
+        private int liveCompId;
 
         public static LiveCompResponse.OnlyId build(LiveComp liveComp) {
             return LiveCompResponse.OnlyId.builder()
-                    .id(liveComp.getId())
+                    .liveCompId(liveComp.getId())
                     .build();
         }
     }
@@ -28,15 +28,15 @@ public class LiveCompResponse {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class GetLiveComp {
-        private int id;
+        private int liveCompId;
         private int userId;
-        private LocalTime totalTime;
+        private int totalTime;
         private int ranking;
         private int cnt;
 
         public static LiveCompResponse.GetLiveComp build(LiveComp liveComp, int ranking, int cnt) {
             return GetLiveComp.builder()
-                    .id(liveComp.getId())
+                    .liveCompId(liveComp.getId())
                     .userId(liveComp.getUser().getId())
                     .totalTime(liveComp.getTotalTime())
                     .ranking(ranking)
