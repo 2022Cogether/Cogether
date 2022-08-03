@@ -27,6 +27,16 @@ const routes = [
         name: "TilCreate",
         component: () => import("@/components/til/TilCreate.vue"),
       },
+      {
+        path: ":tilPK",
+        name: "TilDetail",
+        component: () => import("@/components/til/TilDetail.vue"),
+      },
+      {
+        path: ":tilPK/edit",
+        name: "TilUpdate",
+        component: () => import("@/components/til/TilUpdate.vue"),
+      },
     ],
   },
   {
