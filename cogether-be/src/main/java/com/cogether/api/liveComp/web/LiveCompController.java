@@ -19,7 +19,7 @@ public class LiveCompController {
 
     private final LiveCompService liveCompService;
 
-    @PutMapping("/liveComp")
+    @PatchMapping("/liveComp")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<LiveCompResponse.OnlyId> update(@RequestBody LiveCompRequest.Update request) {
         LiveCompResponse.OnlyId response = liveCompService.update(request);
