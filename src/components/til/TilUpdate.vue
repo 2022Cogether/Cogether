@@ -4,9 +4,10 @@
       <font-awesome-icon class="icon-exit fs-3" icon="fa-solid fa-xmark" />
     </button>
   </div>
-  <form @submit.prevent="modifyTil">
-    <div class="box-register">
-      <button type="submit" class="btn-register">수정</button>
+  <div>
+    <div class="box-register d-flex justify-content-between">
+      <button type="submit" class="btn-delete" @click="deleteTil">삭제</button>
+      <button type="submit" class="btn-modify" @click="modifyTil">수정</button>
     </div>
     <div class="box-input1">
       <input
@@ -33,7 +34,7 @@
         accept="image/*"
       />
     </div>
-  </form>
+  </div>
 </template>
 
 <script>
@@ -72,6 +73,24 @@ export default {
         }
       });
     }
+    function deleteTil() {
+      Swal.fire({
+        title: "삭제하시겠습니까?",
+        text: "삭제한 글은 복구할 수 없습니다.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "확인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          //취소하고 이동할 페이지
+          store.dispatch("removeTil", tilContent.pk); // pk??
+        }
+      });
+    }
+
     function imgupload(e) {
       let imageFile = e.target.files; // 업로드한 파일의 데이터가 여기있음.
       console.log(imageFile);
@@ -87,7 +106,7 @@ export default {
       //함수 작동 내용
     }
 
-    return { exit, modifyTil, imgupload, tilContent, state };
+    return { exit, modifyTil, imgupload, tilContent, deleteTil, state };
   },
   components: {},
 };
@@ -129,12 +148,22 @@ export default {
   float: right;
 }
 
-.btn-register {
+.btn-modify {
   width: 100px;
   height: 30px;
   border: 0px;
   float: right;
   background-color: #dbdbdb;
+  border-radius: 5px;
+}
+
+.btn-delete {
+  width: 100px;
+  height: 30px;
+  border: 0px;
+  float: left;
+  background-color: #ff0303;
+  color: white;
   border-radius: 5px;
 }
 

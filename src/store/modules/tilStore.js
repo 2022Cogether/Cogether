@@ -1,5 +1,5 @@
-// import axios from "axios";
-// import router from "@/router";
+import axios from "axios";
+import router from "@/router";
 
 export const tilStore = {
   state: {
@@ -17,9 +17,35 @@ export const tilStore = {
     },
   },
   mutations: {
-    SET_BOOLEANVALUE: (state, payload) => {
+    SET_TIL: (state, payload) => {
       state.tilContent = payload;
     },
   },
-  actions: {},
+  actions: {
+    removeTil({ commit }, tilPk) {
+      axios
+        .delete("/til/delete/", tilPk)
+        .then((res) => {
+          if (res.status === 200) {
+            alert("삭제 성공!");
+            commit("SET_TIL", {});
+            router.push({ name: "mainview" });
+          }
+        })
+        .catch((err) => {
+          alert("삭제 실패??");
+          console.error(err.response.data);
+          commit("SET_AUTH_ERROR", err.response.data);
+          const errorMessage = [];
+          for (const errors in err.response.data) {
+            for (const error of err.response.data[errors]) {
+              if (!errorMessage.includes(error)) {
+                errorMessage.push(error);
+              }
+            }
+          }
+          alert(errorMessage.join("\r\n"));
+        });
+    },
+  },
 };
