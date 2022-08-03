@@ -1,36 +1,13 @@
 <template>
-  <li
-    class="list-group-item d-flex"
-    data-bs-toggle="modal"
-    data-bs-target="#personDetailInfo"
-  >
+  <li class="list-group-item d-flex">
     <div class="profile-img-box">
       <img class="profile-img" src="@/assets/logo.png" alt="profile image" />
     </div>
-    <div class="user-info flex-fill">
-      <h3>꼬꼬</h3>
-      <p>나 좀 데려가...</p>
-    </div>
-    <div class="align-self-end">
-      <div class="tech-icon-box">
-        <img
-          class="tech-icon"
-          src="@/assets/devicon/javascript-original.svg"
-          alt="TechStack Icons"
-        />
-      </div>
-    </div>
-    <font-awesome-icon icon="fa-regular fa-bookmark" class="bookmark-icon" />
-  </li>
-  <li
-    class="list-group-item d-flex"
-    data-bs-toggle="modal"
-    data-bs-target="#personDetailInfo"
-  >
-    <div class="profile-img-box">
-      <img class="profile-img" src="@/assets/logo.png" alt="profile image" />
-    </div>
-    <div class="user-info flex-fill">
+    <div
+      class="user-info flex-fill"
+      data-bs-toggle="modal"
+      data-bs-target="#personDetailInfo"
+    >
       <h3>꼬꼬</h3>
       <p>나 좀 데려가...</p>
     </div>
@@ -43,30 +20,20 @@
         />
       </div>
     </div>
-    <font-awesome-icon icon="fa-regular fa-bookmark" class="bookmark-icon" />
-  </li>
-  <li
-    class="list-group-item d-flex"
-    data-bs-toggle="modal"
-    data-bs-target="#personDetailInfo"
-  >
-    <div class="profile-img-box">
-      <img class="profile-img" src="@/assets/logo.png" alt="profile image" />
+    <div v-if="bookmark" class="bookmark-icon-box">
+      <font-awesome-icon
+        @click="bookmarkCheck"
+        icon="fa-solid fa-bookmark"
+        class="bookmark-icon-solid"
+      />
     </div>
-    <div class="user-info flex-fill">
-      <h3>꼬꼬</h3>
-      <p>나 좀 데려가...</p>
+    <div v-else>
+      <font-awesome-icon
+        @click="bookmarkCheck"
+        icon="fa-regular fa-bookmark"
+        class="bookmark-icon"
+      />
     </div>
-    <div class="align-self-end">
-      <div class="tech-icon-box">
-        <img
-          class="tech-icon"
-          src="@/assets/devicon/javascript-original.svg"
-          alt="TechStack Icons"
-        />
-      </div>
-    </div>
-    <font-awesome-icon icon="fa-regular fa-bookmark" class="bookmark-icon" />
   </li>
 
   <!-- Modal -->
@@ -80,10 +47,20 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header justify-content-space-evenly">
-          <font-awesome-icon
-            icon="fa-regular fa-bookmark"
-            class="bookmark-icon"
-          />
+          <div v-if="bookmark" class="bookmark-icon-box">
+            <font-awesome-icon
+              @click="bookmarkCheck"
+              icon="fa-solid fa-bookmark"
+              class="bookmark-icon-solid"
+            />
+          </div>
+          <div v-else>
+            <font-awesome-icon
+              @click="bookmarkCheck"
+              icon="fa-regular fa-bookmark"
+              class="bookmark-icon"
+            />
+          </div>
           <div class="d-flex align-items-center">
             <div class="dropdown">
               <button
@@ -132,7 +109,11 @@
             </p>
           </div>
         </div>
-        <div class="modal-footer justify-content-center">
+        <div
+          class="modal-footer justify-content-center"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
           <button type="button" class="btn">
             <font-awesome-icon icon="fa-solid fa-comments" />
             DM 보내기
@@ -144,7 +125,22 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      bookmark: false,
+    };
+  },
+  methods: {
+    bookmarkCheck() {
+      if (this.bookmark) {
+        this.bookmark = false;
+      } else {
+        this.bookmark = true;
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -199,6 +195,12 @@ p {
 .bookmark-icon {
   font-size: 25px;
   padding: 0 10px;
+}
+
+.bookmark-icon-solid {
+  font-size: 25px;
+  padding: 0 10px;
+  color: #e63946;
 }
 
 li {
@@ -259,5 +261,9 @@ li {
 .modal-footer > .btn {
   background-color: #2a9d8f;
   color: #fff;
+}
+
+.list-group-item:hover {
+  background-color: #c1ebe6;
 }
 </style>

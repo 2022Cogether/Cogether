@@ -26,6 +26,7 @@
             class="fs-3 til-dropdown-icon"
           />
         </a>
+        <!-- 나중에 사용자가 게시글 작성자일 경우만 뜨게 설정하기 -->
         <div class="dropdown-menu">
           <a class="dropdown-item" href="">내용 수정</a>
           <a class="dropdown-item" href="">삭제</a>

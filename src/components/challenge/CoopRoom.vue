@@ -1,7 +1,7 @@
 <template>
   <div class="room-nav">
-    <span class="title fs-2">백준 10000번 풀기</span>
-    <span class="time fs-5 mx-3">00:00 남음</span>
+    <span class="title fs-2"> {{ room.title }}</span>
+    <span class="time fs-5 mx-3">{{ room.time }}분 남음</span>
     <span class="tab1">
       <button class="btn-time-expand">연장</button>
       <button class="btn-exit">종료</button>
@@ -54,20 +54,48 @@
 </template>
 
 <script>
-import { computed, reactive } from "vue";
+import router from "@/router";
+import { computed, reactive, ref } from "vue";
 import { useStore } from "vuex";
+import testaxios from "@/api/testaxios";
 export default {
   name: "CoopRoom",
   setup() {
     const state = reactive({
       isExpand: true,
     });
+    const room = reactive({
+      id: null,
+      host: null,
+      title: null,
+      time: null,
+      curPeople: null,
+      maxPeople: null,
+      isStarted: null,
+      content: null,
+    });
+    const roomNo = ref(router.currentRoute.value.params.roomNo);
+    testaxios
+      .get(`/room/${roomNo.value}`)
+      .then(({ data }) => {
+        room.id = data.id;
+        room.host = data.host;
+        room.title = data.title;
+        room.time = data.time;
+        room.curPeople = data.curPeople;
+        room.maxPeople = data.maxPeople;
+        room.isStarted = data.isStrated;
+        room.content = data.content;
+      })
+      .catch((e) => {
+        console.log("에러: " + e);
+      });
     const store = useStore();
     const getters = computed(() => store.getters);
     function changeExpand() {
       state.isExpand = !state.isExpand;
     }
-    return { store, getters, state, changeExpand };
+    return { store, getters, state, changeExpand, room };
   },
   components: {},
 };

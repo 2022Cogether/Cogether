@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import MainView from "../views/MainView.vue";
-import SignView from "../views/SignView.vue";
+// import SignView from "../views/SignView.vue";
 import RankingView from "../views/RankingView.vue";
 import ProfileMain from "../components/profile/ProfileMain.vue";
 
@@ -17,9 +17,50 @@ const routes = [
     component: MainView,
   },
   {
-    path: "/signview",
+    path: "/til",
+    name: "TilView",
+    component: () => import("@/views/TilView.vue"),
+    redirect: "/",
+    children: [
+      {
+        path: "create",
+        name: "TilCreate",
+        component: () => import("@/components/til/TilCreate.vue"),
+      },
+    ],
+  },
+  {
+    path: "/sign",
     name: "signview",
-    component: SignView,
+    component: () => import("@/views/SignView.vue"),
+    redirect: "/",
+    children: [
+      {
+        path: "signin",
+        name: "SignIn",
+        component: () => import("@/components/sign/SignIn.vue"),
+      },
+      {
+        path: "signup",
+        name: "SignUp",
+        component: () => import("@/components/sign/SignUp.vue"),
+      },
+      {
+        path: "passwordseek",
+        name: "PassWordSeek",
+        component: () => import("@/components/sign/PassWordSeek.vue"),
+      },
+      {
+        path: "passwordchange",
+        name: "PassWordChange",
+        component: () => import("@/components/sign/PassWordChange.vue"),
+      },
+      {
+        path: "signout",
+        name: "SignOut",
+        component: () => import("@/components/sign/SignOut.vue"),
+      },
+    ],
   },
   {
     path: "/challenge",
@@ -43,7 +84,7 @@ const routes = [
         component: () => import("@/components/challenge/CoopCreate.vue"),
       },
       {
-        path: "room",
+        path: "room/:roomNo",
         name: "CoopRoom",
         component: () => import("@/components/challenge/CoopRoom.vue"),
       },
@@ -61,9 +102,24 @@ const routes = [
         component: () => import("@/components/recruit/RecruitMain.vue"),
       },
       {
+        path: "study",
+        name: "StudyList",
+        component: () => import("@/components/recruit/StudyList.vue"),
+      },
+      {
         path: "create",
         name: "RecruitCreate",
         component: () => import("@/components/recruit/RecruitCreate.vue"),
+      },
+      {
+        path: "personcreate",
+        name: "PersonCreate",
+        component: () => import("@/components/recruit/PersonCreate.vue"),
+      },
+      {
+        path: "studycreate",
+        name: "StudyCreate",
+        component: () => import("@/components/recruit/StudyCreate.vue"),
       },
     ],
   },

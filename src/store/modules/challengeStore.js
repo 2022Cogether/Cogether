@@ -1,4 +1,5 @@
 import testaxios from "@/api/testaxios";
+// import axios from "axios";
 
 export const challengeStore = {
   state: {
@@ -6,7 +7,11 @@ export const challengeStore = {
     isCompeteStarted: false,
     competeStartTime: null,
     isCoopRoomExpand: true,
-    test: [], //test 나중에 삭제
+    competeTotal: "01:30:00",
+    competeRank: 7,
+    competePeople: 100,
+    rooms: [],
+    roomtId: null,
   },
   getters: {
     //변수 호출
@@ -19,9 +24,20 @@ export const challengeStore = {
     getIsCoopRoomExpand(state) {
       return state.isCoopRoomExpand;
     },
-    //test 나중에 삭제
-    gettest(state) {
-      return state.test;
+    getRooms(state) {
+      return state.rooms;
+    },
+    getCompeteTotal(state) {
+      return state.competeTotal;
+    },
+    getCompeteRank(state) {
+      return state.competeRank;
+    },
+    getCompetePeople(state) {
+      return state.competePeople;
+    },
+    getRoomId(state) {
+      return state.roomId;
     },
   },
   mutations: {
@@ -35,19 +51,86 @@ export const challengeStore = {
     SET_IS_COOP_ROOM_EXPAND(state, isCoopRoomExpand) {
       state.isCoopRoomExpand = isCoopRoomExpand;
     },
-    //test 나중에 삭제
-    Mutest(state, test) {
-      state.test = test;
+    SET_ROOMS(state, rooms) {
+      state.rooms = rooms;
+    },
+    SET_ROOM_ID(state, roomId) {
+      state.roomId = roomId;
     },
   },
   actions: {
-    //test 나중에 삭제
-    test({ commit }, param) {
+    //경쟁 시간 보내기 (구현 예정)
+    sendCompeteTime({ commit }, param) {
+      console.log(commit);
+      console.log(param);
+    },
+    //협력방만들기 (구현 예정)
+    createCoopRoom({ commit }, param) {
+      const room = {
+        host: "test",
+        title: param.title,
+        time: parseInt(param.hour) * 60 + parseInt(param.min),
+        curPeople: 1,
+        maxPeople: param.personnel,
+        isStarted: false,
+        content: param.content,
+      };
       testaxios
-        .get("/" + param)
+        .post("/livecoop", room)
         .then(({ data }) => {
-          console.log("성공:" + commit);
-          commit("Mutest", data);
+          console.log(commit);
+          console.log(data);
+        })
+        .catch((e) => {
+          console.log("에러: " + e);
+        });
+    },
+    updateCoopRoom({ commit }, param) {
+      const room = {
+        host: "test",
+        title: param.title,
+        time: parseInt(param.hour) * 60 + parseInt(param.min),
+        curPeople: 1,
+        maxPeople: param.personnel,
+        isStarted: false,
+        content: param.content,
+      };
+      testaxios
+        .put("/livecoop", room)
+        .then(({ data }) => {
+          console.log(commit);
+          console.log(data);
+        })
+        .catch((e) => {
+          console.log("에러: " + e);
+        });
+    },
+    deleteCoopRoom({ commit }, id) {
+      testaxios
+        .delete("/livecoop/" + id)
+        .then(({ data }) => {
+          console.log(commit);
+          console.log(data);
+        })
+        .catch((e) => {
+          console.log("에러: " + e);
+        });
+    },
+    getCoopRooms({ commit }) {
+      testaxios
+        .get("livecoop/list")
+        .then(({ data }) => {
+          commit("SET_ROOMS", data);
+        })
+        .catch((e) => {
+          console.log("에러: " + e);
+        });
+    },
+    getDetailCoopRooms({ commit }, id) {
+      testaxios
+        .get("livecoop/" + id)
+        .then(({ data }) => {
+          commit("SET_ROOMS", data);
         })
         .catch((e) => {
           console.log("에러: " + e);

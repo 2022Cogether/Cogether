@@ -1,10 +1,6 @@
 <template>
   <!-- 경쟁모드 -->
   <div class="compete">
-    <button @click="test">actions 및 axios 실행</button>
-    <!--test 나중에 삭제-->
-    <button @click="test2">실행확인</button>
-    <!--test 나중에 삭제-->
     <div class="compete-nav-name fs-3">경쟁모드</div>
     <div class="compete-box round">
       <div class="row">
@@ -23,9 +19,13 @@
           </div>
         </div>
         <div class="col-3 text-end">
-          <div class="compete-total">Total</div>
-          <div class="compete-ranking">현재 순위</div>
-          <div class="compete-people">참여인원</div>
+          <div class="compete-total">Total: {{ getters.getCompeteTotal }}</div>
+          <div class="compete-ranking">
+            Rank: {{ getters.getCompeteRank }}등
+          </div>
+          <div class="compete-people">
+            참여인원: {{ getters.getCompetePeople }}
+          </div>
         </div>
       </div>
     </div>
@@ -35,8 +35,8 @@
     <div class="coop-nav">
       <div class="coop-nav-name fs-3">협력모드</div>
       <div class="searchbar">
-        <input class="input-search" type="text" />
-        <button class="btn-search">
+        <input class="input-search" type="text" v-model="state.tempText" />
+        <button class="btn-search" @click="search">
           <font-awesome-icon
             class="searchicon"
             icon=" fa-solid fa-magnifying-glass"
@@ -44,12 +44,12 @@
         </button>
       </div>
       <div class="coop-tabs">
-        <button class="coop-tab">전체</button>
-        <button class="coop-tab">시작전</button>
-        <button class="coop-tab">진행중</button>
+        <button class="coop-tab" @click="btnTab1">전체</button>
+        <button class="coop-tab" @click="btnTab2">시작전</button>
+        <button class="coop-tab" @click="btnTab3">진행중</button>
       </div>
     </div>
-    <coop-list />
+    <coop-list :tabState="state.tabState" :searchText="state.searchText" />
   </div>
   <a href="#/challenge/create" class="icon-body">
     <font-awesome-icon icon="fa-solid fa-gamepad" class="gamepad-icon" />
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { computed } from "vue";
+import { computed, reactive } from "vue";
 import { useStore } from "vuex";
 import CoopList from "@/components/challenge/CoopList.vue";
 export default {
@@ -65,35 +65,57 @@ export default {
   setup() {
     const store = useStore();
     const getters = computed(() => store.getters);
+    const state = reactive({
+      tabState: 1,
+      tempText: null,
+      searchText: null,
+    });
     function now() {
       let today = new Date();
-      store.commit("SET_COMPETE_START_TIME", today);
       today.setHours(today.getHours() + 9);
+      store.commit("SET_COMPETE_START_TIME", today);
       return today.toISOString().substring(11, 19);
     }
     function btnCompete() {
       if (getters.value.getIsCompeteStarted == true) {
-        let today = new Date();
-        today = new Date(today - getters.value.getCompeteStartTime);
-        today.setHours(today.getHours() - 15);
-        console.log(today.toISOString().substring(0, 19));
+        let end = new Date();
+        end.setHours(end.getHours() + 9);
+        let start = getters.value.getCompeteStartTime;
+        end = new Date(end - start);
+        store.dispatch("sendCompeteTime", end.toISOString().substring(0, 19));
       }
-
       store.commit(
         "SET_IS_COMPETE_STARTED",
         !getters.value.getIsCompeteStarted
       );
     }
-    //test 나중에 삭제
-    function test() {
-      store.dispatch("test", 10);
-    }
-    //test 나중에 삭제
-    function test2() {
-      alert("JsonDate 10개:\n" + getters.value.gettest);
+    function btnTab1() {
+      state.tabState = 1;
     }
 
-    return { store, getters, btnCompete, now, test, test2 };
+    function btnTab2() {
+      state.tabState = 2;
+    }
+
+    function btnTab3() {
+      state.tabState = 3;
+    }
+
+    function search() {
+      state.searchText = state.tempText;
+    }
+
+    return {
+      store,
+      getters,
+      btnCompete,
+      now,
+      state,
+      btnTab1,
+      btnTab2,
+      btnTab3,
+      search,
+    };
   },
   components: {
     CoopList,
@@ -125,6 +147,11 @@ button {
   margin: 1%;
 }
 
+.coop-tab:hover {
+  background-color: #2a9d8f;
+  color: white;
+}
+
 .compete-box {
   position: relative;
   height: 150px;
@@ -152,6 +179,7 @@ button {
 
 .btn-compete-box:hover {
   background-color: #2a9d8f;
+  color: white;
 }
 
 .compete-nav-name {

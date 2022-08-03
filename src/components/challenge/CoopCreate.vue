@@ -20,7 +20,7 @@
       <div class="input-group mb-3">
         <label class="input-group-text" for="personnel">인원</label>
         <select v-model="state.personnel" class="form-select" id="personnel">
-          <option selected>선택</option>
+          <option selected disabled>선택</option>
           <option value="2">2명</option>
           <option value="3">3명</option>
           <option value="4">4명</option>
@@ -31,7 +31,7 @@
       <div class="input-group mb-3">
         <label class="input-group-text" for="coop-time-hour">시간</label>
         <select v-model="state.hour" class="form-select">
-          <option selected>시</option>
+          <option selected disabled>시</option>
           <option value="0">0</option>
           <option value="1">1</option>
           <option value="2">2</option>
@@ -46,7 +46,7 @@
           <option value="11">11</option>
         </select>
         <select v-model="state.min" class="form-select">
-          <option selected>분</option>
+          <option selected disabled>분</option>
           <option value="0">0</option>
           <option value="10">10</option>
           <option value="20">20</option>
@@ -67,9 +67,11 @@
 import Swal from "sweetalert2";
 import router from "@/router";
 import { reactive } from "vue";
+import { useStore } from "vuex";
 export default {
   name: "CoopCreate",
   setup() {
+    const store = useStore();
     const state = reactive({
       //사용할 변수들 선언
       title: null,
@@ -96,13 +98,35 @@ export default {
       });
     }
     function createCoop() {
-      //확인
-      console.log(state.title);
-      console.log(state.personnel);
-      console.log(state.hour);
-      console.log(state.min);
-      console.log(state.content);
-      //함수 작동 내용
+      if (
+        !state.content ||
+        !state.hour ||
+        !state.min ||
+        !state.personnel ||
+        !state.title
+      ) {
+        return;
+      }
+      //actions axios 보내기
+      store.dispatch("createCoopRoom", state);
+      //sweetalert
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "bottom-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener("mouseenter", Swal.stopTimer);
+          toast.addEventListener("mouseleave", Swal.resumeTimer);
+        },
+      });
+      Toast.fire({
+        icon: "success",
+        title: "방이 생성되었습니다.",
+      });
+      //페이지 이동
+      router.push({ name: "ChallengeMain" });
     }
 
     return { exit, createCoop, state };

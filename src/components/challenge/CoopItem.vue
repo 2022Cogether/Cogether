@@ -3,20 +3,27 @@
     <a href="#"
       ><img class="coop-profile" src="@/assets/logo.png" alt="로고"
     /></a>
-    <span class="coop-title fs-5">방제목</span>
-    <span class="coop-time fs-6">분</span>
+    <span class="coop-title fs-5">{{ room.title }}</span>
+    <span class="coop-time fs-6">{{ room.time }}분</span>
     <div class="coop-bottom">
-      <span class="coop-people">/ 명</span>
+      <span class="coop-people"
+        >{{ room.curPeople }} / {{ room.maxPeople }} 명</span
+      >
       <span class="icon-people"></span>
     </div>
     <button
+      v-if="!room.isStarted"
+      id="1"
+      @click="openModal"
       class="btn-coop-enter"
       data-bs-toggle="modal"
       data-bs-target="#coopRoomDetail"
     >
       입장
     </button>
+    <button v-if="room.isStarted" class="btn-coop-enter">진행중</button>
   </div>
+
   <!-- Modal -->
   <div
     class="modal fade"
@@ -38,36 +45,38 @@
           </div>
         </div>
         <div class="modal-body">
-          <div class="profile-detail-box d-flex justify-content-center">
-            <img src="@/assets/logo.png" alt="profile image" />
-            <div class="profile-detail-info">
-              <h5 class="modal-title" id="personDetailInfoLabel">꼬꼬</h5>
-              <p>나 좀 데려가...</p>
-              <div class="tech-icon-box">
-                <img
-                  class="tech-icon"
-                  src="@/assets/devicon/javascript-original.svg"
-                  alt="tech icon"
-                />
+          <div class="room-detail-box d-flex">
+            <div class="image-box">
+              <img src="@/assets/logo.png" alt="profile image" />
+            </div>
+            <div class="room-detail-info">
+              <h5 class="modal-title" id="coopRoomDetailLabel">
+                <!-- {{ room.host }} -->
+              </h5>
+              <div class="modal-box d-flex">
+                <div class="modal-people">
+                  <!-- {{ room.curPeople }} / {{ room.maxPeople }} 명 -->
+                </div>
+                <!-- <div class="modal-time">{{ room.time }}분</div> -->
+                <div class="modal-time"></div>
               </div>
             </div>
           </div>
-          <div class="user-introduction">
+          <div class="room-content">
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do e
+              <!-- {{ room.content }} -->
             </p>
           </div>
         </div>
         <div class="modal-footer justify-content-center">
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn"
             data-bs-dismiss="modal"
             aria-label="Close"
             @click="btnEnter"
           >
-            <font-awesome-icon icon="fa-solid fa-comments" />
-            DM 보내기
+            참여하기
           </button>
         </div>
       </div>
@@ -77,15 +86,34 @@
 
 <script>
 import router from "@/router";
+import jQuery from "jquery";
+import { useStore } from "vuex";
+import { computed } from "vue";
 export default {
   name: "CoopItem",
-  setup() {
+  props: ["room", "tabState"],
+  setup(props) {
+    const store = useStore();
+    const getters = computed(() => store.getters);
+    const $ = jQuery;
     function btnEnter() {
-      router.push({ name: "CoopRoom" });
+      router.push({
+        name: "CoopRoom",
+        params: { roomNo: getters.value.getRoomId },
+      });
     }
-
-    return { btnEnter };
+    function openModal() {
+      store.commit("SET_ROOM_ID", props.room.id);
+      $(".modal .modal-body .modal-title").html(props.room.title);
+      $(".modal .modal-body .modal-people").html(
+        props.room.curPeople + " / " + props.room.maxPeople
+      );
+      $(".modal .modal-body .modal-time").html(props.room.time + "분");
+      $(".modal .modal-body .room-content p").html(props.room.content);
+    }
+    return { btnEnter, openModal };
   },
+  components: {},
 };
 </script>
 
@@ -137,70 +165,66 @@ export default {
 }
 
 .btn-coop-enter:hover {
-  background-color: #dbdbda;
+  background-color: #2a9d8f;
+  color: white;
 }
-/* ///Modal/// */
-
-.btn-coop-room-dropdown {
-  border: 0px;
-  background-color: transparent;
-}
-.tech-icon-box {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background-color: #d8f3dc;
-  margin-bottom: 7px;
-}
-
-.tech-icon {
-  display: block;
-  width: 13px;
-  height: 13px;
-  margin: 0 auto;
-}
-
-h3 {
-  font-size: 15px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-p {
-  font-size: 12px;
-  margin: 0;
-}
-
-.bookmark-icon {
-  font-size: 25px;
-  padding: 0 10px;
-}
-
-li {
-  padding: 0;
+/* Modal */
+.modal-content {
+  background-color: #eff7f6;
 }
 
 .dropdown > button {
   margin-right: 10px;
 }
 
-.profile-detail-box > img {
-  width: 60px;
-  height: 60px;
-  margin-right: 15px;
-  margin-top: 5px;
+.image-box {
+  width: 75px;
+  height: 75px;
+  border-radius: 70%;
+  overflow: hidden;
+  margin-right: 25px;
+  border: 3px solid gold;
 }
 
-.profile-detail-info > h5 {
+.image-box > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  margin: 5px auto;
+}
+
+.room-detail-box {
+  margin-left: 80px;
+}
+.room-detail-info {
+  margin-top: 10px;
+}
+
+.room-detail-info > h5 {
   font-size: 20px;
   font-weight: 700;
 }
 
-.user-introduction {
-  background-color: gray;
-  border: 1px solid white;
-  border-radius: 10px;
+.room-content {
+  /* background-color: #2a9d8f; */
+  /* border: 1px solid white; */
+  /* border-radius: 10px; */
   width: 300px;
-  margin: 30px auto 10px;
+  margin: 20px auto 10px;
+  padding: 10px;
+  word-wrap: break-word;
+}
+
+.modal-header {
+  border: 0;
+}
+
+.modal-footer > .btn {
+  background-color: #2a9d8f;
+  color: #fff;
+}
+
+.modal-time {
+  margin-left: 30px;
 }
 </style>
