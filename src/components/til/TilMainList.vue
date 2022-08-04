@@ -13,7 +13,7 @@
 
 <script>
 import { useStore } from "vuex";
-import { computed } from "vue";
+import { ref, computed } from "vue";
 import TilMainItem from "@/components/til/TilMainItem.vue";
 import TilDetail from "@/components/til/TilDetail.vue";
 
@@ -29,8 +29,26 @@ export default {
 
     const tilList = getters.value.getTilList;
 
-    const modalNum = getters.value.getOpenTil;
-    const isOpen = modalNum != -1;
+    const modalNum = ref(getters.value.getOpenTil);
+    // watch(
+    //   getters.value.getOpenTil,
+    //   (newValue) => {
+    //     modalNum.value = newValue;
+    //     alert("안 바뀌잖아!!");
+    //   },
+    //   {
+    //     deep: true,
+    //   }
+    // );
+    const unwatch = store.watch(
+      (getters) => {
+        return getters.getOpenTil; // 감시하고 싶은 데이터를 턴
+      },
+      (newVal) => {
+        modalNum.value = newVal;
+      }
+    );
+    const isOpen = ref(modalNum.value != -1);
 
     // created 할 때 한 번 발생하고, 이후로 끝까지 스크롤하면 계속 실행되어 til list에 추가하는 방식
     const getTilList = () => {
@@ -43,7 +61,7 @@ export default {
     eraseTilList();
     getTilList();
 
-    // 참조: https://renatello.com/check-if-a-user-has-scrolled-to-the-bottom-in-vue-js/
+    // 참조: https://renatello.com/check-if-a-user-has-scrolled-to-the-bottom-in-vue-js//
     const scroll = () => {
       window.onscroll = () => {
         let bottomOfWindow =
@@ -68,6 +86,7 @@ export default {
       modalNum,
       isOpen,
       tilList,
+      unwatch,
     };
   },
   mounted() {

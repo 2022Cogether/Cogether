@@ -65,9 +65,9 @@ const routes = [
         component: () => import("@/components/sign/PassWordChange.vue"),
       },
       {
-        path: "signout",
-        name: "SignOut",
-        component: () => import("@/components/sign/SignOut.vue"),
+        path: "resign",
+        name: "ReSign",
+        component: () => import("@/components/sign/ReSign.vue"),
       },
     ],
   },

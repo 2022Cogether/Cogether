@@ -70,10 +70,10 @@ export const tilStore = {
     },
   },
   actions: {
-    fetchOpenTil({ commit, dispatch }, tilNum) {
+    fetchOpenTil({ commit }, tilNum) {
       alert("openTil 번호 변경!" + tilNum);
       commit("SET_OPEN_TIL", tilNum);
-      dispatch("fetchTil", tilNum);
+      // dispatch("fetchTil", tilNum);
     },
 
     fetchTil({ commit }, tilNum) {

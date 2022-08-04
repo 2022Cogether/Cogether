@@ -600,5 +600,6 @@ svg {
   height: 100%;
   align-items: center;
   justify-content: center;
+  background-color: white;
 }
 </style>

@@ -77,47 +77,38 @@ export const signStore = {
     },
 
     login({ commit, dispatch }, credentials) {
-      // 연습용
-      alert("로그인 성공!");
-      const token = credentials.email + credentials.password;
-      dispatch("saveToken", token);
-      dispatch("fetchCurrentUser");
-      commit("RESET_AUTH_ERROR");
-      router.go();
+      axios
+        .post("/api/user/signin/", credentials)
+        .then((res) => {
+          alert("로그인 성공!");
+          const token = res.data.key;
+          dispatch("saveToken", token); // 토큰 갱신
+          dispatch("fetchCurrentUser"); // 현재 사용자 정보 추가(미구현)
+          commit("RESET_AUTH_ERROR"); // 로그인 오류시 발생할 수 있는 오류 정보 수정(미구현)
+          router.go(); // 일단 새로고침하여 메인 페이지 이동하게 해놓음
+        })
+        .catch((err) => {
+          alert("로그인 실패!");
 
-      // 백서버 연결시 위에 거 지우고 아래 거 주석 해제
-      // axios
-      //   .post("/api/user/login/", credentials) // 임의로 잡은 url
-      //   .then((res) => {
-      //     alert("로그인 성공!");
-      //     const token = res.data.key;
-      //     dispatch("saveToken", token); // 토큰 갱신
-      //     dispatch("fetchCurrentUser"); // 현재 사용자 정보 추가(미구현)
-      //     commit("RESET_AUTH_ERROR"); // 로그인 오류시 발생할 수 있는 오류 정보 수정(미구현)
-      //     router.go(); // 일단 새로고침하여 메인 페이지 이동하게 해놓음
-      //   })
-      //   .catch((err) => {
-      //     alert("로그인 실패!");
-
-      //     // 이하 코드는 전 프로젝트에서 쓰던 에러 표현 식
-      //     // 나(박홍철)이 쓴 코드에서 중복되며 최종 버젼에는 삭제할 수 있음
-      //     console.error(err.response.data);
-      //     commit("SET_AUTH_ERROR", err.response.data);
-      //     const errorMessage = [];
-      //     for (const errors in err.response.data) {
-      //       for (const error of err.response.data[errors]) {
-      //         if (!errorMessage.includes(error)) {
-      //           errorMessage.push(error);
-      //         }
-      //       }
-      //     }
-      //     alert(errorMessage.join("\r\n"));
-      //   });
+          // 이하 코드는 전 프로젝트에서 쓰던 에러 표현 식
+          // 나(박홍철)이 쓴 코드에서 중복되며 최종 버젼에는 삭제할 수 있음
+          console.error(err.response.data);
+          commit("SET_AUTH_ERROR", err.response.data);
+          const errorMessage = [];
+          for (const errors in err.response.data) {
+            for (const error of err.response.data[errors]) {
+              if (!errorMessage.includes(error)) {
+                errorMessage.push(error);
+              }
+            }
+          }
+          alert(errorMessage.join("\r\n"));
+        });
     },
 
     register({ commit, dispatch }, credentials) {
       axios
-        .post("/api/user/", credentials)
+        .post("/api/user/signup/", credentials)
         .then((res) => {
           alert("회원가입 성공!");
           const token = res.data.key;
@@ -310,8 +301,8 @@ export const signStore = {
     // 기존 비밀번호도 받아서 이 비밀번호가 유효하면 새 비밀번호로 변경되는 것을 가정함
     changePassword({ commit, getters }, pwSet) {
       axios
-        .post(
-          "/api/user/passwordchange/", // 임의로 잡은 url
+        .put(
+          "/api/user/password/",
           {
             password: pwSet.password,
             newPassword: pwSet.newPassword,
@@ -345,69 +336,52 @@ export const signStore = {
     },
 
     logout({ getters }) {
-      // 연습용
-      console.log(getters.authHeader);
-      localStorage.removeItem("token");
-      alert("성공적으로 logout!");
-      router.push({ name: "mainview" });
-      router.go(); // 새로고침 한 번 더해야 로그인 창이됨...지울 수 있을까
-
-      // 백서버 연결시 위에 거 지우고 아래 거 주석 해제
-      // axios
-      //   .post("/api/user/logout/", { headers: getters.authHeader }) // 임의로 잡은 url
-      //   .then(() => {
-      //     localStorage.removeItem("token");
-      //     alert("성공적으로 logout!");
-      //     router.push({ name: "mainview" });
-      //     router.go();
-      //   })
-      //   .catch((err) => {
-      //     alert("실패적으로 logout!");
-      //     console.error(err.response);
-      //   });
+      axios
+        .post("/api/user/signout/", { headers: getters.authHeader })
+        .then(() => {
+          localStorage.removeItem("token");
+          alert("성공적으로 logout!");
+          router.push({ name: "mainview" });
+          router.go(); // 새로고침 한 번 더해야 로그인 창이됨...지울 수 있을까
+        })
+        .catch((err) => {
+          alert("실패적으로 logout!");
+          console.error(err.response);
+        });
     },
 
-    signOut({ commit, getters }, password) {
-      // 연습용
-      if (password) {
-        alert("회원 탈퇴되었습니다!");
-        localStorage.removeItem("token");
-        router.push({ name: "mainview" });
-        router.go();
-        commit();
-        getters();
-      } else {
-        alert("에러입니다.");
-      }
+    resign({ commit, getters }, password) {
+      axios
+        .put(
+          "/api/user/resign/",
+          { password: password },
+          { headers: getters.authHeader }
+        )
+        .then((res) => {
+          if (res.data.status === 200) {
+            alert("회원 탈퇴되었습니다!");
+            localStorage.removeItem("token");
+            router.push({ name: "mainview" });
+            router.go();
+          } else {
+            alert("200이 아닌 다른 값이 반환되었습니다");
+          }
+        })
+        .catch((err) => {
+          alert("에러입니다.");
 
-      // 백서버 연결시 위에 거 지우고 아래 거 주석 해제
-      // axios
-      //   .post("/api/user/signout/", { password: password }, { headers: getters.authHeader }) // 임의로 잡은 url
-      //   .then((res) => {
-      //     if (res.data.status === 200) {
-      //       alert("회원 탈퇴되었습니다!");
-      //       localStorage.removeItem("token");
-      //       router.push({ name: "mainview" });
-      //       router.go();
-      //     } else {
-      //       alert("200이 아닌 다른 값이 반환되었습니다");
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     alert("에러입니다.");
-
-      //     console.error(err.response.data);
-      //     commit("SET_AUTH_ERROR", err.response.data);
-      //     const errorMessage = [];
-      //     for (const errors in err.response.data) {
-      //       for (const error of err.response.data[errors]) {
-      //         if (!errorMessage.includes(error)) {
-      //           errorMessage.push(error);
-      //         }
-      //       }
-      //     }
-      //     alert(errorMessage.join("\r\n"));
-      //   });
+          console.error(err.response.data);
+          commit("SET_AUTH_ERROR", err.response.data);
+          const errorMessage = [];
+          for (const errors in err.response.data) {
+            for (const error of err.response.data[errors]) {
+              if (!errorMessage.includes(error)) {
+                errorMessage.push(error);
+              }
+            }
+          }
+          alert(errorMessage.join("\r\n"));
+        });
     },
   },
 };
