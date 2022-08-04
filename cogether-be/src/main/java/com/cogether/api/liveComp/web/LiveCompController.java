@@ -1,7 +1,5 @@
 package com.cogether.api.liveComp.web;
 
-import com.cogether.api.hunting.domain.HuntingRequest;
-import com.cogether.api.hunting.domain.HuntingResponse;
 import com.cogether.api.liveComp.domain.LiveCompRequest;
 import com.cogether.api.liveComp.domain.LiveCompResponse;
 import com.cogether.api.liveComp.service.LiveCompService;
@@ -10,8 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-
+@CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/api")
