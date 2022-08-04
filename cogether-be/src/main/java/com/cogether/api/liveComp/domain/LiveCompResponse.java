@@ -1,10 +1,6 @@
 package com.cogether.api.liveComp.domain;
 
-import com.cogether.api.hunting.domain.HuntingResponse;
 import lombok.*;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class LiveCompResponse {
 
