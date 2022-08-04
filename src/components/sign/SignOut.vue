@@ -27,7 +27,7 @@ export default {
     const password = ref("");
 
     function withdraw() {
-      store.dispatch("logout", password.value);
+      store.dispatch("signOut", password.value);
     }
 
     return { password, withdraw };

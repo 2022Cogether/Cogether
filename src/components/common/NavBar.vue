@@ -44,25 +44,23 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import router from "@/router";
+import { computed } from "vue";
+import { useStore } from "vuex";
 
 export default {
   name: "NavBar",
   setup() {
-    const isLoggedIn = ref(true);
-    // 아마 실제로는 store의 getters로 가져올 변수로 바뀔 듯
+    const store = useStore();
+    const getters = computed(() => store.getters);
+
+    const isLoggedIn = getters.value.isLoggedIn;
 
     function checkOkay() {
       console.log("CLICKED!!");
     }
 
     const logout = () => {
-      const a = ref(true);
-      // axios 사용
-      if (a.value) {
-        router.push("/");
-      }
+      store.dispatch("logout");
     };
 
     return { isLoggedIn, checkOkay, logout };
