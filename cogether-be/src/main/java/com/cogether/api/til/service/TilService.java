@@ -124,4 +124,22 @@ public class TilService {
         return TilResponse.TilList.build(tilList);
     }
 
+    public TilResponse.TilList getMyTilList(int userId){
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        List<TilResponse.TilAll> tilList = new ArrayList<>();
+        List<Til> list = tilRepository.findAllByUserOrderByCreatedAtDesc(user);
+        for(int i = 0 ; i < list.size() ; i++){
+            Til til = list.get(i);
+            List<TilImg> imgList = tilImgRepository.findAllByTil(til);
+            List<TilComment> commentList = tilCommentRepository.findAllByTil(til);
+            int likeCnt = tilLikeRepository.countAllByTil(til);
+            int check = tilLikeRepository.countAllByTilAndUser(til, user);
+            boolean isLike = false;
+            if(check == 1){
+                isLike = true;
+            }
+            tilList.add(TilResponse.TilAll.build(til, imgList, commentList, likeCnt, isLike));
+        }
+        return TilResponse.TilList.build(tilList);
+    }
 }
