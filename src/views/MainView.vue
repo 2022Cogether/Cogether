@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="isLoggedIn">
     <!-- 검색바 -->
     <div class="search-bar-block">
       <div class="search-bar">
@@ -15,14 +15,30 @@
     <!-- TilMainList -->
     <TilMainList />
   </div>
+  <div v-else>
+    <SignIn />
+  </div>
 </template>
 <script>
 import TilMainList from "@/components/til/TilMainList.vue";
+import SignIn from "@/components/sign/SignIn.vue";
+
+import { computed } from "vue";
+import { useStore } from "vuex";
 
 export default {
   name: "MainView",
   components: {
     TilMainList,
+    SignIn,
+  },
+  setup() {
+    const store = useStore();
+    const getters = computed(() => store.getters);
+
+    const isLoggedIn = getters.value.isLoggedIn;
+
+    return { isLoggedIn };
   },
 };
 </script>

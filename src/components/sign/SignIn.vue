@@ -36,7 +36,9 @@
           <p>비밀번호를 잊으셨나요?</p>
         </div>
         <div>
-          <router-link to="/sign/password"> 비밀번호 찾기 </router-link>
+          <router-link :to="{ name: 'PassWordSeek' }">
+            비밀번호 찾기
+          </router-link>
         </div>
       </div>
     </div>
@@ -77,12 +79,6 @@ export default {
       };
 
       $store.dispatch("login", credentials);
-
-      if ($store.getters["isLoggedIn"]) {
-        confirm("로그인 했습니다!");
-      } else {
-        confirm("로그인 실패했습니다!");
-      }
     }
 
     return { email, password, goLogin };
