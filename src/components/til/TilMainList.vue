@@ -34,7 +34,6 @@ export default {
     //   getters.value.getOpenTil,
     //   (newValue) => {
     //     modalNum.value = newValue;
-    //     alert("안 바뀌잖아!!");
     //   },
     //   {
     //     deep: true,
