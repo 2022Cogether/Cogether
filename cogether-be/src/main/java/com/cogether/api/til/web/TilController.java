@@ -78,4 +78,12 @@ public class TilController {
         return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping(path = "/til/search")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<TilResponse.TilList> getSearchTil(@RequestParam String keyword, @RequestParam int userId){
+        System.out.println(keyword);
+        TilResponse.TilList response = tilService.getSearchTil(keyword, userId);
+        return ResponseEntity.ok().body(response);
+    }
+
 }
