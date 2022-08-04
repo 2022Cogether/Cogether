@@ -28,10 +28,10 @@ public class ChatMember {
     @JoinColumn(name = "room_id")
     private ChatRoom chatRoom;
 
-    @Column(name = "last_read_chat_id", nullable = false)
+    @Column(name = "last_read_chat_id")
     private int lastReadChatId;
 
-    @Column(name = "created_at", updatable = false, insertable = false)
+    @Column(name = "created_at", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
 }
