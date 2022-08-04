@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface TilRepository extends JpaRepository<Til, Integer> {
-    List<Til> findAllByContentContainingIgnoreCaseOrTitleContainingIgnoreCaseOrderByCreatedAtDesc(String keyword, String keyword2);
+    List<Til> findAllByContentContainingIgnoreCaseOrTitleContainingIgnoreCaseOrUser_NicknameContainingIgnoreCaseOrderByCreatedAtDesc(String keyword, String keyword2, String keyword3);
     List<Til> findAllByUserOrderByCreatedAtDesc(User user);
-    List<Til> findAllByTitleContainingIgnoreCaseAndUserOrderByCreatedAt(String keyword, User user);
+    List<Til> findAllByTitleContainingIgnoreCaseAndUserOrderByCreatedAtDesc(String keyword, User user);
 }
