@@ -1,5 +1,7 @@
 <template>
   <div class="room-nav">
+    <!-- <button @click="timerStart">타이머</button> -->
+    <!-- <div></div> -->
     <span class="title fs-2"> {{ room.title }}</span>
     <span class="time fs-5 mx-3">{{ room.time }}분 남음</span>
     <span class="tab1">
@@ -95,6 +97,11 @@ export default {
     function changeExpand() {
       state.isExpand = !state.isExpand;
     }
+
+    // var Timer = ref(null);
+    // var TimeCounter = ref(180);
+    // var TimerStr = ref("03:00")l
+    // function timerStart() {}
     return { store, getters, state, changeExpand, room };
   },
   components: {},
