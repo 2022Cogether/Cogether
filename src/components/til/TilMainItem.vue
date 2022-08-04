@@ -5,8 +5,9 @@
       <div class="profile-body">
         <font-awesome-icon class="fs-3" icon="fa-solid fa-user" />
       </div>
-      <div class="til-title">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+      <!-- 클릭하면 detail 모달이 나오게 할 수 있을까? -->
+      <div class="til-title" @click="setNum">
+        {{ til.title }}
       </div>
       <div class="til-info">
         <span class="til-user">삐약이</span>
@@ -181,10 +182,7 @@
         />
       </div> -->
       <div class="til-content">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos
-        recusandae, laborum numquam ab voluptatibus veritatis fuga. Quibusdam
-        quasi illum dolorem aut nostrum fugiat cumque blanditiis aspernatur ad
-        numquam, ab voluptatibus.
+        {{ til.content }}
       </div>
     </div>
     <!-- 댓글 입력창 -->
@@ -195,10 +193,28 @@
 </template>
 
 <script>
+import { useStore } from "vuex";
+
 export default {
   name: "TilMainItem",
+  props: {
+    til: Object,
+  },
+  setup(props) {
+    const store = useStore();
+
+    const setNum = () => {
+      const tilNum = props.til.pk;
+      store.dispatch("fetchOpenTil", tilNum);
+    };
+
+    return {
+      setNum,
+    };
+  },
   data() {
     return {
+      onDetailModal: false,
       bookmarked: 0,
     };
   },
@@ -211,9 +227,6 @@ export default {
         this.bookmarked = 1;
       }
     },
-  },
-  props: {
-    idx: Number,
   },
 };
 </script>
@@ -283,6 +296,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .til-info {
