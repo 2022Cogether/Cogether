@@ -1,6 +1,6 @@
 <template>
   <div class="til-list">
-    <TilMainItem v-for="(item, idx) in 20" :key="idx" v-bind:idx="idx" />
+    <TilMainItem v-for="til in tilList" :key="til.pk" :til="til" />
   </div>
   <TilDetail v-if="isOpen" />
   <!-- 나중에 TIL create창으로 URL 추가 -->
@@ -26,6 +26,8 @@ export default {
   setup() {
     const store = useStore();
     const getters = computed(() => store.getters);
+
+    const tilList = getters.value.getTilList;
 
     const modalNum = getters.value.getOpenTil;
     const isOpen = modalNum != -1;
@@ -65,6 +67,7 @@ export default {
       scroll,
       modalNum,
       isOpen,
+      tilList,
     };
   },
   mounted() {

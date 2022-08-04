@@ -6,6 +6,7 @@ export const tilStore = {
     openTil: -1, // 모달창으로 디테일이 열릴 til의 번호, -1이면 안 열린 상태!
     tilList: [
       {
+        pk: 10,
         created_at: "2022-03-31",
         title: "til 마지막글",
         content:
@@ -13,6 +14,7 @@ export const tilStore = {
         user_id: 1004,
       },
       {
+        pk: 100,
         created_at: "2022-03-30",
         title: "til 마지막에서 두번째 글",
         content:
@@ -20,6 +22,7 @@ export const tilStore = {
         user_id: 1004,
       },
       {
+        pk: 1000,
         created_at: "2022-03-29",
         title: "til 마지막에서 세번째 글",
         content:
@@ -28,6 +31,7 @@ export const tilStore = {
       },
     ],
     tilContent: {
+      pk: 5,
       created_at: "2020-02-29",
       title: "til 1번글",
       content:

@@ -7,7 +7,7 @@
       </div>
       <!-- 클릭하면 detail 모달이 나오게 할 수 있을까? -->
       <div class="til-title" @click="setNum">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        {{ til.title }}
       </div>
       <div class="til-info">
         <span class="til-user">삐약이</span>
@@ -182,10 +182,7 @@
         />
       </div> -->
       <div class="til-content">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos
-        recusandae, laborum numquam ab voluptatibus veritatis fuga. Quibusdam
-        quasi illum dolorem aut nostrum fugiat cumque blanditiis aspernatur ad
-        numquam, ab voluptatibus.
+        {{ til.content }}
       </div>
     </div>
     <!-- 댓글 입력창 -->
@@ -200,11 +197,14 @@ import { useStore } from "vuex";
 
 export default {
   name: "TilMainItem",
-  setup() {
+  props: {
+    til: Object,
+  },
+  setup(props) {
     const store = useStore();
 
-    const setNum = (tilNum) => {
-      tilNum = 1;
+    const setNum = () => {
+      const tilNum = props.til.pk;
       store.dispatch("fetchOpenTil", tilNum);
     };
 
@@ -227,9 +227,6 @@ export default {
         this.bookmarked = 1;
       }
     },
-  },
-  props: {
-    idx: Number,
   },
 };
 </script>
