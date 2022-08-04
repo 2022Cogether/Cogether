@@ -12,7 +12,7 @@
             <button class="btn-compete-box fs-6" @click="btnCompete">GO</button>
           </div>
           <div v-else>
-            <div class="compete-box-content fs-6">시작시간: {{ now() }}</div>
+            <div class="compete-box-content fs-6">시작시간 {{ now() }}</div>
             <button class="btn-compete-box fs-6" @click="btnCompete">
               STOP
             </button>
@@ -76,19 +76,30 @@ export default {
       store.commit("SET_COMPETE_START_TIME", today);
       return today.toISOString().substring(11, 19);
     }
+
     function btnCompete() {
-      if (getters.value.getIsCompeteStarted == true) {
-        let end = new Date();
-        end.setHours(end.getHours() + 9);
-        let start = getters.value.getCompeteStartTime;
-        end = new Date(end - start);
-        store.dispatch("sendCompeteTime", end.toISOString().substring(0, 19));
+      if (!getters.value.getCompeteInterval) {
+        //interval 중복 실행 방지
+        store.commit("SET_COMPETE_INTERVAL", true);
+        const interval = setInterval(() => {
+          if (getters.value.getIsCompeteStarted) {
+            //compete 켜진 상태면 보내기
+            store.dispatch("sendCompete");
+          }
+          if (!getters.value.getIsCompeteStarted) {
+            //compete 꺼진 상태면 보내지 않기
+            store.commit("SET_COMPETE_INTERVAL", false); //interval상태값 끄기
+            clearInterval(interval);
+          }
+        }, 60000);
       }
+      //compete상태 전환
       store.commit(
         "SET_IS_COMPETE_STARTED",
         !getters.value.getIsCompeteStarted
       );
     }
+
     function btnTab1() {
       state.tabState = 1;
     }

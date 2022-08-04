@@ -7,11 +7,13 @@ export const challengeStore = {
     isCompeteStarted: false,
     competeStartTime: null,
     isCoopRoomExpand: true,
-    competeTotal: "01:30:00",
+    competeTotal: 60,
     competeRank: 7,
     competePeople: 100,
     rooms: [],
     roomtId: null,
+    timeStarted: false,
+    competedInterval: false,
   },
   getters: {
     //변수 호출
@@ -39,6 +41,12 @@ export const challengeStore = {
     getRoomId(state) {
       return state.roomId;
     },
+    getTimeStarted(state) {
+      return state.timeStarted;
+    },
+    getCompeteInterval(state) {
+      return state.competedInterval;
+    },
   },
   mutations: {
     //변수값 수정
@@ -56,6 +64,15 @@ export const challengeStore = {
     },
     SET_ROOM_ID(state, roomId) {
       state.roomId = roomId;
+    },
+    SET_COMPETE_RANK(state, a) {
+      state.competeRank = a;
+    },
+    SET_TIME_STARTED(state, a) {
+      state.timeStarted = a;
+    },
+    SET_COMPETE_INTERVAL(state, competedInterval) {
+      state.competedInterval = competedInterval;
     },
   },
   actions: {
@@ -135,6 +152,9 @@ export const challengeStore = {
         .catch((e) => {
           console.log("에러: " + e);
         });
+    },
+    sendCompete() {
+      console.log("1");
     },
   },
   modules: {},
