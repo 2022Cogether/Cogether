@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class TilService {
@@ -86,6 +88,21 @@ public class TilService {
         TilComment tilComment = tilCommentRepository.findById(tilCommentId).orElseThrow(TilCommentNotFoundException::new);
         tilCommentRepository.deleteById(tilCommentId);
         return TilResponse.OnlyCommentId.build(tilComment);
+    }
+
+    public TilResponse.TilAll getTilDetail(int tilId, int userId){
+        System.out.println("하이");
+        Til til = tilRepository.findById(tilId).orElseThrow(TilNotFoundException::new);
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        List<TilImg> imgList = tilImgRepository.findAllByTil(til);
+        List<TilComment> commentList = tilCommentRepository.findAllByTil(til);
+        int likeCnt = tilLikeRepository.countAllByTil(til);
+        int check = tilLikeRepository.countAllByTilAndUser(til, user);
+        boolean isLike = false;
+        if(check == 1) {
+            isLike = true;
+        }
+        return TilResponse.TilAll.build(til, imgList, commentList, likeCnt, isLike);
     }
 
 }

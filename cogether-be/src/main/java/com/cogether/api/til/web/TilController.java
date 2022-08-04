@@ -71,4 +71,11 @@ public class TilController {
         return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping(path = "/til")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<TilResponse.TilAll> getTilDetail(@RequestParam int tilId, @RequestParam int userId){
+        TilResponse.TilAll response = tilService.getTilDetail(tilId, userId);
+        return ResponseEntity.ok().body(response);
+    }
+
 }

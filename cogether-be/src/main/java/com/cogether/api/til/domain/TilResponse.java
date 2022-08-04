@@ -111,7 +111,7 @@ public class TilResponse {
         private int likeCnt;
         private boolean isLike;
 
-        public static TilResponse.TilAll build(Til til, TilLike tilLike, List<TilImg> tilImg, List<TilComment> tilComment, int likeCnt, boolean isLike){
+        public static TilResponse.TilAll build(Til til, List<TilImg> tilImg, List<TilComment> tilComment, int likeCnt, boolean isLike){
             return TilAll.builder()
                     .tilId(til.getId())
                     .tilTitle(til.getTitle())
@@ -128,19 +128,17 @@ public class TilResponse {
         }
     }
 
-//    @Getter
-//    @Builder
-//    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-//    @AllArgsConstructor(access = AccessLevel.PRIVATE)
-//    public static class MyTilList{
-//
-//    }
-//
-//    @Getter
-//    @Builder
-//    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-//    @AllArgsConstructor(access = AccessLevel.PRIVATE)
-//    public static class MainTilList{
-//
-//    }
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class TilList{
+        private List<TilResponse.TilAll> tilList;
+
+        public static TilResponse.TilList build(List<TilResponse.TilAll> tilAll){
+            return TilList.builder()
+                    .tilList(tilAll)
+                    .build();
+        }
+    }
 }
