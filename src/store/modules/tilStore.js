@@ -3,6 +3,7 @@ import router from "@/router";
 
 export const tilStore = {
   state: {
+    openTil: -1, // 모달창으로 디테일이 열릴 til의 번호, -1이면 안 열린 상태!
     tilList: [
       {
         created_at: "2022-03-31",
@@ -35,6 +36,9 @@ export const tilStore = {
     },
   },
   getters: {
+    getOpenTil(state) {
+      return state.openTil;
+    },
     getTilList(state) {
       return state.tilList;
     },
@@ -46,6 +50,9 @@ export const tilStore = {
     },
   },
   mutations: {
+    SET_OPEN_TIL: (state, tilNum) => {
+      state.openTil = tilNum;
+    },
     // 기존 til 리스트에 새로 받은 리스트를 합침!
     ADD_TIL_LIST: (state, nextlist) => {
       state.tilList = state.tilList.concat(nextlist);
@@ -59,6 +66,26 @@ export const tilStore = {
     },
   },
   actions: {
+    fetchOpenTil({ commit, dispatch }, tilNum) {
+      alert("openTil 번호 변경!" + tilNum);
+      commit("SET_OPEN_TIL", tilNum);
+      dispatch("fetchTil", tilNum);
+    },
+
+    fetchTil({ commit }, tilNum) {
+      axios
+        .get("/api/til/", { tilId: tilNum })
+        .then((res) => {
+          if (res.status === 200) {
+            commit("SET_TIL", res.data);
+          }
+        })
+        .catch((err) => {
+          alert("왜 실패??");
+          console.error(err.response.data);
+        });
+    },
+
     // 스크롤할 때마다 추가로 받는 방식이면 지금까지 받은 til 숫자를 알 필요가 있다고 생각함
     // 그래서 임의로 tilnum을 추가함
     fetchTilList({ commit, getters }, payload) {
@@ -70,7 +97,7 @@ export const tilStore = {
       // 백이랑 연결이 된다면...
       // const tilNum = getters.getTilListLength;
       // axios
-      //   .get("/til/list", { userId: payload.userId, tilnum: tilNum })
+      //   .get("/api/til/list", { userId: payload.userId, tilnum: tilNum })
       //   .then((res) => {
       //     if (res.status === 200) {
       //       alert("새로 받아왔습니다!");

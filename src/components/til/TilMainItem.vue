@@ -1,11 +1,12 @@
 <template>
-  <div class="til-item" @click="showDetail">
+  <div class="til-item">
     <!-- 왼쪽: 프로필, 제목, 글쓴이, 시간/ 오른쪽: 드랍다운 -->
     <div class="til-header">
       <div class="profile-body">
         <font-awesome-icon class="fs-3" icon="fa-solid fa-user" />
       </div>
-      <div class="til-title">
+      <!-- 클릭하면 detail 모달이 나오게 할 수 있을까? -->
+      <div class="til-title" @click="setNum">
         Lorem ipsum dolor sit amet consectetur adipisicing elit.
       </div>
       <div class="til-info">
@@ -192,18 +193,24 @@
       <input type="text" class="til-comment-input" />
     </div>
   </div>
-  <div v-if="onDetailModal">
-    <TilDetail />
-  </div>
 </template>
 
 <script>
-import TilDetail from "@/components/til/TilDetail.vue";
+import { useStore } from "vuex";
 
 export default {
   name: "TilMainItem",
-  components: {
-    TilDetail,
+  setup() {
+    const store = useStore();
+
+    const setNum = (tilNum) => {
+      tilNum = 1;
+      store.dispatch("fetchOpenTil", tilNum);
+    };
+
+    return {
+      setNum,
+    };
   },
   data() {
     return {
@@ -219,9 +226,6 @@ export default {
       } else {
         this.bookmarked = 1;
       }
-    },
-    showDetail() {
-      this.onDetailModal = !this.onDetailModal;
     },
   },
   props: {
@@ -295,6 +299,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .til-info {
