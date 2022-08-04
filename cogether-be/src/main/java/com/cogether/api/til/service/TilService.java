@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -91,7 +92,6 @@ public class TilService {
     }
 
     public TilResponse.TilAll getTilDetail(int tilId, int userId){
-        System.out.println("하이");
         Til til = tilRepository.findById(tilId).orElseThrow(TilNotFoundException::new);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<TilImg> imgList = tilImgRepository.findAllByTil(til);
@@ -103,6 +103,25 @@ public class TilService {
             isLike = true;
         }
         return TilResponse.TilAll.build(til, imgList, commentList, likeCnt, isLike);
+    }
+
+    public TilResponse.TilList getSearchTil(String keyword, int userId){
+        List<TilResponse.TilAll> tilList = new ArrayList<>();
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        List<Til> list = tilRepository.findAllByContentContainingIgnoreCaseOrTitleContainingIgnoreCaseOrderByCreatedAtDesc(keyword, keyword);
+        for(int i = 0 ; i < list.size() ; i++){
+            Til til = list.get(i);
+            List<TilImg> imgList = tilImgRepository.findAllByTil(til);
+            List<TilComment> commentList = tilCommentRepository.findAllByTil(til);
+            int likeCnt = tilLikeRepository.countAllByTil(til);
+            int check = tilLikeRepository.countAllByTilAndUser(til, user);
+            boolean isLike = false;
+            if(check == 1){
+                isLike = true;
+            }
+            tilList.add(TilResponse.TilAll.build(til, imgList, commentList, likeCnt, isLike));
+        }
+        return TilResponse.TilList.build(tilList);
     }
 
 }
