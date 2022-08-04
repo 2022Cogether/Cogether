@@ -128,19 +128,19 @@ public class TilResponse {
         }
     }
 
-    @Getter
-    @Builder
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class MyTilList{
-
-    }
-
-    @Getter
-    @Builder
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class MainTilList{
-
-    }
+//    @Getter
+//    @Builder
+//    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+//    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+//    public static class MyTilList{
+//
+//    }
+//
+//    @Getter
+//    @Builder
+//    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+//    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+//    public static class MainTilList{
+//
+//    }
 }

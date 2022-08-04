@@ -1,5 +1,6 @@
 package com.cogether.api.til.service;
 
+import com.cogether.api.file.service.FileUploadService;
 import com.cogether.api.til.domain.*;
 import com.cogether.api.til.exception.TilCommentNotFoundException;
 import com.cogether.api.til.exception.TilLikeNotFoundException;
@@ -24,13 +25,14 @@ public class TilService {
     private final TilLikeRepository tilLikeRepository;
     private final TilCommentRepository tilCommentRepository;
     private final UserRepository userRepository;
+    private final FileUploadService fileUploadService;
     public TilResponse.OnlyId create(TilRequest.Create_Til create_til, TilRequest.Create_TilImg create_img){
         User user = userRepository.findById(create_til.getUserId()).orElseThrow(UserNotFoundException::new);
         Til til = create_til.toEntity(user);
         Til savedTil = tilRepository.save(til);
         for (int i = 0; i < create_img.getImgList().size(); i++){
-            //TODO: 이미지 url 변환 작업
-            String img_url = "";
+            //TODO: 등록테스트 필요
+            String img_url = fileUploadService.uploadImage(create_img.getImgList().get(i));
             TilImg tilimg = TilImg.toEntity(savedTil, img_url);
             TilImg savedTilImg = tilImgRepository.save(tilimg);
         }
