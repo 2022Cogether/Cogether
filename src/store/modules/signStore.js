@@ -87,7 +87,7 @@ export const signStore = {
 
       // 백서버 연결시 위에 거 지우고 아래 거 주석 해제
       // axios
-      //   .post("/sign/signin/", credentials)
+      //   .post("/api/user/login/", credentials) // 임의로 잡은 url
       //   .then((res) => {
       //     alert("로그인 성공!");
       //     const token = res.data.key;
@@ -117,7 +117,7 @@ export const signStore = {
 
     register({ commit, dispatch }, credentials) {
       axios
-        .post("/sign/signup/", credentials)
+        .post("/api/user/", credentials)
         .then((res) => {
           alert("회원가입 성공!");
           const token = res.data.key;
@@ -172,7 +172,11 @@ export const signStore = {
     // 이메일을 받고 이메일로 가입한 유저가 있으면 새 비밀번호를 보냄
     takePassWord({ commit, getters }, email) {
       axios
-        .post("/sign/passwordseek/", email, { headers: getters.authHeader })
+        .post(
+          "/api/user/password",
+          { email: email },
+          { headers: getters.authHeader }
+        ) // 임의로 잡은 url
         .then((res) => {
           if (res.data.status === 200) {
             alert("비밀번호를 성공적으로 보냈습니다!");
@@ -206,7 +210,7 @@ export const signStore = {
     // 서버에서 Skill Set을 받고 store의 스킬 셋을 업데이트함
     takeSkillSet({ commit }) {
       axios
-        .get("/sign/skill/")
+        .get("/aip/user/skill/") // 임의로 잡은 url
         .then((res) => {
           if (res.data.status === 200) {
             alert("스킬 셋을 성공적으로 받았습니다!");
@@ -235,7 +239,7 @@ export const signStore = {
     // 닉네임 중복 체크
     checkNickName({ commit }, nickName) {
       axios
-        .get("/sign/nickname/", nickName)
+        .get("/api/user/verify", { nickname: nickName })
         .then((res) => {
           if (res.data.status === 200) {
             alert("가능한 닉네임입니다!");
@@ -270,7 +274,7 @@ export const signStore = {
     // 이메일 중복 체크
     checkEmail({ commit }, email) {
       axios
-        .get("/sign/email/", email)
+        .get("/api/user/verify", { email: email })
         .then((res) => {
           if (res.data.status === 200) {
             alert("가능한 이메일입니다!");
@@ -306,7 +310,16 @@ export const signStore = {
     // 기존 비밀번호도 받아서 이 비밀번호가 유효하면 새 비밀번호로 변경되는 것을 가정함
     changePassword({ commit, getters }, pwSet) {
       axios
-        .post("/sign/passwordchange/", pwSet, { headers: getters.authHeader })
+        .post(
+          "/api/user/passwordchange/", // 임의로 잡은 url
+          {
+            password: pwSet.password,
+            newPassword: pwSet.newPassword,
+          },
+          {
+            headers: getters.authHeader,
+          }
+        )
         .then((res) => {
           if (res.data.status === 200) {
             alert("비밀번호를 변경했습니다!");
@@ -341,7 +354,7 @@ export const signStore = {
 
       // 백서버 연결시 위에 거 지우고 아래 거 주석 해제
       // axios
-      //   .post("/sign/logout/", { headers: getters.authHeader })
+      //   .post("/api/user/logout/", { headers: getters.authHeader }) // 임의로 잡은 url
       //   .then(() => {
       //     localStorage.removeItem("token");
       //     alert("성공적으로 logout!");
@@ -369,7 +382,7 @@ export const signStore = {
 
       // 백서버 연결시 위에 거 지우고 아래 거 주석 해제
       // axios
-      //   .post("/sign/signout/", password, { headers: getters.authHeader })
+      //   .post("/api/user/signout/", { password: password }, { headers: getters.authHeader }) // 임의로 잡은 url
       //   .then((res) => {
       //     if (res.data.status === 200) {
       //       alert("회원 탈퇴되었습니다!");

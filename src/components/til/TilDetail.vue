@@ -1,6 +1,6 @@
 <template>
   <!-- TilMainItem.vue에서 많이 가져옴 -->
-  <div class="til-item">
+  <div class="til-item modal">
     <!-- 왼쪽: 프로필, 제목, 글쓴이, 시간/ 오른쪽: 드랍다운 -->
     <div class="til-header">
       <div class="profile-body">
@@ -188,7 +188,7 @@
       </div>
     </div>
     <!-- 댓글 입력창 -->
-    <comment-list :comments="tilContent.comments"></comment-list>
+    <!-- <CommentList :comments="tilContent.comments" /> -->
     <div class="til-comment">
       <input
         type="text"
@@ -201,16 +201,16 @@
 </template>
 
 <script>
-import CommentList from "@/components/til/comment/CommentList.vue";
+// import CommentList from "@/components/til/comment/CommentList.vue";
 
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
 
 export default {
   name: "TilDetail",
-  component: {
-    CommentList,
-  },
+  // component: {
+  //   CommentList,
+  // },
   setup() {
     const store = useStore();
     const getters = computed(() => store.getters);

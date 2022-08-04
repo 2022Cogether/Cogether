@@ -1,5 +1,5 @@
 <template>
-  <div class="til-item">
+  <div class="til-item" @click="showDetail">
     <!-- 왼쪽: 프로필, 제목, 글쓴이, 시간/ 오른쪽: 드랍다운 -->
     <div class="til-header">
       <div class="profile-body">
@@ -192,13 +192,22 @@
       <input type="text" class="til-comment-input" />
     </div>
   </div>
+  <div v-if="onDetailModal">
+    <TilDetail />
+  </div>
 </template>
 
 <script>
+import TilDetail from "@/components/til/TilDetail.vue";
+
 export default {
   name: "TilMainItem",
+  components: {
+    TilDetail,
+  },
   data() {
     return {
+      onDetailModal: false,
       bookmarked: 0,
     };
   },
@@ -210,6 +219,9 @@ export default {
       } else {
         this.bookmarked = 1;
       }
+    },
+    showDetail() {
+      this.onDetailModal = !this.onDetailModal;
     },
   },
   props: {
