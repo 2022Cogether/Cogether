@@ -11,12 +11,54 @@
 </template>
 
 <script>
+import { useStore } from "vuex";
 import TilMainItem from "@/components/til/TilMainItem.vue";
 
 export default {
   name: "TilMainList",
   components: {
     TilMainItem,
+  },
+  setup() {
+    const store = useStore();
+
+    // created 할 때 한 번 발생하고, 이후로 끝까지 스크롤하면 계속 실행되어 til list에 추가하는 방식
+    const getTilList = () => {
+      store.dispatch("fetchTilList", { userId: 1 });
+    };
+    const eraseTilList = () => {
+      store.dispatch("removeTilList");
+    };
+
+    eraseTilList();
+    getTilList();
+
+    // 참조: https://renatello.com/check-if-a-user-has-scrolled-to-the-bottom-in-vue-js/
+    const scroll = () => {
+      window.onscroll = () => {
+        let bottomOfWindow =
+          Math.max(
+            window.pageYOffset,
+            document.documentElement.scrollTop,
+            document.body.scrollTop
+          ) +
+            window.innerHeight >
+          document.documentElement.offsetHeight;
+
+        if (bottomOfWindow) {
+          getTilList();
+        }
+      };
+    };
+
+    return {
+      getTilList,
+      eraseTilList,
+      scroll,
+    };
+  },
+  mounted() {
+    this.scroll();
   },
 };
 </script>
