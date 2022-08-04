@@ -9,4 +9,5 @@ import java.util.List;
 public interface TilRepository extends JpaRepository<Til, Integer> {
     List<Til> findAllByContentContainingIgnoreCaseOrTitleContainingIgnoreCaseOrderByCreatedAtDesc(String keyword, String keyword2);
     List<Til> findAllByUserOrderByCreatedAtDesc(User user);
+    List<Til> findAllByTitleContainingIgnoreCaseAndUserOrderByCreatedAt(String keyword, User user);
 }
