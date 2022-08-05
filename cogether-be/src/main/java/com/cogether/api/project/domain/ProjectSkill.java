@@ -1,6 +1,5 @@
 package com.cogether.api.project.domain;
 
-import com.cogether.api.project.service.ProjectService;
 import lombok.*;
 
 import javax.persistence.*;
