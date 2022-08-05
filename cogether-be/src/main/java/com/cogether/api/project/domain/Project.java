@@ -44,6 +44,8 @@ public class Project {
     @Column(name = "content", length = 2000, nullable = false)
     private String content;
 
-    @Column(name = "created_at", updatable = false, insertable = false)
+    @Column(name = "created_at", updatable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
+
 }

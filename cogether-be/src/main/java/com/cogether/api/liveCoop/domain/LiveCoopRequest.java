@@ -30,16 +30,16 @@ public class LiveCoopRequest {
                     .build();
         }
     }
-    @Getter
-    @Builder
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class Update {
-        private int id;
-        private int maxMemNum;
-        private int duration;
-        private String title;
-        private String content;
-        private boolean inProgress;
-    }
+//    @Getter
+//    @Builder
+//    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+//    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+//    public static class Update {
+//        private int id;
+//        private int maxMemNum;
+//        private int duration;
+//        private String title;
+//        private String content;
+//        private boolean inProgress;
+//    }
 }

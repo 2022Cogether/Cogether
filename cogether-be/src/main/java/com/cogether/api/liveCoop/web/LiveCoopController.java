@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalTime;
 
+@CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/api")
@@ -36,12 +36,12 @@ public class LiveCoopController {
         return ResponseEntity.ok().body(response);
     }
 
-    @PutMapping("/LiveCoop")
-    @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<LiveCoopResponse.OnlyId> update(@RequestBody LiveCoopRequest.Update request) {
-        LiveCoopResponse.OnlyId response = liveCoopService.update(request);
-        return ResponseEntity.ok().body(response);
-    }
+//    @PutMapping("/LiveCoop")
+//    @ResponseStatus(value = HttpStatus.OK)
+//    public ResponseEntity<LiveCoopResponse.OnlyId> update(@RequestBody LiveCoopRequest.Update request) {
+//        LiveCoopResponse.OnlyId response = liveCoopService.update(request);
+//        return ResponseEntity.ok().body(response);
+//    }
 
     @DeleteMapping("/LiveCoop/{LiveCoopId}")
     @ResponseStatus(value = HttpStatus.OK)
