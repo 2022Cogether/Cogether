@@ -1,6 +1,8 @@
 package com.cogether.api.liveCoop.domain;
 
-import com.cogether.api.user.domain.User;
+import com.cogether.api.hunting.domain.Hunting;
+import com.cogether.api.hunting.domain.HuntingRequest;
+import com.cogether.api.user.dto.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,7 +22,7 @@ public class LiveCoopMember {
     @Column(columnDefinition = "INT UNSIGNED", nullable = false)
     private int id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "livecoop_id")
     private LiveCoop liveCoop;
 
@@ -28,6 +30,13 @@ public class LiveCoopMember {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "code", length = 20000)
+    @Column(name = "code", length = 15000)
     private String code;
+
+    public static LiveCoopMember toEntity(User user, LiveCoop liveCoop) {
+        return LiveCoopMember.builder()
+                .user(user)
+                .liveCoop(liveCoop)
+                .build();
+    }
 }
