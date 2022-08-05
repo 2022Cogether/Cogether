@@ -2,6 +2,10 @@ package com.cogether.api.project.domain;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ProjectResponse {
 
     @Getter
@@ -18,4 +22,59 @@ public class ProjectResponse {
         }
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class getProjectSkill{
+        private int projectSkillId;
+        private int projectId;
+        private String skillName;
+
+        public static ProjectResponse.getProjectSkill build(ProjectSkill projectSkill){
+            return getProjectSkill.builder()
+                    .projectSkillId(projectSkill.getId())
+                    .projectId(projectSkill.getProject().getId())
+                    .skillName(projectSkill.getSkillName())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class ProjectAll{
+        private int projectId;
+        private int userId;
+        private String userNickname;
+        private String userImgurl;
+        private LocalDateTime start;
+        private int total_mem;
+        private int cur_mem;
+        private String online;
+        private String title;
+        private String content;
+        private List<ProjectResponse.getProjectSkill> skillList;
+        private LocalDateTime createdAt;
+        private boolean isScrap;
+
+        public static ProjectResponse.ProjectAll build(Project project, List<ProjectSkill> projectSkill, boolean isScrap){
+            return ProjectAll.builder()
+                    .projectId(project.getId())
+                    .userNickname(project.getUser().getNickname())
+                    .userImgurl(project.getUser().getImgUrl())
+                    .userId(project.getUser().getId())
+                    .start(project.getStart())
+                    .total_mem(project.getTotalMem())
+                    .cur_mem(project.getCurMem())
+                    .online(project.getOnline())
+                    .title(project.getTitle())
+                    .content(project.getContent())
+                    .skillList(projectSkill.stream().map(getProjectSkill::build).collect(Collectors.toList()))
+                    .createdAt(project.getCreatedAt())
+                    .isScrap(isScrap)
+                    .build();
+        }
+    }
 }
