@@ -20,9 +20,9 @@ public class Follow {
 
     @ManyToOne
     @JoinColumn(name="from_id")
-    private User user;
+    private User user;  // 내아이디.. . .ㅍ... . ...ㅍ. . . .
 
     @Column(name="to_id",nullable = false)
-    private int toId;
+    private int toId;   // 내가 팔로잉 등록함 ㅋ.ㅋ.ㅋ.ㅋ.ㅋ.ㅋ.
 
 }

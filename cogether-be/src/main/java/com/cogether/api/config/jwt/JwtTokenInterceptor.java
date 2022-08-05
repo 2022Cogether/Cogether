@@ -1,4 +1,4 @@
-package com.cogether.config.jwt;
+package com.cogether.api.config.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

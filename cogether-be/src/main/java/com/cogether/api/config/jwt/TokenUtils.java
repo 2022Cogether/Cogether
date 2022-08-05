@@ -1,4 +1,4 @@
-package com.cogether.config.jwt;
+package com.cogether.api.config.jwt;
 
 import com.cogether.api.user.domain.User;
 import io.jsonwebtoken.*;
@@ -13,8 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class TokenUtils {
 
     private final String SECRET_KEY = "secretKey";
@@ -49,7 +49,7 @@ public class TokenUtils {
         try {
             Claims accessClaims = getClaimsFormToken(token);
             System.out.println("Access expireTime: " + accessClaims.getExpiration());
-            System.out.println("Access userId: " + accessClaims.get("userId"));
+            System.out.println("Access userId: " + accessClaims.get("userEmail"));
             return true;
         } catch (ExpiredJwtException exception) {
             System.out.println("Token Expired UserID : " + exception.getClaims().getSubject());
@@ -66,7 +66,7 @@ public class TokenUtils {
         try {
             Claims accessClaims = getClaimsToken(token);
             System.out.println("Access expireTime: " + accessClaims.getExpiration());
-            System.out.println("Access userId: " + accessClaims.get("userId"));
+            System.out.println("Access userId: " + accessClaims.get("userEmail"));
             return true;
         } catch (ExpiredJwtException exception) {
             System.out.println("Token Expired UserID : " + exception.getClaims().getSubject());

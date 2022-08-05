@@ -9,5 +9,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
     Integer countAllByCompIsTrue();
 
-    Optional<User> findByUserId(String userId);
+    Optional<User> findByEmail(String userEmail);
+
+    Optional<User> findByUserId(int userId);
 }

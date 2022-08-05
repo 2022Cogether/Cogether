@@ -1,4 +1,4 @@
-package com.cogether.config.security;
+package com.cogether.api.config.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -8,7 +8,6 @@ import javax.persistence.*;
 @Entity
 @Table(name="auth")
 @RequiredArgsConstructor
-@Builder
 public class Auth {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +20,13 @@ public class Auth {
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
+
+    @Builder
+    public Auth(String refreshToken, User user) {
+        this.refreshToken = refreshToken;
+        this.user = user;
+    }
+
 
     public void refreshUpdate(String refreshToken) {
         this.refreshToken = refreshToken;

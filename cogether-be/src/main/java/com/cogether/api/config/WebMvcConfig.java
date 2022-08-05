@@ -1,6 +1,6 @@
-package com.cogether.config;
+package com.cogether.api.config;
 
-import com.cogether.config.jwt.JwtTokenInterceptor;
+import com.cogether.api.config.jwt.JwtTokenInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
