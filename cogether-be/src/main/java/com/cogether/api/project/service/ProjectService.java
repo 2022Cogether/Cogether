@@ -4,6 +4,7 @@ import com.cogether.api.project.domain.Project;
 import com.cogether.api.project.domain.ProjectRequest;
 import com.cogether.api.project.domain.ProjectResponse;
 import com.cogether.api.project.domain.ProjectSkill;
+import com.cogether.api.project.exception.ProjectNotFoundException;
 import com.cogether.api.project.repository.ProjectRepository;
 import com.cogether.api.project.repository.ProjectSkillRepository;
 import com.cogether.api.user.dto.User;
@@ -12,6 +13,7 @@ import com.cogether.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,5 +38,16 @@ public class ProjectService {
             projectSkillRepository.save(projectSkill);
         }
         return ProjectResponse.OnlyId.build(savedProject);
+    }
+
+    public ProjectResponse.OnlyId delete(int projectId){
+        Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
+        List<ProjectSkill> list = projectSkillRepository.findAllByProject_Id(projectId);
+        for (int i = 0 ; i<list.size(); i++){
+            ProjectSkill projectSkill = list.get(i);
+            projectSkillRepository.deleteById(projectSkill.getId());
+        }
+        projectRepository.deleteById(projectId);
+        return ProjectResponse.OnlyId.build(project);
     }
 }
