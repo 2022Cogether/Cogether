@@ -1,6 +1,5 @@
 <template>
   <div class="coop-room-box">
-    <div>{{ getters.gettest }}</div>
     <span v-if="tabState == 1">
       <span v-for="(room, i) in getters.getRooms" :key="i">
         <span v-if="searchText == null || room.title.indexOf(searchText) != -1">
@@ -13,8 +12,8 @@
         <span v-if="searchText == null || room.title.indexOf(searchText) != -1">
           <coop-item
             v-if="
-              (tabState == 2 && !room.isStarted) ||
-              (tabState == 3 && room.isStarted)
+              (tabState == 2 && !room.inProgress) ||
+              (tabState == 3 && room.inProgress)
             "
             :room="room"
             :tabState="tabState"
@@ -37,7 +36,7 @@ export default {
   },
   setup() {
     const store = useStore();
-    store.dispatch("getCoopRooms");
+    store.dispatch("getCoopRooms", 1); //테스트
     const getters = computed(() => store.getters);
     return { store, getters };
   },

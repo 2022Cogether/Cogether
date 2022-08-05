@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --port 3030",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
@@ -17,6 +17,7 @@
     "axios": "^0.27.2",
     "bootstrap": "^5.2.0",
     "core-js": "^3.8.3",
+    "cors": "^2.8.5",
     "jquery": "^3.6.0",
     "sass": "^1.53.0",
     "sass-loader": "^10.3.1",

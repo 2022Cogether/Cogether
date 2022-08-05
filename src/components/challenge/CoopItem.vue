@@ -4,15 +4,15 @@
       ><img class="coop-profile" src="@/assets/logo.png" alt="로고"
     /></a>
     <span class="coop-title fs-5">{{ room.title }}</span>
-    <span class="coop-time fs-6">{{ room.time }}분</span>
+    <span class="coop-time fs-6">{{ room.duration }}분</span>
     <div class="coop-bottom">
       <span class="coop-people"
-        >{{ room.curPeople }} / {{ room.maxPeople }} 명</span
+        >{{ room.nowMemNum }} / {{ room.maxMemNum }} 명</span
       >
       <span class="icon-people"></span>
     </div>
     <button
-      v-if="!room.isStarted"
+      v-if="!room.inProgress"
       id="1"
       @click="openModal"
       class="btn-coop-enter"
@@ -21,7 +21,7 @@
     >
       입장
     </button>
-    <button v-if="room.isStarted" class="btn-coop-enter">진행중</button>
+    <button v-if="room.inProgress" class="btn-coop-enter">진행중</button>
   </div>
 
   <!-- Modal -->
@@ -74,7 +74,7 @@
             class="btn"
             data-bs-dismiss="modal"
             aria-label="Close"
-            @click="btnEnter"
+            @click="btnEnter(getters.getRoomId)"
           >
             참여하기
           </button>
@@ -89,6 +89,7 @@ import router from "@/router";
 import jQuery from "jquery";
 import { useStore } from "vuex";
 import { computed } from "vue";
+import Swal from "sweetalert2";
 export default {
   name: "CoopItem",
   props: ["room", "tabState"],
@@ -96,22 +97,40 @@ export default {
     const store = useStore();
     const getters = computed(() => store.getters);
     const $ = jQuery;
-    function btnEnter() {
+    function btnEnter(roomId) {
+      if (getters.value.getEnterCoop) {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "bottom-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener("mouseenter", Swal.stopTimer);
+            toast.addEventListener("mouseleave", Swal.resumeTimer);
+          },
+        });
+        Toast.fire({
+          icon: "error",
+          title: "현재 참여 중인 방이 있습니다.",
+        });
+        return;
+      }
       router.push({
         name: "CoopRoom",
-        params: { roomNo: getters.value.getRoomId },
+        params: { roomNo: roomId },
       });
     }
     function openModal() {
       store.commit("SET_ROOM_ID", props.room.id);
       $(".modal .modal-body .modal-title").html(props.room.title);
       $(".modal .modal-body .modal-people").html(
-        props.room.curPeople + " / " + props.room.maxPeople
+        props.room.nowMemNum + " / " + props.room.maxMemNum
       );
-      $(".modal .modal-body .modal-time").html(props.room.time + "분");
+      $(".modal .modal-body .modal-time").html(props.room.duration + "분");
       $(".modal .modal-body .room-content p").html(props.room.content);
     }
-    return { btnEnter, openModal };
+    return { btnEnter, openModal, getters };
   },
   components: {},
 };
