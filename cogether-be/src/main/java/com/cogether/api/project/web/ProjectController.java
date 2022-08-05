@@ -21,5 +21,12 @@ public class ProjectController {
         return ResponseEntity.ok().body(response);
     }
 
+    @DeleteMapping(path = "/project/{projectId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<ProjectResponse.OnlyId> delete(@PathVariable int projectId){
+        ProjectResponse.OnlyId response = projectService.delete(projectId);
+        return ResponseEntity.ok().body(response);
+    }
+
 
 }
