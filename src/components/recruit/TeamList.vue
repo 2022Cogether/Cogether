@@ -1,6 +1,10 @@
 <template>
   <ul class="list-group list-group-flush">
     <TeamItem />
+    <TeamItem />
+    <TeamItem />
+    <TeamItem />
+    <TeamItem />
   </ul>
 </template>
 
@@ -14,4 +18,13 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.list-group {
+  max-height: 300px;
+  overflow: auto;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+</style>
