@@ -1,12 +1,10 @@
 package com.cogether.api.liveComp.domain;
 
-import com.cogether.api.user.domain.User;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.cogether.api.user.dto.User;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -26,17 +24,16 @@ public class LiveComp {
     private User user;
 
     @Column(name = "total_time", nullable = false)
-    @JsonFormat(pattern = "HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
-    private LocalTime totalTime;
+    private int totalTime;
 
     @Column(name = "created_at", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
 
-    public static LiveComp toEntity(User user, LocalTime totalTime) {
+    public static LiveComp toEntity(User user) {
         return LiveComp.builder()
                 .user(user)
-                .totalTime(totalTime)
+                .totalTime(0)
                 .build();
     }
 }

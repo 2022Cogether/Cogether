@@ -1,5 +1,6 @@
 package com.cogether.api.project.domain;
 
+import com.cogether.api.project.service.ProjectService;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,6 +23,13 @@ public class ProjectSkill {
     @JoinColumn(name = "Project_id")
     private Project project;
 
-    @Column(name = "skill_id", nullable = false)
-    private int skillId;
+    @Column(name = "skill_name", nullable = false)
+    private String skillName;
+
+    public static ProjectSkill toEntity(Project project, String skillName){
+        return ProjectSkill.builder()
+                .project(project)
+                .skillName(skillName)
+                .build();
+    }
 }

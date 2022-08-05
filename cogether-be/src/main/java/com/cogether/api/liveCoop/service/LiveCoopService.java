@@ -45,16 +45,16 @@ public class LiveCoopService {
         return LiveCoopResponse.GetLiveCoops.build(liveCoops);
     }
 
-    public LiveCoopResponse.OnlyId update(LiveCoopRequest.Update request) {
-        LiveCoop liveCoop = liveCoopRepository.findById(request.getId()).orElseThrow(LiveCoopNotFoundException::new);
-        liveCoop.setMemNum(request.getMaxMemNum());
-        liveCoop.setDuration(request.getDuration());
-        liveCoop.setTitle(request.getTitle());
-        liveCoop.setContent(request.getContent());
-        liveCoop.setInProgress(request.isInProgress());
-        LiveCoop savedLiveCoop = liveCoopRepository.save(liveCoop);
-        return LiveCoopResponse.OnlyId.build(savedLiveCoop);
-    }
+//    public LiveCoopResponse.OnlyId update(LiveCoopRequest.Update request) {
+//        LiveCoop liveCoop = liveCoopRepository.findById(request.getId()).orElseThrow(LiveCoopNotFoundException::new);
+//        liveCoop.setMemNum(request.getMaxMemNum());
+//        liveCoop.setDuration(request.getDuration());
+//        liveCoop.setTitle(request.getTitle());
+//        liveCoop.setContent(request.getContent());
+//        liveCoop.setInProgress(request.isInProgress());
+//        LiveCoop savedLiveCoop = liveCoopRepository.save(liveCoop);
+//        return LiveCoopResponse.OnlyId.build(savedLiveCoop);
+//    }
 
     public LiveCoopResponse.OnlyId delete(int id) {
         LiveCoop liveCoop = liveCoopRepository.findById(id).orElseThrow(LiveCoopNotFoundException::new);
