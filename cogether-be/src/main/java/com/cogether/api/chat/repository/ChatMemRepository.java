@@ -3,7 +3,7 @@ package com.cogether.api.chat.repository;
 import com.cogether.api.chat.domain.ChatMember;
 import com.cogether.api.chat.domain.ChatRoom;
 import com.cogether.api.liveCoop.domain.LiveCoop;
-import com.cogether.api.user.dto.User;
+import com.cogether.api.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

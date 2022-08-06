@@ -1,6 +1,6 @@
 package com.cogether.api.til.domain;
 
-import com.cogether.api.user.dto.Follow;
+import com.cogether.api.user.domain.Follow;
 import lombok.*;
 import javax.persistence.*;
 

@@ -190,7 +190,7 @@ public class UserService {
     // 사용자가 팔로잉한 팔로워들 리스트 로드
     public int loadFollowingList(UserRequest userRequest){
 
-        Optional<User> user = userRepository.findByUserId(userRequest.getId()); //userRequest에 대한 식별자 알아오기
+        Optional<User> user = userRepository.findById(userRequest.getId()); //userRequest에 대한 식별자 알아오기
 
         return -1;
     }
@@ -201,7 +201,7 @@ public class UserService {
     @Transactional
     public int registFollowing(UserRequest userRequest){
 
-        Optional<User> user = userRepository.findByUserId(userRequest.getId());
+        Optional<User> user = userRepository.findById(userRequest.getId());
 
         User users = user.get();
 
@@ -219,7 +219,7 @@ public class UserService {
     @Transactional
     public int cancleFollowing(UserRequest userRequest)
     {
-        Optional<User> user = userRepository.findByUserId(userRequest.getId());
+        Optional<User> user = userRepository.findById(userRequest.getId());
 
         User users = user.get();
 

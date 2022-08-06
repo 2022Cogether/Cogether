@@ -2,7 +2,7 @@ package com.cogether.api.til.repository;
 
 import com.cogether.api.til.domain.Til;
 import com.cogether.api.til.domain.TilLike;
-import com.cogether.api.user.dto.User;
+import com.cogether.api.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TilLikeRepository extends JpaRepository<TilLike, Integer> {
