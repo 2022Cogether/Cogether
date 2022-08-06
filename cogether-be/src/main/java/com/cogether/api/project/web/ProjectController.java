@@ -28,5 +28,11 @@ public class ProjectController {
         return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping(path = "/project")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<ProjectResponse.ProjectAll> getProjectDetail(@RequestParam int projectId, @RequestParam int userId){
+        ProjectResponse.ProjectAll response = projectService.getProjectDetail(projectId, userId);
+        return ResponseEntity.ok().body(response);
+    }
 
 }
