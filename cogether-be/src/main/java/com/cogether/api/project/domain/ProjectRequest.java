@@ -17,7 +17,7 @@ public class ProjectRequest {
         private LocalDateTime start;
         private int total_mem;
         private int cur_mem;
-        private boolean online;
+        private String online;
         private String title;
         private String content;
         private List<String> skillList;
