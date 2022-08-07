@@ -1,67 +1,35 @@
 <template>
-  <div class="box-exit">
-    <button class="btn-exit" @click="exit">
-      <font-awesome-icon class="icon-exit fs-3" icon="fa-solid fa-xmark" />
+  <!-- 등록버튼 -->
+  <div class="box-register">
+    <button type="button" class="btn-register" @click="createRecruitPerson">
+      등록
     </button>
   </div>
-  <div class="dropdown">
-    <button
-      class="btn btn-secondary dropdown-toggle"
-      type="button"
-      data-bs-toggle="dropdown"
-      aria-expanded="false"
-    >
-      개인 등록
-    </button>
-    <ul class="dropdown-menu">
-      <li>
-        <a class="dropdown-item" href="#/recruit/create">프로젝트 등록</a>
-      </li>
-      <li>
-        <a class="dropdown-item" href="#/recruit/studycreate">스터디 등록</a>
-      </li>
-    </ul>
+  <!-- 한줄소개 -->
+  <div class="box-input1">
+    <input
+      v-model="state.title"
+      class="title"
+      type="text"
+      placeholder="한 줄 소개를 입력하세요.."
+    />
   </div>
-  <form @submit="createCoop">
-    <div class="box-register">
-      <button type="submit" class="btn-register">등록</button>
-    </div>
-    <div class="box-input1">
-      <input
-        v-model="state.title"
-        class="title"
-        type="text"
-        placeholder="한 줄 소개를 입력하세요.."
-      />
-    </div>
-    <div class="techstack-box">
-      <h3>사용 기술</h3>
-      <div class="tech-icon-container d-flex">
-        <div class="tech-icon-box">
-          <img
-            class="tech-icon"
-            src="@/assets/devicon/javascript-original.svg"
-            alt="tech icon"
-          />
-        </div>
-      </div>
-    </div>
-    <textarea
-      v-model="state.content"
-      class="coop-content form-control"
-    ></textarea>
-  </form>
+  <textarea
+    v-model="state.content"
+    class="person-content form-control"
+  ></textarea>
 </template>
 
 <script>
 import Swal from "sweetalert2";
 import router from "@/router";
 import { reactive } from "vue";
+import { useStore } from "vuex";
 export default {
   name: "RecruitCreate",
   setup() {
+    const store = useStore();
     const state = reactive({
-      //사용할 변수들 선언
       title: null,
       content: null,
     });
@@ -82,53 +50,45 @@ export default {
         }
       });
     }
-    function createCoop() {
-      //확인
-      console.log(state.title);
-      console.log(state.content);
-      //함수 작동 내용
+    function createRecruitPerson() {
+      if (!state.title || !state.content) {
+        return;
+      }
+
+      store.dispatch("createProjectPerson", state);
+      //sweetalert
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "bottom-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener("mouseenter", Swal.stopTimer);
+          toast.addEventListener("mouseleave", Swal.resumeTimer);
+        },
+      });
+      Toast.fire({
+        icon: "success",
+        title: "글이 작성되었습니다.",
+      });
+      //페이지 이동
+      router.push({ name: "RecruitMain" });
     }
 
-    return { exit, createCoop, state };
+    return { exit, state, createRecruitPerson };
   },
   components: {},
 };
 </script>
 
 <style scoped>
-.coop-content {
-  width: 100%;
-  height: 60vh;
-}
-
-.input-group,
-.input-group-text,
-.form-select {
-  height: 40px;
-  float: left;
-}
-
-.input-group {
-  margin-right: 5%;
-  width: 30%;
-}
-
-.title {
-  width: 100%;
-  border-radius: 5px;
-}
-
-.box-exit {
-  height: 50px;
+.person-content {
+  height: 50vh;
 }
 
 .box-register {
   height: 40px;
-}
-.btn-exit {
-  border: 0px;
-  background-color: transparent;
-  float: right;
 }
 
 .btn-register {
@@ -141,6 +101,8 @@ export default {
 }
 
 .title {
+  width: 100%;
+  border-radius: 5px;
   height: 50px;
   border: 1px solid #dbdbdb;
 }
@@ -149,19 +111,7 @@ export default {
   margin-bottom: 10px;
 }
 
-/* Tech Stack */
-.tech-icon-box {
-  width: 30px;
-  height: 30px;
-  background-color: #c1ebe6;
-  border-radius: 50%;
-  margin: 10px;
-}
-
-.tech-icon {
-  display: block;
-  width: 15px;
-  height: 15px;
-  margin: 7px auto;
+::-webkit-scrollbar {
+  display: none;
 }
 </style>
