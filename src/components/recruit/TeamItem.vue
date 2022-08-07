@@ -204,9 +204,11 @@ export default {
 
 <style scoped>
 .team-container {
+  background-color: white;
   border: 1px solid #dbdbda;
   border-radius: 10px;
   box-shadow: 0px 5px 3px -3px #bdbdbd;
+  margin-bottom: 10px;
 }
 
 .team-container:hover {

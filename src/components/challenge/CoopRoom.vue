@@ -60,7 +60,7 @@
 import router from "@/router";
 import { computed, reactive, ref } from "vue";
 import { useStore } from "vuex";
-import testaxios from "@/api/testaxios";
+import http from "@/api/http";
 import Swal from "sweetalert2";
 export default {
   name: "CoopRoom",
@@ -79,7 +79,7 @@ export default {
       content: null,
     });
     const roomNo = ref(router.currentRoute.value.params.roomNo);
-    testaxios
+    http
       .get(`/LiveCoop/${roomNo.value}`)
       .then(({ data }) => {
         console.log(data);

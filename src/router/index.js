@@ -125,11 +125,6 @@ const routes = [
         name: "PersonCreate",
         component: () => import("@/components/recruit/PersonCreate.vue"),
       },
-      {
-        path: "studycreate",
-        name: "StudyCreate",
-        component: () => import("@/components/recruit/StudyCreate.vue"),
-      },
     ],
   },
   {
