@@ -1,5 +1,4 @@
-import testaxios from "@/api/testaxios";
-// import axios from "axios";
+import http from "@/api/http";
 
 export const challengeStore = {
   state: {
@@ -87,8 +86,8 @@ export const challengeStore = {
   },
   actions: {
     getCompeteInfo({ commit }, id) {
-      testaxios
-        .get("/liveComp/" + id)
+      http
+        .get("/livecoop/" + id)
         .then(({ data }) => {
           commit("SET_COMPETE_RANK", data.ranking);
           commit("SET_COMPETE_TIME", data.totalTime);
@@ -104,8 +103,8 @@ export const challengeStore = {
       const userid = {
         userId: id,
       };
-      testaxios
-        .patch("/liveComp", userid)
+      http
+        .patch("/livecoop", userid)
         .then(({ data }) => {
           console.log(commit);
           console.log(data);
@@ -124,8 +123,8 @@ export const challengeStore = {
         content: param.content,
         inProgress: false,
       };
-      testaxios
-        .post("/LiveCoop", room)
+      http
+        .post("/livecoop", room)
         .then(({ data }) => {
           console.log(commit);
           console.log(data);
@@ -135,8 +134,8 @@ export const challengeStore = {
         });
     },
     async deleteCoopRoom({ commit }, id) {
-      await testaxios
-        .delete("/LiveCoop/" + id)
+      await http
+        .delete("/livecoop/" + id)
         .then(({ data }) => {
           console.log(commit);
           console.log(data);
@@ -146,8 +145,8 @@ export const challengeStore = {
         });
     },
     getCoopRooms({ commit }, id) {
-      testaxios
-        .get("/LiveCoop/list/" + id)
+      http
+        .get("/livecoop/list/" + id)
         .then(({ data }) => {
           console.log("방리스트받기성공");
           console.log(data);
@@ -159,7 +158,7 @@ export const challengeStore = {
         });
     },
     getDetailCoopRooms({ commit }, id) {
-      testaxios
+      http
         .get("livecoop/" + id)
         .then(({ data }) => {
           commit("SET_ROOMS", data);

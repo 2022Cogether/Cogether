@@ -1,8 +1,6 @@
 <template>
+  <h2>People</h2>
   <ul class="list-group list-group-flush">
-    <PeopleItem />
-    <PeopleItem />
-    <PeopleItem />
     <PeopleItem />
     <PeopleItem />
     <PeopleItem />
@@ -14,6 +12,8 @@
 <script>
 import PeopleItem from "@/components/recruit/PeopleItem.vue";
 export default {
+  name: "PeopleList",
+  props: ["searchText"],
   components: {
     PeopleItem,
   },
@@ -22,7 +22,7 @@ export default {
 
 <style scoped>
 ul {
-  height: 200px;
+  max-height: 200px;
   border-top: 2px solid black;
   border-bottom: 2px solid black;
   margin-bottom: 30px;
