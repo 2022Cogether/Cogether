@@ -34,5 +34,19 @@ public class ProjectRequest {
         }
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Create_ProjectScrap{
+        private int projectId;
+        private int userId;
 
+        public ProjectScrap toEntity(Project project, User user){
+            return ProjectScrap.builder()
+                    .project(project)
+                    .user(user)
+                    .build();
+        }
+    }
 }
