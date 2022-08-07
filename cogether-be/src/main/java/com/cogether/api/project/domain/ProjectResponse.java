@@ -91,4 +91,18 @@ public class ProjectResponse {
                     .build();
         }
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class OnlyProjectScrapId{
+        private int id;
+
+        public static ProjectResponse.OnlyProjectScrapId build(ProjectScrap projectScrap){
+            return OnlyProjectScrapId.builder()
+                    .id(projectScrap.getId())
+                    .build();
+        }
+    }
 }
