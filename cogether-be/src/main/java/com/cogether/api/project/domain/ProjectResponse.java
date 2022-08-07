@@ -77,4 +77,18 @@ public class ProjectResponse {
                     .build();
         }
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class ProjectList{
+        private List<ProjectResponse.ProjectAll> projectList;
+
+        public static ProjectResponse.ProjectList build(List<ProjectResponse.ProjectAll> projectAll){
+            return ProjectList.builder()
+                    .projectList(projectAll)
+                    .build();
+        }
+    }
 }
