@@ -35,4 +35,25 @@ public class ProjectController {
         return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping(path = "/project/{userId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<ProjectResponse.ProjectList> getProjectList(@PathVariable int userId){
+        ProjectResponse.ProjectList response = projectService.getProjectList(userId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping(path = "/project/scrap")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<ProjectResponse.OnlyProjectScrapId> createScrap(@RequestBody ProjectRequest.Create_ProjectScrap projectScrap){
+        ProjectResponse.OnlyProjectScrapId response = projectService.createScrap(projectScrap);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping(path = "/project/scrap")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<ProjectResponse.OnlyProjectScrapId> deleteScrap(@RequestParam int userId, @RequestParam int projectId){
+        ProjectResponse.OnlyProjectScrapId response = projectService.deleteScrap(userId, projectId);
+        return ResponseEntity.ok().body(response);
+    }
+
 }

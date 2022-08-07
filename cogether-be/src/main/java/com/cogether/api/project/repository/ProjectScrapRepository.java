@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProjectScrapRepository extends JpaRepository<ProjectScrap, Integer> {
     Integer countAllByProjectAndUser(Project project, User user);
+    ProjectScrap findByProject_IdAndUser_Id(int projectId, int userId);
 }

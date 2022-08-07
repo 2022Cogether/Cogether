@@ -1,9 +1,6 @@
 package com.cogether.api.project.service;
 
-import com.cogether.api.project.domain.Project;
-import com.cogether.api.project.domain.ProjectRequest;
-import com.cogether.api.project.domain.ProjectResponse;
-import com.cogether.api.project.domain.ProjectSkill;
+import com.cogether.api.project.domain.*;
 import com.cogether.api.project.exception.ProjectNotFoundException;
 import com.cogether.api.project.repository.ProjectRepository;
 import com.cogether.api.project.repository.ProjectScrapRepository;
@@ -14,6 +11,7 @@ import com.cogether.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -62,5 +60,36 @@ public class ProjectService {
             isScrap = true;
         }
         return ProjectResponse.ProjectAll.build(project, list, isScrap);
+    }
+
+    public ProjectResponse.ProjectList getProjectList(int userId){
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        List<ProjectResponse.ProjectAll> projectList = new ArrayList<>();
+        List<Project> list = projectRepository.findAll();
+        for (int i = 0; i < list.size(); i++){
+            Project project = list.get(i);
+            List<ProjectSkill> projectSkillList = projectSkillRepository.findAllByProject_Id(project.getId());
+            int check = projectScrapRepository.countAllByProjectAndUser(project, user);
+            boolean isScrap = false;
+            if(check == 1){
+                isScrap = true;
+            }
+            projectList.add(ProjectResponse.ProjectAll.build(project, projectSkillList, isScrap));
+        }
+        return ProjectResponse.ProjectList.build(projectList);
+    }
+
+    public ProjectResponse.OnlyProjectScrapId createScrap(ProjectRequest.Create_ProjectScrap create_projectScrap){
+        User user = userRepository.findById(create_projectScrap.getUserId()).orElseThrow(UserNotFoundException::new);
+        Project project = projectRepository.findById(create_projectScrap.getProjectId()).orElseThrow(ProjectNotFoundException::new);
+        ProjectScrap projectScrap = create_projectScrap.toEntity(project, user);
+        ProjectScrap savedProjectScrap = projectScrapRepository.save(projectScrap);
+        return ProjectResponse.OnlyProjectScrapId.build(savedProjectScrap);
+    }
+
+    public ProjectResponse.OnlyProjectScrapId deleteScrap(int userId, int projectId){
+        ProjectScrap projectScrap = projectScrapRepository.findByProject_IdAndUser_Id(projectId, userId);
+        projectScrapRepository.deleteById(projectScrap.getId());
+        return ProjectResponse.OnlyProjectScrapId.build(projectScrap);
     }
 }
