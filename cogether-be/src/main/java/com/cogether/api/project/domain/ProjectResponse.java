@@ -77,4 +77,32 @@ public class ProjectResponse {
                     .build();
         }
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class ProjectList{
+        private List<ProjectResponse.ProjectAll> projectList;
+
+        public static ProjectResponse.ProjectList build(List<ProjectResponse.ProjectAll> projectAll){
+            return ProjectList.builder()
+                    .projectList(projectAll)
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class OnlyProjectScrapId{
+        private int id;
+
+        public static ProjectResponse.OnlyProjectScrapId build(ProjectScrap projectScrap){
+            return OnlyProjectScrapId.builder()
+                    .id(projectScrap.getId())
+                    .build();
+        }
+    }
 }
