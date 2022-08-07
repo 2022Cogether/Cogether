@@ -2,10 +2,9 @@ package com.cogether.api.user.web;
 
 import com.cogether.api.user.dto.TokenResponse;
 import com.cogether.api.user.dto.UserRequest;
-import com.cogether.api.user.UserService;
-import com.sun.xml.bind.v2.TODO;
+import com.cogether.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.Parameter;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,11 +36,13 @@ public class UserController {
     }
 
     //로그아웃
-//    @GetMapping("/user/signout")
-//    public ResponseEntity<TokenResponse> signOut() throws Exception
-//    {
-//       // return ResponseEntity.ok().body(userService.signIn(userRequest));
-//    }
+    @GetMapping("/user/signout")
+    public ResponseEntity signOut(@RequestBody UserRequest userRequest) throws Exception
+    {
+        userService.signOut(userRequest);
+        System.out.println("로그아웃");
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
 
     //이메일 인증
     @PostMapping("user/verify")

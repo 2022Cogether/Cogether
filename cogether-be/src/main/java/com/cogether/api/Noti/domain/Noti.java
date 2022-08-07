@@ -1,4 +1,4 @@
-package com.cogether.api.Noti.dto;
+package com.cogether.api.Noti.domain;
 
 import com.cogether.api.user.domain.User;
 import lombok.*;

@@ -1,14 +1,14 @@
-package com.cogether.api.user;
+package com.cogether.api.user.service;
 
 import com.cogether.api.config.jwt.TokenUtils;
 import com.cogether.api.user.domain.Auth;
-import com.cogether.api.user.domain.Follow;
+import com.cogether.api.follow.domain.Follow;
 import com.cogether.api.user.domain.User;
 import com.cogether.api.user.domain.UserSkill;
 import com.cogether.api.user.dto.TokenResponse;
 import com.cogether.api.user.dto.UserRequest;
 import com.cogether.api.user.repository.AuthRepository;
-import com.cogether.api.user.repository.FollowRepository;
+import com.cogether.api.follow.repository.FollowRepository;
 import com.cogether.api.user.repository.UserRepository;
 import com.cogether.api.user.repository.UserSkillRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,12 +49,6 @@ public class UserService {
 
         return userSkillList;
     }
-    public List<Follow> findByFollowList(int userId)
-    {
-        List<Follow> followingList = followRepository.findById(userId);
-
-        return followingList;
-    }
 
 
 
@@ -73,17 +67,17 @@ public class UserService {
 
         int id = userRequest.getId();   // 식별자
 
-        List<UserSkill> userSkillList = findUser(id);
+//        List<UserSkill> userSkillList = findUser(id);
 
         //UserSkill table에 레코드 저장
-        for(UserSkill userSkills : userSkillList)
-        {
-            UserSkill userSkill = userSkillRepository.save(
-                    UserSkill.builder()
-                            .skillId(userSkills.getSkillId())
-                            .user(user)
-                            .build());
-        }
+//        for(UserSkill userSkills : userSkillList)
+//        {
+//            UserSkill userSkill = userSkillRepository.save(
+//                    UserSkill.builder()
+//                            .skillId(userSkills.getSkillId())
+//                            .user(user)
+//                            .build());
+//        }
 
         String accessToken = tokenUtils.generateJwtToken(user);
         String refreshToken = tokenUtils.saveRefreshToken(user);
@@ -96,35 +90,65 @@ public class UserService {
     //로그인
     @Transactional
     public TokenResponse signIn(UserRequest userRequest) throws Exception {
+
         User user =
                 userRepository
                         .findByEmail(userRequest.getEmail())
                         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        Auth authEntity =
+        Optional<Auth> authEntity =
                 authRepository
-                        .findByUserId(user.getId())
-                        .orElseThrow(() -> new IllegalArgumentException("Token 이 존재하지 않습니다."));
+                        .findByUserId(user.getId());
+                        //.orElseThrow(() -> new IllegalArgumentException("Token 이 존재하지 않습니다."));
         if (!passwordEncoder.matches(userRequest.getPassword(), user.getPassword())) {
             throw new Exception("비밀번호가 일치하지 않습니다.");
         }
         String accessToken = "";
-        String refreshToken = authEntity.getRefreshToken();
+        String refreshToken = "";
+        Auth auth=new Auth();
 
-        System.out.println(refreshToken);
-        if (tokenUtils.isValidRefreshToken(refreshToken)) {
-            accessToken = tokenUtils.generateJwtToken(authEntity.getUser());
-            return TokenResponse.builder()
-                    .ACCESS_TOKEN(accessToken)
-                    .REFRESH_TOKEN(authEntity.getRefreshToken())
-                    .build();
-        } else {
-            accessToken = tokenUtils.generateJwtToken(authEntity.getUser());
+        if(authEntity.isPresent())
+        {
+            auth=authEntity.get();
+            refreshToken =auth.getRefreshToken();
+
+            //리프레시토큰 검증
+            if (tokenUtils.isValidRefreshToken(refreshToken)) {
+                accessToken = tokenUtils.generateJwtToken(auth.getUser());
+                refreshToken = tokenUtils.saveRefreshToken(user);
+                return TokenResponse.builder()
+                        .ACCESS_TOKEN(accessToken)
+                        .REFRESH_TOKEN(refreshToken)
+                        .build();
+            }
+            else {
+                accessToken = tokenUtils.generateJwtToken(auth.getUser());
+                refreshToken = tokenUtils.saveRefreshToken(user);
+                auth.refreshUpdate(refreshToken);
+            }
+
+            return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).build();
+        }
+        else
+        {
+            accessToken = tokenUtils.generateJwtToken(user);
             refreshToken = tokenUtils.saveRefreshToken(user);
-            authEntity.refreshUpdate(refreshToken);
+            authRepository.save(Auth.builder().user(user).refreshToken(refreshToken).build());
+            return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).build();
         }
 
-        return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).build();
     }
+    //로그아웃
+    @Transactional
+    public void signOut(UserRequest userRequest) throws Exception {
+        User user = userRepository.findByEmail(userRequest.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        Auth auth = authRepository.findByUserId(user.getId()).
+                orElseThrow(() -> new IllegalArgumentException("Token 이 존재하지 않습니다."));
+
+        authRepository.delete(auth);
+    }
+
 
     public boolean verifyDuplicationOfEmail(UserRequest userRequest)
     {
@@ -185,56 +209,6 @@ public class UserService {
 
 
         return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).build();
-    }
-
-    // 사용자가 팔로잉한 팔로워들 리스트 로드
-    public int loadFollowingList(UserRequest userRequest){
-
-        Optional<User> user = userRepository.findById(userRequest.getId()); //userRequest에 대한 식별자 알아오기
-
-        return -1;
-    }
-
-
-
-    //팔로잉 등록
-    @Transactional
-    public int registFollowing(UserRequest userRequest){
-
-        Optional<User> user = userRepository.findById(userRequest.getId());
-
-        User users = user.get();
-
-       Follow follow=
-               followRepository.save(Follow.builder()
-                               .toId(users.getId())
-                               .user(users)
-                       .build());
-
-
-        return 1;
-    }
-
-    //팔로잉 해제
-    @Transactional
-    public int cancleFollowing(UserRequest userRequest)
-    {
-        Optional<User> user = userRepository.findById(userRequest.getId());
-
-        User users = user.get();
-
-
-        followRepository.delete(Follow.builder()
-                        .toId(users.getId())
-                        .user(users)
-                        .build());
-
-        return -1;
-    }
-
-    // 사용자를 팔로잉한 팔로워들 리스트 로드
-    public int loadFollowerList(UserRequest userRequest){
-        return -1;
     }
 
 

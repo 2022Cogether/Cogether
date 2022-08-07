@@ -44,9 +44,6 @@ public class User {
     @Column(name="verified")
     private boolean verified;
 
-    @Column(name="refresh_token" ,length=500)
-    private String refreshToken;
-
     @Column(name="git_url", length=100)
     private String gitUrl;
 
@@ -70,4 +67,8 @@ public class User {
 
     @Column(name="resign")
     private boolean resign;
+
+
+
+
 }

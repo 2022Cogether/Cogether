@@ -11,8 +11,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
     private final JwtTokenInterceptor jwtTokenInterceptor;
 
+    private final String [] INTERCEPTOR_WHITE_LIST=
+            {"/api/user/signin","/api/user/signup","/api/user/signout"};
+
     public void addInterceptors(InterceptorRegistry registry) {
         System.out.println("인터셉터 등록");
-        registry.addInterceptor(jwtTokenInterceptor).addPathPatterns("/info");
+        registry.addInterceptor(jwtTokenInterceptor).addPathPatterns("/api/hunting")
+                .excludePathPatterns(INTERCEPTOR_WHITE_LIST);
     }
 }

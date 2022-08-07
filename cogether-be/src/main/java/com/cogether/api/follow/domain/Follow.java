@@ -1,5 +1,6 @@
-package com.cogether.api.user.domain;
+package com.cogether.api.follow.domain;
 
+import com.cogether.api.user.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,10 +20,16 @@ public class Follow {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name="from_id")
+    @JoinColumn(name="to_id")
     private User user;  // 내아이디.. . .ㅍ... . ...ㅍ. . . .
 
-    @Column(name="to_id",nullable = false)
-    private int toId;   // 내가 팔로잉 등록함 ㅋ.ㅋ.ㅋ.ㅋ.ㅋ.ㅋ.
+    @Column(name="to_email",nullable = false)
+    private String toEmail;
+
+    @Column(name="from_id",nullable = false)
+    private int fromId;   // 내가 팔로잉 등록함 ㅋ.ㅋ.ㅋ.ㅋ.ㅋ.ㅋ.
+
+    @Column(name="from_email",nullable = false)
+    private String fromEmail;
 
 }
