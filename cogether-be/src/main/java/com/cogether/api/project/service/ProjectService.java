@@ -1,9 +1,6 @@
 package com.cogether.api.project.service;
 
-import com.cogether.api.project.domain.Project;
-import com.cogether.api.project.domain.ProjectRequest;
-import com.cogether.api.project.domain.ProjectResponse;
-import com.cogether.api.project.domain.ProjectSkill;
+import com.cogether.api.project.domain.*;
 import com.cogether.api.project.exception.ProjectNotFoundException;
 import com.cogether.api.project.repository.ProjectRepository;
 import com.cogether.api.project.repository.ProjectScrapRepository;
@@ -80,5 +77,19 @@ public class ProjectService {
             projectList.add(ProjectResponse.ProjectAll.build(project, projectSkillList, isScrap));
         }
         return ProjectResponse.ProjectList.build(projectList);
+    }
+
+    public ProjectResponse.OnlyProjectScrapId createScrap(ProjectRequest.Create_ProjectScrap create_projectScrap){
+        User user = userRepository.findById(create_projectScrap.getUserId()).orElseThrow(UserNotFoundException::new);
+        Project project = projectRepository.findById(create_projectScrap.getProjectId()).orElseThrow(ProjectNotFoundException::new);
+        ProjectScrap projectScrap = create_projectScrap.toEntity(project, user);
+        ProjectScrap savedProjectScrap = projectScrapRepository.save(projectScrap);
+        return ProjectResponse.OnlyProjectScrapId.build(savedProjectScrap);
+    }
+
+    public ProjectResponse.OnlyProjectScrapId deleteScrap(int userId, int projectId){
+        ProjectScrap projectScrap = projectScrapRepository.findByProject_IdAndUser_Id(projectId, userId);
+        projectScrapRepository.deleteById(projectScrap.getId());
+        return ProjectResponse.OnlyProjectScrapId.build(projectScrap);
     }
 }
