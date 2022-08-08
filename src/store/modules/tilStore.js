@@ -139,6 +139,19 @@ export const tilStore = {
       commit("CLEAN_TIL_LIST");
     },
 
+    createArticle({ dispatch, getters }, payload) {
+      axios
+        .post("til", payload, { headers: getters.authHeader })
+        .then((res) => {
+          router.push({
+            name: "TilDetail",
+            params: { tilPK: res.data.tilId },
+          });
+          dispatch("fetchOpenTil", res.data.tilId); //급해서 일단
+        })
+        .catch((err) => console.error(err.response));
+    },
+
     removeTil({ commit, getters }, tilPK) {
       axios
         .delete("til/delete/" + tilPK, { headers: getters.authHeader })
