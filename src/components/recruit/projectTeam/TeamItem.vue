@@ -9,9 +9,9 @@
             alt="profile image"
           />
         </div>
-        <h3>타이틀</h3>
+        <div class="title fs-3">{{ projectTeam.title }}</div>
       </div>
-      <div v-if="bookmark" class="bookmark-icon-box">
+      <div v-if="state.bookmark" class="bookmark-icon-box">
         <font-awesome-icon
           @click="bookmarkCheck"
           icon="fa-solid fa-bookmark"
@@ -31,12 +31,7 @@
       data-bs-toggle="modal"
       data-bs-target="#teamDetailInfo"
     >
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eaque et
-      dolorem, aliquam adipisci dolor architecto iusto numquam, porro corporis
-      dicta officia? A, ullam? Repellat quidem voluptas at deserunt neque sit
-      reiciendis odio officia ullam? Nesciunt repudiandae odio rem excepturi
-      consectetur, eos qui, corrupti quod, officia explicabo voluptatibus! Nam,
-      itaque minima!
+      {{ projectTeam.content }}
     </p>
     <div
       class="info-box d-flex justify-content-between"
@@ -52,7 +47,7 @@
       </div>
       <div class="detail-info-box d-flex">
         <p>시작 예정일</p>
-        <span>2022.07.20</span>
+        <span>{{ projectTeam.start.substring(0, 10) }}</span>
         <font-awesome-icon icon="fa-solid fa-people-group" class="group-icon" />
         <span>3/4</span>
       </div>
@@ -114,7 +109,9 @@
             </div>
             <div class="profile-detail-info">
               <div class="d-flex">
-                <h5 class="modal-title" id="teamDetailInfoLabel">꼬꼬</h5>
+                <h5 class="modal-title" id="teamDetailInfoLabel">
+                  {{ projectTeam.userNickname }}
+                </h5>
                 <span class="date align-self-end">2022.07.27</span>
               </div>
               <p class="team-recruit-summary">
@@ -184,29 +181,31 @@
 </template>
 
 <script>
+import { reactive } from "vue";
 export default {
-  data() {
-    return {
-      bookmark: false,
-    };
-  },
-  methods: {
-    bookmarkCheck() {
-      if (this.bookmark) {
-        this.bookmark = false;
-      } else {
-        this.bookmark = true;
-      }
-    },
+  name: "TeamIteam",
+  props: ["projectTeam"],
+  setup(props) {
+    const state = reactive({
+      bookmark: props.projectTeam.scrap,
+    });
+
+    function bookmarkCheck() {
+      state.bookmark = !state.bookmark;
+    }
+
+    return { bookmarkCheck, state };
   },
 };
 </script>
 
 <style scoped>
 .team-container {
+  background-color: white;
   border: 1px solid #dbdbda;
   border-radius: 10px;
   box-shadow: 0px 5px 3px -3px #bdbdbd;
+  margin-bottom: 10px;
 }
 
 .team-container:hover {
@@ -230,7 +229,7 @@ export default {
 }
 
 /* Title */
-h3 {
+.title {
   font-family: "Nanum Gothic", sans-serif;
   font-weight: 700;
   margin-top: 12px;
@@ -239,12 +238,12 @@ h3 {
 /* Bookmark Icon */
 .bookmark-icon {
   margin-right: 10px;
-  font-size: 40px;
+  font-size: 1.7rem;
 }
 
 .bookmark-icon-solid {
   margin-right: 10px;
-  font-size: 40px;
+  font-size: 1.7rem;
   color: #e63946;
 }
 

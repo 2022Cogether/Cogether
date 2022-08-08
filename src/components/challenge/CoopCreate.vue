@@ -20,7 +20,7 @@
       <div class="input-group mb-3">
         <label class="input-group-text" for="personnel">인원</label>
         <select v-model="state.personnel" class="form-select" id="personnel">
-          <option selected disabled>선택</option>
+          <option disabled>선택</option>
           <option value="2">2명</option>
           <option value="3">3명</option>
           <option value="4">4명</option>
@@ -31,7 +31,7 @@
       <div class="input-group mb-3">
         <label class="input-group-text" for="coop-time-hour">시간</label>
         <select v-model="state.hour" class="form-select">
-          <option selected disabled>시</option>
+          <option disabled>시</option>
           <option value="0">0</option>
           <option value="1">1</option>
           <option value="2">2</option>

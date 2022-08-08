@@ -1,29 +1,32 @@
 <template>
   <div>
+    <!-- 검색바 -->
     <div class="searchbar">
-      <input class="input-search" type="text" />
-      <button class="btn-search">
+      <input class="input-search" type="text" v-model="state.tempText" />
+      <button class="btn-search" @click="search">
         <font-awesome-icon
           class="searchicon"
           icon=" fa-solid fa-magnifying-glass"
         />
       </button>
     </div>
+    <!-- 버튼 -->
     <div class="button-box d-flex justify-content-evenly">
-      <button type="button" class="btn" @click="onClickProject">
+      <button type="button" class="btn" @click="btnTab1">
         <font-awesome-icon icon="fa-solid fa-handshake" />
         프로젝트
       </button>
-      <button type="button" class="btn" @click="onClickStudy">
+      <button type="button" class="btn" @click="btnTab2">
         <font-awesome-icon icon="fa-solid fa-pen-clip" />
         스터디
       </button>
-      <button type="button" class="btn">
+      <button type="button" class="btn" @click="btnTab3">
         <font-awesome-icon icon="fa-regular fa-bookmark" />
         스크랩
       </button>
     </div>
-    <div class="d-flex">
+    <!-- 기술스택 필터 -->
+    <!-- <div class="d-flex">
       <div class="icon-container">
         <img
           src="@/assets/devicon/javascript-original.svg"
@@ -34,49 +37,79 @@
       <button class="plus-icon-box">
         <font-awesome-icon icon="fa-solid fa-plus" class="scra" />
       </button>
+    </div> -->
+    <!-- 프로젝트  -->
+    <div v-if="state.tabState === 'project'">
+      <PeopleList :searchText="state.searchText" :tabState="state.tabState" />
+      <TeamList :searchText="state.searchText" :tabState="state.tabState" />
     </div>
-    <div v-show="currComp === 'project'">
-      <div>
-        <h2>People</h2>
-        <PeopleList />
+    <!-- 스터디 -->
+    <div v-if="state.tabState === 'study'">
+      <StudyList :searchText="state.searchText" :tabState="state.tabState" />
+    </div>
+    <!-- 스크랩 -->
+    <div v-if="state.tabState === 'scrap'">
+      <div class="list-box">
+        <PeopleList :searchText="state.searchText" :tabState="state.tabState" />
       </div>
-      <div>
-        <h2>Project</h2>
-        <TeamList />
+      <div class="list-box">
+        <TeamList :searchText="state.searchText" :tabState="state.tabState" />
+      </div>
+      <div class="list-box">
+        <StudyList :searchText="state.searchText" :tabState="state.tabState" />
       </div>
     </div>
-    <div v-show="currComp === 'study'">
-      <div>
-        <h2>Study</h2>
-        <StudyList />
-      </div>
-    </div>
-  </div>
-  <a href="#/recruit/create" class="write-icon-box">
-    <font-awesome-icon
-      icon="fa-solid fa-plus"
-      class="plus-icon align-self-start"
-    />
-    <font-awesome-icon icon="fa-solid fa-address-book" class="book-icon" />
-  </a>
-  <div>
-    <h2>Test</h2>
-    <a href="javacript:;" @click="getList">Test</a>
+    <!-- 글쓰기 -->
+    <button class="icon-body" @click="recruitCreate">
+      <font-awesome-icon icon="fa-solid fa-address-book" class="book-icon" />
+    </button>
   </div>
 </template>
 
 <script>
-import PeopleList from "@/components/recruit/PeopleList.vue";
-import TeamList from "@/components/recruit/TeamList.vue";
-import StudyList from "@/components/recruit/StudyList.vue";
-import axios from "axios";
+import { computed, reactive } from "vue";
+import { useStore } from "vuex";
+import router from "@/router";
+import PeopleList from "@/components/recruit/projectPeople/PeopleList.vue";
+import TeamList from "@/components/recruit/projectTeam/TeamList.vue";
+import StudyList from "@/components/recruit/study/StudyList.vue";
 
 export default {
   name: "RecruitMain",
-  data() {
+  setup() {
+    const store = useStore();
+    const getters = computed(() => store.getters);
+    const state = reactive({
+      tabState: "project",
+      tempText: null,
+      searchText: null,
+    });
+
+    function btnTab1() {
+      state.tabState = "project";
+    }
+    function btnTab2() {
+      state.tabState = "study";
+    }
+    function btnTab3() {
+      state.tabState = "scrap";
+    }
+
+    function recruitCreate() {
+      router.push({ name: "RecruitCreate" });
+    }
+    function search() {
+      state.searchText = state.tempText;
+    }
     return {
-      currComp: "project",
-      list: [],
+      store,
+      getters,
+      state,
+      btnTab1,
+      btnTab2,
+      recruitCreate,
+      search,
+      btnTab3,
     };
   },
   components: {
@@ -84,52 +117,24 @@ export default {
     TeamList,
     StudyList,
   },
-  mounted() {
-    this.getList();
-  },
-  methods: {
-    onClickProject() {
-      this.currComp = "project";
-    },
-    onClickStudy() {
-      this.currComp = "study";
-    },
-    async getList() {
-      this.list = await this.api(
-        "https://21af139c-67f3-4c14-9e7d-69f6a8cb75b9.mock.pstmn.io/",
-        "get",
-        {}
-      );
-      console.log(this.list);
-    },
-    async api(url, method, data) {
-      return (
-        await axios({
-          methods: method,
-          url: url,
-          data: data,
-        }).catch((e) => {
-          console.log(e);
-        })
-      ).data;
-    },
-  },
 };
 </script>
 
 <style scoped>
 /* Searh Bar */
 .searchbar {
-  border: 3px solid black;
+  display: flex;
+  background-color: white;
+  border: 1px solid black;
   width: fit-content;
   height: 40px;
   border-radius: 10px;
   overflow: hidden;
   margin: 20px auto;
-  padding-top: 3px;
 }
 
 .input-search {
+  justify-content: center;
   border: none;
 }
 
@@ -139,7 +144,6 @@ export default {
 
 .btn-search {
   border: none;
-  box-shadow: none;
   background-color: inherit;
 }
 
@@ -194,7 +198,7 @@ h2 {
 }
 
 /* Write Icon */
-.write-icon-box {
+.icon-body {
   border: 0px;
   width: 60px;
   height: 60px;
@@ -210,12 +214,11 @@ h2 {
   box-shadow: 0px 3px rgba(0, 0, 0, 0.3);
 }
 
-.plus-icon {
-  font-size: 12px;
-  padding-top: 10px;
-}
-
 .book-icon {
   font-size: 30px;
+}
+
+.list-box {
+  margin-bottom: 50px;
 }
 </style>

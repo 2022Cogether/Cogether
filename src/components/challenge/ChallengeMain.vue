@@ -12,20 +12,24 @@
             <button class="btn-compete-box fs-6" @click="btnCompete">GO</button>
           </div>
           <div v-else>
-            <div class="compete-box-content fs-6">시작시간 {{ now() }}</div>
+            <div class="compete-box-content fs-6">
+              시작시간 {{ getters.getCompeteStartTime }}
+            </div>
             <button class="btn-compete-box fs-6" @click="btnCompete">
               STOP
             </button>
           </div>
         </div>
         <div class="col-3 text-end">
-          <div class="compete-total">Total: {{ getters.getCompeteTotal }}</div>
+          <div class="compete-total">
+            Total: {{ getters.getCompeteTotal }}분
+          </div>
           <div class="compete-ranking">
             Rank: {{ getters.getCompeteRank }}등
           </div>
-          <div class="compete-people">
+          <!-- <div class="compete-people">
             참여인원: {{ getters.getCompetePeople }}
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -51,30 +55,34 @@
     </div>
     <coop-list :tabState="state.tabState" :searchText="state.searchText" />
   </div>
-  <a href="#/challenge/create" class="icon-body">
+  <button class="icon-body" @click="coopCreate">
     <font-awesome-icon icon="fa-solid fa-gamepad" class="gamepad-icon" />
-  </a>
+  </button>
 </template>
 
 <script>
 import { computed, reactive } from "vue";
 import { useStore } from "vuex";
+import router from "@/router";
 import CoopList from "@/components/challenge/CoopList.vue";
+import Swal from "sweetalert2";
 export default {
   name: "ChallengeView",
   setup() {
     const store = useStore();
+    store.dispatch("getCompeteInfo", 1);
     const getters = computed(() => store.getters);
     const state = reactive({
       tabState: 1,
       tempText: null,
       searchText: null,
     });
+
     function now() {
       let today = new Date();
       today.setHours(today.getHours() + 9);
+      today = today.toISOString().substring(11, 19);
       store.commit("SET_COMPETE_START_TIME", today);
-      return today.toISOString().substring(11, 19);
     }
 
     function btnCompete() {
@@ -84,14 +92,15 @@ export default {
         const interval = setInterval(() => {
           if (getters.value.getIsCompeteStarted) {
             //compete 켜진 상태면 보내기
-            store.dispatch("sendCompete");
+            store.dispatch("sendCompeteTime", 1);
+            store.dispatch("getCompeteInfo", 1);
           }
           if (!getters.value.getIsCompeteStarted) {
             //compete 꺼진 상태면 보내지 않기
             store.commit("SET_COMPETE_INTERVAL", false); //interval상태값 끄기
             clearInterval(interval);
           }
-        }, 60000);
+        }, 1000);
       }
       //compete상태 전환
       store.commit(
@@ -116,6 +125,27 @@ export default {
       state.searchText = state.tempText;
     }
 
+    function coopCreate() {
+      if (!getters.value.getEnterCoop) {
+        router.push({ name: "CoopCreate" });
+      } else {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "bottom-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener("mouseenter", Swal.stopTimer);
+            toast.addEventListener("mouseleave", Swal.resumeTimer);
+          },
+        });
+        Toast.fire({
+          icon: "error",
+          title: "현재 참여 중인 방이 있습니다.",
+        });
+      }
+    }
     return {
       store,
       getters,
@@ -126,6 +156,7 @@ export default {
       btnTab2,
       btnTab3,
       search,
+      coopCreate,
     };
   },
   components: {

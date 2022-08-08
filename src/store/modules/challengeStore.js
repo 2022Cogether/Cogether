@@ -1,5 +1,4 @@
-import testaxios from "@/api/testaxios";
-// import axios from "axios";
+import http from "@/api/http";
 
 export const challengeStore = {
   state: {
@@ -7,13 +6,14 @@ export const challengeStore = {
     isCompeteStarted: false,
     competeStartTime: null,
     isCoopRoomExpand: true,
-    competeTotal: 60,
-    competeRank: 7,
+    competeTotal: null,
+    competeRank: null,
     competePeople: 100,
     rooms: [],
-    roomtId: null,
+    roomId: null,
     timeStarted: false,
     competedInterval: false,
+    enterCoop: false,
   },
   getters: {
     //변수 호출
@@ -47,6 +47,9 @@ export const challengeStore = {
     getCompeteInterval(state) {
       return state.competedInterval;
     },
+    getEnterCoop(state) {
+      return state.enterCoop;
+    },
   },
   mutations: {
     //변수값 수정
@@ -74,25 +77,53 @@ export const challengeStore = {
     SET_COMPETE_INTERVAL(state, competedInterval) {
       state.competedInterval = competedInterval;
     },
+    SET_COMPETE_TIME(state, competeTotal) {
+      state.competeTotal = competeTotal;
+    },
+    SET_ENTER_COOP(state, enterCoop) {
+      state.enterCoop = enterCoop;
+    },
   },
   actions: {
+    getCompeteInfo({ commit }, id) {
+      http
+        .get("/livecoop/" + id)
+        .then(({ data }) => {
+          commit("SET_COMPETE_RANK", data.ranking);
+          commit("SET_COMPETE_TIME", data.totalTime);
+          console.log(commit);
+          console.log(data);
+        })
+        .catch((e) => {
+          console.log("에러: " + e);
+        });
+    },
     //경쟁 시간 보내기 (구현 예정)
-    sendCompeteTime({ commit }, param) {
-      console.log(commit);
-      console.log(param);
+    sendCompeteTime({ commit }, id) {
+      const userid = {
+        userId: id,
+      };
+      http
+        .patch("/livecoop", userid)
+        .then(({ data }) => {
+          console.log(commit);
+          console.log(data);
+        })
+        .catch((e) => {
+          console.log("에러: " + e);
+        });
     },
     //협력방만들기 (구현 예정)
     createCoopRoom({ commit }, param) {
       const room = {
-        host: "test",
+        userId: 3,
+        maxMemNum: param.personnel,
+        duration: parseInt(param.hour) * 60 + parseInt(param.min),
         title: param.title,
-        time: parseInt(param.hour) * 60 + parseInt(param.min),
-        curPeople: 1,
-        maxPeople: param.personnel,
-        isStarted: false,
         content: param.content,
+        inProgress: false,
       };
-      testaxios
+      http
         .post("/livecoop", room)
         .then(({ data }) => {
           console.log(commit);
@@ -102,28 +133,8 @@ export const challengeStore = {
           console.log("에러: " + e);
         });
     },
-    updateCoopRoom({ commit }, param) {
-      const room = {
-        host: "test",
-        title: param.title,
-        time: parseInt(param.hour) * 60 + parseInt(param.min),
-        curPeople: 1,
-        maxPeople: param.personnel,
-        isStarted: false,
-        content: param.content,
-      };
-      testaxios
-        .put("/livecoop", room)
-        .then(({ data }) => {
-          console.log(commit);
-          console.log(data);
-        })
-        .catch((e) => {
-          console.log("에러: " + e);
-        });
-    },
-    deleteCoopRoom({ commit }, id) {
-      testaxios
+    async deleteCoopRoom({ commit }, id) {
+      await http
         .delete("/livecoop/" + id)
         .then(({ data }) => {
           console.log(commit);
@@ -133,18 +144,21 @@ export const challengeStore = {
           console.log("에러: " + e);
         });
     },
-    getCoopRooms({ commit }) {
-      testaxios
-        .get("livecoop/list")
+    getCoopRooms({ commit }, id) {
+      http
+        .get("/livecoop/list/" + id)
         .then(({ data }) => {
-          commit("SET_ROOMS", data);
+          console.log("방리스트받기성공");
+          console.log(data);
+          commit("SET_ROOMS", data.liveCoops);
+          commit("SET_ENTER_COOP", data.enterCoop);
         })
         .catch((e) => {
           console.log("에러: " + e);
         });
     },
     getDetailCoopRooms({ commit }, id) {
-      testaxios
+      http
         .get("livecoop/" + id)
         .then(({ data }) => {
           commit("SET_ROOMS", data);
@@ -152,9 +166,6 @@ export const challengeStore = {
         .catch((e) => {
           console.log("에러: " + e);
         });
-    },
-    sendCompete() {
-      console.log("1");
     },
   },
   modules: {},

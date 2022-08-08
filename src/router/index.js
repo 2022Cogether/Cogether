@@ -113,22 +113,18 @@ const routes = [
       {
         path: "study",
         name: "StudyList",
-        component: () => import("@/components/recruit/StudyList.vue"),
+        component: () => import("@/components/recruit/study/StudyList.vue"),
       },
       {
         path: "create",
         name: "RecruitCreate",
-        component: () => import("@/components/recruit/RecruitCreate.vue"),
+        component: () =>
+          import("@/components/recruit/create/RecruitCreate.vue"),
       },
       {
         path: "personcreate",
         name: "PersonCreate",
-        component: () => import("@/components/recruit/PersonCreate.vue"),
-      },
-      {
-        path: "studycreate",
-        name: "StudyCreate",
-        component: () => import("@/components/recruit/StudyCreate.vue"),
+        component: () => import("@/components/recruit/create/PersonCreate.vue"),
       },
     ],
   },
