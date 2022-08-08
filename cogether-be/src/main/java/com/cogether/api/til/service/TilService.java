@@ -1,6 +1,8 @@
 package com.cogether.api.til.service;
 
 import com.cogether.api.file.service.FileUploadService;
+import com.cogether.api.follow.domain.Follow;
+import com.cogether.api.follow.repository.FollowRepository;
 import com.cogether.api.til.domain.*;
 import com.cogether.api.til.exception.TilCommentNotFoundException;
 import com.cogether.api.til.exception.TilLikeNotFoundException;
@@ -15,8 +17,7 @@ import com.cogether.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class TilService {
     private final TilCommentRepository tilCommentRepository;
     private final UserRepository userRepository;
     private final FileUploadService fileUploadService;
+    private final FollowRepository followRepository;
     public TilResponse.OnlyId create(TilRequest.Create_Til create_til, TilRequest.Create_TilImg create_img){
         User user = userRepository.findById(create_til.getUserId()).orElseThrow(UserNotFoundException::new);
         Til til = create_til.toEntity(user);
@@ -160,6 +162,35 @@ public class TilService {
             }
             tilList.add(TilResponse.TilAll.build(til, imgList, commentList, likeCnt, isLike));
         }
+        return TilResponse.TilList.build(tilList);
+    }
+
+    public TilResponse.TilList getMainTil(int userId){
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        List<Follow> userList = followRepository.findByFollowing(userId);
+        List<TilResponse.TilAll> tilList = new ArrayList<>();
+        for (int i = 0; i < userList.size(); i++){
+            int userFollowingId = userList.get(i).getFromId();
+            List<Til> tilFollowingList = tilRepository.findAllByUser_Id(userFollowingId);
+            for (int j = 0; j < tilFollowingList.size(); j++){
+                Til til = tilFollowingList.get(j);
+                List<TilImg> imgList = tilImgRepository.findAllByTil(til);
+                List<TilComment> commentList = tilCommentRepository.findAllByTil(til);
+                int likeCnt = tilLikeRepository.countAllByTil(til);
+                int check = tilLikeRepository.countAllByTilAndUser(til, user);
+                boolean isLike = false;
+                if(check == 1){
+                    isLike = true;
+                }
+                tilList.add(TilResponse.TilAll.build(til, imgList, commentList, likeCnt, isLike));
+            }
+        }
+        Collections.sort(tilList, new Comparator<TilResponse.TilAll>() {
+            @Override
+            public int compare(TilResponse.TilAll o1, TilResponse.TilAll o2) {
+                return o2.getCreatedAt().compareTo(o1.getCreatedAt());
+            }
+        });
         return TilResponse.TilList.build(tilList);
     }
 }
