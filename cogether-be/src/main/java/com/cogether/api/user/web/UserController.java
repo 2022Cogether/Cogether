@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 1. 회원가입
  * 2. 로그인
@@ -48,29 +51,34 @@ public class UserController {
     }
 
     //이메일 인증
-    @PostMapping("user/verify")
+
 
     //이메일 중복확인      true : 중복 false : 중복 x
-    @GetMapping("/user/verify")
+    @GetMapping("/user/verify/email")
     public ResponseEntity verifyDuplicationOfEmail(@RequestBody UserRequest userRequest) throws Exception {
 
         boolean emailIsPresent =userService.verifyDuplicationOfEmail(userRequest);
-        String duplicate ="";
 
-        return emailIsPresent ? ResponseEntity.ok().body(duplicate="true")
-                :ResponseEntity.ok().body(duplicate="false");
+
+        Map<String,String> body =new HashMap<>();
+        body.put("email",userRequest.getEmail());
+        body.put("duplicate",String.valueOf(emailIsPresent));
+
+        return ResponseEntity.ok().body(body);
     }
 
 
     //닉네임 중복확인      true : 중복 false : 중복 x
-    @GetMapping("/user/verify/{nickname}")
-    public ResponseEntity verifyDuplicationOfNickName(@RequestParam String nickname) throws Exception {
+    @GetMapping("/user/verify/nickname")
+    public ResponseEntity verifyDuplicationOfNickName(@RequestBody UserRequest userRequest) throws Exception {
 
-        boolean nickNameIsPresent = userService.verifyDuplicationOfNickName(nickname);
-        String duplicate ="";
+        boolean nickNameIsPresent = userService.verifyDuplicationOfNickName(userRequest.getNickname());
 
-        return nickNameIsPresent ? ResponseEntity.ok().body(duplicate="true")
-                :ResponseEntity.ok().body(duplicate="false");
+        Map<String,String> body =new HashMap<>();
+        body.put("nickname",userRequest.getNickname());
+        body.put("duplicate",String.valueOf(nickNameIsPresent));
+
+        return ResponseEntity.ok().body(body);
     }
 
 
@@ -92,16 +100,26 @@ public class UserController {
     @PutMapping("/user/resign")
     public  ResponseEntity resignUser(@RequestBody UserRequest userRequest) throws  Exception
     {
-        return ResponseEntity.ok().body("test");
+        Map<String,String> body = new HashMap<>();
+
+        userService.resignUser(userRequest);
+        body.put("id",Integer.toString(userRequest.getId()));
+        body.put("resign","true");
+
+        return ResponseEntity.ok().body(body);
     }
 
     //비밀번호 변경
     @PutMapping("/user/password")
     public  ResponseEntity modifyPassword(@RequestBody UserRequest userRequest) throws Exception
     {
+        Map<String,String> body = new HashMap<>();
+
         userService.modifyPassword(userRequest);
-        String modify;
-        return ResponseEntity.ok().body(modify="true");
+
+        body.put("id",Integer.toString(userRequest.getId()));
+        body.put("modify","true");
+        return ResponseEntity.ok().body(body);
     }
 
 
