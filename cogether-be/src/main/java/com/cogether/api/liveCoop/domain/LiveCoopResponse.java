@@ -70,4 +70,18 @@ public class LiveCoopResponse {
         }
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class OnlyLiveCoopMemberId {
+        private int liveCoopMemberId;
+
+        public static LiveCoopResponse.OnlyLiveCoopMemberId build(LiveCoopMember liveCoopMember) {
+            return OnlyLiveCoopMemberId.builder()
+                    .liveCoopMemberId(liveCoopMember.getId())
+                    .build();
+        }
+    }
+
 }
