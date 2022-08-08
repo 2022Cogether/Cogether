@@ -48,4 +48,9 @@ public class HuntingService {
         return HuntingResponse.OnlyHuntingScrapId.build(savedHuntingScrap);
     }
 
+    public HuntingResponse.OnlyHuntingScrapId deleteScrap(int id) {
+        HuntingScrap huntingScrap = huntingScrapRepository.findById(id).orElseThrow(HuntingNotFoundException::new);
+        huntingScrapRepository.deleteById(id);
+        return HuntingResponse.OnlyHuntingScrapId.build(huntingScrap);
+    }
 }
