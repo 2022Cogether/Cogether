@@ -163,7 +163,7 @@ public class UserService {
         authRepository.delete(auth);
     }
 
-
+    // 이메일 중복확인
     public boolean verifyDuplicationOfEmail(UserRequest userRequest)
     {
         Optional<User> user =
@@ -175,7 +175,7 @@ public class UserService {
             return false;       // 중복없음
     }
 
-
+    //닉네임 중복확인
     public boolean verifyDuplicationOfNickName(String nickname)
     {
         Optional<User> user =
@@ -223,5 +223,21 @@ public class UserService {
         return  user;
     }
 
+    //비밀번호 변경
+    public int modifyPassword(UserRequest userRequest) throws Exception
+    {
+        int id = userRequest.getId();
+        String password = userRequest.getPassword();
+        String encodingPassword = passwordEncoder.encode(password);
+
+        User user = userRepository
+                .findById(userRequest.getId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        user.setPassword(encodingPassword);
+
+        userRepository.save(user);
+
+        return 1;
+    }
 
 }

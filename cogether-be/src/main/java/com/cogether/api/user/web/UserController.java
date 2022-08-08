@@ -83,12 +83,26 @@ public class UserController {
 
     //회원정보 변경
     @PutMapping("/user")
-    public ResponseEntity<TokenResponse> modifyUserInfo(@RequestBody UserRequest userRequest) throws Exception
+    public ResponseEntity modifyUserInfo(@RequestBody UserRequest userRequest) throws Exception
     {
         return ResponseEntity.ok().body(userService.modifyUserInfo(userRequest));
     }
 
+    //회원 탈퇴
+    @PutMapping("/user/resign")
+    public  ResponseEntity resignUser(@RequestBody UserRequest userRequest) throws  Exception
+    {
+        return ResponseEntity.ok().body("test");
+    }
 
+    //비밀번호 변경
+    @PutMapping("/user/password")
+    public  ResponseEntity modifyPassword(@RequestBody UserRequest userRequest) throws Exception
+    {
+        userService.modifyPassword(userRequest);
+        String modify;
+        return ResponseEntity.ok().body(modify="true");
+    }
 
 
 }

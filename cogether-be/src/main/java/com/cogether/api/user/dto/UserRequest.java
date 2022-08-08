@@ -7,6 +7,7 @@ import java.util.List;
 
 //로그인
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
