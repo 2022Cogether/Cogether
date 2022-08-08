@@ -24,7 +24,7 @@ public class HuntingController {
 
     @GetMapping("/hunting")
     public ResponseEntity<HuntingResponse.GetHunting> getHunting(@RequestParam int userId, @RequestParam int huntingId) {
-        HuntingResponse.GetHunting response = huntingService.getHunting(huntingId);
+        HuntingResponse.GetHunting response = huntingService.getHunting(userId, huntingId);
         return ResponseEntity.ok().body(response);
     }
 
