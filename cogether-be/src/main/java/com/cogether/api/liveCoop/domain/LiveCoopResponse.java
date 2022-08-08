@@ -84,4 +84,26 @@ public class LiveCoopResponse {
         }
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class GetLiveCoopMember {
+        private int id;
+        private int userId;
+        private String userName;
+        private String userImgUrl;
+        private String code;
+
+        public static GetLiveCoopMember build(LiveCoopMember liveCoopMember) {
+            return GetLiveCoopMember.builder()
+                    .id(liveCoopMember.getId())
+                    .userId(liveCoopMember.getUser().getId())
+                    .userName(liveCoopMember.getUser().getNickname())
+                    .userImgUrl(liveCoopMember.getUser().getImgUrl())
+                    .code(liveCoopMember.getCode())
+                    .build();
+        }
+    }
+
 }
