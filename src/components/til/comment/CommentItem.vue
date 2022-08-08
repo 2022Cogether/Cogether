@@ -1,7 +1,162 @@
 <template>
-  <div></div>
+  <div class="comment-item">
+    <div class="container">
+      <div class="be-comment-block">
+        <div class="be-comment">
+          <div class="d-flex justify-content-between">
+            <div>
+              <span class="be-comment-name">
+                <a href="#">{{ comment.user_id }}</a>
+              </span>
+              <span class="be-comment-time">
+                <i class="fa fa-clock-o"></i>
+                {{ comment.created_at }}
+              </span>
+            </div>
+            <div>
+              <font-awesome-icon
+                v-if="(isCommenter || true) && !isEdit"
+                @click="onEdit"
+                class="fa-lg m-1"
+                icon="fa-solid fa-pen-to-square"
+                style="cursor: pointer"
+              />
+              <font-awesome-icon
+                v-if="isCommenter || isWriter || true"
+                @click="deleteComment"
+                class="fa-lg m-1"
+                icon="fa-solid fa-rectangle-xmark"
+                style="cursor: pointer"
+              /><!-- axios 성공하면 || true 지우고 시험하기-->
+            </div>
+          </div>
+          <p v-if="!isEdit" class="be-comment-text">
+            {{ comment.content }}
+          </p>
+          <input
+            v-else
+            type="text"
+            class="comment-input"
+            @keyup.enter.prevent="editComment"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
-export default {};
+import { useStore } from "vuex";
+import { ref, computed } from "vue";
+
+export default {
+  name: "CommentItem",
+  props: {
+    comment: Object,
+    userId: Number,
+    tilPk: Number,
+  },
+  setup(props) {
+    const store = useStore();
+
+    const currentUser = store.getters.getCurrentUser;
+
+    // 유저 인증(isWrite -> 현재 유저가 TIL 글쓴이 isCommenter -> 현재 유저가 이 댓글 작성자)
+    const isWriter = computed(() => {
+      return currentUser.pk == props.userId;
+    });
+    const isCommenter = computed(() => {
+      return currentUser.pk == props.comment.user_id;
+    });
+
+    // 코멘트 지우기
+    const deleteComment = () => {
+      const payload = {
+        commentId: props.comment.pk,
+        tilId: props.tilPk,
+      };
+      store.dispatch("removeComments", payload);
+    };
+
+    // 코멘트 수정 중인지 여부
+    const isEdit = ref(false);
+    const onEdit = () => {
+      isEdit.value = !isEdit.value;
+    };
+
+    // 코멘트 수정이 보내지면
+    const editComment = (event) => {
+      let payload = {};
+      payload.comment = props.comment;
+      payload.comment.content = event.target.value;
+      payload.tilID = props.tilPk;
+      store.dispatch("updateComment", payload);
+    };
+
+    return {
+      isWriter,
+      isCommenter,
+      deleteComment,
+      isEdit,
+      onEdit,
+      editComment,
+    };
+  },
+};
 </script>
-<style></style>
+<style>
+.comment-item {
+  width: 97%;
+}
+
+.be-comment-block {
+  border: 1px solid #edeff2;
+  border-radius: 2px;
+  border: 1px solid #ffffff;
+}
+
+.be-comment-content span {
+  display: inline-block;
+  width: 49%;
+  margin-bottom: 15px;
+}
+
+.be-comment-name {
+  font-size: 13px;
+  font-family: "Conv_helveticaneuecyr-bold";
+}
+
+.be-comment-content a {
+  color: #383b43;
+}
+
+.be-comment-content span {
+  display: inline-block;
+  width: 49%;
+  margin-bottom: 15px;
+}
+
+.be-comment-time {
+  text-align: right;
+}
+
+.be-comment-time {
+  font-size: 11px;
+  color: #b4b7c1;
+}
+
+.be-comment-text {
+  font-size: 13px;
+  line-height: 18px;
+  color: #7a8192;
+  display: block;
+  background: #f6f6f7;
+  border: 1px solid #edeff2;
+  padding: 15px 20px 20px 20px;
+}
+
+.comment-input {
+  width: 97%;
+  border-radius: 10px;
+  border: 1px solid rgba(219, 219, 218, 1);
+}
+</style>

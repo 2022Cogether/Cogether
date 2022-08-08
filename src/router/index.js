@@ -17,7 +17,7 @@ const routes = [
     component: MainView,
   },
   {
-    path: "/api/til",
+    path: "/til",
     name: "TilView",
     component: () => import("@/views/TilView.vue"),
     children: [

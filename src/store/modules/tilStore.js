@@ -37,6 +37,20 @@ export const tilStore = {
       content:
         "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       user_id: 1004,
+      comments: [
+        {
+          pk: 100,
+          created_at: "2020-02-20",
+          content: "굳굳",
+          user_id: "2000",
+        },
+        {
+          pk: 1000,
+          created_at: "2022-02-20",
+          content: "배드배드",
+          user_id: "1004",
+        },
+      ],
     },
   },
   getters: {
@@ -72,7 +86,6 @@ export const tilStore = {
   actions: {
     // 피드 상세 조회할 tilId를 store에 세팅
     fetchOpenTil({ commit, dispatch }, credentials) {
-      alert("openTil 번호 변경!" + credentials.tilId);
       commit("SET_OPEN_TIL", credentials.tilId);
       dispatch("fetchTil", credentials);
     },
@@ -98,7 +111,7 @@ export const tilStore = {
       // const tilNum = getters.getTilListLength;
       // 현재 가지고 있는 til 목록의 수를 받아 벡에서 그 다음 til 들을 로딩하려고 만든 변수인데..
       axios
-        .get("til/list" + payload.userId)
+        .get("til/list/" + payload.userId)
         .then((res) => {
           if (res.status === 200) {
             alert("새로 받아왔습니다!");
@@ -124,6 +137,25 @@ export const tilStore = {
     removeTilList({ commit }) {
       alert("싹 지우고!");
       commit("CLEAN_TIL_LIST");
+    },
+
+    createTil({ dispatch, getters, state }, payload) {
+      axios
+        .post("til", payload, { headers: getters.authHeader })
+        .then((res) => {
+          router.push({
+            name: "TilDetail",
+            params: { tilPK: res.data.tilId },
+          });
+
+          const credentials = {
+            tilId: res.data.tilId,
+            userId: state.currentUser.id, // 이거 맞나?
+          };
+
+          dispatch("fetchOpenTil", credentials);
+        })
+        .catch((err) => console.error(err.response));
     },
 
     removeTil({ commit, getters }, tilPK) {
@@ -167,10 +199,21 @@ export const tilStore = {
         .catch((err) => console.error(err.response));
     },
 
+    searchTil({ commit }, payload) {
+      // paylod => keyword, userId
+      axios
+        .get("til/search/", payload)
+        .then((res) => commit("ADD_TIL_LIST", res.data))
+        .catch((err) => console.error(err.response));
+    },
+
     createComment({ commit, getters }, payload) {
       axios
         .post("/til/commment/create", payload, { headers: getters.authHeader })
-        .then((res) => commit("SET_TIL", res.data))
+        .then((res) => {
+          commit("CLEAN_TIL_LIST");
+          commit("SET_TIL", res.data);
+        })
         .catch((err) => console.error(err.response));
     },
   },
