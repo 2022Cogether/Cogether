@@ -193,6 +193,7 @@
 </template>
 
 <script>
+import { computed } from "vue";
 import { useStore } from "vuex";
 
 export default {
@@ -200,13 +201,18 @@ export default {
   props: {
     til: Object,
   },
-  setup(props) {
+  setup(props, { emit }) {
     const store = useStore();
+    const getters = computed(() => store.getters);
 
-    const setNum = () => {
+    function setNum() {
       const tilNum = props.til.pk;
-      store.dispatch("fetchOpenTil", tilNum);
-    };
+      store.dispatch("fetchOpenTil", {
+        tilId: tilNum,
+        userId: getters.value.getCurrentUser,
+      });
+      emit("detailChange", tilNum);
+    }
 
     return {
       setNum,

@@ -70,15 +70,17 @@ export const tilStore = {
     },
   },
   actions: {
-    fetchOpenTil({ commit }, tilNum) {
-      alert("openTil 번호 변경!" + tilNum);
-      commit("SET_OPEN_TIL", tilNum);
-      // dispatch("fetchTil", tilNum);
+    // 피드 상세 조회할 tilId를 store에 세팅
+    fetchOpenTil({ commit, dispatch }, credentials) {
+      alert("openTil 번호 변경!" + credentials.tilId);
+      commit("SET_OPEN_TIL", credentials.tilId);
+      dispatch("fetchTil", credentials);
     },
 
-    fetchTil({ commit }, tilNum) {
+    // 피드 상세 조회
+    fetchTil({ commit }, credentials) {
       axios
-        .get("/api/til/", { tilId: tilNum })
+        .get("til/", credentials)
         .then((res) => {
           if (res.status === 200) {
             commit("SET_TIL", res.data);
@@ -92,59 +94,19 @@ export const tilStore = {
 
     // 스크롤할 때마다 추가로 받는 방식이면 지금까지 받은 til 숫자를 알 필요가 있다고 생각함
     // 그래서 임의로 tilnum을 추가함
-    fetchTilList({ commit, getters }, payload) {
-      alert("새로 받아왔습니다!");
-      commit("ADD_TIL_LIST", []);
-      console.log(payload);
-      getters.getTilListLength;
-
-      // 백이랑 연결이 된다면...
+    fetchTilList({ commit }, payload) {
       // const tilNum = getters.getTilListLength;
-      // axios
-      //   .get("/api/til/list", { userId: payload.userId, tilnum: tilNum })
-      //   .then((res) => {
-      //     if (res.status === 200) {
-      //       alert("새로 받아왔습니다!");
-      //       commit("ADD_TIL_LIST", res.data);
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     alert("왜 실패??");
-      //     console.error(err.response.data);
-      //     commit("SET_AUTH_ERROR", err.response.data);
-      //     const errorMessage = [];
-      //     for (const errors in err.response.data) {
-      //       for (const error of err.response.data[errors]) {
-      //         if (!errorMessage.includes(error)) {
-      //           errorMessage.push(error);
-      //         }
-      //       }
-      //     }
-      //     alert(errorMessage.join("\r\n"));
-      //   });
-    },
-
-    removeTilList({ commit }) {
-      alert("싹 지우고!");
-      commit("CLEAN_TIL_LIST");
-    },
-
-    removeTil({ commit, getters }, tilPK) {
+      // 현재 가지고 있는 til 목록의 수를 받아 벡에서 그 다음 til 들을 로딩하려고 만든 변수인데..
       axios
-        .delete(
-          "/til/delete/",
-          { tilId: tilPK },
-          { headers: getters.authHeader }
-        )
+        .get("til/list" + payload.userId)
         .then((res) => {
           if (res.status === 200) {
-            alert("삭제 성공!");
-            commit("SET_TIL", {});
-            router.push({ name: "mainview" });
+            alert("새로 받아왔습니다!");
+            commit("ADD_TIL_LIST", res.data);
           }
         })
         .catch((err) => {
-          alert("삭제 실패??");
+          // alert("왜 실패??");
           console.error(err.response.data);
           commit("SET_AUTH_ERROR", err.response.data);
           const errorMessage = [];
@@ -155,18 +117,53 @@ export const tilStore = {
               }
             }
           }
-          alert(errorMessage.join("\r\n"));
+          // alert(errorMessage.join("\r\n"));
+        });
+    },
+
+    removeTilList({ commit }) {
+      alert("싹 지우고!");
+      commit("CLEAN_TIL_LIST");
+    },
+
+    removeTil({ commit, getters }, tilPK) {
+      axios
+        .delete("til/delete/" + tilPK, { headers: getters.authHeader })
+        .then((res) => {
+          if (res.status === 200) {
+            alert("삭제 성공!");
+            commit("SET_TIL", {});
+            router.push({ name: "mainview" });
+          }
+        })
+        .catch((err) => {
+          // alert("삭제 실패??");
+          console.error(err.response.data);
+          commit("SET_AUTH_ERROR", err.response.data);
+          const errorMessage = [];
+          for (const errors in err.response.data) {
+            for (const error of err.response.data[errors]) {
+              if (!errorMessage.includes(error)) {
+                errorMessage.push(error);
+              }
+            }
+          }
+          // alert(errorMessage.join("\r\n"));
         });
     },
 
     likeTil({ commit, getters }, tilPk) {
       axios
-        .post(
-          "/api/til/like/",
-          { tilId: tilPk },
-          { headers: getters.authHeader }
-        )
+        .post("til/like/" + tilPk, { headers: getters.authHeader })
         .then((res) => commit("SET_TIL", res.data))
+        .catch((err) => console.error(err.response));
+    },
+
+    dislikeTil({ commit, getters }, tilPk) {
+      axios
+        .delete("til/like/" + tilPk, { headers: getters.authHeader })
+        .then((res) => commit("SET_TIL", res.data))
+        // TIL state 모델이 확정나면, 거기서 is_like에 해당할 속성을 직접 바꿀 예정
         .catch((err) => console.error(err.response));
     },
 
