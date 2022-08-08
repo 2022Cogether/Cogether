@@ -28,10 +28,17 @@ public class HuntingService {
         return HuntingResponse.OnlyHuntingId.build(savedHunting);
     }
 
-    // TODO: 게시물유저 skill들, 로그인유저 스크랩여부 추가
-    public HuntingResponse.GetHunting getHunting(int id) {
-        Hunting hunting = huntingRepository.findById(id).orElseThrow(HuntingNotFoundException::new);
-        return HuntingResponse.GetHunting.build(hunting);
+    // TODO: 게시물유저 skillList 추가
+    public HuntingResponse.GetHunting getHunting(int userId, int huntingId) {
+        Hunting hunting = huntingRepository.findById(huntingId).orElseThrow(HuntingNotFoundException::new);
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        int cnt = huntingScrapRepository.countAllByUserAndHunting(user, hunting);
+
+        if (cnt == 0)
+            return HuntingResponse.GetHunting.build(hunting, false, 0);
+
+        HuntingScrap huntingScrap = huntingScrapRepository.findByUserAndHunting(user, hunting);
+        return HuntingResponse.GetHunting.build(hunting, true, huntingScrap.getId());
     }
 
     public HuntingResponse.OnlyHuntingId delete(int id) {
