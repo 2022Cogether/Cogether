@@ -106,4 +106,18 @@ public class LiveCoopResponse {
         }
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class GetLiveCoopMembers {
+        private List<GetLiveCoopMember> liveCoopMembers;
+
+        public static LiveCoopResponse.GetLiveCoopMembers build(List<LiveCoopMember> liveCoopMembers) {
+            return LiveCoopResponse.GetLiveCoopMembers.builder()
+                    .liveCoopMembers(liveCoopMembers.stream().map(LiveCoopResponse.GetLiveCoopMember::build).collect(Collectors.toList()))
+                    .build();
+        }
+    }
+
 }
