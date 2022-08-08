@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -66,6 +68,29 @@ public class StudyService {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<StudyResponse.StudyAll> studyList = new ArrayList<>();
         List<Study> list = studyRepository.findAll();
+        Collections.sort(list, new Comparator<Study>() {
+            @Override
+            public int compare(Study o1, Study o2) {
+                return o2.getCreatedAt().compareTo(o1.getCreatedAt());
+            }
+        });
+        for (int i = 0; i < list.size(); i++){
+            Study study = list.get(i);
+            List<StudySkill> studySkillList = studySkillRepository.findAllByStudy_Id(study.getId());
+            int check = studyScrapRepository.countAllByStudyAndUser(study, user);
+            boolean isScrap = false;
+            if(check == 1){
+                isScrap = true;
+            }
+            studyList.add(StudyResponse.StudyAll.build(study, studySkillList, isScrap));
+        }
+        return StudyResponse.StudyList.build(studyList);
+    }
+
+    public StudyResponse.StudyList getMyStudyList(int userId){
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        List<StudyResponse.StudyAll> studyList = new ArrayList<>();
+        List<Study> list = studyRepository.findAllByUserOrderByCreatedAtDesc(user);
         for (int i = 0; i < list.size(); i++){
             Study study = list.get(i);
             List<StudySkill> studySkillList = studySkillRepository.findAllByStudy_Id(study.getId());

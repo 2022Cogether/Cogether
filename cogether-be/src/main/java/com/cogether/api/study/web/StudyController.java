@@ -41,4 +41,11 @@ public class StudyController {
         StudyResponse.StudyList response = studyService.getStudyList(userId);
         return ResponseEntity.ok().body(response);
     }
+
+    @GetMapping(path = "/study/list/my/{userId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<StudyResponse.StudyList> getMyStudyList(@PathVariable int userId){
+        StudyResponse.StudyList response = studyService.getMyStudyList(userId);
+        return ResponseEntity.ok().body(response);
+    }
 }
