@@ -51,9 +51,7 @@ public class UserService {
     }
 
 
-
-    public List<UserSkill> findBySkillId(int userId)
-    {
+    public List<UserSkill> findBySkillId(int userId) {
         return userSkillRepository.findBySkillId(userId);
     }
 
@@ -62,7 +60,6 @@ public class UserService {
 
         return userSkillList;
     }
-
 
 
     //회원가입
@@ -81,17 +78,18 @@ public class UserService {
 
         int id = userRequest.getId();   // 식별자
 
-//        List<UserSkill> userSkillList = findUser(id);
+        List<UserSkill> userSkillList = findUser(id);
 
-        //UserSkill table에 레코드 저장
-//        for(UserSkill userSkills : userSkillList)
-//        {
-//            UserSkill userSkill = userSkillRepository.save(
-//                    UserSkill.builder()
-//                            .skillId(userSkills.getSkillId())
-//                            .user(user)
-//                            .build());
-//        }
+        if (userSkillList.size() != 0) {
+            for (UserSkill userSkills : userSkillList) {
+                UserSkill userSkill = userSkillRepository.save(
+                        UserSkill.builder()
+                                .skillId(userSkills.getSkillId())
+                                .user(user)
+                                .build());
+            }
+        }
+
 
         String accessToken = tokenUtils.generateJwtToken(user);
         String refreshToken = tokenUtils.saveRefreshToken(user);
@@ -112,18 +110,17 @@ public class UserService {
         Optional<Auth> authEntity =
                 authRepository
                         .findByUserId(user.getId());
-                        //.orElseThrow(() -> new IllegalArgumentException("Token 이 존재하지 않습니다."));
+        //.orElseThrow(() -> new IllegalArgumentException("Token 이 존재하지 않습니다."));
         if (!passwordEncoder.matches(userRequest.getPassword(), user.getPassword())) {
             throw new Exception("비밀번호가 일치하지 않습니다.");
         }
         String accessToken = "";
         String refreshToken = "";
-        Auth auth=new Auth();
+        Auth auth = new Auth();
 
-        if(authEntity.isPresent())
-        {
-            auth=authEntity.get();
-            refreshToken =auth.getRefreshToken();
+        if (authEntity.isPresent()) {
+            auth = authEntity.get();
+            refreshToken = auth.getRefreshToken();
 
             //리프레시토큰 검증
             if (tokenUtils.isValidRefreshToken(refreshToken)) {
@@ -134,17 +131,14 @@ public class UserService {
                         .REFRESH_TOKEN(refreshToken)
                         .userId(user.getId())
                         .build();
-            }
-            else {
+            } else {
                 accessToken = tokenUtils.generateJwtToken(auth.getUser());
                 refreshToken = tokenUtils.saveRefreshToken(user);
                 auth.refreshUpdate(refreshToken);
             }
 
             return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).userId(user.getId()).build();
-        }
-        else
-        {
+        } else {
             accessToken = tokenUtils.generateJwtToken(user);
             refreshToken = tokenUtils.saveRefreshToken(user);
             authRepository.save(Auth.builder().user(user).refreshToken(refreshToken).build());
@@ -152,6 +146,7 @@ public class UserService {
         }
 
     }
+
     //로그아웃
     @Transactional
     public void signOut(UserRequest userRequest) throws Exception {
@@ -165,24 +160,26 @@ public class UserService {
     }
 
     // 이메일 중복확인
-    public boolean verifyDuplicationOfEmail(UserRequest userRequest)
-    {
+    public boolean verifyDuplicationOfEmail(UserRequest userRequest) {
         Optional<User> user =
                 userRepository.findByEmail(userRequest.getEmail());
 
-        if(user.isPresent())
+        System.out.println(userRequest.getEmail());
+        System.out.println(user.isPresent());
+
+        if (user.isPresent())
             return true;        // 중복확인
         else
             return false;       // 중복없음
+
     }
 
     //닉네임 중복확인
-    public boolean verifyDuplicationOfNickName(String nickname)
-    {
+    public boolean verifyDuplicationOfNickName(String nickname) {
         Optional<User> user =
                 userRepository.findByNickname(nickname);
 
-        if(user.isPresent())
+        if (user.isPresent())
             return true;        // 중복확인
         else
             return false;       // 중복없음
@@ -190,8 +187,7 @@ public class UserService {
 
     //회원 정보 수정
     @Transactional
-    public TokenResponse modifyUserInfo(UserRequest userRequest)
-    {
+    public TokenResponse modifyUserInfo(UserRequest userRequest) {
         Optional<User> user = userRepository.findByEmail(userRequest.getEmail());
 
 
@@ -217,16 +213,14 @@ public class UserService {
     }
 
     //회원조회
-    public User findUserInfo(int user_id) throws Exception
-    {
+    public User findUserInfo(int user_id) throws Exception {
         User user = userRepository
                 .findById(user_id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        return  user;
+        return user;
     }
 
     //비밀번호 변경
-    public int modifyPassword(UserRequest userRequest) throws Exception
-    {
+    public int modifyPassword(UserRequest userRequest) throws Exception {
         int id = userRequest.getId();
         String password = userRequest.getPassword();
         String encodingPassword = passwordEncoder.encode(password);
@@ -242,7 +236,7 @@ public class UserService {
     }
 
     //탈퇴
-    public int resignUser(UserRequest userRequest) throws Exception{
+    public int resignUser(UserRequest userRequest) throws Exception {
 
         User user = userRepository
                 .findById(userRequest.getId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
