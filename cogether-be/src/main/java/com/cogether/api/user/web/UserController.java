@@ -46,10 +46,10 @@ public class UserController {
     }
 
     //로그아웃
-    @GetMapping("/sign/signout")
-    public ResponseEntity signOut(@RequestBody UserRequest userRequest) throws Exception
+    @GetMapping("/sign/signout/{id}")
+    public ResponseEntity signOut(@PathVariable("id") int userId) throws Exception
     {
-        userService.signOut(userRequest);
+        userService.signOut(userId);
         System.out.println("로그아웃");
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -69,7 +69,7 @@ public class UserController {
         body.put("duplicate",String.valueOf(emailIsPresent));
 
         //return ResponseEntity.ok().body(body);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return emailIsPresent? ResponseEntity.ok(HttpStatus.OK):ResponseEntity.badRequest().build();
     }
 
 
@@ -85,7 +85,7 @@ public class UserController {
 //
 //        //String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(body);
 
-        return ResponseEntity.ok(HttpStatus.OK);
+        return nickNameIsPresent? ResponseEntity.ok(HttpStatus.OK) :ResponseEntity.badRequest().build();
     }
 
 

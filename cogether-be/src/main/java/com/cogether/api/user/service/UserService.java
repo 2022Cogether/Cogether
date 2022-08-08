@@ -79,17 +79,17 @@ public class UserService {
 
         int id = userRequest.getId();   // 식별자
 
-        List<UserSkill> userSkillList = findUser(id);
-
-        if (userSkillList.size() != 0) {
-            for (UserSkill userSkills : userSkillList) {
-                UserSkill userSkill = userSkillRepository.save(
-                        UserSkill.builder()
-                                .skillId(userSkills.getSkillId())
-                                .user(user)
-                                .build());
-            }
-        }
+//        List<UserSkill> userSkillList = findUser(id);
+//
+//        if (userSkillList.size() != 0) {
+//            for (UserSkill userSkills : userSkillList) {
+//                UserSkill userSkill = userSkillRepository.save(
+//                        UserSkill.builder()
+//                                .skillId(userSkills.getSkillId())
+//                                .user(user)
+//                                .build());
+//            }
+//        }
 
 
         String accessToken = tokenUtils.generateJwtToken(user);
@@ -97,7 +97,7 @@ public class UserService {
 
         authRepository.save(Auth.builder().user(user).refreshToken(refreshToken).build());      //DB 리프레시 토큰 저장
 
-        return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).userId(id).build();
+        return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).userId(user.getId()).build();
     }
 
     //로그인
@@ -150,8 +150,8 @@ public class UserService {
 
     //로그아웃
     @Transactional
-    public void signOut(UserRequest userRequest) throws Exception {
-        User user = userRepository.findByEmail(userRequest.getEmail())
+    public void signOut(int userId) throws Exception {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         Auth auth = authRepository.findByUserId(user.getId()).
@@ -180,6 +180,8 @@ public class UserService {
         Optional<User> user =
                 userRepository.findByNickname(nickname);
 
+        System.out.println(nickname);
+        System.out.println(user.isPresent());
         if (user.isPresent())
             return true;        // 중복확인
         else
