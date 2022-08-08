@@ -4,6 +4,7 @@ import com.cogether.api.liveCoop.domain.LiveCoop;
 import com.cogether.api.liveCoop.domain.LiveCoopMember;
 import com.cogether.api.liveCoop.domain.LiveCoopRequest;
 import com.cogether.api.liveCoop.domain.LiveCoopResponse;
+import com.cogether.api.liveCoop.exception.LiveCoopMemberNotFoundException;
 import com.cogether.api.liveCoop.exception.LiveCoopNotFoundException;
 import com.cogether.api.liveCoop.repository.LiveCoopMemberRepository;
 import com.cogether.api.liveCoop.repository.LiveCoopRepository;
@@ -74,6 +75,11 @@ public class LiveCoopService {
         LiveCoopMember liveCoopMember = LiveCoopMember.toEntity(user, liveCoop);
         LiveCoopMember savedLiveCoopMember = liveCoopMemberRepository.save(liveCoopMember);
         return LiveCoopResponse.OnlyLiveCoopMemberId.build(savedLiveCoopMember);
+    }
+
+    public LiveCoopResponse.GetLiveCoopMember getLiveCoopMember(int id) {
+        LiveCoopMember liveCoopMember = liveCoopMemberRepository.findById(id).orElseThrow(LiveCoopMemberNotFoundException::new);
+        return LiveCoopResponse.GetLiveCoopMember.build(liveCoopMember);
     }
 
 }
