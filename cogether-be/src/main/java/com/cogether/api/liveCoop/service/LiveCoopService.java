@@ -88,4 +88,12 @@ public class LiveCoopService {
         return LiveCoopResponse.GetLiveCoopMembers.build(liveCoopMembers);
     }
 
+    public LiveCoopResponse.OnlyLiveCoopMemberId updateLiveCoopMember(LiveCoopRequest.UpdateLiveCoopMember request) {
+        LiveCoopMember liveCoopMember = liveCoopMemberRepository.findById(request.getLiveCoopMemberId()).orElseThrow(LiveCoopMemberNotFoundException::new);
+        liveCoopMember.setCode(request.getCode());
+        LiveCoopMember savedLiveCoopMember = liveCoopMemberRepository.save(liveCoopMember);
+        return LiveCoopResponse.OnlyLiveCoopMemberId.build(savedLiveCoopMember);
+    }
+
+
 }
