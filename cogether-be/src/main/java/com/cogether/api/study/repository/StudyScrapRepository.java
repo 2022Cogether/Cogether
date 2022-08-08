@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface StudyScrapRepository extends JpaRepository<StudyScrap, Integer> {
 
     Integer countAllByStudyAndUser (Study study, User user);
+    StudyScrap findByStudy_IdAndUser_Id(int studyId, int userId);
 }
