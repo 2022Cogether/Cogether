@@ -62,4 +62,10 @@ public class LiveCoopController {
         return ResponseEntity.ok().body(response);
     }
 
+    @PatchMapping("/livecoop/member")
+    public ResponseEntity<LiveCoopResponse.OnlyLiveCoopMemberId> getLiveCoopMembers(@RequestBody LiveCoopRequest.UpdateLiveCoopMember request) {
+        LiveCoopResponse.OnlyLiveCoopMemberId response = liveCoopService.updateLiveCoopMember(request);
+        return ResponseEntity.ok().body(response);
+    }
+
 }
