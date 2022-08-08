@@ -27,4 +27,11 @@ public class StudyController {
         StudyResponse.OnlyId response = studyService.delete(studyId);
         return ResponseEntity.ok().body(response);
     }
+
+    @GetMapping(path = "/study")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<StudyResponse.StudyAll> getStudyDetail(@RequestParam int studyId, @RequestParam int userId){
+        StudyResponse.StudyAll response = studyService.getStudyDetail(studyId, userId);
+        return ResponseEntity.ok().body(response);
+    }
 }
