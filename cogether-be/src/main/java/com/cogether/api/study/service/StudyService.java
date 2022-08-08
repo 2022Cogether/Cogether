@@ -14,6 +14,7 @@ import com.cogether.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -59,5 +60,22 @@ public class StudyService {
             isScrap = true;
         }
         return StudyResponse.StudyAll.build(study,list, isScrap);
+    }
+
+    public StudyResponse.StudyList getStudyList(int userId){
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        List<StudyResponse.StudyAll> studyList = new ArrayList<>();
+        List<Study> list = studyRepository.findAll();
+        for (int i = 0; i < list.size(); i++){
+            Study study = list.get(i);
+            List<StudySkill> studySkillList = studySkillRepository.findAllByStudy_Id(study.getId());
+            int check = studyScrapRepository.countAllByStudyAndUser(study, user);
+            boolean isScrap = false;
+            if(check == 1){
+                isScrap = true;
+            }
+            studyList.add(StudyResponse.StudyAll.build(study, studySkillList, isScrap));
+        }
+        return StudyResponse.StudyList.build(studyList);
     }
 }
