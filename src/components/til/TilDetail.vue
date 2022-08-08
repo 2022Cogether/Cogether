@@ -177,6 +177,7 @@
           </div>
           <!-- 좋아요 갯수를 Til로 가늠하는 방법 필요 -->
           <span class="like-count" @click="sendLike"> 좋아요 0개 </span>
+          <!-- v-if: "is_Current_User_Like_This_TIL?" 등으로 sendlikt/senddislike 바꾸어야 할 듯 <- currentUser 완성 뒤 -->
           <!-- <div v-if="bookmarked" class="bookmark">
         <font-awesome-icon
           @click="bookmarkCheck"
@@ -231,6 +232,9 @@ export default {
     const sendLike = () => {
       store.dispatch("likeTil", tilContent.pk);
     };
+    const sendDislike = () => {
+      store.dispatch("dislikeTil", tilContent.pk);
+    };
 
     const onSubmit = () => {
       const payload = {
@@ -244,6 +248,7 @@ export default {
       tilContent,
       commentContent,
       sendLike,
+      sendDislike,
       onSubmit,
     };
   },
@@ -251,11 +256,34 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.modal {
+  height: 80%;
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-card {
+  background-color: white;
+}
+
+// .modal-card {
+//   z-index: 1;
+//   position: absolute;
+//   display: flex;
+//   width: 100%;
+//   height: 100%;
+//   align-items: center;
+//   justify-content: center;
+//   background-color: white;
+// }
+
 .til-item {
   position: relative;
   margin-left: auto;
   margin-right: auto;
-  width: 80%;
+  width: 100%;
   height: 700px;
   margin-bottom: 20px;
   border: 2px solid rgba(219, 219, 218, 0.8);
@@ -591,15 +619,5 @@ svg {
   100% {
     transform: scale(1);
   }
-}
-
-.modal {
-  position: absolute;
-  display: flex;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-  background-color: white;
 }
 </style>
