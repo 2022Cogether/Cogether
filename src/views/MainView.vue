@@ -3,8 +3,13 @@
     <!-- 검색바 -->
     <div class="search-bar-block">
       <div class="search-bar">
-        <input class="input-search" type="text" />
-        <button class="btn-search">
+        <input
+          class="input-search"
+          type="text"
+          v-model="searchWord"
+          @keyup.enter.prevent="onSubmit"
+        />
+        <button @click="onSubmit" class="btn-search">
           <font-awesome-icon
             icon="fa-solid fa-magnifying-glass"
             class="icon-search"
@@ -23,7 +28,7 @@
 import TilMainList from "@/components/til/TilMainList.vue";
 import SignIn from "@/components/sign/SignIn.vue";
 
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "vuex";
 
 export default {
@@ -36,9 +41,24 @@ export default {
     const store = useStore();
     const getters = computed(() => store.getters);
 
+    const searchWord = ref("");
+
     const isLoggedIn = getters.value.isLoggedIn;
 
-    return { isLoggedIn };
+    const onSubmit = () => {
+      const payload = {
+        keyword: searchWord.value,
+        userId: getters.value.getCurrentUser,
+      };
+      console.log(payload);
+      store.dispatch("searchTil", payload);
+    };
+
+    return {
+      searchWord,
+      isLoggedIn,
+      onSubmit,
+    };
   },
 };
 </script>

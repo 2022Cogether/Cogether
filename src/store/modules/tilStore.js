@@ -199,10 +199,21 @@ export const tilStore = {
         .catch((err) => console.error(err.response));
     },
 
+    searchTil({ commit }, payload) {
+      // paylod => keyword, userId
+      axios
+        .get("til/search/", payload)
+        .then((res) => commit("ADD_TIL_LIST", res.data))
+        .catch((err) => console.error(err.response));
+    },
+
     createComment({ commit, getters }, payload) {
       axios
         .post("/til/commment/create", payload, { headers: getters.authHeader })
-        .then((res) => commit("SET_TIL", res.data))
+        .then((res) => {
+          commit("CLEAN_TIL_LIST");
+          commit("SET_TIL", res.data);
+        })
         .catch((err) => console.error(err.response));
     },
   },

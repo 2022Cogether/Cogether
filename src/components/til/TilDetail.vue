@@ -192,7 +192,7 @@
             {{ tilContent.content }}
           </div>
         </div>
-        <!-- 댓글 입력창 -->
+        <!-- 댓글창 -->
         <div class="til-comment">
           <h1 class="comments-title">Comments (3)</h1>
           <CommentItem
@@ -205,7 +205,7 @@
           <input
             type="text"
             class="til-comment-input"
-            @submit.prevent="onSubmit"
+            @keyup.enter="onSubmit"
             v-model="commentContent"
           />
         </div>
