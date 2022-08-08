@@ -40,4 +40,13 @@ public class LiveCoopRequest {
         private  int liveCoopId;
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class UpdateLiveCoopMember {
+        private  int liveCoopMemberId;
+        private String code;
+    }
+
 }
