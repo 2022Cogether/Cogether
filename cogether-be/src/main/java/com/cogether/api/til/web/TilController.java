@@ -43,10 +43,10 @@ public class TilController {
         return ResponseEntity.ok().body(response);
     }
 
-    @DeleteMapping(path = "/til/like/{tilLikeId}")
+    @DeleteMapping(path = "/til/like")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<TilResponse.OnlyLikeId> deleteLike(@PathVariable int tilLikeId){
-        TilResponse.OnlyLikeId response = tilService.deleteLike(tilLikeId);
+    public ResponseEntity<TilResponse.OnlyLikeId> deleteLike(@RequestParam int tilId, @RequestParam int userId){
+        TilResponse.OnlyLikeId response = tilService.deleteLike(tilId, userId);
         return ResponseEntity.ok().body(response);
     }
 

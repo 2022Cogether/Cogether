@@ -36,7 +36,7 @@ public class TilService {
             //TODO: 등록테스트 필요
             String img_url = fileUploadService.uploadImage(create_img.getImgList().get(i));
             TilImg tilimg = TilImg.toEntity(savedTil, img_url);
-            TilImg savedTilImg = tilImgRepository.save(tilimg);
+            tilImgRepository.save(tilimg);
         }
         return TilResponse.OnlyId.build(savedTil);
     }
@@ -63,9 +63,11 @@ public class TilService {
         return TilResponse.OnlyLikeId.build(savedTilLike);
     }
 
-    public TilResponse.OnlyLikeId deleteLike(int tilLikeId){
-        TilLike tilLike = tilLikeRepository.findById(tilLikeId).orElseThrow(TilLikeNotFoundException::new);
-        tilLikeRepository.deleteById(tilLikeId);
+    public TilResponse.OnlyLikeId deleteLike(int tilId, int userId){
+        Til til = tilRepository.findById(tilId).orElseThrow(TilNotFoundException::new);
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        TilLike tilLike = tilLikeRepository.findByTilAndUser(til, user);
+        tilLikeRepository.deleteById(tilLike.getId());
         return TilResponse.OnlyLikeId.build(tilLike);
     }
 
