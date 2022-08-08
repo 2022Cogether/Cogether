@@ -19,6 +19,19 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 1.로그인
+ * 2. 로그아웃
+ * 3. 회원가입
+ * 4. 이메일 인증
+ * 5. 유저정보 조회
+ * 6. 닉네임 중복확인
+ * 7. 이메일 중복확인
+ * 8. 비밀번호 찾기
+ * 9. 회원정보수정
+ * 10. 유저비밀번호 변경
+ * 11. 회원탈퇴
+ */
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -172,10 +185,10 @@ public class UserService {
             return false;       // 중복없음
     }
 
-    public boolean verifyDuplicationOfNickName(String nickName)
+    public boolean verifyDuplicationOfNickName(UserRequest userRequest)
     {
         Optional<User> user =
-                userRepository.findByEmail(nickName);
+                userRepository.findByEmail(userRequest.getNickname());
 
         if(user.isPresent())
             return true;        // 중복확인

@@ -8,8 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-//1. 회원가입
-//2. 로그인
+/**
+ * 1. 회원가입
+ * 2. 로그인
+ * 3. 로그아웃
+ */
 
 
 
@@ -21,7 +24,7 @@ public class UserController {
     private final UserService userService;
 
     //회원가입
-    @PostMapping("/user/signup")
+    @PostMapping("/sign/signup")
     public ResponseEntity signUp(@RequestBody UserRequest userRequest) {
         return userService.findByEmail(userRequest.getEmail()).isPresent()
                 ? ResponseEntity.badRequest().build()
@@ -29,14 +32,14 @@ public class UserController {
     }
 
     //로그인
-   @PostMapping("/user/signin")
+   @PostMapping("/sign/signin")
     public ResponseEntity<TokenResponse> signIn(@RequestBody UserRequest userRequest) throws Exception {
 
         return ResponseEntity.ok().body(userService.signIn(userRequest));
     }
 
     //로그아웃
-    @GetMapping("/user/signout")
+    @GetMapping("/sign/signout")
     public ResponseEntity signOut(@RequestBody UserRequest userRequest) throws Exception
     {
         userService.signOut(userRequest);
@@ -62,9 +65,9 @@ public class UserController {
 
     //닉네임 중복확인      true : 중복 false : 중복 x
     @GetMapping("/user/verify/{nickname}")
-    public ResponseEntity<Boolean> verifyDuplicationOfNickName(@PathVariable String nickname) throws Exception {
+    public ResponseEntity<Boolean> verifyDuplicationOfNickName(@RequestBody UserRequest userRequest) throws Exception {
 
-        return ResponseEntity.ok().body(userService.verifyDuplicationOfNickName(nickname));
+        return ResponseEntity.ok().body(userService.verifyDuplicationOfNickName(userRequest));
     }
 
     //회원정보 변경
