@@ -73,12 +73,21 @@ public class UserController {
                 :ResponseEntity.ok().body(duplicate="false");
     }
 
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity findUser(@RequestParam int userId) throws Exception{
+
+        return ResponseEntity.ok().body(userService.findUserInfo(userId));
+    }
+
+
     //회원정보 변경
     @PutMapping("/user")
     public ResponseEntity<TokenResponse> modifyUserInfo(@RequestBody UserRequest userRequest) throws Exception
     {
         return ResponseEntity.ok().body(userService.modifyUserInfo(userRequest));
     }
+
 
 
 

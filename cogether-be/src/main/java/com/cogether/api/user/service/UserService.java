@@ -97,7 +97,7 @@ public class UserService {
 
         authRepository.save(Auth.builder().user(user).refreshToken(refreshToken).build());      //DB 리프레시 토큰 저장
 
-        return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).build();
+        return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).userId(id).build();
     }
 
     //로그인
@@ -131,6 +131,7 @@ public class UserService {
                 return TokenResponse.builder()
                         .ACCESS_TOKEN(accessToken)
                         .REFRESH_TOKEN(refreshToken)
+                        .userId(user.getId())
                         .build();
             }
             else {
@@ -139,14 +140,14 @@ public class UserService {
                 auth.refreshUpdate(refreshToken);
             }
 
-            return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).build();
+            return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).userId(user.getId()).build();
         }
         else
         {
             accessToken = tokenUtils.generateJwtToken(user);
             refreshToken = tokenUtils.saveRefreshToken(user);
             authRepository.save(Auth.builder().user(user).refreshToken(refreshToken).build());
-            return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).build();
+            return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).userId(user.getId()).build();
         }
 
     }
@@ -174,16 +175,6 @@ public class UserService {
             return false;       // 중복없음
     }
 
-    public boolean verifyDuplicationOfEmail(String email)
-    {
-        Optional<User> user =
-                userRepository.findByEmail(email);
-
-        if(user.isPresent())
-            return true;        // 중복확인
-        else
-            return false;       // 중복없음
-    }
 
     public boolean verifyDuplicationOfNickName(String nickname)
     {
@@ -224,6 +215,13 @@ public class UserService {
         return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).build();
     }
 
+    //회원조회
+    public User findUserInfo(int user_id) throws Exception
+    {
+        User user = userRepository
+                .findById(user_id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        return  user;
+    }
 
 
 }
