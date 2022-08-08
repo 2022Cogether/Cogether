@@ -108,4 +108,10 @@ public class StudyService {
         StudyScrap savedStudyScrap = studyScrapRepository.save(studyScrap);
         return StudyResponse.OnlyStudyScrapId.build(savedStudyScrap);
     }
+
+    public StudyResponse.OnlyStudyScrapId deleteStudyScrap(int studyId, int userId){
+        StudyScrap studyScrap = studyScrapRepository.findByStudy_IdAndUser_Id(studyId, userId);
+        studyScrapRepository.deleteById(studyScrap.getId());
+        return StudyResponse.OnlyStudyScrapId.build(studyScrap);
+    }
 }
