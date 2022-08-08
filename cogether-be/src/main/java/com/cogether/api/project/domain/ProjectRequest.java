@@ -1,6 +1,6 @@
 package com.cogether.api.project.domain;
 
-import com.cogether.api.user.dto.User;
+import com.cogether.api.user.domain.User;
 import lombok.*;
 
 import java.time.LocalDateTime;

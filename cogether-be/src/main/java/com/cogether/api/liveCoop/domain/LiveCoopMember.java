@@ -2,7 +2,7 @@ package com.cogether.api.liveCoop.domain;
 
 import com.cogether.api.hunting.domain.Hunting;
 import com.cogether.api.hunting.domain.HuntingRequest;
-import com.cogether.api.user.dto.User;
+import com.cogether.api.user.domain.User;
 import lombok.*;
 
 import javax.persistence.*;

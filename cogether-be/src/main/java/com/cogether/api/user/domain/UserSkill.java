@@ -1,4 +1,4 @@
-package com.cogether.api.user.dto;
+package com.cogether.api.user.domain;
 
 import lombok.*;
 
@@ -20,10 +20,10 @@ public class UserSkill {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="user_id") //유저식별자
     private User user;
 
-    @Column(name="skill_id",length=50)
+    @Column(name="skill_id",length=50)  //기술스택식별자
     private String skillId;
 
 }

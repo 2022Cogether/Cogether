@@ -5,7 +5,7 @@ import com.cogether.api.project.exception.ProjectNotFoundException;
 import com.cogether.api.project.repository.ProjectRepository;
 import com.cogether.api.project.repository.ProjectScrapRepository;
 import com.cogether.api.project.repository.ProjectSkillRepository;
-import com.cogether.api.user.dto.User;
+import com.cogether.api.user.domain.User;
 import com.cogether.api.user.exception.UserNotFoundException;
 import com.cogether.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
