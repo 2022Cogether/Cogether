@@ -3,8 +3,10 @@ package com.cogether.api.hunting.service;
 import com.cogether.api.hunting.domain.Hunting;
 import com.cogether.api.hunting.domain.HuntingRequest;
 import com.cogether.api.hunting.domain.HuntingResponse;
+import com.cogether.api.hunting.domain.HuntingScrap;
 import com.cogether.api.hunting.exception.HuntingNotFoundException;
 import com.cogether.api.hunting.repository.HuntingRepository;
+import com.cogether.api.hunting.repository.HuntingScrapRepository;
 import com.cogether.api.user.domain.User;
 import com.cogether.api.user.exception.UserNotFoundException;
 import com.cogether.api.user.repository.UserRepository;
@@ -16,34 +18,46 @@ import org.springframework.stereotype.Service;
 public class HuntingService {
 
     private final HuntingRepository huntingRepository;
-
+    private final HuntingScrapRepository huntingScrapRepository;
     private final UserRepository userRepository;
 
-    public HuntingResponse.OnlyId create(HuntingRequest.Create request) {
+    public HuntingResponse.OnlyHuntingId create(HuntingRequest.CreateHunting request) {
         User user = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
         Hunting hunting = request.toEntity(user);
         Hunting savedHunting = huntingRepository.save(hunting);
-        return HuntingResponse.OnlyId.build(savedHunting);
+        return HuntingResponse.OnlyHuntingId.build(savedHunting);
     }
 
-    // TODO: 게시물유저 skill들, 로그인유저 스크랩여부 추가
-    public HuntingResponse.GetHunting getHunting(int id) {
-        Hunting hunting = huntingRepository.findById(id).orElseThrow(HuntingNotFoundException::new);
-        return HuntingResponse.GetHunting.build(hunting);
+    // TODO: 게시물유저 skillList 추가
+    public HuntingResponse.GetHunting getHunting(int userId, int huntingId) {
+        Hunting hunting = huntingRepository.findById(huntingId).orElseThrow(HuntingNotFoundException::new);
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        int cnt = huntingScrapRepository.countAllByUserAndHunting(user, hunting);
+
+        if (cnt == 0)
+            return HuntingResponse.GetHunting.build(hunting, false, 0);
+
+        HuntingScrap huntingScrap = huntingScrapRepository.findByUserAndHunting(user, hunting);
+        return HuntingResponse.GetHunting.build(hunting, true, huntingScrap.getId());
     }
 
-    public HuntingResponse.OnlyId update(HuntingRequest.Update request) {
-        Hunting hunting = huntingRepository.findById(request.getId()).orElseThrow(HuntingNotFoundException::new);
-        hunting.setTitle(request.getTitle());
-        hunting.setContent(request.getContent());
-        Hunting savedHunting = huntingRepository.save(hunting);
-        return HuntingResponse.OnlyId.build(savedHunting);
-    }
-
-    public HuntingResponse.OnlyId delete(int id) {
+    public HuntingResponse.OnlyHuntingId delete(int id) {
         Hunting hunting = huntingRepository.findById(id).orElseThrow(HuntingNotFoundException::new);
         huntingRepository.deleteById(id);
-        return HuntingResponse.OnlyId.build(hunting);
+        return HuntingResponse.OnlyHuntingId.build(hunting);
     }
 
+    public HuntingResponse.OnlyHuntingScrapId createScrap(HuntingRequest.CreateHuntingScrap request) {
+        User user = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
+        Hunting hunting = huntingRepository.findById(request.getHuntingId()).orElseThrow(HuntingNotFoundException::new);
+        HuntingScrap huntingScrap = request.toEntity(user, hunting);
+        HuntingScrap savedHuntingScrap = huntingScrapRepository.save(huntingScrap);
+        return HuntingResponse.OnlyHuntingScrapId.build(savedHuntingScrap);
+    }
+
+    public HuntingResponse.OnlyHuntingScrapId deleteScrap(int id) {
+        HuntingScrap huntingScrap = huntingScrapRepository.findById(id).orElseThrow(HuntingNotFoundException::new);
+        huntingScrapRepository.deleteById(id);
+        return HuntingResponse.OnlyHuntingScrapId.build(huntingScrap);
+    }
 }

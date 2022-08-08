@@ -17,36 +17,61 @@ public class LiveCoopController {
 
     private final LiveCoopService liveCoopService;
 
-    @PostMapping("/LiveCoop")
+    @PostMapping("/livecoop")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<LiveCoopResponse.OnlyId> create(@RequestBody LiveCoopRequest.Create request) {
-        LiveCoopResponse.OnlyId response = liveCoopService.create(request);
+    public ResponseEntity<LiveCoopResponse.OnlyLiveCoopId> createLiveCoop(@RequestBody LiveCoopRequest.CreateLiveCoop request) {
+        LiveCoopResponse.OnlyLiveCoopId response = liveCoopService.createLiveCoop(request);
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/LiveCoop/{LiveCoopId}")
-    public ResponseEntity<LiveCoopResponse.GetLiveCoop> getLiveCoop(@PathVariable int LiveCoopId) {
-        LiveCoopResponse.GetLiveCoop response = liveCoopService.getLiveCoop(LiveCoopId);
+    @GetMapping("/livecoop/{liveCoopId}")
+    public ResponseEntity<LiveCoopResponse.GetLiveCoop> getLiveCoop(@PathVariable int liveCoopId) {
+        LiveCoopResponse.GetLiveCoop response = liveCoopService.getLiveCoop(liveCoopId);
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/LiveCoop/list")
-    public ResponseEntity<LiveCoopResponse.GetLiveCoops> getLiveCoops() {
-        LiveCoopResponse.GetLiveCoops response = liveCoopService.getLiveCoops();
+    @GetMapping("/livecoop/list/{userId}")
+    public ResponseEntity<LiveCoopResponse.GetLiveCoops> getLiveCoops(@PathVariable int userId) {
+        LiveCoopResponse.GetLiveCoops response = liveCoopService.getLiveCoops(userId);
         return ResponseEntity.ok().body(response);
     }
 
-//    @PutMapping("/LiveCoop")
-//    @ResponseStatus(value = HttpStatus.OK)
-//    public ResponseEntity<LiveCoopResponse.OnlyId> update(@RequestBody LiveCoopRequest.Update request) {
-//        LiveCoopResponse.OnlyId response = liveCoopService.update(request);
-//        return ResponseEntity.ok().body(response);
-//    }
-
-    @DeleteMapping("/LiveCoop/{LiveCoopId}")
+    @DeleteMapping("/livecoop/{liveCoopId}")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<LiveCoopResponse.OnlyId> delete(@PathVariable int LiveCoopId) {
-        LiveCoopResponse.OnlyId response = liveCoopService.delete(LiveCoopId);
+    public ResponseEntity<LiveCoopResponse.OnlyLiveCoopId> deleteLiveCoop(@PathVariable int liveCoopId) {
+        LiveCoopResponse.OnlyLiveCoopId response = liveCoopService.deleteLiveCoop(liveCoopId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/livecoop/member")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<LiveCoopResponse.OnlyLiveCoopMemberId> createLiveCoopMember(@RequestBody LiveCoopRequest.CreateLiveCoopMember request) {
+        LiveCoopResponse.OnlyLiveCoopMemberId response = liveCoopService.createLiveCoopMember(request);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/livecoop/member/{liveCoopMemberId}")
+    public ResponseEntity<LiveCoopResponse.GetLiveCoopMember> getLiveCoopMember(@PathVariable int liveCoopMemberId) {
+        LiveCoopResponse.GetLiveCoopMember response = liveCoopService.getLiveCoopMember(liveCoopMemberId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/livecoop/member/list/{liveCoopId}")
+    public ResponseEntity<LiveCoopResponse.GetLiveCoopMembers> getLiveCoopMembers(@PathVariable int liveCoopId) {
+        LiveCoopResponse.GetLiveCoopMembers response = liveCoopService.getLiveCoopMembers(liveCoopId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PatchMapping("/livecoop/member")
+    public ResponseEntity<LiveCoopResponse.OnlyLiveCoopMemberId> getLiveCoopMembers(@RequestBody LiveCoopRequest.UpdateLiveCoopMember request) {
+        LiveCoopResponse.OnlyLiveCoopMemberId response = liveCoopService.updateLiveCoopMember(request);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping("/livecoop/member/{liveCoopMemberId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<LiveCoopResponse.OnlyLiveCoopMemberId> deleteLiveCoopMember(@PathVariable int liveCoopMemberId) {
+        LiveCoopResponse.OnlyLiveCoopMemberId response = liveCoopService.deleteLiveCoopMember(liveCoopMemberId);
         return ResponseEntity.ok().body(response);
     }
 

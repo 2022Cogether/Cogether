@@ -21,7 +21,14 @@ public class StudySkill {
     @JoinColumn(name = "Study_id")
     private Study study;
 
-    @Column(name = "skill_id", nullable = false)
-    private int skillId;
+    @Column(name = "skill_name", nullable = false)
+    private String skillName;
+
+    public static StudySkill toEntity(Study study, String skillName){
+        return StudySkill.builder()
+                .study(study)
+                .skillName(skillName)
+                .build();
+    }
 
 }

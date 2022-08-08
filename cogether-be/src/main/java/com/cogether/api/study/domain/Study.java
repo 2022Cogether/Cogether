@@ -36,7 +36,7 @@ public class Study {
     private int curMem;
 
     @Column(name = "online", nullable = false)
-    private boolean online;
+    private String online;
 
     @Column(name = "title", length = 100, nullable = false)
     private String title;
@@ -44,6 +44,6 @@ public class Study {
     @Column(name = "content", length = 2000, nullable = false)
     private String content;
 
-    @Column(name = "created_at", updatable = false, insertable = false)
+    @Column(name = "created_at", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 }

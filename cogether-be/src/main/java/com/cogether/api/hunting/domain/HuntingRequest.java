@@ -8,7 +8,7 @@ public class HuntingRequest {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class Create {
+    public static class CreateHunting {
         private int userId;
         private String title;
         private String content;
@@ -26,10 +26,15 @@ public class HuntingRequest {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class Update {
-        private int id;
-        private String title;
-        private String content;
+    public static class CreateHuntingScrap {
+        private int userId;
+        private int huntingId;
+        public HuntingScrap toEntity(User user, Hunting hunting) {
+            return HuntingScrap.builder()
+                    .user(user)
+                    .hunting(hunting)
+                    .build();
+        }
     }
 
 }

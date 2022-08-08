@@ -10,7 +10,7 @@ public class LiveCoopRequest {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class Create {
+    public static class CreateLiveCoop {
         private int userId;
         private int maxMemNum;
         private int duration;
@@ -30,16 +30,23 @@ public class LiveCoopRequest {
                     .build();
         }
     }
-//    @Getter
-//    @Builder
-//    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-//    @AllArgsConstructor(access = AccessLevel.PRIVATE)
-//    public static class Update {
-//        private int id;
-//        private int maxMemNum;
-//        private int duration;
-//        private String title;
-//        private String content;
-//        private boolean inProgress;
-//    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class CreateLiveCoopMember {
+        private int userId;
+        private  int liveCoopId;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class UpdateLiveCoopMember {
+        private  int liveCoopMemberId;
+        private String code;
+    }
+
 }

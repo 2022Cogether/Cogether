@@ -17,28 +17,35 @@ public class HuntingController {
 
     @PostMapping("/hunting")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<HuntingResponse.OnlyId> create(@RequestBody HuntingRequest.Create request) {
-        HuntingResponse.OnlyId response = huntingService.create(request);
+    public ResponseEntity<HuntingResponse.OnlyHuntingId> create(@RequestBody HuntingRequest.CreateHunting request) {
+        HuntingResponse.OnlyHuntingId response = huntingService.create(request);
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/hunting")
-    public ResponseEntity<HuntingResponse.GetHunting> getPost(@RequestParam int userId, @RequestParam int huntingId) {
-        HuntingResponse.GetHunting response = huntingService.getHunting(huntingId);
-        return ResponseEntity.ok().body(response);
-    }
-
-    @PutMapping("/hunting")
-    @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<HuntingResponse.OnlyId> update(@RequestBody HuntingRequest.Update request) {
-        HuntingResponse.OnlyId response = huntingService.update(request);
+    public ResponseEntity<HuntingResponse.GetHunting> getHunting(@RequestParam int userId, @RequestParam int huntingId) {
+        HuntingResponse.GetHunting response = huntingService.getHunting(userId, huntingId);
         return ResponseEntity.ok().body(response);
     }
 
     @DeleteMapping("/hunting/{huntingId}")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<HuntingResponse.OnlyId> delete(@PathVariable int huntingId) {
-        HuntingResponse.OnlyId response = huntingService.delete(huntingId);
+    public ResponseEntity<HuntingResponse.OnlyHuntingId> delete(@PathVariable int huntingId) {
+        HuntingResponse.OnlyHuntingId response = huntingService.delete(huntingId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/hunting/scrap")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<HuntingResponse.OnlyHuntingScrapId> createHuntingScrap(@RequestBody HuntingRequest.CreateHuntingScrap request) {
+        HuntingResponse.OnlyHuntingScrapId response = huntingService.createScrap(request);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping("/hunting/scrap/{huntingScrapId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<HuntingResponse.OnlyHuntingScrapId> deleteScrap(@PathVariable int huntingScrapId) {
+        HuntingResponse.OnlyHuntingScrapId response = huntingService.deleteScrap(huntingScrapId);
         return ResponseEntity.ok().body(response);
     }
 
