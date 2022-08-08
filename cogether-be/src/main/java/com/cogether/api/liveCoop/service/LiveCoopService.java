@@ -82,4 +82,10 @@ public class LiveCoopService {
         return LiveCoopResponse.GetLiveCoopMember.build(liveCoopMember);
     }
 
+    public LiveCoopResponse.GetLiveCoopMembers getLiveCoopMembers(int liveCoopId) {
+        LiveCoop liveCoop = liveCoopRepository.findById(liveCoopId).orElseThrow(LiveCoopNotFoundException::new);
+        List<LiveCoopMember> liveCoopMembers = liveCoopMemberRepository.findAllByLiveCoop(liveCoop);
+        return LiveCoopResponse.GetLiveCoopMembers.build(liveCoopMembers);
+    }
+
 }
