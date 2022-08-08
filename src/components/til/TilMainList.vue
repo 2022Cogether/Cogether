@@ -1,6 +1,39 @@
 <template>
+  <div class="modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Modal title</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>Modal body text goes here.</p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="til-list">
-    <TilMainItem v-for="til in tilList" :key="til.pk" :til="til" />
+    <TilMainItem
+      v-for="til in tilList"
+      :key="til.pk"
+      :til="til"
+      @detailChange="detailChange"
+    />
   </div>
   <TilDetail v-if="isOpen" />
   <!-- 나중에 TIL create창으로 URL 추가 -->
@@ -27,26 +60,9 @@ export default {
     const store = useStore();
     const getters = computed(() => store.getters);
 
-    const tilList = getters.value.getTilList;
+    const tilList = store.getters.getTilList;
 
     const modalNum = ref(getters.value.getOpenTil);
-    // watch(
-    //   getters.value.getOpenTil,
-    //   (newValue) => {
-    //     modalNum.value = newValue;
-    //   },
-    //   {
-    //     deep: true,
-    //   }
-    // );
-    const unwatch = store.watch(
-      (getters) => {
-        return getters.getOpenTil; // 감시하고 싶은 데이터를 턴
-      },
-      (newVal) => {
-        modalNum.value = newVal;
-      }
-    );
     const isOpen = ref(modalNum.value != -1);
 
     // created 할 때 한 번 발생하고, 이후로 끝까지 스크롤하면 계속 실행되어 til list에 추가하는 방식
@@ -60,7 +76,7 @@ export default {
     eraseTilList();
     getTilList();
 
-    // 참조: https://renatello.com/check-if-a-user-has-scrolled-to-the-bottom-in-vue-js//
+    // 참조: https://renatello.com/check-if-a-user-has-scrolled-to-the-bottom-in-vue-js/
     const scroll = () => {
       window.onscroll = () => {
         let bottomOfWindow =
@@ -78,6 +94,11 @@ export default {
       };
     };
 
+    function detailChange(num) {
+      modalNum.value = num;
+      isOpen.value = modalNum.value != -1;
+    }
+
     return {
       getTilList,
       eraseTilList,
@@ -85,7 +106,7 @@ export default {
       modalNum,
       isOpen,
       tilList,
-      unwatch,
+      detailChange,
     };
   },
   mounted() {

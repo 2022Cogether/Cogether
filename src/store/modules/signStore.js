@@ -27,6 +27,9 @@ export const signStore = {
 
     // 로그인 되면 token 추가 / 로그아웃 되면 token 제거
     token: localStorage.getItem("token") || "",
+
+    // 현재 유저 정보(id, 닉네임 등)이 저장될 state
+    currentUser: {},
   },
   getters: {
     getBooleanValue(state) {
@@ -52,9 +55,13 @@ export const signStore = {
     getSkillSet(state) {
       return state.skillSet;
     },
+
     // 인증키로 헤더 세팅 (장고 때 만든 거라 spring에서 다를 수 있음)
     authHeader(state) {
       return { Authorization: `token ${state.token}` };
+    },
+    getCurrentUser(state) {
+      return state.currentUser;
     },
   },
   mutations: {
@@ -69,6 +76,8 @@ export const signStore = {
     },
 
     SET_TOKEN: (state, token) => (state.token = token),
+
+    SET_CURRENT_USER: (state, userData) => (state.currentUser = userData),
   },
   actions: {
     saveToken({ commit }, token) {
@@ -78,7 +87,7 @@ export const signStore = {
 
     login({ commit, dispatch }, credentials) {
       axios
-        .post("/api/user/signin/", credentials)
+        .post("user/signin/", credentials)
         .then((res) => {
           alert("로그인 성공!");
           const token = res.data.key;
@@ -108,7 +117,7 @@ export const signStore = {
 
     register({ commit, dispatch }, credentials) {
       axios
-        .post("/api/user/signup/", credentials)
+        .post("user/signup/", credentials)
         .then((res) => {
           alert("회원가입 성공!");
           const token = res.data.key;
@@ -161,13 +170,9 @@ export const signStore = {
     // },
 
     // 이메일을 받고 이메일로 가입한 유저가 있으면 새 비밀번호를 보냄
-    takePassWord({ commit, getters }, email) {
+    takePassWord({ commit }, email) {
       axios
-        .post(
-          "/api/user/password",
-          { email: email },
-          { headers: getters.authHeader }
-        ) // 임의로 잡은 url
+        .post("user/password", { email: email })
         .then((res) => {
           if (res.data.status === 200) {
             alert("비밀번호를 성공적으로 보냈습니다!");
@@ -201,7 +206,7 @@ export const signStore = {
     // 서버에서 Skill Set을 받고 store의 스킬 셋을 업데이트함
     takeSkillSet({ commit }) {
       axios
-        .get("/aip/user/skill/") // 임의로 잡은 url
+        .get("user/skill/") // api 필요 없음 AWS에서 사용!
         .then((res) => {
           if (res.data.status === 200) {
             alert("스킬 셋을 성공적으로 받았습니다!");
@@ -230,7 +235,7 @@ export const signStore = {
     // 닉네임 중복 체크
     checkNickName({ commit }, nickName) {
       axios
-        .get("/api/user/verify", { nickname: nickName })
+        .get("user/verify" + nickName)
         .then((res) => {
           if (res.data.status === 200) {
             alert("가능한 닉네임입니다!");
@@ -265,7 +270,7 @@ export const signStore = {
     // 이메일 중복 체크
     checkEmail({ commit }, email) {
       axios
-        .get("/api/user/verify", { email: email })
+        .get("user/verify", { email: email })
         .then((res) => {
           if (res.data.status === 200) {
             alert("가능한 이메일입니다!");
@@ -302,7 +307,7 @@ export const signStore = {
     changePassword({ commit, getters }, pwSet) {
       axios
         .put(
-          "/api/user/password/",
+          "user/password/",
           {
             password: pwSet.password,
             newPassword: pwSet.newPassword,
@@ -337,7 +342,7 @@ export const signStore = {
 
     logout({ getters }) {
       axios
-        .post("/api/user/signout/", { headers: getters.authHeader })
+        .post("user/signout/", { headers: getters.authHeader })
         .then(() => {
           localStorage.removeItem("token");
           alert("성공적으로 logout!");
@@ -353,7 +358,7 @@ export const signStore = {
     resign({ commit, getters }, password) {
       axios
         .put(
-          "/api/user/resign/",
+          "user/resign/",
           { password: password },
           { headers: getters.authHeader }
         )
