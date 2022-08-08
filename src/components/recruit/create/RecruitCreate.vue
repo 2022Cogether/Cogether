@@ -26,8 +26,8 @@
 import Swal from "sweetalert2";
 import router from "@/router";
 import { reactive } from "vue";
-import TeamCreate from "@/components/recruit/TeamCreate.vue";
-import PersonCreate from "@/components/recruit/PersonCreate.vue";
+import TeamCreate from "@/components/recruit/create/TeamCreate.vue";
+import PersonCreate from "@/components/recruit/create/PersonCreate.vue";
 export default {
   name: "RecruitCreate",
   setup() {

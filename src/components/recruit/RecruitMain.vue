@@ -20,13 +20,13 @@
         <font-awesome-icon icon="fa-solid fa-pen-clip" />
         스터디
       </button>
-      <button type="button" class="btn">
+      <button type="button" class="btn" @click="btnTab3">
         <font-awesome-icon icon="fa-regular fa-bookmark" />
         스크랩
       </button>
     </div>
     <!-- 기술스택 필터 -->
-    <div class="d-flex">
+    <!-- <div class="d-flex">
       <div class="icon-container">
         <img
           src="@/assets/devicon/javascript-original.svg"
@@ -37,30 +37,42 @@
       <button class="plus-icon-box">
         <font-awesome-icon icon="fa-solid fa-plus" class="scra" />
       </button>
-    </div>
+    </div> -->
     <!-- 프로젝트  -->
     <div v-if="state.tabState === 'project'">
-      <PeopleList :searchText="state.searchText" />
-      <TeamList :searchText="state.searchText" />
+      <PeopleList :searchText="state.searchText" :tabState="state.tabState" />
+      <TeamList :searchText="state.searchText" :tabState="state.tabState" />
     </div>
     <!-- 스터디 -->
     <div v-if="state.tabState === 'study'">
-      <StudyList :searchText="state.searchText" />
+      <StudyList :searchText="state.searchText" :tabState="state.tabState" />
     </div>
+    <!-- 스크랩 -->
+    <div v-if="state.tabState === 'scrap'">
+      <div class="list-box">
+        <PeopleList :searchText="state.searchText" :tabState="state.tabState" />
+      </div>
+      <div class="list-box">
+        <TeamList :searchText="state.searchText" :tabState="state.tabState" />
+      </div>
+      <div class="list-box">
+        <StudyList :searchText="state.searchText" :tabState="state.tabState" />
+      </div>
+    </div>
+    <!-- 글쓰기 -->
+    <button class="icon-body" @click="recruitCreate">
+      <font-awesome-icon icon="fa-solid fa-address-book" class="book-icon" />
+    </button>
   </div>
-  <!-- 글쓰기 -->
-  <button class="icon-body" @click="recruitCreate">
-    <font-awesome-icon icon="fa-solid fa-address-book" class="book-icon" />
-  </button>
 </template>
 
 <script>
 import { computed, reactive } from "vue";
 import { useStore } from "vuex";
 import router from "@/router";
-import PeopleList from "@/components/recruit/PeopleList.vue";
-import TeamList from "@/components/recruit/TeamList.vue";
-import StudyList from "@/components/recruit/StudyList.vue";
+import PeopleList from "@/components/recruit/projectPeople/PeopleList.vue";
+import TeamList from "@/components/recruit/projectTeam/TeamList.vue";
+import StudyList from "@/components/recruit/study/StudyList.vue";
 
 export default {
   name: "RecruitMain",
@@ -72,11 +84,15 @@ export default {
       tempText: null,
       searchText: null,
     });
+
     function btnTab1() {
       state.tabState = "project";
     }
     function btnTab2() {
       state.tabState = "study";
+    }
+    function btnTab3() {
+      state.tabState = "scrap";
     }
 
     function recruitCreate() {
@@ -85,7 +101,16 @@ export default {
     function search() {
       state.searchText = state.tempText;
     }
-    return { store, getters, state, btnTab1, btnTab2, recruitCreate, search };
+    return {
+      store,
+      getters,
+      state,
+      btnTab1,
+      btnTab2,
+      recruitCreate,
+      search,
+      btnTab3,
+    };
   },
   components: {
     PeopleList,
@@ -191,5 +216,9 @@ h2 {
 
 .book-icon {
   font-size: 30px;
+}
+
+.list-box {
+  margin-bottom: 50px;
 }
 </style>
