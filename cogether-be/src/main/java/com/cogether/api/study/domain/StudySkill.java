@@ -21,7 +21,7 @@ public class StudySkill {
     @JoinColumn(name = "Study_id")
     private Study study;
 
-    @Column(name = "skill_id", nullable = false)
-    private int skillId;
+    @Column(name = "skill_name", nullable = false)
+    private String skillId;
 
 }
