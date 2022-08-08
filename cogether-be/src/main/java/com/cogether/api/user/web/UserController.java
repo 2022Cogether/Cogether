@@ -69,7 +69,7 @@ public class UserController {
         body.put("duplicate",String.valueOf(emailIsPresent));
 
         //return ResponseEntity.ok().body(body);
-        return emailIsPresent? ResponseEntity.ok(HttpStatus.OK):ResponseEntity.badRequest().build();
+        return emailIsPresent? ResponseEntity.ok().body(true) :ResponseEntity.ok().body(false);
     }
 
 
@@ -85,7 +85,7 @@ public class UserController {
 //
 //        //String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(body);
 
-        return nickNameIsPresent? ResponseEntity.ok(HttpStatus.OK) :ResponseEntity.badRequest().build();
+        return nickNameIsPresent? ResponseEntity.ok().body(true) :ResponseEntity.ok().body(false);
     }
 
 
