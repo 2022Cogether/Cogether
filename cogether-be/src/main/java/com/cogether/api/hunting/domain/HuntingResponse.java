@@ -8,12 +8,12 @@ public class HuntingResponse {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class OnlyId {
-        private long id;
+    public static class OnlyHuntingId {
+        private int huntingId;
 
-        public static HuntingResponse.OnlyId build(Hunting hunting) {
-            return HuntingResponse.OnlyId.builder()
-                    .id(hunting.getId())
+        public static HuntingResponse.OnlyHuntingId build(Hunting hunting) {
+            return OnlyHuntingId.builder()
+                    .huntingId(hunting.getId())
                     .build();
         }
     }
@@ -39,6 +39,20 @@ public class HuntingResponse {
                     .userImgUrl(hunting.getUser().getImgUrl())
                     .title(hunting.getTitle())
                     .content(hunting.getContent())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class OnlyHuntingScrapId {
+        private int huntingScrapId;
+
+        public static HuntingResponse.OnlyHuntingScrapId build(HuntingScrap huntingScrap) {
+            return OnlyHuntingScrapId.builder()
+                    .huntingScrapId(huntingScrap.getId())
                     .build();
         }
     }
