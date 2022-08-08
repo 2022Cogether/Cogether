@@ -68,4 +68,12 @@ public class LiveCoopService {
         return LiveCoopResponse.OnlyLiveCoopId.build(liveCoop);
     }
 
+    public LiveCoopResponse.OnlyLiveCoopMemberId createLiveCoopMember(LiveCoopRequest.CreateLiveCoopMember request) {
+        User user = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
+        LiveCoop liveCoop = liveCoopRepository.findById(request.getLiveCoopId()).orElseThrow(LiveCoopNotFoundException::new);
+        LiveCoopMember liveCoopMember = LiveCoopMember.toEntity(user, liveCoop);
+        LiveCoopMember savedLiveCoopMember = liveCoopMemberRepository.save(liveCoopMember);
+        return LiveCoopResponse.OnlyLiveCoopMemberId.build(savedLiveCoopMember);
+    }
+
 }
