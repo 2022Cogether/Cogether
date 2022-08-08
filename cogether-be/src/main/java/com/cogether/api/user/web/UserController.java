@@ -3,6 +3,7 @@ package com.cogether.api.user.web;
 import com.cogether.api.user.dto.TokenResponse;
 import com.cogether.api.user.dto.UserRequest;
 import com.cogether.api.user.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +56,7 @@ public class UserController {
 
     //이메일 중복확인      true : 중복 false : 중복 x
     @GetMapping("/user/verify/email")
-    public ResponseEntity verifyDuplicationOfEmail(@RequestBody UserRequest userRequest) throws Exception {
+    public ResponseEntity<Map<String,String>>  verifyDuplicationOfEmail(@RequestBody UserRequest userRequest) throws Exception {
 
         boolean emailIsPresent =userService.verifyDuplicationOfEmail(userRequest);
 
@@ -70,13 +71,17 @@ public class UserController {
 
     //닉네임 중복확인      true : 중복 false : 중복 x
     @GetMapping("/user/verify/nickname")
-    public ResponseEntity verifyDuplicationOfNickName(@RequestBody UserRequest userRequest) throws Exception {
+    public ResponseEntity<Map<String,String>> verifyDuplicationOfNickName(@RequestBody UserRequest userRequest) throws Exception {
 
         boolean nickNameIsPresent = userService.verifyDuplicationOfNickName(userRequest.getNickname());
+        ObjectMapper mapper = new ObjectMapper();
+
 
         Map<String,String> body =new HashMap<>();
         body.put("nickname",userRequest.getNickname());
         body.put("duplicate",String.valueOf(nickNameIsPresent));
+
+        //String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(body);
 
         return ResponseEntity.ok().body(body);
     }
