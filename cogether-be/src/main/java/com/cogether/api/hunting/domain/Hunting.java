@@ -29,7 +29,7 @@ public class Hunting {
     @Column(name = "content", length = 1000, nullable = false)
     private String content;
 
-    public static Hunting toEntity(User user, HuntingRequest.Create request) {
+    public static Hunting toEntity(User user, HuntingRequest.CreateHunting request) {
         return Hunting.builder()
                 .user(user)
                 .title(request.getTitle())
