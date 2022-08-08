@@ -11,7 +11,7 @@ import com.cogether.api.liveCoop.domain.LiveCoopRequest;
 import com.cogether.api.liveCoop.domain.LiveCoopResponse;
 import com.cogether.api.liveCoop.exception.LiveCoopNotFoundException;
 import com.cogether.api.liveCoop.repository.LiveCoopRepository;
-import com.cogether.api.user.dto.User;
+import com.cogether.api.user.domain.User;
 import com.cogether.api.user.exception.UserNotFoundException;
 import com.cogether.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

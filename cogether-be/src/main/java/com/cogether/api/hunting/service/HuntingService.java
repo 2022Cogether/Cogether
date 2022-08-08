@@ -5,7 +5,7 @@ import com.cogether.api.hunting.domain.HuntingRequest;
 import com.cogether.api.hunting.domain.HuntingResponse;
 import com.cogether.api.hunting.exception.HuntingNotFoundException;
 import com.cogether.api.hunting.repository.HuntingRepository;
-import com.cogether.api.user.dto.User;
+import com.cogether.api.user.domain.User;
 import com.cogether.api.user.exception.UserNotFoundException;
 import com.cogether.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

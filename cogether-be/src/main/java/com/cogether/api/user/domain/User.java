@@ -1,4 +1,4 @@
-package com.cogether.api.user.dto;
+package com.cogether.api.user.domain;
 
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,7 +22,10 @@ public class User {
     @Column(name="email",length = 50,nullable = false)
     private String email;
 
-    @Column(name="nickname",length = 15,nullable = false)
+    @Column(name="password",nullable = false)
+    private String password;
+
+    @Column(name="nickname",length = 15)
     private String nickname;
 
     @Column(name="exp",nullable = false)
@@ -40,9 +43,6 @@ public class User {
 
     @Column(name="verified")
     private boolean verified;
-
-    @Column(name="refresh_token" ,length=500)
-    private String refreshToken;
 
     @Column(name="git_url", length=100)
     private String gitUrl;
@@ -67,4 +67,8 @@ public class User {
 
     @Column(name="resign")
     private boolean resign;
+
+
+
+
 }
