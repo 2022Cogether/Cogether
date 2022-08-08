@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TokenResponse {
 
+    private int userId;
     private String ACCESS_TOKEN;
     private String REFRESH_TOKEN;
 }
