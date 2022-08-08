@@ -17,8 +17,12 @@
           </div>
           <div>
             <div v-if="isEmailChecked" class="btn active">인증 완료!</div>
-            <div v-else class="btn disable" @click.prevent="certifyEmail">
-              이메일 인증
+            <div
+              v-else
+              class="btn btn-checks disable"
+              @click.prevent="certifyEmail"
+            >
+              이메일 중복확인
             </div>
           </div>
 
@@ -58,8 +62,12 @@
           </div>
           <div>
             <div v-if="isNickChecked" class="btn active">인증 완료!</div>
-            <div v-else class="btn disable" @click.prevent="certifyNickName">
-              닉네임 인증
+            <div
+              v-else
+              class="btn btn-checks disable"
+              @click.prevent="certifyNickName"
+            >
+              닉네임 중복확인
             </div>
           </div>
 
@@ -127,7 +135,7 @@
           <p>혹시 회원이신가요?</p>
         </div>
         <div>
-          <router-link to="/sign/signin"> 로그인 </router-link>
+          <router-link to="/sign/signin" class="link"> 로그인 </router-link>
         </div>
       </div>
     </div>
@@ -371,5 +379,16 @@ export default {
   border: 0px;
   outline: none;
   border-radius: 30px;
+}
+
+.btn-checks {
+  font-size: 0.7rem;
+  border: 1px solid #dbdbdb;
+  background-color: #dbdbdb;
+  padding: 3px;
+}
+
+.link {
+  text-decoration: none;
 }
 </style>
