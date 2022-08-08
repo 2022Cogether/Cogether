@@ -1,10 +1,12 @@
 package com.cogether.api.user.web;
 
+import com.cogether.api.user.dto.LoginRequest;
 import com.cogether.api.user.dto.TokenResponse;
 import com.cogether.api.user.dto.UserRequest;
 import com.cogether.api.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +22,10 @@ import java.util.Map;
 
 
 
+@CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path="api")
+@RequestMapping(path="/api")
 public class UserController {
 
     private final UserService userService;
@@ -55,40 +58,39 @@ public class UserController {
 
 
     //이메일 중복확인      true : 중복 false : 중복 x
-    @GetMapping("/user/verify/email")
-    public ResponseEntity<Map<String,String>>  verifyDuplicationOfEmail(@RequestBody UserRequest userRequest) throws Exception {
+    @GetMapping("/verify/email/{email}")
+    public ResponseEntity  verifyDuplicationOfEmail(@PathVariable("email") String email) throws Exception {
 
-        boolean emailIsPresent =userService.verifyDuplicationOfEmail(userRequest);
+        boolean emailIsPresent =userService.verifyDuplicationOfEmail(email);
 
 
         Map<String,String> body =new HashMap<>();
-        body.put("email",userRequest.getEmail());
+        body.put("email",email);
         body.put("duplicate",String.valueOf(emailIsPresent));
 
-        return ResponseEntity.ok().body(body);
+        //return ResponseEntity.ok().body(body);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 
     //닉네임 중복확인      true : 중복 false : 중복 x
-    @GetMapping("/user/verify/nickname")
-    public ResponseEntity<Map<String,String>> verifyDuplicationOfNickName(@RequestBody UserRequest userRequest) throws Exception {
+    @GetMapping("/verify/nickname/{nickname}")
+    public ResponseEntity verifyDuplicationOfNickName(@PathVariable("nickname") String nickname) throws Exception {
 
-        boolean nickNameIsPresent = userService.verifyDuplicationOfNickName(userRequest.getNickname());
-        ObjectMapper mapper = new ObjectMapper();
+        boolean nickNameIsPresent = userService.verifyDuplicationOfNickName(nickname);
 
+//        Map<String,String> body =new HashMap<>();
+//        body.put("nickname",nickname);
+//        body.put("duplicate",String.valueOf(nickNameIsPresent));
+//
+//        //String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(body);
 
-        Map<String,String> body =new HashMap<>();
-        body.put("nickname",userRequest.getNickname());
-        body.put("duplicate",String.valueOf(nickNameIsPresent));
-
-        //String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(body);
-
-        return ResponseEntity.ok().body(body);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity findUser(@RequestParam int userId) throws Exception{
+    public ResponseEntity findUser(@PathVariable int userId) throws Exception{
 
         return ResponseEntity.ok().body(userService.findUserInfo(userId));
     }
