@@ -48,4 +48,11 @@ public class StudyController {
         StudyResponse.StudyList response = studyService.getMyStudyList(userId);
         return ResponseEntity.ok().body(response);
     }
+
+    @PostMapping(path = "/study/scrap")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<StudyResponse.OnlyStudyScrapId> createStudyScrap(@RequestBody StudyRequest.Create_StudyScrap  create_studyScrap){
+        StudyResponse.OnlyStudyScrapId response = studyService.createStudyScrap(create_studyScrap);
+        return ResponseEntity.ok().body(response);
+    }
 }
