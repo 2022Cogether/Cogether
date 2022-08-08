@@ -40,9 +40,13 @@
 import Swal from "sweetalert2";
 import router from "@/router";
 import { reactive } from "vue";
+import { useStore } from "vuex";
+
 export default {
   name: "TilCreate",
   setup() {
+    const store = useStore();
+
     const state = reactive({
       //사용할 변수들 선언
       title: null,
@@ -79,6 +83,7 @@ export default {
       console.log(state.content);
       console.log(state.imageUrls);
       //함수 작동 내용
+      store.dispatch("createTil", state);
     }
 
     return { exit, createTil, imgupload, state };
