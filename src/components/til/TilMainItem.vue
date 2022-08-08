@@ -37,14 +37,14 @@
     <!-- 첨부 이미지 캐러셀 -->
     <div class="til-body">
       <div
-        id="carouselExampleIndicators"
+        :id="'carouselExampleIndicators' + til.pk"
         class="carousel slide"
         data-bs-ride="false"
       >
         <div class="carousel-indicators">
           <button
             type="button"
-            data-bs-target="#carouselExampleIndicators"
+            :data-bs-target="'#carouselExampleIndicators' + til.pk"
             data-bs-slide-to="0"
             class="active"
             aria-current="true"
@@ -52,13 +52,13 @@
           ></button>
           <button
             type="button"
-            data-bs-target="#carouselExampleIndicators"
+            :data-bs-target="'#carouselExampleIndicators' + til.pk"
             data-bs-slide-to="1"
             aria-label="Slide 2"
           ></button>
           <button
             type="button"
-            data-bs-target="#carouselExampleIndicators"
+            :data-bs-target="'#carouselExampleIndicators' + til.pk"
             data-bs-slide-to="2"
             aria-label="Slide 3"
           ></button>
@@ -77,7 +77,7 @@
         <button
           class="carousel-control-prev"
           type="button"
-          data-bs-target="#carouselExampleIndicators"
+          :data-bs-target="'#carouselExampleIndicators' + til.pk"
           data-bs-slide="prev"
         >
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -86,7 +86,7 @@
         <button
           class="carousel-control-next"
           type="button"
-          data-bs-target="#carouselExampleIndicators"
+          :data-bs-target="'#carouselExampleIndicators' + til.pk"
           data-bs-slide="next"
         >
           <span class="carousel-control-next-icon" aria-hidden="true"></span>
@@ -201,7 +201,7 @@ export default {
   props: {
     til: Object,
   },
-  setup(props, { emit }) {
+  setup(props) {
     const store = useStore();
     const getters = computed(() => store.getters);
 
@@ -211,7 +211,6 @@ export default {
         tilId: tilNum,
         userId: getters.value.getCurrentUser,
       });
-      emit("detailChange", tilNum);
     }
 
     return {
@@ -258,7 +257,7 @@ export default {
 
 .til-body {
   background-color: rgb(41, 39, 39);
-  height: 65%;
+  height: auto;
 }
 
 .til-footer {

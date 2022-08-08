@@ -28,14 +28,9 @@
     </div>
   </div>
   <div class="til-list">
-    <TilMainItem
-      v-for="til in tilList"
-      :key="til.pk"
-      :til="til"
-      @detailChange="detailChange"
-    />
+    <TilMainItem v-for="til in tilList" :key="til.pk" :til="til" />
   </div>
-  <TilDetail v-if="isOpen" />
+  <TilDetail v-if="isOpen" class="isModal" />
   <!-- 나중에 TIL create창으로 URL 추가 -->
   <a href="">
     <button class="icon-body" @click="showChatList">
@@ -46,7 +41,7 @@
 
 <script>
 import { useStore } from "vuex";
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import TilMainItem from "@/components/til/TilMainItem.vue";
 import TilDetail from "@/components/til/TilDetail.vue";
 
@@ -62,8 +57,12 @@ export default {
 
     const tilList = store.getters.getTilList;
 
-    const modalNum = ref(getters.value.getOpenTil);
-    const isOpen = ref(modalNum.value != -1);
+    const modalNum = computed(() => {
+      return getters.value.getOpenTil;
+    });
+    const isOpen = computed(() => {
+      return modalNum.value != -1;
+    });
 
     // created 할 때 한 번 발생하고, 이후로 끝까지 스크롤하면 계속 실행되어 til list에 추가하는 방식
     const getTilList = () => {
@@ -94,11 +93,6 @@ export default {
       };
     };
 
-    function detailChange(num) {
-      modalNum.value = num;
-      isOpen.value = modalNum.value != -1;
-    }
-
     return {
       getTilList,
       eraseTilList,
@@ -106,7 +100,6 @@ export default {
       modalNum,
       isOpen,
       tilList,
-      detailChange,
     };
   },
   mounted() {
@@ -116,6 +109,13 @@ export default {
 </script>
 
 <style scoped>
+.isModal {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.5);
+  display: flex;
+}
+
 .til-list {
   margin-top: 5%;
 }

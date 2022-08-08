@@ -1,5 +1,5 @@
 <template>
-  <div class="modal">
+  <div class="modal d-flex justify-content-center" @click="closeModal">
     <div class="modal-card">
       <!-- TilMainItem.vue에서 많이 가져옴 -->
       <div class="til-item">
@@ -40,14 +40,16 @@
         <!-- 첨부 이미지 캐러셀 -->
         <div class="til-body">
           <div
-            id="carouselExampleIndicators"
+            :id="'carouselExampleIndicatorsForDetail' + tilContent.pk"
             class="carousel slide"
             data-bs-ride="false"
           >
             <div class="carousel-indicators">
               <button
                 type="button"
-                data-bs-target="#carouselExampleIndicators"
+                :data-bs-target="
+                  '#carouselExampleIndicatorsForDetail' + tilContent.pk
+                "
                 data-bs-slide-to="0"
                 class="active"
                 aria-current="true"
@@ -55,13 +57,17 @@
               ></button>
               <button
                 type="button"
-                data-bs-target="#carouselExampleIndicators"
+                :data-bs-target="
+                  '#carouselExampleIndicatorsForDetail' + tilContent.pk
+                "
                 data-bs-slide-to="1"
                 aria-label="Slide 2"
               ></button>
               <button
                 type="button"
-                data-bs-target="#carouselExampleIndicators"
+                :data-bs-target="
+                  '#carouselExampleIndicatorsForDetail' + tilContent.pk
+                "
                 data-bs-slide-to="2"
                 aria-label="Slide 3"
               ></button>
@@ -80,7 +86,9 @@
             <button
               class="carousel-control-prev"
               type="button"
-              data-bs-target="#carouselExampleIndicators"
+              :data-bs-target="
+                '#carouselExampleIndicatorsForDetail' + tilContent.pk
+              "
               data-bs-slide="prev"
             >
               <span
@@ -92,7 +100,9 @@
             <button
               class="carousel-control-next"
               type="button"
-              data-bs-target="#carouselExampleIndicators"
+              :data-bs-target="
+                '#carouselExampleIndicatorsForDetail' + tilContent.pk
+              "
               data-bs-slide="next"
             >
               <span
@@ -177,21 +187,7 @@
           </div>
           <!-- 좋아요 갯수를 Til로 가늠하는 방법 필요 -->
           <span class="like-count" @click="sendLike"> 좋아요 0개 </span>
-          <!-- v-if: "is_Current_User_Like_This_TIL?" 등으로 sendlikt/senddislike 바꾸어야 할 듯 <- currentUser 완성 뒤 -->
-          <!-- <div v-if="bookmarked" class="bookmark">
-        <font-awesome-icon
-          @click="bookmarkCheck"
-          icon="fa-solid fa-bookmark"
-          class="icon-bookmark"
-        />
-      </div>
-      <div v-else>
-        <font-awesome-icon
-          @click="bookmarkCheck"
-          icon="fa-regular fa-bookmark"
-          class="icon-bookmark"
-        />
-      </div> -->
+          <!-- v-if: "is_Current_User_Like_This_TIL?" 등으로 sendlike/senddislike 바꾸어야 할 듯 <- currentUser 완성 뒤 -->
           <div class="til-content">
             {{ tilContent.content }}
           </div>
@@ -244,47 +240,45 @@ export default {
       store.dispatch("createComment", payload);
     };
 
+    // 모달 바깥을 클릭하면 모달을 닫게 하는 함수
+    const closeModal = (event) => {
+      if (
+        !document
+          .querySelector(".modal-card")
+          .querySelector("." + event.target.className) // 클릭한 박스의 클래스가 modal-card라는 클래스의 하위 클래스인지 아닌지
+      ) {
+        store.dispatch("fetchOpenTil", {
+          tilId: -1,
+          userId: getters.value.getCurrentUser,
+        });
+      }
+    };
+
     return {
       tilContent,
       commentContent,
       sendLike,
       sendDislike,
       onSubmit,
+      closeModal,
     };
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.modal {
-  height: 80%;
-  width: 80%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .modal-card {
   background-color: white;
+  width: 70vw;
+  height: auto;
 }
-
-// .modal-card {
-//   z-index: 1;
-//   position: absolute;
-//   display: flex;
-//   width: 100%;
-//   height: 100%;
-//   align-items: center;
-//   justify-content: center;
-//   background-color: white;
-// }
 
 .til-item {
   position: relative;
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-  height: 700px;
+  height: auto;
   margin-bottom: 20px;
   border: 2px solid rgba(219, 219, 218, 0.8);
   border-radius: 10px;
@@ -294,28 +288,33 @@ export default {
   position: relative;
   background-color: white;
   height: 15%;
+  margin-bottom: 15vh;
   border-radius: 10px 10px 0px 0px;
 }
 
 .til-body {
   background-color: rgb(41, 39, 39);
-  height: 65%;
+  height: auto;
 }
 
 .til-footer {
-  height: 15%;
+  height: auto;
   position: relative;
+  background-color: white;
 }
 
 .til-comment {
-  height: 5%;
+  height: auto;
   margin-left: 12px;
+  margin-top: 15vh;
+  background-color: white;
 }
 
 .til-comment-input {
   width: 97%;
   border-radius: 10px;
   border: 1px solid rgba(219, 219, 218, 1);
+  margin-bottom: 5vh;
 }
 
 .profile-body {
@@ -392,10 +391,9 @@ export default {
 
 .til-content {
   position: absolute;
+  height: auto;
   left: 10px;
-  font-size: 0.7rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 1rem;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
