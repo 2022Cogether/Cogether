@@ -42,4 +42,11 @@ public class HuntingController {
         return ResponseEntity.ok().body(response);
     }
 
+    @DeleteMapping("/hunting/scrap/{huntingScrapId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<HuntingResponse.OnlyHuntingScrapId> deleteScrap(@PathVariable int huntingScrapId) {
+        HuntingResponse.OnlyHuntingScrapId response = huntingService.deleteScrap(huntingScrapId);
+        return ResponseEntity.ok().body(response);
+    }
+
 }
