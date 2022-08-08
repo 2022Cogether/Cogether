@@ -99,4 +99,10 @@ public class TilController {
         return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping(path = "/til/list/{userId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<TilResponse.TilList> getMainTil(@PathVariable int userId){
+        TilResponse.TilList response = tilService.getMainTil(userId);
+        return ResponseEntity.ok().body(response);
+    }
 }
