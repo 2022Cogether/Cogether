@@ -36,7 +36,7 @@ public class Study {
     private int curMem;
 
     @Column(name = "online", nullable = false)
-    private boolean online;
+    private String online;
 
     @Column(name = "title", length = 100, nullable = false)
     private String title;
