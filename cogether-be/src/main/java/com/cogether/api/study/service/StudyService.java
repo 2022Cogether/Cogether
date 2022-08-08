@@ -4,6 +4,7 @@ import com.cogether.api.study.domain.Study;
 import com.cogether.api.study.domain.StudyRequest;
 import com.cogether.api.study.domain.StudyResponse;
 import com.cogether.api.study.domain.StudySkill;
+import com.cogether.api.study.exception.StudyNotFoundException;
 import com.cogether.api.study.repository.StudyRepository;
 import com.cogether.api.study.repository.StudyScrapRepository;
 import com.cogether.api.study.repository.StudySkillRepository;
@@ -46,5 +47,17 @@ public class StudyService {
         }
         studyRepository.deleteById(studyId);
         return StudyResponse.OnlyId.build(study);
+    }
+
+    public StudyResponse.StudyAll getStudyDetail(int studyId, int userId){
+        Study study = studyRepository.findById(studyId).orElseThrow(StudyNotFoundException::new);
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        List<StudySkill> list = studySkillRepository.findAllByStudy_Id(studyId);
+        int check = studyScrapRepository.countAllByStudyAndUser(study, user);
+        boolean isScrap = false;
+        if(check == 1){
+            isScrap = true;
+        }
+        return StudyResponse.StudyAll.build(study,list, isScrap);
     }
 }
