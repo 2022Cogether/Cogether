@@ -1,9 +1,9 @@
-import axios from "axios";
+import http from "@/api/http";
 import router from "@/router";
 
 export const signStore = {
   state: {
-    // axios에서 성공/실패 여부가 component 로컬 변수에 영향을 줄 때 쓸 변수
+    // http에서 성공/실패 여부가 component 로컬 변수에 영향을 줄 때 쓸 변수
     booleanValue: false,
 
     // store에 저장되는 스킬 셋 목록, 서버를 통해 생성/업데이트 될 예정
@@ -86,8 +86,8 @@ export const signStore = {
     },
 
     login({ commit, dispatch }, credentials) {
-      axios
-        .post("user/signin/", credentials)
+      http
+        .post("sign/signin/", credentials)
         .then((res) => {
           alert("로그인 성공!");
           const token = res.data.key;
@@ -116,8 +116,8 @@ export const signStore = {
     },
 
     register({ commit, dispatch }, credentials) {
-      axios
-        .post("user/signup/", credentials)
+      http
+        .post("sign/signup/", credentials)
         .then((res) => {
           alert("회원가입 성공!");
           const token = res.data.key;
@@ -154,7 +154,7 @@ export const signStore = {
     //         LoginView로 이동
     //   */
     //   if (getters.isLoggedIn) {
-    //     axios({
+    //     http({
     //       url: drf.accounts.currentUserInfo(),
     //       method: 'get',
     //       headers: getters.authHeader,
@@ -171,7 +171,7 @@ export const signStore = {
 
     // 이메일을 받고 이메일로 가입한 유저가 있으면 새 비밀번호를 보냄
     takePassWord({ commit }, email) {
-      axios
+      http
         .post("user/password", { email: email })
         .then((res) => {
           if (res.data.status === 200) {
@@ -205,7 +205,7 @@ export const signStore = {
 
     // 서버에서 Skill Set을 받고 store의 스킬 셋을 업데이트함
     takeSkillSet({ commit }) {
-      axios
+      http
         .get("user/skill/") // api 필요 없음 AWS에서 사용!
         .then((res) => {
           if (res.data.status === 200) {
@@ -234,8 +234,8 @@ export const signStore = {
 
     // 닉네임 중복 체크
     checkNickName({ commit }, nickName) {
-      axios
-        .get("user/verify" + nickName)
+      http
+        .get("user/verify/" + nickName)
         .then((res) => {
           if (res.data.status === 200) {
             alert("가능한 닉네임입니다!");
@@ -269,43 +269,55 @@ export const signStore = {
 
     // 이메일 중복 체크
     checkEmail({ commit }, email) {
-      axios
-        .get("user/verify", { email: email })
-        .then((res) => {
-          if (res.data.status === 200) {
-            alert("가능한 이메일입니다!");
-            commit("SET_BOOLEANVALUE");
-          } else {
-            alert("200이 아닌 다른 값이 반환되었습니다");
-          }
+      console.log("이메일 체크");
+      const data = {
+        email: email,
+      };
+      console.log(typeof email + ": " + email);
+      http
+        .get("user/verify/email", data)
+        .then(({ data }) => {
+          console.log(commit);
+          console.log(data);
         })
-        .catch((err) => {
-          if (err.response.status === 404) {
-            alert("이미 사용하고 있는 이메일입니다.");
-          } else if (err.response.status === 500) {
-            alert("서버 에러입니다.");
-          } else {
-            alert("그 외 에러입니다.");
-          }
-
-          console.error(err.response.data);
-          commit("SET_AUTH_ERROR", err.response.data);
-          const errorMessage = [];
-          for (const errors in err.response.data) {
-            for (const error of err.response.data[errors]) {
-              if (!errorMessage.includes(error)) {
-                errorMessage.push(error);
-              }
-            }
-          }
-          alert(errorMessage.join("\r\n"));
+        .catch((e) => {
+          console.log("에러: " + e);
         });
+      // .then((res) => {
+      //   if (res.data.status === 200) {
+      //     alert("가능한 이메일입니다!");
+      //     commit("SET_BOOLEANVALUE");
+      //   } else {
+      //     alert("200이 아닌 다른 값이 반환되었습니다");
+      //   }
+      // })
+      // .catch((err) => {
+      //   if (err.response.status === 404) {
+      //     alert("이미 사용하고 있는 이메일입니다.");
+      //   } else if (err.response.status === 500) {
+      //     alert("서버 에러입니다.");
+      //   } else {
+      //     alert("그 외 에러입니다.");
+      //   }
+
+      //   console.error(err.response.data);
+      //   commit("SET_AUTH_ERROR", err.response.data);
+      //   const errorMessage = [];
+      //   for (const errors in err.response.data) {
+      //     for (const error of err.response.data[errors]) {
+      //       if (!errorMessage.includes(error)) {
+      //         errorMessage.push(error);
+      //       }
+      //     }
+      //   }
+      //   alert(errorMessage.join("\r\n"));
+      // });
     },
 
     // 변경된 비밀 번호를 받고 서버에 보내 수정
     // 기존 비밀번호도 받아서 이 비밀번호가 유효하면 새 비밀번호로 변경되는 것을 가정함
     changePassword({ commit, getters }, pwSet) {
-      axios
+      http
         .put(
           "user/password/",
           {
@@ -341,7 +353,7 @@ export const signStore = {
     },
 
     logout({ getters }) {
-      axios
+      http
         .post("user/signout/", { headers: getters.authHeader })
         .then(() => {
           localStorage.removeItem("token");
@@ -356,7 +368,7 @@ export const signStore = {
     },
 
     resign({ commit, getters }, password) {
-      axios
+      http
         .put(
           "user/resign/",
           { password: password },
