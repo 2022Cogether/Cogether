@@ -5,6 +5,7 @@ import com.cogether.api.user.domain.Auth;
 import com.cogether.api.follow.domain.Follow;
 import com.cogether.api.user.domain.User;
 import com.cogether.api.user.domain.UserSkill;
+import com.cogether.api.user.dto.LoginRequest;
 import com.cogether.api.user.dto.TokenResponse;
 import com.cogether.api.user.dto.UserRequest;
 import com.cogether.api.user.repository.AuthRepository;
@@ -160,11 +161,11 @@ public class UserService {
     }
 
     // 이메일 중복확인
-    public boolean verifyDuplicationOfEmail(UserRequest userRequest) {
+    public boolean verifyDuplicationOfEmail(String email) {
         Optional<User> user =
-                userRepository.findByEmail(userRequest.getEmail());
+                userRepository.findByEmail(email);
 
-        System.out.println(userRequest.getEmail());
+        System.out.println(email);
         System.out.println(user.isPresent());
 
         if (user.isPresent())
