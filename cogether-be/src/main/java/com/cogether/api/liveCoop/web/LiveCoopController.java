@@ -68,4 +68,11 @@ public class LiveCoopController {
         return ResponseEntity.ok().body(response);
     }
 
+    @DeleteMapping("/livecoop/member/{liveCoopMemberId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<LiveCoopResponse.OnlyLiveCoopMemberId> deleteLiveCoopMember(@PathVariable int liveCoopMemberId) {
+        LiveCoopResponse.OnlyLiveCoopMemberId response = liveCoopService.deleteLiveCoopMember(liveCoopMemberId);
+        return ResponseEntity.ok().body(response);
+    }
+
 }
