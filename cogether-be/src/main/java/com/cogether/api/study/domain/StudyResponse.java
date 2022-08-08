@@ -77,4 +77,18 @@ public class StudyResponse {
                     .build();
         }
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class StudyList{
+        private List<StudyResponse.StudyAll> studyList;
+
+        public static StudyResponse.StudyList build(List<StudyResponse.StudyAll> studyAll){
+            return StudyList.builder()
+                    .studyList(studyAll)
+                    .build();
+        }
+    }
 }
