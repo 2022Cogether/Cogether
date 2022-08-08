@@ -13,15 +13,32 @@
                 {{ comment.created_at }}
               </span>
             </div>
-            <font-awesome-icon
-              @click="deleteComment"
-              class="fa-lg"
-              icon="fa-solid fa-rectangle-xmark"
-            />
+            <div>
+              <font-awesome-icon
+                v-if="(isCommenter || true) && !isEdit"
+                @click="onEdit"
+                class="fa-lg m-1"
+                icon="fa-solid fa-pen-to-square"
+                style="cursor: pointer"
+              />
+              <font-awesome-icon
+                v-if="isCommenter || isWriter || true"
+                @click="deleteComment"
+                class="fa-lg m-1"
+                icon="fa-solid fa-rectangle-xmark"
+                style="cursor: pointer"
+              /><!-- axios 성공하면 || true 지우고 시험하기-->
+            </div>
           </div>
-          <p class="be-comment-text">
+          <p v-if="!isEdit" class="be-comment-text">
             {{ comment.content }}
           </p>
+          <input
+            v-else
+            type="text"
+            class="comment-input"
+            @keyup.enter.prevent="editComment"
+          />
         </div>
       </div>
     </div>
@@ -29,7 +46,7 @@
 </template>
 <script>
 import { useStore } from "vuex";
-import { computed } from "vue";
+import { ref, computed } from "vue";
 
 export default {
   name: "CommentItem",
@@ -43,6 +60,7 @@ export default {
 
     const currentUser = store.getters.getCurrentUser;
 
+    // 유저 인증(isWrite -> 현재 유저가 TIL 글쓴이 isCommenter -> 현재 유저가 이 댓글 작성자)
     const isWriter = computed(() => {
       return currentUser.pk == props.userId;
     });
@@ -50,19 +68,37 @@ export default {
       return currentUser.pk == props.comment.user_id;
     });
 
+    // 코멘트 지우기
     const deleteComment = () => {
       const payload = {
         commentId: props.comment.pk,
         tilId: props.tilPk,
       };
-
       store.dispatch("removeComments", payload);
+    };
+
+    // 코멘트 수정 중인지 여부
+    const isEdit = ref(false);
+    const onEdit = () => {
+      isEdit.value = !isEdit.value;
+    };
+
+    // 코멘트 수정이 보내지면
+    const editComment = (event) => {
+      let payload = {};
+      payload.comment = props.comment;
+      payload.comment.content = event.target.value;
+      payload.tilID = props.tilPk;
+      store.dispatch("updateComment", payload);
     };
 
     return {
       isWriter,
       isCommenter,
       deleteComment,
+      isEdit,
+      onEdit,
+      editComment,
     };
   },
 };
@@ -116,5 +152,11 @@ export default {
   background: #f6f6f7;
   border: 1px solid #edeff2;
   padding: 15px 20px 20px 20px;
+}
+
+.comment-input {
+  width: 97%;
+  border-radius: 10px;
+  border: 1px solid rgba(219, 219, 218, 1);
 }
 </style>

@@ -46,5 +46,14 @@ export const tilCommentStore = {
           // alert(errorMessage.join("\r\n"));
         });
     },
+
+    updateComment({ dispatch, getters }, payload) {
+      axios
+        .put("til/comment", payload.comment, { headers: getters.authHeader })
+        .then(() => {
+          dispatch("fetchComments", payload.tilId);
+        })
+        .catch((err) => console.error(err.response));
+    },
   },
 };
