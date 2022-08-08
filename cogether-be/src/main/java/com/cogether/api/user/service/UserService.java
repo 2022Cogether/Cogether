@@ -185,10 +185,10 @@ public class UserService {
             return false;       // 중복없음
     }
 
-    public boolean verifyDuplicationOfNickName(UserRequest userRequest)
+    public boolean verifyDuplicationOfNickName(String nickname)
     {
         Optional<User> user =
-                userRepository.findByEmail(userRequest.getNickname());
+                userRepository.findByNickname(nickname);
 
         if(user.isPresent())
             return true;        // 중복확인

@@ -50,24 +50,27 @@ public class UserController {
     //이메일 인증
     @PostMapping("user/verify")
 
-//    @GetMapping("/user/verify")
-//    public ResponseEntity<Boolean> verifyDuplicationOfEmail(@RequestBody UserRequest userRequest) throws Exception {
-//
-//        return ResponseEntity.ok().body(userService.verifyDuplicationOfEmail(userRequest));
-//    }
-
     //이메일 중복확인      true : 중복 false : 중복 x
-    @GetMapping("/user/verify/{email}")
-    public ResponseEntity<Boolean> verifyDuplicationOfEmail(@PathVariable String email) throws Exception {
+    @GetMapping("/user/verify")
+    public ResponseEntity verifyDuplicationOfEmail(@RequestBody UserRequest userRequest) throws Exception {
 
-        return ResponseEntity.ok().body(userService.verifyDuplicationOfEmail(email));
+        boolean emailIsPresent =userService.verifyDuplicationOfEmail(userRequest);
+        String duplicate ="";
+
+        return emailIsPresent ? ResponseEntity.ok().body(duplicate="true")
+                :ResponseEntity.ok().body(duplicate="false");
     }
+
 
     //닉네임 중복확인      true : 중복 false : 중복 x
     @GetMapping("/user/verify/{nickname}")
-    public ResponseEntity<Boolean> verifyDuplicationOfNickName(@RequestBody UserRequest userRequest) throws Exception {
+    public ResponseEntity verifyDuplicationOfNickName(@RequestParam String nickname) throws Exception {
 
-        return ResponseEntity.ok().body(userService.verifyDuplicationOfNickName(userRequest));
+        boolean nickNameIsPresent = userService.verifyDuplicationOfNickName(nickname);
+        String duplicate ="";
+
+        return nickNameIsPresent ? ResponseEntity.ok().body(duplicate="true")
+                :ResponseEntity.ok().body(duplicate="false");
     }
 
     //회원정보 변경
