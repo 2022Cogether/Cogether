@@ -139,7 +139,7 @@ export const tilStore = {
       commit("CLEAN_TIL_LIST");
     },
 
-    createArticle({ dispatch, getters }, payload) {
+    createTil({ dispatch, getters, state }, payload) {
       axios
         .post("til", payload, { headers: getters.authHeader })
         .then((res) => {
@@ -147,7 +147,13 @@ export const tilStore = {
             name: "TilDetail",
             params: { tilPK: res.data.tilId },
           });
-          dispatch("fetchOpenTil", res.data.tilId); //급해서 일단
+
+          const credentials = {
+            tilId: res.data.tilId,
+            userId: state.currentUser.id, // 이거 맞나?
+          };
+
+          dispatch("fetchOpenTil", credentials);
         })
         .catch((err) => console.error(err.response));
     },
