@@ -55,4 +55,12 @@ public class StudyController {
         StudyResponse.OnlyStudyScrapId response = studyService.createStudyScrap(create_studyScrap);
         return ResponseEntity.ok().body(response);
     }
+
+    @DeleteMapping(path = "/study/scrap")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<StudyResponse.OnlyStudyScrapId> deleteStudyScrap(@RequestParam int studyId, @RequestParam int userId){
+        StudyResponse.OnlyStudyScrapId response = studyService.deleteStudyScrap(studyId, userId);
+        return ResponseEntity.ok().body(response);
+
+    }
 }
