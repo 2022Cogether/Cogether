@@ -43,4 +43,11 @@ public class LiveCoopController {
         return ResponseEntity.ok().body(response);
     }
 
+    @PostMapping("/livecoop/member")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<LiveCoopResponse.OnlyLiveCoopMemberId> createLiveCoopMember(@RequestBody LiveCoopRequest.CreateLiveCoopMember request) {
+        LiveCoopResponse.OnlyLiveCoopMemberId response = liveCoopService.createLiveCoopMember(request);
+        return ResponseEntity.ok().body(response);
+    }
+
 }

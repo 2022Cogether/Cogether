@@ -31,4 +31,13 @@ public class LiveCoopRequest {
         }
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class CreateLiveCoopMember {
+        private int userId;
+        private  int liveCoopId;
+    }
+
 }
