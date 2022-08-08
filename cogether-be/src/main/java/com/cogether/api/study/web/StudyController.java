@@ -20,4 +20,11 @@ public class StudyController {
         StudyResponse.OnlyId response = studyService.create(study);
         return ResponseEntity.ok().body(response);
     }
+
+    @DeleteMapping(path = "/study/{studyId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<StudyResponse.OnlyId> delete(@PathVariable int studyId){
+        StudyResponse.OnlyId response = studyService.delete(studyId);
+        return ResponseEntity.ok().body(response);
+    }
 }
