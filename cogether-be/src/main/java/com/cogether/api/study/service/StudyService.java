@@ -36,4 +36,15 @@ public class StudyService {
         }
         return StudyResponse.OnlyId.build(savedStudy);
     }
+
+    public StudyResponse.OnlyId delete(int studyId){
+        Study study = studyRepository.findById(studyId).orElseThrow(UserNotFoundException::new);
+        List<StudySkill> list = studySkillRepository.findAllByStudy_Id(studyId);
+        for (int i = 0; i < list.size(); i++){
+            StudySkill studySkill = list.get(i);
+            studySkillRepository.deleteById(studySkill.getId());
+        }
+        studyRepository.deleteById(studyId);
+        return StudyResponse.OnlyId.build(study);
+    }
 }
