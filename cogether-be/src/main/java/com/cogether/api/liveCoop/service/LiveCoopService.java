@@ -95,5 +95,10 @@ public class LiveCoopService {
         return LiveCoopResponse.OnlyLiveCoopMemberId.build(savedLiveCoopMember);
     }
 
+    public LiveCoopResponse.OnlyLiveCoopMemberId deleteLiveCoopMember(int id) {
+        LiveCoopMember liveCoopMember = liveCoopMemberRepository.findById(id).orElseThrow(LiveCoopMemberNotFoundException::new);
+        liveCoopMemberRepository.deleteById(id);
+        return LiveCoopResponse.OnlyLiveCoopMemberId.build(liveCoopMember);
+    }
 
 }
