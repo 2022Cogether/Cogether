@@ -31,6 +31,7 @@ import {
   faExpand,
   faPaperPlane,
   faArrowLeft,
+  faRectangleXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark as faBookmark_reg } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -60,7 +61,8 @@ library.add(
   faCompress,
   faExpand,
   faPaperPlane,
-  faArrowLeft
+  faArrowLeft,
+  faRectangleXmark
 );
 
 createApp(App)

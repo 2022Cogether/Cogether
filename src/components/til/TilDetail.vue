@@ -193,8 +193,15 @@
           </div>
         </div>
         <!-- 댓글 입력창 -->
-        <!-- <CommentList :comments="tilContent.comments" /> -->
         <div class="til-comment">
+          <h1 class="comments-title">Comments (3)</h1>
+          <CommentItem
+            v-for="comment in tilContent.comments"
+            :key="comment.pk"
+            :comment="comment"
+            :userId="tilContent.user_id"
+            :tilPk="tilContent.pk"
+          />
           <input
             type="text"
             class="til-comment-input"
@@ -208,16 +215,16 @@
 </template>
 
 <script>
-// import CommentList from "@/components/til/comment/CommentList.vue";
+import CommentItem from "@/components/til/comment/CommentItem.vue";
 
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
 
 export default {
   name: "TilDetail",
-  // component: {
-  //   CommentList,
-  // },
+  components: {
+    CommentItem,
+  },
   setup() {
     const store = useStore();
     const getters = computed(() => store.getters);
@@ -254,6 +261,14 @@ export default {
       }
     };
 
+    // Comment 메소드
+    const getComments = () => {
+      store.dispatch("fetchComments", tilContent.pk);
+    };
+    getComments(); // 시작할 때 til 댓글 가져옴
+
+    console.log(tilContent.comments);
+
     return {
       tilContent,
       commentContent,
@@ -261,6 +276,7 @@ export default {
       sendDislike,
       onSubmit,
       closeModal,
+      getComments,
     };
   },
 };
@@ -304,9 +320,10 @@ export default {
 }
 
 .til-comment {
+  position: relative;
   height: auto;
   margin-left: 12px;
-  margin-top: 15vh;
+  margin-top: 3vh;
   background-color: white;
 }
 
@@ -390,13 +407,12 @@ export default {
 }
 
 .til-content {
-  position: absolute;
+  position: relative;
   height: auto;
+  overflow: auto;
   left: 10px;
   font-size: 1rem;
   display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
 }
 
 // 좋아요 버튼 모양, 크기, 애니메이션 관련
@@ -411,6 +427,13 @@ svg {
   #main-circ {
     transform-origin: 29.5px 29.5px;
   }
+}
+
+.comments-title {
+  font-size: 16px;
+  color: #262626;
+  margin-bottom: 15px;
+  font-family: "Conv_helveticaneuecyr-bold";
 }
 
 #checkbox {
