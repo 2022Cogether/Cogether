@@ -34,4 +34,20 @@ public class StudyRequest {
                     .build();
         }
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Create_StudyScrap{
+        private int studyId;
+        private int userId;
+
+        public StudyScrap toEntity(Study study, User user){
+            return StudyScrap.builder()
+                    .study(study)
+                    .user(user)
+                    .build();
+        }
+    }
 }

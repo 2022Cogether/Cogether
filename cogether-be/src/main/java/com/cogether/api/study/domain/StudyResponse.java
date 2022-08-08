@@ -91,4 +91,18 @@ public class StudyResponse {
                     .build();
         }
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class OnlyStudyScrapId{
+        private int id;
+
+        public static StudyResponse.OnlyStudyScrapId build(StudyScrap studyScrap){
+            return OnlyStudyScrapId.builder()
+                    .id(studyScrap.getId())
+                    .build();
+        }
+    }
 }
