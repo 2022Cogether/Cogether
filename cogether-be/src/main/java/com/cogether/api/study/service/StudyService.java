@@ -1,9 +1,6 @@
 package com.cogether.api.study.service;
 
-import com.cogether.api.study.domain.Study;
-import com.cogether.api.study.domain.StudyRequest;
-import com.cogether.api.study.domain.StudyResponse;
-import com.cogether.api.study.domain.StudySkill;
+import com.cogether.api.study.domain.*;
 import com.cogether.api.study.exception.StudyNotFoundException;
 import com.cogether.api.study.repository.StudyRepository;
 import com.cogether.api.study.repository.StudyScrapRepository;
@@ -102,5 +99,13 @@ public class StudyService {
             studyList.add(StudyResponse.StudyAll.build(study, studySkillList, isScrap));
         }
         return StudyResponse.StudyList.build(studyList);
+    }
+
+    public StudyResponse.OnlyStudyScrapId createStudyScrap(StudyRequest.Create_StudyScrap create_studyScrap){
+        User user = userRepository.findById(create_studyScrap.getUserId()).orElseThrow(UserNotFoundException::new);
+        Study study = studyRepository.findById(create_studyScrap.getStudyId()).orElseThrow(StudyNotFoundException::new);
+        StudyScrap studyScrap = create_studyScrap.toEntity(study, user);
+        StudyScrap savedStudyScrap = studyScrapRepository.save(studyScrap);
+        return StudyResponse.OnlyStudyScrapId.build(savedStudyScrap);
     }
 }
