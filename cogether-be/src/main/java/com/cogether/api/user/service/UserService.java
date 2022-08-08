@@ -76,6 +76,7 @@ public class UserService {
                                 .password(passwordEncoder.encode(userRequest.getPassword()))  // 사용자 비밀번호 암호화해서 DB에 저장
                                 .email(userRequest.getEmail())      //사용자 이메일
                                 .nickname(userRequest.getNickname())//사용자 닉네임
+                                .resign(false)
                                 .build());
 
         int id = userRequest.getId();   // 식별자
@@ -234,6 +235,19 @@ public class UserService {
                 .findById(userRequest.getId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         user.setPassword(encodingPassword);
+
+        userRepository.save(user);
+
+        return 1;
+    }
+
+    //탈퇴
+    public int resignUser(UserRequest userRequest) throws Exception{
+
+        User user = userRepository
+                .findById(userRequest.getId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        user.setResign(true);
 
         userRepository.save(user);
 
