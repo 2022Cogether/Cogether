@@ -39,7 +39,8 @@ dependencies {
     //aws
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
-
+    //swagger
+    implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
