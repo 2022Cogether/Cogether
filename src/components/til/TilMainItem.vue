@@ -5,7 +5,6 @@
       <div class="profile-body">
         <font-awesome-icon class="fs-3" icon="fa-solid fa-user" />
       </div>
-      <!-- 클릭하면 detail 모달이 나오게 할 수 있을까? -->
       <div class="til-title" @click="setNum">
         {{ til.title }}
       </div>
@@ -37,14 +36,14 @@
     <!-- 첨부 이미지 캐러셀 -->
     <div class="til-body">
       <div
-        id="carouselExampleIndicators"
+        :id="'carouselExampleIndicators' + til.pk"
         class="carousel slide"
         data-bs-ride="false"
       >
         <div class="carousel-indicators">
           <button
             type="button"
-            data-bs-target="#carouselExampleIndicators"
+            :data-bs-target="'#carouselExampleIndicators' + til.pk"
             data-bs-slide-to="0"
             class="active"
             aria-current="true"
@@ -52,13 +51,13 @@
           ></button>
           <button
             type="button"
-            data-bs-target="#carouselExampleIndicators"
+            :data-bs-target="'#carouselExampleIndicators' + til.pk"
             data-bs-slide-to="1"
             aria-label="Slide 2"
           ></button>
           <button
             type="button"
-            data-bs-target="#carouselExampleIndicators"
+            :data-bs-target="'#carouselExampleIndicators' + til.pk"
             data-bs-slide-to="2"
             aria-label="Slide 3"
           ></button>
@@ -77,7 +76,7 @@
         <button
           class="carousel-control-prev"
           type="button"
-          data-bs-target="#carouselExampleIndicators"
+          :data-bs-target="'#carouselExampleIndicators' + til.pk"
           data-bs-slide="prev"
         >
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -86,7 +85,7 @@
         <button
           class="carousel-control-next"
           type="button"
-          data-bs-target="#carouselExampleIndicators"
+          :data-bs-target="'#carouselExampleIndicators' + til.pk"
           data-bs-slide="next"
         >
           <span class="carousel-control-next-icon" aria-hidden="true"></span>
@@ -186,14 +185,19 @@
       </div>
     </div>
     <!-- 댓글 입력창 -->
-    <div class="til-comment">
-      <input type="text" class="til-comment-input" />
+    <div class="til-comment my-2">
+      <input
+        type="text"
+        class="til-comment-input"
+        @keyup.enter.prevent="onSubmit"
+        v-model="commentContent"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import { computed } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 
 export default {
@@ -201,9 +205,11 @@ export default {
   props: {
     til: Object,
   },
-  setup(props, { emit }) {
+  setup(props) {
     const store = useStore();
     const getters = computed(() => store.getters);
+
+    const commentContent = ref("");
 
     function setNum() {
       const tilNum = props.til.pk;
@@ -211,11 +217,20 @@ export default {
         tilId: tilNum,
         userId: getters.value.getCurrentUser,
       });
-      emit("detailChange", tilNum);
     }
 
+    const onSubmit = () => {
+      const payload = {
+        tilPK: props.til.pk,
+        content: commentContent,
+      };
+      store.dispatch("createComment", payload);
+    };
+
     return {
+      commentContent,
       setNum,
+      onSubmit,
     };
   },
   data() {
@@ -243,7 +258,7 @@ export default {
   margin-left: auto;
   margin-right: auto;
   width: 80%;
-  height: 700px;
+  height: auto;
   margin-bottom: 20px;
   border: 2px solid rgba(219, 219, 218, 0.8);
   border-radius: 10px;
@@ -258,7 +273,7 @@ export default {
 
 .til-body {
   background-color: rgb(41, 39, 39);
-  height: 65%;
+  height: auto;
 }
 
 .til-footer {
@@ -278,7 +293,7 @@ export default {
 }
 
 .profile-body {
-  position: absolute;
+  position: relative;
   top: 25px;
   left: 10px;
   width: 50px;
@@ -293,9 +308,9 @@ export default {
 }
 
 .til-title {
-  position: absolute;
+  position: relative;
   left: 70px;
-  top: 25px;
+  bottom: 12px;
   width: 70%;
   font-size: 1.1rem;
   font-weight: bold;
@@ -306,7 +321,7 @@ export default {
 }
 
 .til-info {
-  position: absolute;
+  position: relative;
   left: 70px;
   top: 50px;
 }
@@ -351,7 +366,7 @@ export default {
 }
 
 .til-content {
-  position: absolute;
+  position: relative;
   left: 10px;
   font-size: 0.7rem;
   overflow: hidden;
