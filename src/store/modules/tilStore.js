@@ -155,6 +155,22 @@ export const tilStore = {
         .catch((err) => console.error(err.response));
     },
 
+    updateTil({ dispatch, getters, state }, payload) {
+      axios
+        .put("til/" + payload.pk, payload, {
+          headers: getters.authHeader,
+        }) // payload: Til 데이터
+        .then((res) => {
+          const credentials = {
+            tilId: res.data.tilId,
+            userId: state.currentUser.id, // 이거 맞나?
+          };
+
+          dispatch("fetchOpenTil", credentials);
+        })
+        .catch((err) => console.error(err.response));
+    },
+
     removeTil({ commit, getters }, tilPK) {
       axios
         .delete("til/delete/" + tilPK, { headers: getters.authHeader })
