@@ -60,7 +60,7 @@ export default {
     }
 
     const logout = () => {
-      store.dispatch("logout");
+      store.dispatch("logout", 1);
     };
 
     return { isLoggedIn, checkOkay, logout };
