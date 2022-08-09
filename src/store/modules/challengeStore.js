@@ -6,8 +6,8 @@ export const challengeStore = {
     isCompeteStarted: false,
     competeStartTime: null,
     isCoopRoomExpand: true,
-    competeTotal: null,
-    competeRank: null,
+    competeTotal: " - ",
+    competeRank: " - ",
     competePeople: 100,
     rooms: [],
     roomId: null,
@@ -87,7 +87,7 @@ export const challengeStore = {
   actions: {
     getCompeteInfo({ commit }, id) {
       http
-        .get("/livecoop/" + id)
+        .get("/livecomp/" + id)
         .then(({ data }) => {
           commit("SET_COMPETE_RANK", data.ranking);
           commit("SET_COMPETE_TIME", data.totalTime);
@@ -104,7 +104,7 @@ export const challengeStore = {
         userId: id,
       };
       http
-        .patch("/livecoop", userid)
+        .patch("/livecomp", userid)
         .then(({ data }) => {
           console.log(commit);
           console.log(data);

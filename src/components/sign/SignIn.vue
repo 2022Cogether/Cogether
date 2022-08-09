@@ -62,23 +62,45 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "vuex";
+import Swal from "sweetalert2";
 
 export default {
   name: "SignIn",
   setup() {
-    const $store = useStore();
+    const store = useStore();
+    const getters = computed(() => store.getters);
+
+    //SWal 모달창
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "bottom-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+
     const email = ref("");
     const password = ref("");
 
-    function goLogin() {
+    async function goLogin() {
       const credentials = {
         email: email.value,
         password: password.value,
       };
 
-      $store.dispatch("login", credentials);
+      await store.dispatch("login", credentials);
+      if (!getters.value.getBooleanValue) {
+        Toast.fire({
+          icon: "warning",
+          title: "아이디 또는 비밀번호를 잘못 입력했습니다.",
+        });
+      }
     }
 
     return { email, password, goLogin };
