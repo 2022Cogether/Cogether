@@ -12,15 +12,31 @@
     <span v-if="tabState == 'scrap'">
       <span v-if="!checkScrap()"> 스크랩된 글이 없습니다.</span>
       <span v-for="(projectPerson, i) in getters.getProjectPeople" :key="i">
-        <span v-if="projectPerson.scrap">
-          <PeopleItem :projectPerson="projectPerson" />
+        <span
+          v-if="
+            searchText == null ||
+            projectPerson.title.indexOf(searchText) != -1 ||
+            projectPerson.userNickname.indexOf(searchText) != -1
+          "
+        >
+          <span v-if="projectPerson.scrap">
+            <PeopleItem :projectPerson="projectPerson" />
+          </span>
         </span>
       </span>
     </span>
     <!-- 프로젝트 탭 -->
     <span v-else>
       <span v-for="(projectPerson, i) in getters.getProjectPeople" :key="i">
-        <PeopleItem :projectPerson="projectPerson" />
+        <span
+          v-if="
+            searchText == null ||
+            projectPerson.title.indexOf(searchText) != -1 ||
+            projectPerson.userNickname.indexOf(searchText) != -1
+          "
+        >
+          <PeopleItem :projectPerson="projectPerson" />
+        </span>
       </span>
     </span>
   </ul>

@@ -76,7 +76,7 @@
             type="checkbox"
             class="checkbox my-3"
             @click="checkTerm"
-          /><label for="terms">Terms and conditions</label>
+          /><label for="terms">이메일 정보 제공에 동의합니다.</label>
           <div class="mt-2 d-flex justify-content-between">
             <button class="submit" @click="changePage">Next</button>
             <button class="submit" @click="goRegister">Register</button>
@@ -186,10 +186,12 @@ export default {
         isEmailChecked.value = false;
       }
     };
-    const certifyEmail = () => {
-      store.dispatch("checkEmail", email.value);
-      if (getters.value.getBooleanValue) {
-        isEmailChecked.value = true;
+    const certifyEmail = async () => {
+      if (isValidEmail.value) {
+        await store.dispatch("checkEmail", email.value);
+        if (getters.value.getBooleanValue) {
+          isEmailChecked.value = true;
+        }
       }
     };
 
@@ -215,10 +217,12 @@ export default {
         isNickChecked.value = false;
       }
     };
-    const certifyNickName = () => {
-      store.dispatch("checkNickName", nickName.value);
-      if (getters.value.getBooleanValue) {
-        isNickChecked.value = true;
+    const certifyNickName = async () => {
+      if (isNickValid.value) {
+        await store.dispatch("checkNickName", nickName.value);
+        if (getters.value.getBooleanValue) {
+          isNickChecked.value = true;
+        }
       }
     };
 
@@ -275,7 +279,7 @@ export default {
         const credentials = {
           email: email.value,
           password: password.value,
-          nickName: nickName.value,
+          nickname: nickName.value,
           skills: userLangSkills.value,
         };
         store.dispatch("register", credentials);
