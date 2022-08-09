@@ -16,8 +16,6 @@ public class UserRequest {
     private String email;
     private String password;
     private String nickname;
-    private List<String> UserSkill;
-
     private String intro;
 
     private String git_url;
@@ -29,4 +27,7 @@ public class UserRequest {
 
     private boolean admin;
     private boolean verified;
+
+    @NonNull
+    private List<String> skills;
 }

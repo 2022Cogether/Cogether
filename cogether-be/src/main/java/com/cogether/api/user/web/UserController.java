@@ -3,6 +3,7 @@ package com.cogether.api.user.web;
 import com.cogether.api.user.dto.LoginRequest;
 import com.cogether.api.user.dto.TokenResponse;
 import com.cogether.api.user.dto.UserRequest;
+import com.cogether.api.user.service.SkillService;
 import com.cogether.api.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,6 @@ import java.util.Map;
 
 
 
-@CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(path="/api")
