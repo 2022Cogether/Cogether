@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -25,12 +27,9 @@ public class ProjectService {
 
     public ProjectResponse.OnlyId create(ProjectRequest.Create_Project create_project){
         User user = userRepository.findById(create_project.getUserId()).orElseThrow(UserNotFoundException::new);
-        System.out.println(user.getNickname());
         Project project = create_project.toEntity(user);
-        System.out.println(project.getContent());
         Project savedProject = projectRepository.save(project);
         List<String> list = create_project.getSkillList();
-        System.out.println(list.get(0));
         for (int i = 0; i < list.size(); i++){
             String skill = list.get(i);
             ProjectSkill projectSkill = ProjectSkill.toEntity(savedProject, skill);
@@ -66,6 +65,12 @@ public class ProjectService {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<ProjectResponse.ProjectAll> projectList = new ArrayList<>();
         List<Project> list = projectRepository.findAll();
+        Collections.sort(list, new Comparator<Project>() {
+            @Override
+            public int compare(Project o1, Project o2) {
+                return o2.getCreatedAt().compareTo(o1.getCreatedAt());
+            }
+        });
         for (int i = 0; i < list.size(); i++){
             Project project = list.get(i);
             List<ProjectSkill> projectSkillList = projectSkillRepository.findAllByProject_Id(project.getId());
@@ -91,5 +96,22 @@ public class ProjectService {
         ProjectScrap projectScrap = projectScrapRepository.findByProject_IdAndUser_Id(projectId, userId);
         projectScrapRepository.deleteById(projectScrap.getId());
         return ProjectResponse.OnlyProjectScrapId.build(projectScrap);
+    }
+
+    public ProjectResponse.ProjectList getMyProjectList(int userId){
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        List<ProjectResponse.ProjectAll> projectList = new ArrayList<>();
+        List<Project> list = projectRepository.findAllByUserOrderByCreatedAtDesc(user);
+        for (int i = 0; i < list.size(); i++){
+            Project project = list.get(i);
+            List<ProjectSkill> projectSkillList = projectSkillRepository.findAllByProject_Id(project.getId());
+            int check = projectScrapRepository.countAllByProjectAndUser(project, user);
+            boolean isScrap = false;
+            if(check == 1){
+                isScrap = true;
+            }
+            projectList.add(ProjectResponse.ProjectAll.build(project, projectSkillList, isScrap));
+        }
+        return ProjectResponse.ProjectList.build(projectList);
     }
 }
