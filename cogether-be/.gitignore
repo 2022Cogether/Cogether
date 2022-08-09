@@ -38,3 +38,6 @@ out/
 
 ### awsS3 ###
 **/src/main/resources/application-aws.properties
+
+### db ###
+**/src/main/resources/application-db.properties
