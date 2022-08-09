@@ -100,7 +100,6 @@ export const tilStore = {
           }
         })
         .catch((err) => {
-          alert("왜 실패??");
           console.error(err.response.data);
         });
     },
@@ -119,7 +118,6 @@ export const tilStore = {
           }
         })
         .catch((err) => {
-          // alert("왜 실패??");
           console.error(err.response.data);
           commit("SET_AUTH_ERROR", err.response.data);
           const errorMessage = [];
@@ -130,7 +128,6 @@ export const tilStore = {
               }
             }
           }
-          // alert(errorMessage.join("\r\n"));
         });
     },
 
@@ -148,6 +145,22 @@ export const tilStore = {
             params: { tilPK: res.data.tilId },
           });
 
+          const credentials = {
+            tilId: res.data.tilId,
+            userId: state.currentUser.id, // 이거 맞나?
+          };
+
+          dispatch("fetchOpenTil", credentials);
+        })
+        .catch((err) => console.error(err.response));
+    },
+
+    updateTil({ dispatch, getters, state }, payload) {
+      axios
+        .put("til/" + payload.pk, payload, {
+          headers: getters.authHeader,
+        }) // payload: Til 데이터
+        .then((res) => {
           const credentials = {
             tilId: res.data.tilId,
             userId: state.currentUser.id, // 이거 맞나?

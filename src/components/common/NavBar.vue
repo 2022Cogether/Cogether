@@ -29,8 +29,14 @@
           <font-awesome-icon class="fs-3" icon="fa-solid fa-user" />
         </a>
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="#/profile">내 프로필</a>
-          <a class="dropdown-item" href="">비밀번호 변경</a>
+          <router-link
+            class="dropdown-item"
+            :to="{ name: 'profile', params: { userId: 1 } }"
+            >내 프로필<!-- 추후 userId를 currentUesr.pk 등으로 변경 -->
+          </router-link>
+          <router-link class="dropdown-item" :to="{ name: 'PassWordChange' }"
+            >비밀번호 변경
+          </router-link>
           <a class="dropdown-item" @click.prevent="logout">로그아웃</a>
         </div>
       </div>
@@ -53,6 +59,8 @@ export default {
     const store = useStore();
     const getters = computed(() => store.getters);
 
+    const currentUser = store.getters.getCurrentUser;
+
     const isLoggedIn = getters.value.isLoggedIn;
 
     function checkOkay() {
@@ -63,7 +71,7 @@ export default {
       store.dispatch("logout", 1);
     };
 
-    return { isLoggedIn, checkOkay, logout };
+    return { isLoggedIn, currentUser, checkOkay, logout };
   },
 };
 </script>
