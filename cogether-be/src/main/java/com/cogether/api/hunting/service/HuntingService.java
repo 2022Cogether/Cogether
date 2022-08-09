@@ -13,6 +13,8 @@ import com.cogether.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class HuntingService {
@@ -43,6 +45,9 @@ public class HuntingService {
 
     public HuntingResponse.OnlyHuntingId delete(int id) {
         Hunting hunting = huntingRepository.findById(id).orElseThrow(HuntingNotFoundException::new);
+        List<HuntingScrap> huntingScrapList = huntingScrapRepository.findAllByHunting(hunting);
+        for (int idx = 0; idx < huntingScrapList.size(); idx++)
+            huntingScrapRepository.deleteById(huntingScrapList.get(idx).getId());
         huntingRepository.deleteById(id);
         return HuntingResponse.OnlyHuntingId.build(hunting);
     }
