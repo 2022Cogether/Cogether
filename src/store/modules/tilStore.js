@@ -100,7 +100,6 @@ export const tilStore = {
           }
         })
         .catch((err) => {
-          alert("왜 실패??");
           console.error(err.response.data);
         });
     },
@@ -119,7 +118,6 @@ export const tilStore = {
           }
         })
         .catch((err) => {
-          // alert("왜 실패??");
           console.error(err.response.data);
           commit("SET_AUTH_ERROR", err.response.data);
           const errorMessage = [];
@@ -130,7 +128,6 @@ export const tilStore = {
               }
             }
           }
-          // alert(errorMessage.join("\r\n"));
         });
     },
 
