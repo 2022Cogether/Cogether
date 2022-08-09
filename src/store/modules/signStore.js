@@ -233,52 +233,62 @@ export const signStore = {
     },
 
     // 닉네임 중복 체크
-    checkNickName({ commit }, nickName) {
-      http
-        .get("user/verify/" + nickName)
-        .then((res) => {
-          if (res.data.status === 200) {
-            alert("가능한 닉네임입니다!");
+    async checkNickName({ commit }, nickName) {
+      await http
+        .get("verify/nickname/" + nickName)
+        .then(({ data }) => {
+          if (!data) {
+            console.log("사용가능한 닉네임!");
             commit("SET_BOOLEANVALUE");
           } else {
-            alert("200이 아닌 다른 값이 반환되었습니다");
+            console.log("중복된 닉네임!");
           }
         })
-        .catch((err) => {
-          if (err.response.status === 404) {
-            alert("이미 사용하고 있는 닉네임입니다.");
-          } else if (err.response.status === 500) {
-            alert("서버 에러입니다.");
-          } else {
-            alert("그 외 에러입니다.");
-          }
-
-          console.error(err.response.data);
-          commit("SET_AUTH_ERROR", err.response.data);
-          const errorMessage = [];
-          for (const errors in err.response.data) {
-            for (const error of err.response.data[errors]) {
-              if (!errorMessage.includes(error)) {
-                errorMessage.push(error);
-              }
-            }
-          }
-          alert(errorMessage.join("\r\n"));
+        .catch((e) => {
+          console.log("에러: " + e);
         });
+      // .then((res) => {
+      //   if (res.data.status === 200) {
+      //     alert("가능한 닉네임입니다!");
+      //     commit("SET_BOOLEANVALUE");
+      //   } else {
+      //     alert("200이 아닌 다른 값이 반환되었습니다");
+      //   }
+      // })
+      // .catch((err) => {
+      //   if (err.response.status === 404) {
+      //     alert("이미 사용하고 있는 닉네임입니다.");
+      //   } else if (err.response.status === 500) {
+      //     alert("서버 에러입니다.");
+      //   } else {
+      //     alert("그 외 에러입니다.");
+      //   }
+      //   console.error(err.response.data);
+      //   commit("SET_AUTH_ERROR", err.response.data);
+      //   const errorMessage = [];
+      //   for (const errors in err.response.data) {
+      //     for (const error of err.response.data[errors]) {
+      //       if (!errorMessage.includes(error)) {
+      //         errorMessage.push(error);
+      //       }
+      //     }
+      //   }
+      //   alert(errorMessage.join("\r\n"));
+      // });
     },
 
     // 이메일 중복 체크
-    checkEmail({ commit }, email) {
+    async checkEmail({ commit }, email) {
       console.log("이메일 체크");
-      const data = {
-        email: email,
-      };
-      console.log(typeof email + ": " + email);
-      http
-        .get("user/verify/email", data)
+      await http
+        .get("verify/email/" + email)
         .then(({ data }) => {
-          console.log(commit);
-          console.log(data);
+          if (!data) {
+            console.log("사용가능한 이메일!");
+            commit("SET_BOOLEANVALUE");
+          } else {
+            console.log("중복된 이메일!");
+          }
         })
         .catch((e) => {
           console.log("에러: " + e);
