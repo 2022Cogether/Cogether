@@ -40,8 +40,12 @@
     </div> -->
     <!-- 프로젝트  -->
     <div v-if="state.tabState === 'project'">
-      <PeopleList :searchText="state.searchText" :tabState="state.tabState" />
-      <TeamList :searchText="state.searchText" :tabState="state.tabState" />
+      <div class="list-box">
+        <PeopleList :searchText="state.searchText" :tabState="state.tabState" />
+      </div>
+      <div class="list-box">
+        <TeamList :searchText="state.searchText" :tabState="state.tabState" />
+      </div>
     </div>
     <!-- 스터디 -->
     <div v-if="state.tabState === 'study'">

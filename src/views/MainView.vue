@@ -14,9 +14,11 @@
     </div>
     <!-- TilMainList -->
     <TilMainList />
+    <SignIn />
   </div>
   <div v-else>
-    <SignIn />
+    <TilMainList />
+    <!-- <SignIn /> -->
   </div>
 </template>
 <script>
