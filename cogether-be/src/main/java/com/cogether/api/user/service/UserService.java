@@ -8,6 +8,7 @@ import com.cogether.api.user.domain.UserSkill;
 import com.cogether.api.user.dto.LoginRequest;
 import com.cogether.api.user.dto.TokenResponse;
 import com.cogether.api.user.dto.UserRequest;
+import com.cogether.api.user.dto.UserSkillResponse;
 import com.cogether.api.user.repository.AuthRepository;
 import com.cogether.api.follow.repository.FollowRepository;
 import com.cogether.api.user.repository.UserRepository;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +46,6 @@ public class UserService {
 
     private final UserSkillRepository userSkillRepository;
 
-    private final FollowRepository followRepository;
 
     public Optional<User> findByEmail(String userEmail) {
 
@@ -74,23 +75,30 @@ public class UserService {
                                 .password(passwordEncoder.encode(userRequest.getPassword()))  // 사용자 비밀번호 암호화해서 DB에 저장
                                 .email(userRequest.getEmail())      //사용자 이메일
                                 .nickname(userRequest.getNickname())//사용자 닉네임
-                                .resign(false)
+                                .createdAt(LocalDateTime.now()) // 가입날자
+                                .resign(false)  // 탈퇴 여부
+                                .comp(false) // 경쟁모드 참가여부
+                                .admin(false)
+                                .etcUrl(userRequest.getEtc_url())   //기타 사이트
+                                .gitUrl(userRequest.getGit_url())   //깃 url
+                                .notionUrl((userRequest.getNotion_url()))   //노션url
+                                .exp(0) // 경험치
+                                .imgUrl(userRequest.getImg_url())   // 프로필
+                                .intro(userRequest.getIntro())// 한줄소개
+                                .verified(false)    // 이메일 인증여부
                                 .build());
 
-        int id = userRequest.getId();   // 식별자
+        List<String> skills = userRequest.getSkills();
 
-//        List<UserSkill> userSkillList = findUser(id);
-//
-//        if (userSkillList.size() != 0) {
-//            for (UserSkill userSkills : userSkillList) {
-//                UserSkill userSkill = userSkillRepository.save(
-//                        UserSkill.builder()
-//                                .skillId(userSkills.getSkillId())
-//                                .user(user)
-//                                .build());
-//            }
-//        }
-
+        System.out.println(skills.isEmpty());
+        if(!skills.isEmpty()) {
+            for (String skill : skills) {
+                userSkillRepository.save(UserSkill.builder()
+                        .skillId(skill)
+                        .user(user)
+                        .build());
+            }
+        }
 
         String accessToken = tokenUtils.generateJwtToken(user);
         String refreshToken = tokenUtils.saveRefreshToken(user);
