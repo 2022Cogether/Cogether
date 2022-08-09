@@ -70,8 +70,8 @@ export default {
   name: "ChallengeView",
   setup() {
     const store = useStore();
-    store.dispatch("getCompeteInfo", 1);
     const getters = computed(() => store.getters);
+    store.dispatch("getCompeteInfo", getters.value.getLoginUserId);
     const state = reactive({
       tabState: 1,
       tempText: null,
@@ -92,8 +92,8 @@ export default {
         const interval = setInterval(() => {
           if (getters.value.getIsCompeteStarted) {
             //compete 켜진 상태면 보내기
-            store.dispatch("sendCompeteTime", 1);
-            store.dispatch("getCompeteInfo", 1);
+            store.dispatch("sendCompeteTime", getters.value.getLoginUserId);
+            store.dispatch("getCompeteInfo", getters.value.getLoginUserId);
           }
           if (!getters.value.getIsCompeteStarted) {
             //compete 꺼진 상태면 보내지 않기
@@ -141,7 +141,7 @@ export default {
           },
         });
         Toast.fire({
-          icon: "error",
+          icon: "warning",
           title: "현재 참여 중인 방이 있습니다.",
         });
       }

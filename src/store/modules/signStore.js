@@ -13,7 +13,7 @@ export const signStore = {
       "cplusplus",
       "python",
       "java",
-      "javaScript",
+      "javascript",
       "spring",
       "react",
       "r",
@@ -29,6 +29,7 @@ export const signStore = {
     // 로그인 되면 token 추가 / 로그아웃 되면 token 제거
     token: localStorage.getItem("token") || "",
 
+    loginUserId: localStorage.getItem("userId") || "",
     // 현재 유저 정보(id, 닉네임 등)이 저장될 state
     currentUser: {},
 
@@ -62,6 +63,9 @@ export const signStore = {
     getSkillSet(state) {
       return state.skillSet;
     },
+    getLoginUserId(state) {
+      return state.loginUserId;
+    },
 
     // 인증키로 헤더 세팅 (장고 때 만든 거라 spring에서 다를 수 있음)
     authHeader(state) {
@@ -86,6 +90,7 @@ export const signStore = {
     },
 
     SET_TOKEN: (state, token) => (state.token = token),
+    SET_LOGIN_USERID: (state, userid) => (state.loginUserId = userid),
 
     SET_CURRENT_USER: (state, userData) => (state.currentUser = userData),
     SET_ANOTHER_USER: (state, userData) => (state.anotherUser = userData),
@@ -96,41 +101,43 @@ export const signStore = {
       localStorage.setItem("token", token); // 로컬 저장소 필요?
     },
 
-    login({ commit, dispatch }, credentials) {
-      http
+    saveUserId({ commit }, userId) {
+      commit("SET_LOGIN_USERID", userId);
+      localStorage.setItem("userId", userId); // 로컬 저장소 필요?
+    },
+
+    async login({ commit, dispatch }, credentials) {
+      await http
         .post("sign/signin/", credentials)
         .then(({ data }) => {
-          console.log(data);
-          console.log(data);
-          alert("로그인 성공!");
+          console.log(commit);
           const token = data.key;
           const userId = data.userId;
-          console.log(userId);
           dispatch("saveToken", token); // 토큰 갱신
+          dispatch("saveUserId", userId);
           dispatch("fetchCurrentUser", userId); // 현재 사용자 정보 추가
-          commit("RESET_AUTH_ERROR"); // 로그인 오류시 발생할 수 있는 오류 정보 수정(미구현)
+          commit("SET_BOOLEANVALUE");
+          // commit("RESET_AUTH_ERROR"); // 로그인 오류시 발생할 수 있는 오류 정보 수정(미구현)
           router.go(); // 일단 새로고침하여 메인 페이지 이동하게 해놓음
         })
         .catch((err) => {
-          console.log(err);
-          alert("로그인 실패!");
           console.error(err.response.data);
         });
     },
 
-    register({ commit, dispatch }, credentials) {
-      http
+    async register({ commit, dispatch }, credentials) {
+      await http
         .post("sign/signup/", credentials)
         .then((res) => {
-          alert("회원가입 성공!");
+          console.log(commit);
           const token = res.data.key;
           dispatch("saveToken", token);
-          dispatch("fetchCurrentUser", res.data.userId); // 명세서 response에 userId 있는 데 맞지??
-          commit("RESET_AUTH_ERROR");
-          router.push({ name: "mainview" });
+          dispatch("saveUserId", res.data.userId);
+          dispatch("fetchCurrentUser", res.data.userId);
+          commit("SET_BOOLEANVALUE");
+          // commit("RESET_AUTH_ERROR");
         })
         .catch((err) => {
-          alert("회원가입 실패!");
           console.error(err.response.data);
         });
     },
@@ -144,6 +151,7 @@ export const signStore = {
             alert("현 사용자 정보 저장 중 에러 발생");
             if (err.response.status === 401) {
               commit("SET_TOKEN", "");
+              commit("SET_LOGIN_USERID", "");
               router.push({ name: "login" });
             }
           });
@@ -159,6 +167,7 @@ export const signStore = {
             alert("현 사용자 정보 저장 중 에러 발생");
             if (err.response.status === 401) {
               commit("SET_TOKEN", "");
+              commit("SET_LOGIN_USERID", "");
               router.push({ name: "login" });
             }
           });
@@ -172,6 +181,7 @@ export const signStore = {
         .then((res) => {
           if (res.data.status === 200) {
             alert("비밀번호를 성공적으로 보냈습니다!");
+            console.log(commit);
             router.push({ name: "SignIn" });
           } else {
             alert("200이 아닌 다른 값이 반환되었습니다");
@@ -187,7 +197,7 @@ export const signStore = {
           }
 
           console.error(err.response.data);
-          commit("SET_AUTH_ERROR", err.response.data);
+          // commit("SET_AUTH_ERROR", err.response.data);
           const errorMessage = [];
           for (const errors in err.response.data) {
             for (const error of err.response.data[errors]) {
@@ -233,34 +243,6 @@ export const signStore = {
         .catch((e) => {
           console.log("에러: " + e);
         });
-      // .then((res) => {
-      //   if (res.data.status === 200) {
-      //     alert("가능한 닉네임입니다!");
-      //     commit("SET_BOOLEANVALUE");
-      //   } else {
-      //     alert("200이 아닌 다른 값이 반환되었습니다");
-      //   }
-      // })
-      // .catch((err) => {
-      //   if (err.response.status === 404) {
-      //     alert("이미 사용하고 있는 닉네임입니다.");
-      //   } else if (err.response.status === 500) {
-      //     alert("서버 에러입니다.");
-      //   } else {
-      //     alert("그 외 에러입니다.");
-      //   }
-      //   console.error(err.response.data);
-      //   commit("SET_AUTH_ERROR", err.response.data);
-      //   const errorMessage = [];
-      //   for (const errors in err.response.data) {
-      //     for (const error of err.response.data[errors]) {
-      //       if (!errorMessage.includes(error)) {
-      //         errorMessage.push(error);
-      //       }
-      //     }
-      //   }
-      //   alert(errorMessage.join("\r\n"));
-      // });
     },
 
     // 이메일 중복 체크
@@ -279,35 +261,6 @@ export const signStore = {
         .catch((e) => {
           console.log("에러: " + e);
         });
-      // .then((res) => {
-      //   if (res.data.status === 200) {
-      //     alert("가능한 이메일입니다!");
-      //     commit("SET_BOOLEANVALUE");
-      //   } else {
-      //     alert("200이 아닌 다른 값이 반환되었습니다");
-      //   }
-      // })
-      // .catch((err) => {
-      //   if (err.response.status === 404) {
-      //     alert("이미 사용하고 있는 이메일입니다.");
-      //   } else if (err.response.status === 500) {
-      //     alert("서버 에러입니다.");
-      //   } else {
-      //     alert("그 외 에러입니다.");
-      //   }
-
-      //   console.error(err.response.data);
-      //   commit("SET_AUTH_ERROR", err.response.data);
-      //   const errorMessage = [];
-      //   for (const errors in err.response.data) {
-      //     for (const error of err.response.data[errors]) {
-      //       if (!errorMessage.includes(error)) {
-      //         errorMessage.push(error);
-      //       }
-      //     }
-      //   }
-      //   alert(errorMessage.join("\r\n"));
-      // });
     },
 
     // 변경된 비밀 번호를 받고 서버에 보내 수정
@@ -337,9 +290,11 @@ export const signStore = {
         .get("sign/signout/" + userId)
         .then(() => {
           localStorage.removeItem("token");
+          localStorage.removeItem("userId");
           alert("성공적으로 logout!");
           commit("SET_CURRENT_USER", {});
           commit("SET_TOKEN", "");
+          commit("SET_LOGIN_USERID", "");
           router.push({ name: "mainview" });
           router.go(); // 새로고침 한 번 더해야 로그인 창이됨...지울 수 있을까
         })
@@ -356,8 +311,10 @@ export const signStore = {
           if (res.data.status === 200) {
             alert("회원 탈퇴되었습니다!");
             localStorage.removeItem("token");
+            localStorage.removeItem("userId");
             commit("SET_CURRENT_USER", {});
             commit("SET_TOKEN", "");
+            commit("SET_LOGIN_USERID", "");
             router.push({ name: "mainview" });
             router.go();
           } else {

@@ -31,7 +31,10 @@
         <div class="dropdown-menu">
           <router-link
             class="dropdown-item"
-            :to="{ name: 'profile', params: { userId: 1 } }"
+            :to="{
+              name: 'profile',
+              params: { userId: userId },
+            }"
             >내 프로필<!-- 추후 userId를 currentUesr.pk 등으로 변경 -->
           </router-link>
           <router-link class="dropdown-item" :to="{ name: 'PassWordChange' }"
@@ -50,7 +53,7 @@
 </template>
 
 <script>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "vuex";
 
 export default {
@@ -61,6 +64,7 @@ export default {
 
     const currentUser = store.getters.getCurrentUser;
 
+    const userId = ref(getters.value.getLoginUserId);
     const isLoggedIn = getters.value.isLoggedIn;
 
     function checkOkay() {
@@ -68,10 +72,10 @@ export default {
     }
 
     const logout = () => {
-      store.dispatch("logout", 1);
+      store.dispatch("logout", getters.value.getLoginUserId);
     };
 
-    return { isLoggedIn, currentUser, checkOkay, logout };
+    return { isLoggedIn, currentUser, checkOkay, logout, userId };
   },
 };
 </script>

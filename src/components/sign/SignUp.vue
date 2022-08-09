@@ -197,6 +197,8 @@
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import skills from "@/assets/skills.js";
+import router from "@/router";
+import Swal from "sweetalert2";
 
 export default {
   name: "SignUp",
@@ -226,6 +228,19 @@ export default {
         }
       }
     };
+
+    //SWal 모달창
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "bottom-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
 
     const password = ref("");
     const password2 = ref("");
@@ -279,9 +294,8 @@ export default {
       store.dispatch("takeSkillSet");
     }
     const langSet = getters.value.getSkillSet;
-    console.log(getters.value.getSkillSet);
 
-    function goRegister() {
+    async function goRegister() {
       if (
         isValidEmail.value &&
         isPwdValid &&
@@ -299,9 +313,26 @@ export default {
           nickname: nickName.value,
           skills: userLangSkills.value,
         };
-        store.dispatch("register", credentials);
+
+        await store.dispatch("register", credentials);
+        if (getters.value.getBooleanValue) {
+          Toast.fire({
+            icon: "success",
+            title: "회원가입이 성공되었습니다.",
+          });
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: "회원가입이 실패되었습니다.",
+          });
+        }
+
+        router.push({ name: "mainview" });
       } else {
-        alert("입력되지 않은 정보가 있습니다!");
+        Toast.fire({
+          icon: "warning",
+          title: "입력되지 않은 정보가 있습니다.",
+        });
       }
     }
 
@@ -343,7 +374,10 @@ export default {
 
       if (typeof val == "object") {
         if (userLangSkills.value.includes(val.target.value)) {
-          alert("이미 입력된 스킬입니다!");
+          Toast.fire({
+            icon: "error",
+            title: "이미 입력된 스킬입니다.",
+          });
         } else {
           userLangSkills.value.push(val.target.value);
           skillInput.value = null; //입력을 하면 입력값 초기화
@@ -351,7 +385,10 @@ export default {
         }
       } else {
         if (userLangSkills.value.includes(val)) {
-          alert("이미 입력된 스킬입니다!");
+          Toast.fire({
+            icon: "warning",
+            title: "이미 입력된 스킬입니다.",
+          });
         } else {
           userLangSkills.value.push(val);
           skillInput.value = null; //입력을 하면 입력값 초기화
