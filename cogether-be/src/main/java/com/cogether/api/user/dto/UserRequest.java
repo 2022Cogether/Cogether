@@ -28,6 +28,5 @@ public class UserRequest {
     private boolean admin;
     private boolean verified;
 
-    @NonNull
     private List<String> skills;
 }

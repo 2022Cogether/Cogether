@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface UserSkillRepository extends JpaRepository<UserSkill, Integer> {
 
-    List<UserSkill> findBySkillId (int userId);   // 파라미터 : 유저 식별자
+    List<UserSkill> findAllByUser(User user);
 
     @Modifying
     @Query("delete from UserSkill u where u.user.id=:userId and u.skillId=:skillId")

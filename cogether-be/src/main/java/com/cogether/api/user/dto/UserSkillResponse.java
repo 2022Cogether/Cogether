@@ -9,7 +9,6 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserSkillResponse {
 
-    private int id;
-    private int userId;
-    private String skillId;
+    private int userSkillId;
+    private String skillName;
 }

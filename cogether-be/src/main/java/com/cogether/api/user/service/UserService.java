@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,15 +54,7 @@ public class UserService {
     }
 
 
-    public List<UserSkill> findBySkillId(int userId) {
-        return userSkillRepository.findBySkillId(userId);
-    }
 
-    public List<UserSkill> findUser(int userId) {
-        List<UserSkill> userSkillList = userSkillRepository.findBySkillId(userId);
-
-        return userSkillList;
-    }
 
 
     //회원가입
