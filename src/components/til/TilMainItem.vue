@@ -13,7 +13,8 @@
         <span class="til-time">1 시간 전</span>
       </div>
 
-      <div class="dropdown">
+      <!-- 일반 어떤 경우에도 보이게 설정했으니 추후 변경 필요 -->
+      <div v-if="isWriter" class="dropdown">
         <a
           href=""
           class="dropdown-toggle"
@@ -26,10 +27,16 @@
             class="fs-3 til-dropdown-icon"
           />
         </a>
-        <!-- 나중에 사용자가 게시글 작성자일 경우만 뜨게 설정하기 -->
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="">내용 수정</a>
-          <a class="dropdown-item" href="">삭제</a>
+          <router-link
+            class="dropdown-item"
+            :to="{
+              name: 'TilUpdate',
+              params: { tilPK: til.pk },
+            }"
+            >내용 수정</router-link
+          >
+          <div class="dropdown-item" @click="deleteTil">삭제</div>
         </div>
       </div>
     </div>
@@ -99,8 +106,8 @@
       <div id="main-content" class="like-button">
         <div>
           <!-- 나중에 id에 til id 넣고 밑에 label 태그의 for랑 맞추면 개별 하트 효과 및 데이터 전송 가능 -->
-          <input type="checkbox" id="checkbox" />
-          <label for="checkbox">
+          <input type="checkbox" :id="'checkbox' + til.pk" />
+          <label :for="'checkbox' + til.pk">
             <svg
               id="heart-svg"
               viewBox="467 392 58 57"
@@ -209,6 +216,12 @@ export default {
     const store = useStore();
     const getters = computed(() => store.getters);
 
+    // 사용자가 글쓴이인지 아닌지 확인
+    const currentUser = store.getters.getCurrentUser;
+    const isWriter = computed(() => {
+      return currentUser.pk == props.til.user_id || true;
+    }); // 확인을 위해 || true 해놓음
+
     const commentContent = ref("");
 
     function setNum() {
@@ -228,6 +241,7 @@ export default {
     };
 
     return {
+      isWriter,
       commentContent,
       setNum,
       onSubmit,

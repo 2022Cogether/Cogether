@@ -86,7 +86,7 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           //취소하고 이동할 페이지
-          store.dispatch("removeTil", tilContent.pk); // pk??
+          store.dispatch("mainview");
         }
       });
     }
