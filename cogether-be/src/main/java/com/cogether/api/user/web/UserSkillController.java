@@ -40,7 +40,7 @@ public class UserSkillController {
     /**
      * 스킬리스트 (List<UserSkillResponse>)
      */
-    @GetMapping("/skill/list/{userid}")
+    @GetMapping("/skills/list/{userid}")
     public ResponseEntity getUserSkilllist(@PathVariable("userid") int userId)throws Exception {
 
         //User user = skillService.getUser(userId);
