@@ -35,7 +35,7 @@ public class ProjectController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(path = "/project/{userId}")
+    @GetMapping(path = "/project/list/{userId}")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<ProjectResponse.ProjectList> getProjectList(@PathVariable int userId){
         ProjectResponse.ProjectList response = projectService.getProjectList(userId);
@@ -53,6 +53,13 @@ public class ProjectController {
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<ProjectResponse.OnlyProjectScrapId> deleteScrap(@RequestParam int userId, @RequestParam int projectId){
         ProjectResponse.OnlyProjectScrapId response = projectService.deleteScrap(userId, projectId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping(path = "/projetct/list/my/{userId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<ProjectResponse.ProjectList> getMyProjectList(@PathVariable int userId){
+        ProjectResponse.ProjectList response = projectService.getMyProjectList(userId);
         return ResponseEntity.ok().body(response);
     }
 
