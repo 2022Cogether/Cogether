@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/api")
