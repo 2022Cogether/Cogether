@@ -83,18 +83,49 @@
           </div>
         </div>
         <div v-show="!isPageOne">
-          <input
-            type="skill"
-            class="input"
-            placeholder="기술을 입력해주세요"
-            @keyup.enter="addLangSkills"
-            required
-          />
+          <!-- 기술스택 검색 자동완성 여기부터 -->
+          <div class="searchbar">
+            <input
+              class="input-search"
+              v-model="skillInput"
+              @input="submitAutoComplete"
+              type="text"
+              @keyup.enter="addLangSkills"
+              placeholder="기술을 입력해주세요"
+            />
+            <button class="btn-search" @click="addLangSkills">
+              <font-awesome-icon
+                class="searchicon"
+                icon=" fa-solid fa-magnifying-glass"
+              />
+            </button>
+          </div>
+          <div class="autocomplete disabled">
+            <div
+              class="skill"
+              @click="searchSkillAdd(res)"
+              style="cursor: pointer"
+              v-for="(res, i) in result"
+              :key="i"
+            >
+              {{ res }}
+            </div>
+          </div>
+          <!-- 여기까지 -->
           <div
-            class="d-flex justify-content-between mt-2"
+            class="img-box d-flex justify-content-between mt-2"
             v-for="langSkill in userLangSkills"
             :key="langSkill.id"
           >
+            <img
+              class="skill-img"
+              :src="
+                `https://cogethera801.s3.ap-northeast-2.amazonaws.com/devicon/` +
+                langSkill +
+                `-original.svg`
+              "
+              alt="img"
+            />
             <p>{{ langSkill }}</p>
             <div class="btn btn-secondary" @click="delLangSkills(langSkill)">
               <svg
@@ -111,7 +142,7 @@
               </svg>
             </div>
           </div>
-          <div class="row d-flex justify-content-around">
+          <div class="row d-flex justify-content-around mt-5">
             <div class="col-5" v-for="lang in langSet" :key="lang.id">
               <div
                 class="btn m-1 w-100"
@@ -165,6 +196,7 @@
 />;
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
+import skills from "@/assets/skills.js";
 
 export default {
   name: "SignUp",
@@ -241,21 +273,6 @@ export default {
         alert("입력되지 않은 스킬입니다!");
       }
     };
-    const addLangSkills = (val) => {
-      if (typeof val == "object") {
-        if (userLangSkills.value.includes(val.target.value)) {
-          alert("이미 입력된 스킬입니다!");
-        } else {
-          userLangSkills.value.push(val.target.value);
-        }
-      } else {
-        if (userLangSkills.value.includes(val)) {
-          alert("이미 입력된 스킬입니다!");
-        } else {
-          userLangSkills.value.push(val);
-        }
-      }
-    };
 
     // created?
     if (!getters.value.getSkillSet) {
@@ -288,7 +305,66 @@ export default {
       }
     }
 
+    //기술스택 및 자동완성관련 함수들
+    const skillInput = ref("");
+    const result = ref("");
+    function submitAutoComplete() {
+      const autocomplete = document.querySelector(".autocomplete");
+      //입력이 없으면 자동완성리스트 제거(null)
+      if (skillInput.value == "") {
+        result.value = null;
+      } else if (skillInput.value) {
+        //값이 입력되면 자동완성 리스트 보이기
+        autocomplete.classList.remove("disabled");
+        result.value = skills.filter((skill) => {
+          //^는 모든 리스트 보이기, i는 대문자 > 소문자처리하는 파라미터
+          return skill.match(new RegExp("^" + skillInput.value, "i"));
+        });
+      } else {
+        autocomplete.classList.add("disabled");
+      }
+    }
+    //자동완성 리스트에서 스킬 클릭하면 해당 값을 입력값에 할당
+    function searchSkillAdd(res) {
+      skillInput.value = res;
+      submitAutoComplete();
+    }
+
+    const addLangSkills = (val) => {
+      //search 아이콘 클릭일 때
+      if (val.type == "click") {
+        val.target.value = skillInput.value;
+      }
+
+      //상자클릭이 아닐 때 skill리스트에 해당 스킬이 있나 검사
+      if (typeof val != "string" && skills.indexOf(val.target.value) < 0) {
+        return;
+      }
+
+      if (typeof val == "object") {
+        if (userLangSkills.value.includes(val.target.value)) {
+          alert("이미 입력된 스킬입니다!");
+        } else {
+          userLangSkills.value.push(val.target.value);
+          skillInput.value = null; //입력을 하면 입력값 초기화
+          result.value = null; // 자동완성 리스트도 초기화
+        }
+      } else {
+        if (userLangSkills.value.includes(val)) {
+          alert("이미 입력된 스킬입니다!");
+        } else {
+          userLangSkills.value.push(val);
+          skillInput.value = null; //입력을 하면 입력값 초기화
+          result.value = null; // 자동완성 리스트도 초기화
+        }
+      }
+    };
+
     return {
+      searchSkillAdd,
+      skillInput,
+      result,
+      submitAutoComplete,
       isPageOne,
       changePage,
       email,
@@ -320,6 +396,55 @@ export default {
 </script>
 
 <style scoped>
+/* 검색바 */
+.searchbar {
+  position: relative;
+  display: inline-block;
+  width: 60%;
+}
+.input-search {
+  outline: none;
+  position: relative;
+  bottom: 0%;
+  width: 100%;
+  border: 0px;
+  padding-left: 5%;
+  padding-right: 20%;
+  margin-right: 1%;
+  background-color: transparent;
+}
+.btn-search {
+  position: absolute;
+  top: 0%;
+  height: 16px;
+  margin-top: 2px;
+  border: 0;
+  border-top: 0px;
+  border-radius: 0px;
+  background-color: transparent;
+  right: 4%;
+}
+
+/* 자동완성 */
+.img-box {
+  height: 40px;
+}
+.skill-img {
+  max-width: 100%;
+  max-height: 100%;
+}
+.skill {
+  border-bottom: 1px solid #f4f0f0;
+}
+.autocomplete {
+  position: absolute;
+  z-index: 4;
+  width: 60%;
+  padding-left: 10px;
+  border: 1px solid #dbdbdb;
+  background-color: white;
+}
+
 .container {
   border: 1px solid #bdbdbd;
   border-radius: 10px;

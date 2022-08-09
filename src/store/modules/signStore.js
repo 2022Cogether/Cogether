@@ -8,14 +8,14 @@ export const signStore = {
 
     // store에 저장되는 스킬 셋 목록, 서버를 통해 생성/업데이트 될 예정
     skillSet: [
-      "C",
-      "C++",
-      "Python",
-      "Java",
-      "JavaScript",
-      "Spring",
-      "Django",
-      "R",
+      "c",
+      "cplusplus",
+      "python",
+      "java",
+      "javaScript",
+      "spring",
+      "react",
+      "r",
     ],
 
     // frontend에서 이메일, 비번, 닉네임의 유효성을 검사할 정규표현식
@@ -32,6 +32,9 @@ export const signStore = {
     currentUser: {},
   },
   getters: {
+    getSkills(state) {
+      return state.skills;
+    },
     getBooleanValue(state) {
       const temp = state.booleanValue;
       if (state.booleanValue) {
@@ -88,15 +91,20 @@ export const signStore = {
     login({ commit, dispatch }, credentials) {
       http
         .post("sign/signin/", credentials)
-        .then((res) => {
+        .then(({ data }) => {
+          console.log(data);
+          console.log(data);
           alert("로그인 성공!");
-          const token = res.data.key;
+          const token = data.key;
+          const userId = data.userId;
+          console.log(userId);
           dispatch("saveToken", token); // 토큰 갱신
           dispatch("fetchCurrentUser"); // 현재 사용자 정보 추가(미구현)
           commit("RESET_AUTH_ERROR"); // 로그인 오류시 발생할 수 있는 오류 정보 수정(미구현)
           router.go(); // 일단 새로고침하여 메인 페이지 이동하게 해놓음
         })
         .catch((err) => {
+          console.log(err);
           alert("로그인 실패!");
 
           // 이하 코드는 전 프로젝트에서 쓰던 에러 표현 식
@@ -362,9 +370,9 @@ export const signStore = {
         });
     },
 
-    logout({ getters }) {
+    logout({ getters }, userId) {
       http
-        .post("user/signout/", { headers: getters.authHeader })
+        .get("sign/signout/" + userId, { headers: getters.authHeader })
         .then(() => {
           localStorage.removeItem("token");
           alert("성공적으로 logout!");
