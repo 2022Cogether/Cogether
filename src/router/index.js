@@ -26,15 +26,20 @@ const routes = [
         name: "TilCreate",
         component: () => import("@/components/til/TilCreate.vue"),
       },
-      {
-        path: ":tilPK",
-        name: "TilDetail",
-        component: () => import("@/components/til/TilDetail.vue"),
-      },
+      // {
+      //   path: ":tilPK",
+      //   name: "TilDetail",
+      //   component: () => import("@/components/til/TilDetail.vue"),
+      // },
       {
         path: ":tilPK/edit",
         name: "TilUpdate",
         component: () => import("@/components/til/TilUpdate.vue"),
+      },
+      {
+        path: "list/:userId",
+        name: "TilList",
+        component: () => import("@/components/til/TilList.vue"),
       },
     ],
   },
@@ -134,7 +139,7 @@ const routes = [
     component: RankingView,
   },
   {
-    path: "/profile",
+    path: "/profile/:userId",
     name: "profile",
     component: ProfileMain,
   },

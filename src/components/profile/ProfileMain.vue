@@ -63,22 +63,44 @@
     </button>
   </div>
   <!-- TIL -->
-  <h4 class="til-title">My TIL</h4>
+  <router-link
+    :to="{
+      name: 'TilList',
+      params: { userId: this.$route.params.userId },
+    }"
+    class="h4 til-title"
+    >My TIL
+  </router-link>
   <div class="til-container d-flex flex-wrap justify-content-evenly">
-    <ProfileTil />
-    <ProfileTil />
-    <ProfileTil />
-    <ProfileTil />
-    <ProfileTil />
+    <ProfileTil v-for="til in tilList" :key="til.pk" :til="til" />
   </div>
 </template>
 
 <script>
 import ProfileTil from "./ProfileTil.vue";
+import { useStore } from "vuex";
 
 export default {
+  name: "ProfileMain",
   components: {
     ProfileTil,
+  },
+  setup() {
+    const store = useStore();
+    const currentUser = store.getters.getCurrentUser;
+
+    const getTilList = () => {
+      store.dispatch("fetchTilList", { userId: currentUser.id });
+    };
+
+    // 페이지가 Created 될 때 list 가져옴
+    getTilList();
+
+    const tilList = store.getters.getTilList;
+
+    return {
+      tilList,
+    };
   },
 };
 </script>
