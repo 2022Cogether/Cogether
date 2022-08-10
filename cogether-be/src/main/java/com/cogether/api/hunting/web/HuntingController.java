@@ -28,6 +28,12 @@ public class HuntingController {
         return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping("/hunting/list/{userId}")
+    public ResponseEntity<HuntingResponse.GetHuntings> getHuntingList(@PathVariable int userId) {
+        HuntingResponse.GetHuntings response = huntingService.getHuntingList(userId);
+        return ResponseEntity.ok().body(response);
+    }
+
     @DeleteMapping("/hunting/{huntingId}")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<HuntingResponse.OnlyHuntingId> delete(@PathVariable int huntingId) {
