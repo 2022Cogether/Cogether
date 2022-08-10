@@ -1,6 +1,6 @@
 package com.cogether.api.hunting.domain;
 
-import com.cogether.api.user.domain.UserSkill;
+import com.cogether.api.user.dto.UserSkillResponse;
 import lombok.*;
 
 import java.util.List;
@@ -26,7 +26,6 @@ public class HuntingResponse {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class GetHunting {
-        // TODO: 게시물유저 skill들, 로그인유저 스크랩여부 추가
         private int huntingId;
         private int userId;
         private String userNickname;
@@ -35,9 +34,9 @@ public class HuntingResponse {
         private String content;
         private boolean scrap;
         private int scrapId;
-        private List<UserSkill> userSkillList;
+        private List<UserSkillResponse> userSkillList;
 
-        public static HuntingResponse.GetHunting build(Hunting hunting, boolean scrap, int scrapId) {
+        public static HuntingResponse.GetHunting build(Hunting hunting, boolean scrap, int scrapId, List<UserSkillResponse> userSkillList) {
             return GetHunting.builder()
                     .huntingId(hunting.getId())
                     .userId(hunting.getUser().getId())
@@ -47,6 +46,22 @@ public class HuntingResponse {
                     .content(hunting.getContent())
                     .scrap(scrap)
                     .scrapId(scrapId)
+                    .userSkillList(userSkillList)
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class GetHuntings {
+
+        private List<GetHunting> huntings;
+
+        public static HuntingResponse.GetHuntings build(List<GetHunting> huntings) {
+            return GetHuntings.builder()
+                    .huntings(huntings)
                     .build();
         }
     }
