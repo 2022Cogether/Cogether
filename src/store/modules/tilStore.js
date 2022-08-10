@@ -12,6 +12,7 @@ export const tilStore = {
         content:
           "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
         user_id: 1004,
+        isLike: true,
       },
       {
         pk: 100,
@@ -20,6 +21,7 @@ export const tilStore = {
         content:
           "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
         user_id: 1004,
+        isLike: false,
       },
       {
         pk: 1000,
@@ -28,6 +30,7 @@ export const tilStore = {
         content:
           "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
         user_id: 1004,
+        isLike: true,
       },
     ],
     tilContent: {
@@ -37,6 +40,7 @@ export const tilStore = {
       content:
         "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       user_id: 1004,
+      isLike: true,
       comments: [
         {
           pk: 100,
@@ -81,6 +85,18 @@ export const tilStore = {
     },
     SET_TIL: (state, payload) => {
       state.tilContent = payload;
+    },
+
+    // TIL like <-> dislike
+    SET_TIL_LIKE: (state) => {
+      state.tilContent.isLike = !state.tilContent.isLike;
+    },
+    SET_TILLIST_LIKE: (state, tilPk) => {
+      state.tilList.forEach((element, idx) => {
+        if (element.pk == tilPk) {
+          state.tilList[idx].isLike = !state.tilList[idx].isLike;
+        }
+      });
     },
   },
   actions: {

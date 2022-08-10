@@ -126,7 +126,12 @@
           <div id="main-content" class="like-button">
             <div>
               <!-- 나중에 id에 til id 넣고 밑에 label 태그의 for랑 맞추면 개별 하트 효과 및 데이터 전송 가능 -->
-              <input type="checkbox" id="checkbox" />
+              <input
+                type="checkbox"
+                id="checkbox"
+                :checked="tilContent.isLike"
+                @click="sendLike"
+              />
               <label for="checkbox">
                 <svg
                   id="heart-svg"
@@ -193,7 +198,7 @@
             </div>
           </div>
           <!-- 좋아요 갯수를 Til로 가늠하는 방법 필요 -->
-          <span class="like-count" @click="sendLike"> 좋아요 0개 </span>
+          <span class="like-count"> 좋아요 0개 </span>
           <!-- v-if: "is_Current_User_Like_This_TIL?" 등으로 sendlike/senddislike 바꾸어야 할 듯 <- currentUser 완성 뒤 -->
           <div class="til-content">
             {{ tilContent.content }}
@@ -236,30 +241,35 @@ export default {
     const store = useStore();
     const getters = computed(() => store.getters);
 
-    const tilContent = getters.value.getTilContent;
+    const tilContent = computed(() => {
+      return getters.value.getTilContent;
+    });
     const commentContent = ref("");
 
     // 사용자가 글쓴이인지 아닌지 확인
     const currentUser = store.getters.getCurrentUser;
     const isWriter = computed(() => {
-      return currentUser.pk == tilContent.user_id || true;
+      return currentUser.pk == tilContent.value.user_id || true;
     }); // 확인을 위해 || true 해놓음
 
     // Til 삭제
     const deleteTil = () => {
-      store.dispatch("removeTil", tilContent.pk); // pk??
+      store.dispatch("removeTil", tilContent.value.pk); // pk??
     };
 
+    // 좋아요/좋아요 취소
     const sendLike = () => {
-      store.dispatch("likeTil", tilContent.pk);
-    };
-    const sendDislike = () => {
-      store.dispatch("dislikeTil", tilContent.pk);
+      if (!tilContent.value.isLike) {
+        store.dispatch("likeTil", tilContent.value.pk);
+      } else {
+        store.dispatch("dislikeTil", tilContent.value.pk);
+      }
+      store.commit("SET_TIL_LIKE");
     };
 
     const onSubmit = () => {
       const payload = {
-        tilPK: tilContent.pk,
+        tilPK: tilContent.value.pk,
         content: commentContent,
       };
       store.dispatch("createComment", payload);
@@ -281,11 +291,11 @@ export default {
 
     // Comment 메소드
     const getComments = () => {
-      store.dispatch("fetchComments", tilContent.pk);
+      store.dispatch("fetchComments", tilContent.value.pk);
     };
     getComments(); // 시작할 때 til 댓글 가져옴
 
-    console.log(tilContent.comments);
+    console.log(tilContent.value.comments);
 
     return {
       isWriter,
@@ -293,7 +303,6 @@ export default {
       tilContent,
       commentContent,
       sendLike,
-      sendDislike,
       onSubmit,
       closeModal,
       getComments,

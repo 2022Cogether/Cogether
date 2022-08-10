@@ -27,7 +27,9 @@ export default {
     const store = useStore();
     const getters = computed(() => store.getters);
 
-    const tilList = store.getters.getTilList;
+    const tilList = computed(() => {
+      return store.getters.getTilList;
+    });
 
     const modalNum = computed(() => {
       return getters.value.getOpenTil;
@@ -40,13 +42,13 @@ export default {
     const getTilList = () => {
       store.dispatch("fetchTilList", { userId: 1 });
     };
-    const eraseTilList = () => {
-      store.dispatch("removeTilList");
-    };
+    // const eraseTilList = () => {
+    //   store.dispatch("removeTilList");
+    // };
 
     // 페이지가 생성될 때 || 페이지에서 나가기 직전 list를 지움
     // 현재 오작동이 잦아서 고민 중..
-    eraseTilList();
+    // eraseTilList();
     onBeforeUnmount(() => {
       // eraseTilList();
     });
@@ -80,7 +82,7 @@ export default {
 
     return {
       getTilList,
-      eraseTilList,
+      // eraseTilList,
       scroll,
       modalNum,
       isOpen,

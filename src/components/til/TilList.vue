@@ -62,7 +62,9 @@ export default {
       store.dispatch("searchTil", payload);
     };
 
-    const tilList = store.getters.getTilList;
+    const tilList = computed(() => {
+      return store.getters.getTilList;
+    });
 
     const modalNum = computed(() => {
       return getters.value.getOpenTil;
@@ -75,15 +77,15 @@ export default {
     function getTilList() {
       store.dispatch("fetchTilList", { userId: userId });
     }
-    const eraseTilList = () => {
-      store.dispatch("removeTilList");
-    };
+    // const eraseTilList = () => {
+    //   store.dispatch("removeTilList");
+    // };
 
     // 페이지가 Created 될 때 list 가져옴
     getTilList();
     // 페이지에서 나가기 직전 list를 지움
     onBeforeUnmount(() => {
-      eraseTilList();
+      // eraseTilList();
     });
 
     // // 참조: https://renatello.com/check-if-a-user-has-scrolled-to-the-bottom-in-vue-js/
@@ -116,7 +118,7 @@ export default {
       isLoggedIn,
       onSubmit,
       getTilList,
-      eraseTilList,
+      // eraseTilList,
       scroll,
       modalNum,
       isOpen,

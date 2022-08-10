@@ -106,7 +106,12 @@
       <div id="main-content" class="like-button">
         <div>
           <!-- 나중에 id에 til id 넣고 밑에 label 태그의 for랑 맞추면 개별 하트 효과 및 데이터 전송 가능 -->
-          <input type="checkbox" :id="'checkbox' + til.pk" />
+          <input
+            type="checkbox"
+            :id="'checkbox' + til.pk"
+            :checked="til.isLike"
+            @click="sendLike"
+          />
           <label :for="'checkbox' + til.pk">
             <svg
               id="heart-svg"
@@ -232,6 +237,17 @@ export default {
       });
     }
 
+    // 좋아요/좋아요 취소
+    const sendLike = () => {
+      if (!props.til.isLike) {
+        store.dispatch("likeTil", props.til.pk);
+      } else {
+        store.dispatch("dislikeTil", props.til.pk);
+      }
+      // props.til.isLike = !props.til.isLike;
+      store.commit("SET_TILLIST_LIKE", props.til.pk);
+    };
+
     const onSubmit = () => {
       const payload = {
         tilPK: props.til.pk,
@@ -243,6 +259,7 @@ export default {
     return {
       isWriter,
       commentContent,
+      sendLike,
       setNum,
       onSubmit,
     };
@@ -405,11 +422,11 @@ svg {
   }
 }
 
-#checkbox {
+input[id^="checkbox"] {
   display: none;
 }
 
-#checkbox:checked + label svg {
+input[id^="checkbox"]:checked + label svg {
   #heart {
     transform: scale(0.2);
     fill: #e2264d;
