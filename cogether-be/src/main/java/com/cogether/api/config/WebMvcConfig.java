@@ -17,7 +17,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final String [] INTERCEPTOR_LIST={
             "/api/til/*","/api/project/*","/api/study/*","/api/hunting/*","/api/livecoop/*","/api/follow"
-            ,"/api/follower","/api/following","/api/chat/*","api/user/*","api/verify/*/*"
+            ,"/api/follower","/api/following","/api/chat/*","api/user/*"
     };
 
     public void addInterceptors(InterceptorRegistry registry) {
@@ -36,7 +36,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("*")
 //			.allowedOrigins("http://localhost:8080", "http://localhost:8081")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH")
 //			.allowedHeaders("*")
                 .maxAge(6000);
     }

@@ -39,7 +39,7 @@ public class TokenUtils {
                 .setSubject(user.getEmail())
                 .setHeader(createHeaderRefresh())
                 .setClaims(createClaims(user))
-                .setExpiration(createExpireDate(1000 * 60 * 60 * 24)) // 토큰 만료시간 24hour
+                .setExpiration(createExpireDate(1000 * 60 * 5 )) // 토큰 만료시간 5분
                 .signWith(SignatureAlgorithm.HS256, createSigningKey(REFRESH_KEY))
                 .compact();
     }
