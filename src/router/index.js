@@ -155,7 +155,12 @@ import store from "@/store";
 
 router.beforeEach((to, from, next) => {
   console.log(to);
-  if (to.name != "SignIn" && !store.getters.isLoggedIn)
+  if (
+    to.name != "SignIn" &&
+    to.name != "SignUp" &&
+    to.name != "PassWordSeek" &&
+    !store.getters.isLoggedIn
+  )
     next({ name: "SignIn" }); // 아직 TOKEN 없어서 ! 붙여놓았음
   else next();
 });

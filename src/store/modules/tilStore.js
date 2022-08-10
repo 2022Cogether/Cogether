@@ -107,9 +107,11 @@ export const tilStore = {
     },
 
     // 피드 상세 조회
-    fetchTil({ commit }, credentials) {
+    fetchTil({ commit, getters }, credentials) {
       axios
-        .get("til/", credentials)
+        .get("til/", credentials, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then((res) => {
           if (res.status === 200) {
             commit("SET_TIL", res.data);
@@ -122,11 +124,13 @@ export const tilStore = {
 
     // 스크롤할 때마다 추가로 받는 방식이면 지금까지 받은 til 숫자를 알 필요가 있다고 생각함
     // 그래서 임의로 tilnum을 추가함
-    fetchTilList({ commit }, payload) {
+    fetchTilList({ commit, getters }, payload) {
       // const tilNum = getters.getTilListLength;
       // 현재 가지고 있는 til 목록의 수를 받아 벡에서 그 다음 til 들을 로딩하려고 만든 변수인데..
       axios
-        .get("til/list/" + payload.userId)
+        .get("til/list/" + payload.userId, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then((res) => {
           if (res.status === 200) {
             alert("새로 받아왔습니다!");
@@ -154,7 +158,9 @@ export const tilStore = {
 
     createTil({ dispatch, getters, state }, payload) {
       axios
-        .post("til", payload, { headers: getters.authHeader })
+        .post("til", payload, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then((res) => {
           router.push({
             name: "TilDetail",
@@ -174,7 +180,7 @@ export const tilStore = {
     updateTil({ dispatch, getters, state }, payload) {
       axios
         .put("til/" + payload.pk, payload, {
-          headers: getters.authHeader,
+          headers: { Authorization: getters.authHeader },
         }) // payload: Til 데이터
         .then((res) => {
           const credentials = {
@@ -189,7 +195,9 @@ export const tilStore = {
 
     removeTil({ commit, getters }, tilPK) {
       axios
-        .delete("til/delete/" + tilPK, { headers: getters.authHeader })
+        .delete("til/delete/" + tilPK, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then((res) => {
           if (res.status === 200) {
             alert("삭제 성공!");
@@ -215,30 +223,38 @@ export const tilStore = {
 
     likeTil({ commit, getters }, tilPk) {
       axios
-        .post("til/like/" + tilPk, { headers: getters.authHeader })
+        .post("til/like/" + tilPk, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then((res) => commit("SET_TIL", res.data))
         .catch((err) => console.error(err.response));
     },
 
     dislikeTil({ commit, getters }, tilPk) {
       axios
-        .delete("til/like/" + tilPk, { headers: getters.authHeader })
+        .delete("til/like/" + tilPk, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then((res) => commit("SET_TIL", res.data))
         // TIL state 모델이 확정나면, 거기서 is_like에 해당할 속성을 직접 바꿀 예정
         .catch((err) => console.error(err.response));
     },
 
-    searchTil({ commit }, payload) {
+    searchTil({ commit, getters }, payload) {
       // paylod => keyword, userId
       axios
-        .get("til/search/", payload)
+        .get("til/search/", payload, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then((res) => commit("ADD_TIL_LIST", res.data))
         .catch((err) => console.error(err.response));
     },
 
     createComment({ commit, getters }, payload) {
       axios
-        .post("/til/commment/create", payload, { headers: getters.authHeader })
+        .post("/til/commment/create", payload, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then((res) => {
           commit("CLEAN_TIL_LIST");
           commit("SET_TIL", res.data);
