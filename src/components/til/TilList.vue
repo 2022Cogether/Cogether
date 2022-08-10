@@ -86,30 +86,30 @@ export default {
       eraseTilList();
     });
 
-    // 참조: https://renatello.com/check-if-a-user-has-scrolled-to-the-bottom-in-vue-js/
-    // 스크롤 거의 하단에 오면 추가 리스트 받아고는 메소드
-    const scroll = () => {
-      window.onscroll = () => {
-        let bottomOfWindow =
-          Math.max(
-            window.pageYOffset,
-            document.documentElement.scrollTop,
-            document.body.scrollTop
-          ) +
-            window.innerHeight >
-          document.documentElement.offsetHeight;
+    // // 참조: https://renatello.com/check-if-a-user-has-scrolled-to-the-bottom-in-vue-js/
+    // // 스크롤 거의 하단에 오면 추가 리스트 받아고는 메소드
+    // const scroll = () => {
+    //   window.onscroll = () => {
+    //     let bottomOfWindow =
+    //       Math.max(
+    //         window.pageYOffset,
+    //         document.documentElement.scrollTop,
+    //         document.body.scrollTop
+    //       ) +
+    //         window.innerHeight >
+    //       document.documentElement.offsetHeight;
 
-        if (bottomOfWindow) {
-          if (window.location.href == "http://localhost:8080/#/") {
-            getTilList();
-          }
-        }
-      };
-    };
+    //     if (bottomOfWindow) {
+    //       if (window.location.href == "http://localhost:8080/#/") {
+    //         getTilList();
+    //       }
+    //     }
+    //   };
+    // };
 
-    onMounted(() => {
-      scroll();
-    });
+    // onMounted(() => {
+    //   scroll();
+    // });
 
     return {
       searchWord,

@@ -380,6 +380,7 @@ export default {
 }
 
 .til-content {
+  width: 97%;
   position: relative;
   left: 10px;
   font-size: 0.7rem;

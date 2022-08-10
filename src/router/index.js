@@ -150,4 +150,14 @@ const router = createRouter({
   routes,
 });
 
+// 네비게이션 가드
+import store from "@/store";
+
+router.beforeEach((to, from, next) => {
+  console.log(to);
+  if (to.name != "SignIn" && !store.getters.isLoggedIn)
+    next({ name: "SignIn" }); // 아직 TOKEN 없어서 ! 붙여놓았음
+  else next();
+});
+
 export default router;

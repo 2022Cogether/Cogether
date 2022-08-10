@@ -119,15 +119,15 @@ export const tilStore = {
         })
         .catch((err) => {
           console.error(err.response.data);
-          commit("SET_AUTH_ERROR", err.response.data);
-          const errorMessage = [];
-          for (const errors in err.response.data) {
-            for (const error of err.response.data[errors]) {
-              if (!errorMessage.includes(error)) {
-                errorMessage.push(error);
-              }
-            }
-          }
+          // commit("SET_AUTH_ERROR", err.response.data);
+          // const errorMessage = [];
+          // for (const errors in err.response.data) {
+          //   for (const error of err.response.data[errors]) {
+          //     if (!errorMessage.includes(error)) {
+          //       errorMessage.push(error);
+          //     }
+          //   }
+          // }
         });
     },
 
@@ -182,17 +182,17 @@ export const tilStore = {
           }
         })
         .catch((err) => {
-          // alert("삭제 실패??");
+          alert("삭제 실패??");
           console.error(err.response.data);
-          commit("SET_AUTH_ERROR", err.response.data);
-          const errorMessage = [];
-          for (const errors in err.response.data) {
-            for (const error of err.response.data[errors]) {
-              if (!errorMessage.includes(error)) {
-                errorMessage.push(error);
-              }
-            }
-          }
+          // commit("SET_AUTH_ERROR", err.response.data);
+          // const errorMessage = [];
+          // for (const errors in err.response.data) {
+          //   for (const error of err.response.data[errors]) {
+          //     if (!errorMessage.includes(error)) {
+          //       errorMessage.push(error);
+          //     }
+          //   }
+          // }
           // alert(errorMessage.join("\r\n"));
         });
     },

@@ -70,11 +70,16 @@
   </div>
   <!-- Search Bar -->
   <div class="searchbar">
-    <input class="input-search" type="text" />
-    <button class="btn-search">
+    <input
+      class="input-search"
+      type="text"
+      v-model="searchWord"
+      @keyup.enter.prevent="onSubmit"
+    />
+    <button @click="onSubmit" class="btn-search">
       <font-awesome-icon
+        icon="fa-solid fa-magnifying-glass"
         class="searchicon"
-        icon=" fa-solid fa-magnifying-glass"
       />
     </button>
   </div>
@@ -94,6 +99,7 @@
 
 <script>
 import ProfileTil from "./ProfileTil.vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 
@@ -106,6 +112,17 @@ export default {
     const store = useStore();
     const route = useRoute();
     const userId = route.params.userId;
+
+    // 검색 창
+    const searchWord = ref("");
+    const onSubmit = () => {
+      const payload = {
+        keyword: searchWord.value,
+        userId: store.getters.getCurrentUser,
+      };
+      console.log(payload);
+      store.dispatch("searchTil", payload);
+    };
 
     // 웹페이지 아이콘 url
     const webIconUrl = [
@@ -149,6 +166,8 @@ export default {
       isMyProfile,
       profiletUser,
       tilList,
+      searchWord,
+      onSubmit,
       webIconUrl,
     };
   },
