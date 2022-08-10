@@ -3,6 +3,8 @@ package com.cogether.api.til.service;
 import com.cogether.api.file.service.FileUploadService;
 import com.cogether.api.follow.domain.Follow;
 import com.cogether.api.follow.repository.FollowRepository;
+import com.cogether.api.rank.domain.Ranking;
+import com.cogether.api.rank.respository.RankingRepository;
 import com.cogether.api.til.domain.*;
 import com.cogether.api.til.exception.TilCommentNotFoundException;
 import com.cogether.api.til.exception.TilLikeNotFoundException;
@@ -16,6 +18,7 @@ import com.cogether.api.user.exception.UserNotFoundException;
 import com.cogether.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -30,16 +33,25 @@ public class TilService {
     private final UserRepository userRepository;
     private final FileUploadService fileUploadService;
     private final FollowRepository followRepository;
-    public TilResponse.OnlyId create(TilRequest.Create_Til create_til, TilRequest.Create_TilImg create_img){
+    private final RankingRepository rankingRepository;
+    public TilResponse.OnlyId create(TilRequest.Create_Til create_til, List<MultipartFile> multipartFiles){
         User user = userRepository.findById(create_til.getUserId()).orElseThrow(UserNotFoundException::new);
         Til til = create_til.toEntity(user);
         Til savedTil = tilRepository.save(til);
-        for (int i = 0; i < create_img.getImgList().size(); i++){
-            //TODO: 등록테스트 필요
-            String img_url = fileUploadService.uploadImage(create_img.getImgList().get(i));
-            TilImg tilimg = TilImg.toEntity(savedTil, img_url);
-            tilImgRepository.save(tilimg);
+        if(multipartFiles.size() != 0){
+            for (int i = 0; i < multipartFiles.size(); i++){
+                //TODO: 등록테스트 필요
+                MultipartFile file = multipartFiles.get(i);
+                String img_url = fileUploadService.uploadImage(file);
+                TilImg tilimg = TilImg.toEntity(savedTil, img_url);
+                tilImgRepository.save(tilimg);
+            }
         }
+        Ranking ranking = rankingRepository.findByUser(user);
+        ranking.setTilCnt(ranking.getTilCnt() + 1);
+        rankingRepository.save(ranking);
+        user.setExp(user.getExp() + 10);
+        userRepository.save(user);
         return TilResponse.OnlyId.build(savedTil);
     }
 
@@ -53,7 +65,22 @@ public class TilService {
 
     public TilResponse.OnlyId delete(int tilId){
         Til til = tilRepository.findById(tilId).orElseThrow(TilNotFoundException::new);
+        List<TilComment> tilCommentList = tilCommentRepository.findAllByTil(til);
+        List<TilImg> tilImgList = tilImgRepository.findAllByTil(til);
+        List<TilLike> tilLikeList = tilLikeRepository.findAllByTil(til);
+        for (int i = 0; i < tilCommentList.size(); i++){
+            tilCommentRepository.deleteById(tilCommentList.get(i).getId());
+        }
+        for (int i = 0; i < tilImgList.size(); i++){
+            tilImgRepository.deleteById(tilImgList.get(i).getId());
+        }
+        for (int i = 0; i < tilLikeList.size(); i++){
+            tilLikeRepository.deleteById(tilLikeList.get(i).getId());
+        }
         tilRepository.deleteById(tilId);
+        Ranking ranking = rankingRepository.findByUser(til.getUser());
+        ranking.setTilCnt(ranking.getTilCnt() - 1);
+        rankingRepository.save(ranking);
         return TilResponse.OnlyId.build(til);
     }
 
