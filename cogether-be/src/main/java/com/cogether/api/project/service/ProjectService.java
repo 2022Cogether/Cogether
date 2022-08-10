@@ -54,11 +54,13 @@ public class ProjectService {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<ProjectSkill> list = projectSkillRepository.findAllByProject_Id(projectId);
         int check = projectScrapRepository.countAllByProjectAndUser(project, user);
+        int scrapId = 0;
         boolean isScrap = false;
         if(check == 1){
+            scrapId = projectScrapRepository.findByProject_IdAndUser_Id(projectId, userId).getId();
             isScrap = true;
         }
-        return ProjectResponse.ProjectAll.build(project, list, isScrap);
+        return ProjectResponse.ProjectAll.build(project, list, scrapId,isScrap);
     }
 
     public ProjectResponse.ProjectList getProjectList(int userId){
@@ -75,11 +77,13 @@ public class ProjectService {
             Project project = list.get(i);
             List<ProjectSkill> projectSkillList = projectSkillRepository.findAllByProject_Id(project.getId());
             int check = projectScrapRepository.countAllByProjectAndUser(project, user);
+            int scrapId = 0;
             boolean isScrap = false;
             if(check == 1){
+                scrapId = projectScrapRepository.findByProject_IdAndUser_Id(project.getId(), userId).getId();
                 isScrap = true;
             }
-            projectList.add(ProjectResponse.ProjectAll.build(project, projectSkillList, isScrap));
+            projectList.add(ProjectResponse.ProjectAll.build(project, projectSkillList, scrapId, isScrap));
         }
         return ProjectResponse.ProjectList.build(projectList);
     }
@@ -92,9 +96,9 @@ public class ProjectService {
         return ProjectResponse.OnlyProjectScrapId.build(savedProjectScrap);
     }
 
-    public ProjectResponse.OnlyProjectScrapId deleteScrap(int userId, int projectId){
-        ProjectScrap projectScrap = projectScrapRepository.findByProject_IdAndUser_Id(projectId, userId);
-        projectScrapRepository.deleteById(projectScrap.getId());
+    public ProjectResponse.OnlyProjectScrapId deleteScrap(int projectScrapId){
+        ProjectScrap projectScrap = projectScrapRepository.findById(projectScrapId).orElseThrow(ProjectNotFoundException::new);
+        projectScrapRepository.deleteById(projectScrapId);
         return ProjectResponse.OnlyProjectScrapId.build(projectScrap);
     }
 
@@ -106,11 +110,13 @@ public class ProjectService {
             Project project = list.get(i);
             List<ProjectSkill> projectSkillList = projectSkillRepository.findAllByProject_Id(project.getId());
             int check = projectScrapRepository.countAllByProjectAndUser(project, user);
+            int scrapId = 0;
             boolean isScrap = false;
             if(check == 1){
+                scrapId = projectScrapRepository.findByProject_IdAndUser_Id(project.getId(), userId).getId();
                 isScrap = true;
             }
-            projectList.add(ProjectResponse.ProjectAll.build(project, projectSkillList, isScrap));
+            projectList.add(ProjectResponse.ProjectAll.build(project, projectSkillList, scrapId, isScrap));
         }
         return ProjectResponse.ProjectList.build(projectList);
     }

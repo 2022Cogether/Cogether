@@ -57,9 +57,10 @@ public class StudyResponse {
         private String content;
         private List<StudyResponse.getStudySkill> skillList;
         private LocalDateTime createdAt;
+        private int scrapId;
         private boolean isScrap;
 
-        public static StudyResponse.StudyAll build(Study study, List<StudySkill> studySkill, boolean isScrap){
+        public static StudyResponse.StudyAll build(Study study, List<StudySkill> studySkill,int scrapId, boolean isScrap){
             return StudyAll.builder()
                     .studyId(study.getId())
                     .userNickname(study.getUser().getNickname())
@@ -73,6 +74,7 @@ public class StudyResponse {
                     .content(study.getContent())
                     .skillList(studySkill.stream().map(getStudySkill::build).collect(Collectors.toList()))
                     .createdAt(study.getCreatedAt())
+                    .scrapId(scrapId)
                     .isScrap(isScrap)
                     .build();
         }

@@ -57,9 +57,10 @@ public class ProjectResponse {
         private String content;
         private List<ProjectResponse.getProjectSkill> skillList;
         private LocalDateTime createdAt;
+        private int scrapId;
         private boolean isScrap;
 
-        public static ProjectResponse.ProjectAll build(Project project, List<ProjectSkill> projectSkill, boolean isScrap){
+        public static ProjectResponse.ProjectAll build(Project project, List<ProjectSkill> projectSkill,int scrapId, boolean isScrap){
             return ProjectAll.builder()
                     .projectId(project.getId())
                     .userNickname(project.getUser().getNickname())
@@ -73,6 +74,7 @@ public class ProjectResponse {
                     .content(project.getContent())
                     .skillList(projectSkill.stream().map(getProjectSkill::build).collect(Collectors.toList()))
                     .createdAt(project.getCreatedAt())
+                    .scrapId(scrapId)
                     .isScrap(isScrap)
                     .build();
         }
