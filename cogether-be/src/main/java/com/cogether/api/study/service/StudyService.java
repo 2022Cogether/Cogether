@@ -54,11 +54,13 @@ public class StudyService {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<StudySkill> list = studySkillRepository.findAllByStudy_Id(studyId);
         int check = studyScrapRepository.countAllByStudyAndUser(study, user);
+        int scrapId = 0;
         boolean isScrap = false;
         if(check == 1){
+            scrapId = studyScrapRepository.findByStudy_IdAndUser_Id(studyId, userId).getId();
             isScrap = true;
         }
-        return StudyResponse.StudyAll.build(study,list, isScrap);
+        return StudyResponse.StudyAll.build(study,list,scrapId, isScrap);
     }
 
     public StudyResponse.StudyList getStudyList(int userId){
@@ -75,11 +77,13 @@ public class StudyService {
             Study study = list.get(i);
             List<StudySkill> studySkillList = studySkillRepository.findAllByStudy_Id(study.getId());
             int check = studyScrapRepository.countAllByStudyAndUser(study, user);
+            int scrapId = 0;
             boolean isScrap = false;
             if(check == 1){
+                scrapId = studyScrapRepository.findByStudy_IdAndUser_Id(study.getId(),userId).getId();
                 isScrap = true;
             }
-            studyList.add(StudyResponse.StudyAll.build(study, studySkillList, isScrap));
+            studyList.add(StudyResponse.StudyAll.build(study, studySkillList,scrapId, isScrap));
         }
         return StudyResponse.StudyList.build(studyList);
     }
@@ -92,11 +96,13 @@ public class StudyService {
             Study study = list.get(i);
             List<StudySkill> studySkillList = studySkillRepository.findAllByStudy_Id(study.getId());
             int check = studyScrapRepository.countAllByStudyAndUser(study, user);
+            int scrapId = 0;
             boolean isScrap = false;
             if(check == 1){
+                scrapId = studyScrapRepository.findByStudy_IdAndUser_Id(study.getId(),userId).getId();
                 isScrap = true;
             }
-            studyList.add(StudyResponse.StudyAll.build(study, studySkillList, isScrap));
+            studyList.add(StudyResponse.StudyAll.build(study, studySkillList,scrapId, isScrap));
         }
         return StudyResponse.StudyList.build(studyList);
     }
@@ -109,9 +115,9 @@ public class StudyService {
         return StudyResponse.OnlyStudyScrapId.build(savedStudyScrap);
     }
 
-    public StudyResponse.OnlyStudyScrapId deleteStudyScrap(int studyId, int userId){
-        StudyScrap studyScrap = studyScrapRepository.findByStudy_IdAndUser_Id(studyId, userId);
-        studyScrapRepository.deleteById(studyScrap.getId());
+    public StudyResponse.OnlyStudyScrapId deleteStudyScrap(int studyScrapId){
+        StudyScrap studyScrap = studyScrapRepository.findById(studyScrapId).orElseThrow(StudyNotFoundException::new);
+        studyScrapRepository.deleteById(studyScrapId);
         return StudyResponse.OnlyStudyScrapId.build(studyScrap);
     }
 }
