@@ -5,8 +5,12 @@ import com.cogether.api.til.domain.TilResponse;
 import com.cogether.api.til.service.TilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,10 +19,10 @@ public class TilController {
 
     private final TilService tilService;
 
-    @PostMapping(path = "/til")
+    @PostMapping(path = "/til", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<TilResponse.OnlyId> create(@RequestBody TilRequest.Create_Til til, @RequestPart(value="image", required=false) TilRequest.Create_TilImg create_img){
-        TilResponse.OnlyId response = tilService.create(til, create_img);
+    public ResponseEntity<TilResponse.OnlyId> create(@RequestPart(value = "data") TilRequest.Create_Til til, @RequestPart(value="image", required=false)List<MultipartFile> multipartFiles){
+        TilResponse.OnlyId response = tilService.create(til, multipartFiles);
         return ResponseEntity.ok().body(response);
     }
 
