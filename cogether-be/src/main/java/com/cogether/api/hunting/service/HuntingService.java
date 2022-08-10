@@ -10,9 +10,11 @@ import com.cogether.api.hunting.repository.HuntingScrapRepository;
 import com.cogether.api.user.domain.User;
 import com.cogether.api.user.exception.UserNotFoundException;
 import com.cogether.api.user.repository.UserRepository;
+import com.cogether.api.user.service.SkillService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,6 +25,8 @@ public class HuntingService {
     private final HuntingScrapRepository huntingScrapRepository;
     private final UserRepository userRepository;
 
+    private final SkillService skillService;
+
     public HuntingResponse.OnlyHuntingId create(HuntingRequest.CreateHunting request) {
         User user = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
         Hunting hunting = request.toEntity(user);
@@ -30,17 +34,26 @@ public class HuntingService {
         return HuntingResponse.OnlyHuntingId.build(savedHunting);
     }
 
-    // TODO: 게시물유저 skillList 추가
     public HuntingResponse.GetHunting getHunting(int userId, int huntingId) {
         Hunting hunting = huntingRepository.findById(huntingId).orElseThrow(HuntingNotFoundException::new);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         int cnt = huntingScrapRepository.countAllByUserAndHunting(user, hunting);
 
         if (cnt == 0)
-            return HuntingResponse.GetHunting.build(hunting, false, 0);
+            return HuntingResponse.GetHunting.build(hunting, false, 0, skillService.getUserSkillList(hunting.getUser().getId()));
 
         HuntingScrap huntingScrap = huntingScrapRepository.findByUserAndHunting(user, hunting);
-        return HuntingResponse.GetHunting.build(hunting, true, huntingScrap.getId());
+        return HuntingResponse.GetHunting.build(hunting, true, huntingScrap.getId(), skillService.getUserSkillList(userId));
+    }
+
+    public HuntingResponse.GetHuntings getHuntingList(int userId) {
+        List<Hunting> hunting = huntingRepository.findAllByOrderByIdDesc();
+        List<HuntingResponse.GetHunting> huntingList = new ArrayList<>();
+        int len = hunting.size();
+        for (int idx = 0; idx < len; idx++)
+            huntingList.add(getHunting(userId, hunting.get(idx).getId()));
+
+        return HuntingResponse.GetHuntings.build(huntingList);
     }
 
     public HuntingResponse.OnlyHuntingId delete(int id) {
