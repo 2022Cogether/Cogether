@@ -49,10 +49,10 @@ public class ProjectController {
         return ResponseEntity.ok().body(response);
     }
 
-    @DeleteMapping(path = "/project/scrap")
+    @DeleteMapping(path = "/project/scrap/{projectScrapId}")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<ProjectResponse.OnlyProjectScrapId> deleteScrap(@RequestParam int userId, @RequestParam int projectId){
-        ProjectResponse.OnlyProjectScrapId response = projectService.deleteScrap(userId, projectId);
+    public ResponseEntity<ProjectResponse.OnlyProjectScrapId> deleteScrap(@PathVariable int projectScrapId){
+        ProjectResponse.OnlyProjectScrapId response = projectService.deleteScrap(projectScrapId);
         return ResponseEntity.ok().body(response);
     }
 
