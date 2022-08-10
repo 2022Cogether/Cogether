@@ -33,7 +33,7 @@ import {
   faArrowLeft,
   faRectangleXmark,
   faPenToSquare,
-  faCircleQuestion,
+  // faCircleQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark as faBookmark_reg } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -65,8 +65,8 @@ library.add(
   faPaperPlane,
   faArrowLeft,
   faRectangleXmark,
-  faPenToSquare,
-  faCircleQuestion
+  faPenToSquare
+  // faCircleQuestion
 );
 
 createApp(App)

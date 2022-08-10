@@ -28,7 +28,7 @@
         >
           <font-awesome-icon class="fs-3" icon="fa-solid fa-user" />
         </a>
-        <div class="dropdown-menu">
+        <div v-if="userId" class="dropdown-menu">
           <router-link
             class="dropdown-item"
             :to="{

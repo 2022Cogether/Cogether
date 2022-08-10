@@ -437,7 +437,7 @@ export const recruitStore = {
     },
   },
   actions: {
-    createProjectTeam({ commit }, param) {
+    createProjectTeam({ commit, getters }, param) {
       console.log(param);
       console.log(commit);
       const post = {
@@ -451,7 +451,9 @@ export const recruitStore = {
         skillList: param.useStack,
       };
       http
-        .post("project", post)
+        .post("project", post, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           console.log("프로젝트팀작성성공");
           console.log(data);
@@ -460,11 +462,13 @@ export const recruitStore = {
           console.log("에러: " + e);
         });
     },
-    createStudyTeam({ commit }, param) {
+    createStudyTeam({ commit, getters }, param) {
       console.log(param);
       console.log(commit);
       http
-        .post("study", param)
+        .post("study", param, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           console.log("스터디팀작성성공");
           console.log(data);
@@ -473,11 +477,13 @@ export const recruitStore = {
           console.log("에러: " + e);
         });
     },
-    createProjectPerson({ commit }, param) {
+    createProjectPerson({ commit, getters }, param) {
       console.log(param);
       console.log(commit);
       http
-        .post("hunting", param)
+        .post("hunting", param, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           console.log("스터디개인작성성공");
           console.log(data);
@@ -486,9 +492,11 @@ export const recruitStore = {
           console.log("에러: " + e);
         });
     },
-    getProjectTeams({ commit }, userId) {
+    getProjectTeams({ commit, getters }, userId) {
       http
-        .get("project/list/" + userId)
+        .get("project/list/" + userId, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           console.log("프로젝트팀리스트받기성공");
           console.log(data);
@@ -498,9 +506,11 @@ export const recruitStore = {
           console.log("에러: " + e);
         });
     },
-    getProjectPeople({ commit }, userId) {
+    getProjectPeople({ commit, getters }, userId) {
       http
-        .get("hunting/list/" + userId)
+        .get("hunting/list/" + userId, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           console.log("프로젝트개인리스트받기성공");
           console.log(data);
@@ -510,9 +520,11 @@ export const recruitStore = {
           console.log("에러: " + e);
         });
     },
-    getStudyTeams({ commit }, userId) {
+    getStudyTeams({ commit, getters }, userId) {
       http
-        .get("study/list/" + userId)
+        .get("study/list/" + userId, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           console.log("스터디팀리스트받기성공");
           console.log(data);
