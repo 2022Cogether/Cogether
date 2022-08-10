@@ -1,6 +1,8 @@
 package com.cogether.api.user.service;
 
 import com.cogether.api.config.jwt.TokenUtils;
+import com.cogether.api.rank.domain.Ranking;
+import com.cogether.api.rank.respository.RankingRepository;
 import com.cogether.api.user.domain.Auth;
 import com.cogether.api.follow.domain.Follow;
 import com.cogether.api.user.domain.User;
@@ -47,6 +49,7 @@ public class UserService {
 
     private final UserSkillRepository userSkillRepository;
 
+    private final RankingRepository rankingRepository;
 
     public Optional<User> findByEmail(String userEmail) {
 
@@ -54,10 +57,9 @@ public class UserService {
     }
 
 
-
-
-
-    //회원가입
+    /**
+     * 회원가입
+     */
     @Transactional
     public TokenResponse signUp(UserRequest userRequest) {
 
@@ -84,7 +86,7 @@ public class UserService {
         List<String> skills = userRequest.getSkills();
 
         System.out.println(skills.isEmpty());
-        if(!skills.isEmpty()) {
+        if (!skills.isEmpty()) {
             for (String skill : skills) {
                 userSkillRepository.save(UserSkill.builder()
                         .skillId(skill)
@@ -92,6 +94,15 @@ public class UserService {
                         .build());
             }
         }
+
+
+        rankingRepository.save(Ranking.builder()
+                .user(user)
+                .tilCnt(0)
+                .week(0)
+                .month(0)
+                .total(0)
+                .build());
 
         String accessToken = tokenUtils.generateJwtToken(user);
         String refreshToken = tokenUtils.saveRefreshToken(user);
@@ -101,7 +112,9 @@ public class UserService {
         return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).userId(user.getId()).build();
     }
 
-    //로그인
+    /**
+     * 로그인
+     */
     @Transactional
     public TokenResponse signIn(UserRequest userRequest) throws Exception {
 
@@ -149,7 +162,9 @@ public class UserService {
 
     }
 
-    //로그아웃
+    /**
+     * 로그아웃
+     */
     @Transactional
     public void signOut(int userId) throws Exception {
         User user = userRepository.findById(userId)
@@ -161,7 +176,9 @@ public class UserService {
         authRepository.delete(auth);
     }
 
-    // 이메일 중복확인
+    /**
+     * 이메일 중복확인
+     */
     public boolean verifyDuplicationOfEmail(String email) {
         Optional<User> user =
                 userRepository.findByEmail(email);
@@ -176,7 +193,9 @@ public class UserService {
 
     }
 
-    //닉네임 중복확인
+    /**
+     * 닉네임 중복확인
+     */
     public boolean verifyDuplicationOfNickName(String nickname) {
         Optional<User> user =
                 userRepository.findByNickname(nickname);
@@ -189,7 +208,9 @@ public class UserService {
             return false;       // 중복없음
     }
 
-    //회원 정보 수정
+    /**
+     * 회원정보수정
+     */
     @Transactional
     public TokenResponse modifyUserInfo(UserRequest userRequest) {
         Optional<User> user = userRepository.findByEmail(userRequest.getEmail());
@@ -216,14 +237,19 @@ public class UserService {
         return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).build();
     }
 
-    //회원조회
+    /**
+     * 회원조회
+     */
     public User findUserInfo(int user_id) throws Exception {
         User user = userRepository
                 .findById(user_id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
         return user;
     }
 
-    //비밀번호 변경
+    /**
+     *
+     */
+
     public int modifyPassword(UserRequest userRequest) throws Exception {
         int id = userRequest.getId();
         String password = userRequest.getPassword();
