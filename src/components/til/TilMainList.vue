@@ -27,7 +27,9 @@ export default {
     const store = useStore();
     const getters = computed(() => store.getters);
 
-    const tilList = store.getters.getTilList;
+    const tilList = computed(() => {
+      return store.getters.getTilList;
+    });
 
     const modalNum = computed(() => {
       return getters.value.getOpenTil;
@@ -40,47 +42,47 @@ export default {
     const getTilList = () => {
       store.dispatch("fetchTilList", { userId: 1 });
     };
-    const eraseTilList = () => {
-      store.dispatch("removeTilList");
-    };
+    // const eraseTilList = () => {
+    //   store.dispatch("removeTilList");
+    // };
 
     // 페이지가 생성될 때 || 페이지에서 나가기 직전 list를 지움
     // 현재 오작동이 잦아서 고민 중..
-    eraseTilList();
+    // eraseTilList();
     onBeforeUnmount(() => {
       // eraseTilList();
     });
     // 페이지가 Created 될 때 list 가져옴
     getTilList();
 
-    // 참조: https://renatello.com/check-if-a-user-has-scrolled-to-the-bottom-in-vue-js/
-    // 스크롤 거의 하단에 오면 추가 리스트 받아고는 메소드
-    const scroll = () => {
-      window.onscroll = () => {
-        let bottomOfWindow =
-          Math.max(
-            window.pageYOffset,
-            document.documentElement.scrollTop,
-            document.body.scrollTop
-          ) +
-            window.innerHeight >
-          document.documentElement.offsetHeight;
+    // // 참조: https://renatello.com/check-if-a-user-has-scrolled-to-the-bottom-in-vue-js/
+    // // 스크롤 거의 하단에 오면 추가 리스트 받아고는 메소드
+    // const scroll = () => {
+    //   window.onscroll = () => {
+    //     let bottomOfWindow =
+    //       Math.max(
+    //         window.pageYOffset,
+    //         document.documentElement.scrollTop,
+    //         document.body.scrollTop
+    //       ) +
+    //         window.innerHeight >
+    //       document.documentElement.offsetHeight;
 
-        if (bottomOfWindow) {
-          if (window.location.href == "http://localhost:8080/#/") {
-            getTilList();
-          }
-        }
-      };
-    };
+    //     if (bottomOfWindow) {
+    //       if (window.location.href == "http://localhost:8080/#/") {
+    //         getTilList();
+    //       }
+    //     }
+    //   };
+    // };
 
-    onMounted(() => {
-      scroll();
-    });
+    // onMounted(() => {
+    //   scroll();
+    // });
 
     return {
       getTilList,
-      eraseTilList,
+      // eraseTilList,
       scroll,
       modalNum,
       isOpen,

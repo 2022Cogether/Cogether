@@ -26,8 +26,8 @@ export const signStore = {
       /[a-zA-Z]+(?=.*\d)(?=.*[a-z])(?=.*[~!@#$]).[a-zA-Z\d~!@#$]{7,14}$/,
     nickPattern: /^[ㄱ-ㅎ가-힣a-zA-Z\d./_]{2,15}$/,
 
-    // 로그인 되면 token 추가 / 로그아웃 되면 token 제거
-    token: localStorage.getItem("token") || "",
+    // 로그인 되면 access token 추가 / 로그아웃 되면 token 제거
+    token: localStorage.getItem("access_TOKEN") || "",
 
     loginUserId: localStorage.getItem("userId") || "",
     // 현재 유저 정보(id, 닉네임 등)이 저장될 state
@@ -96,9 +96,9 @@ export const signStore = {
     SET_ANOTHER_USER: (state, userData) => (state.anotherUser = userData),
   },
   actions: {
-    saveToken({ commit }, token) {
-      commit("SET_TOKEN", token);
-      localStorage.setItem("token", token); // 로컬 저장소 필요?
+    saveAccess({ commit }, accessToken) {
+      commit("SET_TOKEN", accessToken);
+      localStorage.setItem("access_TOKEN", accessToken); // 로컬 저장소 필요?
     },
 
     saveUserId({ commit }, userId) {
@@ -111,14 +111,18 @@ export const signStore = {
         .post("sign/signin/", credentials)
         .then(({ data }) => {
           console.log(commit);
-          const token = data.key;
+          const access_TOKEN = data.access_TOKEN;
+          const refresh_TOKEN = data.refresh_TOKEN;
           const userId = data.userId;
-          dispatch("saveToken", token); // 토큰 갱신
+
+          dispatch("saveAccess", access_TOKEN); // 엑세스 토큰 갱신
+          localStorage.setItem("refresh_TOKEN", refresh_TOKEN); // 리플레시 토큰 갱신
+
           dispatch("saveUserId", userId);
           dispatch("fetchCurrentUser", userId); // 현재 사용자 정보 추가
           commit("SET_BOOLEANVALUE");
-          // commit("RESET_AUTH_ERROR"); // 로그인 오류시 발생할 수 있는 오류 정보 수정(미구현)
-          router.go(); // 일단 새로고침하여 메인 페이지 이동하게 해놓음
+
+          router.push({ name: "profile", params: { userId: userId } });
         })
         .catch((err) => {
           console.error(err.response.data);
@@ -128,14 +132,20 @@ export const signStore = {
     async register({ commit, dispatch }, credentials) {
       await http
         .post("sign/signup/", credentials)
-        .then((res) => {
+        .then(({ data }) => {
           console.log(commit);
-          const token = res.data.key;
-          dispatch("saveToken", token);
-          dispatch("saveUserId", res.data.userId);
-          dispatch("fetchCurrentUser", res.data.userId);
+          const access_TOKEN = data.access_TOKEN;
+          const refresh_TOKEN = data.refresh_TOKEN;
+          const userId = data.userId;
+
+          dispatch("saveAccess", access_TOKEN);
+          localStorage.setItem("refresh_TOKEN", refresh_TOKEN); // 리플레시 토큰 갱신
+
+          dispatch("saveUserId", userId);
+          dispatch("fetchCurrentUser", userId);
           commit("SET_BOOLEANVALUE");
-          // commit("RESET_AUTH_ERROR");
+
+          router.push({ name: "profile", params: { userId: userId } });
         })
         .catch((err) => {
           console.error(err.response.data);
@@ -145,7 +155,9 @@ export const signStore = {
     fetchCurrentUser({ commit, getters }, userId) {
       if (getters.isLoggedIn) {
         axios
-          .get("sign/user" + userId)
+          .get("sign/user" + userId, {
+            headers: { Authorization: getters.authHeader },
+          })
           .then((res) => commit("SET_CURRENT_USER", res.data))
           .catch((err) => {
             alert("현 사용자 정보 저장 중 에러 발생");
@@ -161,7 +173,9 @@ export const signStore = {
     fetchAnothertUser({ commit, getters }, userId) {
       if (getters.isLoggedIn) {
         axios
-          .get("sign/user" + userId)
+          .get("sign/user" + userId, {
+            headers: { Authorization: getters.authHeader },
+          })
           .then((res) => commit("SET_ANOTHER_USER", res.data))
           .catch((err) => {
             alert("현 사용자 정보 저장 중 에러 발생");
@@ -175,9 +189,15 @@ export const signStore = {
     },
 
     // 이메일을 받고 이메일로 가입한 유저가 있으면 새 비밀번호를 보냄
-    takePassWord({ commit }, email) {
+    takePassWord({ commit, getters }, email) {
       http
-        .post("sign/password", { email: email })
+        .post(
+          "sign/password",
+          { email: email },
+          {
+            headers: { Authorization: getters.authHeader },
+          }
+        )
         .then((res) => {
           if (res.data.status === 200) {
             alert("비밀번호를 성공적으로 보냈습니다!");
@@ -211,9 +231,11 @@ export const signStore = {
     },
 
     // 서버에서 Skill Set을 받고 store의 스킬 셋을 업데이트함
-    takeSkillSet({ commit }) {
+    takeSkillSet({ commit, getters }) {
       http
-        .get("sign/skill/") // api 필요 없음 AWS에서 사용!
+        .get("sign/skill/", {
+          headers: { Authorization: getters.authHeader },
+        }) // api 필요 없음 AWS에서 사용!
         .then((res) => {
           if (res.data.status === 200) {
             alert("스킬 셋을 성공적으로 받았습니다!");
@@ -229,9 +251,11 @@ export const signStore = {
     },
 
     // 닉네임 중복 체크
-    async checkNickName({ commit }, nickName) {
+    async checkNickName({ commit, getters }, nickName) {
       await http
-        .get("verify/nickname/" + nickName)
+        .get("verify/nickname/" + nickName, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           if (!data) {
             console.log("사용가능한 닉네임!");
@@ -246,10 +270,12 @@ export const signStore = {
     },
 
     // 이메일 중복 체크
-    async checkEmail({ commit }, email) {
+    async checkEmail({ commit, getters }, email) {
       console.log("이메일 체크");
       await http
-        .get("verify/email/" + email)
+        .get("verify/email/" + email, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           if (!data) {
             console.log("사용가능한 이메일!");
@@ -267,10 +293,16 @@ export const signStore = {
     // 기존 비밀번호도 받아서 이 비밀번호가 유효하면 새 비밀번호로 변경되는 것을 가정함
     changePassword({ getters }, pwSet) {
       axios
-        .put("sign/password/", {
-          password: pwSet.password,
-          newPassword: pwSet.newPassword,
-        })
+        .put(
+          "sign/password/",
+          {
+            password: pwSet.password,
+            newPassword: pwSet.newPassword,
+          },
+          {
+            headers: { Authorization: getters.authHeader },
+          }
+        )
         .then((res) => {
           if (res.data.status === 200) {
             alert("비밀번호를 변경했습니다!");
@@ -285,11 +317,14 @@ export const signStore = {
         });
     },
 
-    logout({ commit }, userId) {
+    logout({ commit, getters }, userId) {
       http
-        .get("sign/signout/" + userId)
+        .get("sign/signout/" + userId, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(() => {
-          localStorage.removeItem("token");
+          localStorage.removeItem("access_TOKEN");
+          localStorage.removeItem("refresh_TOKEN");
           localStorage.removeItem("userId");
           alert("성공적으로 logout!");
           commit("SET_CURRENT_USER", {});
@@ -304,13 +339,20 @@ export const signStore = {
         });
     },
 
-    resign({ commit }, password) {
+    resign({ commit, getters }, password) {
       http
-        .put("sign/resign/", { password: password })
+        .put(
+          "sign/resign/",
+          { password: password },
+          {
+            headers: { Authorization: getters.authHeader },
+          }
+        )
         .then((res) => {
           if (res.data.status === 200) {
             alert("회원 탈퇴되었습니다!");
-            localStorage.removeItem("token");
+            localStorage.removeItem("access_TOKEN");
+            localStorage.removeItem("refresh_TOKEN");
             localStorage.removeItem("userId");
             commit("SET_CURRENT_USER", {});
             commit("SET_TOKEN", "");
@@ -325,6 +367,23 @@ export const signStore = {
           alert("회원 탈퇴 에러입니다.");
           console.error(err.response.data);
         });
+    },
+
+    // accessToken 재요청
+    refreshToken({ commit }) {
+      //accessToken 만료로 재발급 후 재요청시 비동기처리로는 제대로 처리가 안되서 promise로 처리함
+      return new Promise((resolve, reject) => {
+        axios
+          .post("/v1/auth/certify") // URL 필요!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          .then((res) => {
+            commit("saveAccess", res.data.access_TOKEN);
+            resolve(res.data.access_TOKEN);
+          })
+          .catch((err) => {
+            console.log("refreshToken error : ", err.config);
+            reject(err.config.data);
+          });
+      });
     },
   },
 };
