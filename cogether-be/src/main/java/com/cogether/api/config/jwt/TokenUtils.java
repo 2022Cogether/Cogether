@@ -1,6 +1,7 @@
 package com.cogether.api.config.jwt;
 
 import com.cogether.api.user.domain.User;
+import com.cogether.api.user.repository.UserRepository;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class TokenUtils {
     private final String REFRESH_KEY = "refreshKey";
     private final String DATA_KEY = "userID";
 
+    private final UserRepository userRepository;
 
     //AccessToken 발급
     public String generateJwtToken(User user) {
@@ -128,5 +130,26 @@ public class TokenUtils {
                 .setSigningKey(DatatypeConverter.parseBase64Binary(REFRESH_KEY))
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public int getUserIdFromToken(String token)
+    {
+        Claims claims = Jwts.parser()
+                .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
+                .parseClaimsJws(token)
+                .getBody();
+
+        System.out.println(claims.toString());
+
+        String userEmail =claims.get("userID",String.class);
+        System.out.println("토큰에서 뽑아오익 :" + userEmail);
+
+        User user = userRepository
+                .findByEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        int userId = user.getId();
+
+        return userId;
     }
 }
