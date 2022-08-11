@@ -36,7 +36,7 @@
                 class="dropdown-item"
                 :to="{
                   name: 'TilUpdate',
-                  params: { tilPK: tilContent.pk },
+                  params: { tilPk: tilContent.pk },
                 }"
                 >내용 수정</router-link
               >
@@ -269,7 +269,7 @@ export default {
 
     const onSubmit = () => {
       const payload = {
-        tilPK: tilContent.value.pk,
+        tilPk: tilContent.value.pk,
         content: commentContent,
       };
       store.dispatch("createComment", payload);
@@ -279,7 +279,7 @@ export default {
     const closeModal = (event) => {
       if (
         !document
-          .querySelector(".modal-card")
+          .querySelector(".modal")
           .querySelector("." + event.target.className) // 클릭한 박스의 클래스가 modal-card라는 클래스의 하위 클래스인지 아닌지
       ) {
         store.dispatch("fetchOpenTil", {
@@ -439,6 +439,7 @@ export default {
   position: relative;
   height: auto;
   overflow: auto;
+  width: 97%;
   left: 10px;
   font-size: 1rem;
   display: -webkit-box;

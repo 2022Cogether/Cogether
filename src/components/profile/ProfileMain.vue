@@ -1,4 +1,10 @@
 <template>
+  <!-- Til Craete 버튼 -->
+  <router-link :to="{ name: 'TilCreate' }">
+    <button class="icon-body">
+      <font-awesome-icon icon="fa-solid fa-pen-clip" class="pen-icon" />
+    </button>
+  </router-link>
   <!-- Profile -->
   <div class="profile-info-container1 d-flex flex-column align-items-center">
     <div class="profile-img-box">
@@ -33,12 +39,22 @@
   <!-- Tech Stack -->
   <div class="techstack-container">
     <h4>사용하는 기술</h4>
-    <div class="techstack-box">
-      <img
-        src="@/assets/devicon/javascript-original.svg"
-        alt="techstack image"
-        class="techstack-img"
-      />
+    <div class="d-flex flex-wrap" sytle="min-height: 30px;">
+      <div
+        v-for="(lang, idx) in userLangSkills"
+        :key="idx"
+        class="techstack-box"
+      >
+        <img
+          :src="
+            'https://cogethera801.s3.ap-northeast-2.amazonaws.com/devicon/' +
+            lang +
+            '-original.svg'
+          "
+          alt="techstack image"
+          class="techstack-img"
+        />
+      </div>
     </div>
   </div>
   <!-- Webpage Link -->
@@ -103,10 +119,17 @@
 </template>
 
 <script>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+/>;
 import ProfileTil from "./ProfileTil.vue";
 import { ref } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
+
+import skills from "@/assets/skills.js";
+import Swal from "sweetalert2";
 
 export default {
   name: "ProfileMain",
@@ -116,10 +139,11 @@ export default {
   setup() {
     const store = useStore();
     const route = useRoute();
+    // const getters = computed(() => store.getters);
     const userId = route.params.userId;
     const isLoggedIn = store.getters.isLoggedIn;
 
-    // 검색 창
+    // TIL 검색 창
     const searchWord = ref("");
     const onSubmit = () => {
       const payload = {
@@ -129,6 +153,11 @@ export default {
       console.log(payload);
       store.dispatch("searchTil", payload);
     };
+
+    // Skill set
+    // if (!getters.value.getSkillSet) {
+    //   store.dispatch("takeSkillSet");
+    // }
 
     // 웹페이지 아이콘 url
     const webIconUrl = [
@@ -168,8 +197,110 @@ export default {
 
     // 페이지가 Created 될 때 list 가져옴
     getTilList();
-
     const tilList = store.getters.getTilList;
+
+    // 모달 바깥을 클릭하면 모달을 닫게 하는 함수
+    const closeModal = (event) => {
+      if (
+        !document
+          .querySelector(".modal")
+          .querySelector("." + event.target.className) // 클릭한 박스의 클래스가 modal-card라는 클래스의 하위 클래스인지 아닌지
+      ) {
+        isOnTechModal.value = false;
+      }
+    };
+
+    //기술스택 및 자동완성관련 함수들
+    const isOnTechModal = ref(false);
+    const changeTechModal = () => {
+      isOnTechModal.value = !isOnTechModal.value;
+    };
+
+    //SWal 모달창
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "bottom-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+
+    const userLangSkills = ref(store.getters.getUserSkills);
+    console.log(userLangSkills.value);
+    const delLangSkills = (val) => {
+      if (userLangSkills.value.includes(val)) {
+        userLangSkills.value = userLangSkills.value.filter(
+          (element) => element !== val
+        );
+      } else {
+        alert("입력되지 않은 스킬입니다!");
+      }
+    };
+
+    //기술스택 및 자동완성관련 함수들
+    const skillInput = ref("");
+    const result = ref("");
+    function submitAutoComplete() {
+      const autocomplete = document.querySelector(".autocomplete");
+      //입력이 없으면 자동완성리스트 제거(null)
+      if (skillInput.value == "") {
+        result.value = null;
+      } else if (skillInput.value) {
+        //값이 입력되면 자동완성 리스트 보이기
+        autocomplete.classList.remove("disabled");
+        result.value = skills.filter((skill) => {
+          //^는 모든 리스트 보이기, i는 대문자 > 소문자처리하는 파라미터
+          return skill.match(new RegExp("^" + skillInput.value, "i"));
+        });
+      } else {
+        autocomplete.classList.add("disabled");
+      }
+    }
+    //자동완성 리스트에서 스킬 클릭하면 해당 값을 입력값에 할당
+    function searchSkillAdd(res) {
+      skillInput.value = res;
+      submitAutoComplete();
+    }
+
+    const addLangSkills = (val) => {
+      //search 아이콘 클릭일 때
+      if (val.type == "click") {
+        val.target.value = skillInput.value;
+      }
+
+      //상자클릭이 아닐 때 skill리스트에 해당 스킬이 있나 검사
+      if (typeof val != "string" && skills.indexOf(val.target.value) < 0) {
+        return;
+      }
+
+      if (typeof val == "object") {
+        if (userLangSkills.value.includes(val.target.value)) {
+          Toast.fire({
+            icon: "error",
+            title: "이미 입력된 스킬입니다.",
+          });
+        } else {
+          userLangSkills.value.push(val.target.value);
+          skillInput.value = null; //입력을 하면 입력값 초기화
+          result.value = null; // 자동완성 리스트도 초기화
+        }
+      } else {
+        if (userLangSkills.value.includes(val)) {
+          Toast.fire({
+            icon: "warning",
+            title: "이미 입력된 스킬입니다.",
+          });
+        } else {
+          userLangSkills.value.push(val);
+          skillInput.value = null; //입력을 하면 입력값 초기화
+          result.value = null; // 자동완성 리스트도 초기화
+        }
+      }
+    };
 
     return {
       isLoggedIn,
@@ -179,6 +310,19 @@ export default {
       searchWord,
       onSubmit,
       webIconUrl,
+
+      closeModal,
+      isOnTechModal,
+      changeTechModal,
+
+      submitAutoComplete,
+      result,
+      skillInput,
+      searchSkillAdd,
+      addLangSkills,
+      userLangSkills,
+      Toast,
+      delLangSkills,
     };
   },
 };
@@ -259,6 +403,8 @@ h4 {
 .techstack-box {
   width: 30px;
   height: 30px;
+  margin-right: 5px;
+  margin-left: 5px;
   border-radius: 70%;
   overflow: hidden;
 }
@@ -317,5 +463,25 @@ h4 {
 /* TIL */
 .til-title {
   margin-left: 30px;
+}
+/* TIL Create 아이콘 */
+.icon-body {
+  border: 0px;
+  width: 60px;
+  height: 60px;
+  background-color: #2a9d8f;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 5px;
+  right: 25vw;
+  box-shadow: 0px 3px rgba(0, 0, 0, 0.3);
+}
+
+.pen-icon {
+  font-size: 30px;
 }
 </style>

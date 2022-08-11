@@ -33,6 +33,8 @@ import {
   faArrowLeft,
   faRectangleXmark,
   faPenToSquare,
+  faCirclePlus,
+  faCircleMinus,
   // faCircleQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark as faBookmark_reg } from "@fortawesome/free-regular-svg-icons";
@@ -65,7 +67,9 @@ library.add(
   faPaperPlane,
   faArrowLeft,
   faRectangleXmark,
-  faPenToSquare
+  faPenToSquare,
+  faCirclePlus,
+  faCircleMinus
   // faCircleQuestion
 );
 

@@ -5,6 +5,7 @@ import { chatStore } from "@/store/modules/chatStore.js";
 import { signStore } from "@/store/modules/signStore.js";
 import { tilStore } from "@/store/modules/tilStore.js";
 import { tilCommentStore } from "@/store/modules/tilCommentStore.js";
+import { skillStore } from "@/store/modules/skillStore.js";
 
 export default createStore({
   state: {},
@@ -18,5 +19,6 @@ export default createStore({
     tilStore,
     tilCommentStore,
     recruitStore,
+    skillStore,
   },
 });
