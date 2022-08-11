@@ -1,6 +1,5 @@
 import http from "@/api/http";
 import router from "@/router";
-import axios from "axios";
 
 export const signStore = {
   state: {
@@ -156,7 +155,7 @@ export const signStore = {
 
     fetchCurrentUser({ commit, getters }, userId) {
       if (getters.isLoggedIn) {
-        axios
+        http
           .get("sign/user" + userId, {
             headers: { Authorization: getters.authHeader },
           })
@@ -174,7 +173,7 @@ export const signStore = {
 
     fetchAnothertUser({ commit, getters }, userId) {
       if (getters.isLoggedIn) {
-        axios
+        http
           .get("sign/user" + userId, {
             headers: { Authorization: getters.authHeader },
           })
@@ -294,7 +293,7 @@ export const signStore = {
     // 변경된 비밀 번호를 받고 서버에 보내 수정
     // 기존 비밀번호도 받아서 이 비밀번호가 유효하면 새 비밀번호로 변경되는 것을 가정함
     changePassword({ getters }, pwSet) {
-      axios
+      http
         .put(
           "sign/password/",
           {
@@ -375,7 +374,7 @@ export const signStore = {
     refreshToken({ commit }) {
       //accessToken 만료로 재발급 후 재요청시 비동기처리로는 제대로 처리가 안되서 promise로 처리함
       return new Promise((resolve, reject) => {
-        axios
+        http
           .post("/v1/auth/certify") // URL 필요!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           .then((res) => {
             commit("saveAccess", res.data.access_TOKEN);
