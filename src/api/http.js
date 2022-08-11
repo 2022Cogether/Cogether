@@ -4,6 +4,7 @@ import axios from "axios";
 // axios 객체 생성
 export default axios.create({
   baseURL: "http://i7a801.p.ssafy.io:8080/api",
+  // "https://cors-anywhere.herokuapp.com/http://i7a801.p.ssafy.io:8080/api",
   headers: {
     "Content-type": "application/json",
   },
@@ -22,7 +23,6 @@ axios.interceptors.response.use(
       config,
       response: { status },
     } = err;
-
     const originalRequest = config;
 
     // Refresh Token 마저 완료된 경우

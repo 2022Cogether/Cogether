@@ -108,6 +108,11 @@ export default {
 
     function bookmarkCheck() {
       state.bookmark = !state.bookmark;
+      if (state.bookmark) {
+        store.dispatch("setProjectTeamScrap", props.projectTeam.projectId);
+      } else {
+        store.dispatch("deleteProjectTeamScrap", props.projectTeam.projectId);
+      }
     }
 
     async function deleteTeam() {

@@ -3,7 +3,40 @@ import http from "@/api/http";
 export const recruitStore = {
   state: {
     projectTeams: [],
-    projectPeople: [],
+    projectPeople: [
+      {
+        huntings: [
+          {
+            huntingId: 2,
+            userId: 1,
+            userNickname: "김싸피",
+            userImgUrl: null,
+            title: "나는 어때?",
+            content: "나 꽤 몽총한 사람이야",
+            scrap: false,
+            scrapId: 0,
+            userSkillList: [
+              {
+                userSkillId: 1,
+                skillName: "c",
+              },
+              {
+                userSkillId: 2,
+                skillName: "javascript",
+              },
+              {
+                userSkillId: 3,
+                skillName: "python",
+              },
+              {
+                userSkillId: 4,
+                skillName: "java",
+              },
+            ],
+          },
+        ],
+      },
+    ],
     studyTeams: [],
   },
   getters: {
@@ -29,6 +62,7 @@ export const recruitStore = {
     },
   },
   actions: {
+    //모달
     //프로젝트팀
     getProjectTeams({ commit }, userId) {
       http
@@ -53,6 +87,8 @@ export const recruitStore = {
           console.log(data);
         })
         .catch((e) => {
+          console.log("dd");
+          console.log(getters.authHeader);
           console.log("에러: " + e);
         });
     },
@@ -70,18 +106,38 @@ export const recruitStore = {
           console.log("에러: " + e);
         });
     },
-    // setProjectTeamScrap({ commit }, userId) {
-    //   http
-    //     .get("project/list/" + userId)
-    //     .then(({ data }) => {
-    //       console.log("프로젝트팀리스트받기성공");
-    //       console.log(data);
-    //       commit("SET_PROJECT_TEAMS", data.projectList);
-    //     })
-    //     .catch((e) => {
-    //       console.log("에러: " + e);
-    //     });
-    // },
+    setProjectTeamScrap({ commit, getters }, param) {
+      console.log(commit);
+      const sendData = {
+        projectId: param,
+        userId: getters.getLoginUserId,
+      };
+      http
+        .post("project/scrap", sendData, {
+          headers: { Authorization: getters.authHeader },
+        })
+        .then(({ data }) => {
+          console.log("프로젝트팀스크랩성공");
+          console.log(data);
+        })
+        .catch((e) => {
+          console.log("에러: " + e);
+        });
+    },
+    deleteProjectTeamScrap({ commit, getters }, param) {
+      console.log(commit);
+      http
+        .delete("project/scrap", param, {
+          headers: { Authorization: getters.authHeader },
+        })
+        .then(({ data }) => {
+          console.log("프로젝트팀스크랩삭제성공");
+          console.log(data);
+        })
+        .catch((e) => {
+          console.log("에러: " + e);
+        });
+    },
     //프로젝트사람
     getProjectPeople({ commit }, userId) {
       http
@@ -122,15 +178,34 @@ export const recruitStore = {
           console.log("에러: " + e);
         });
     },
-    setProjectPersonScrap({ commit, getters }, userId) {
+    setProjectPersonScrap({ commit, getters }, param) {
+      console.log(commit);
+      const sendData = {
+        huntingId: param,
+        userId: getters.getLoginUserId,
+      };
       http
-        .get("project/list/" + userId, {
+<<<<<<< src/store/modules/recruitStore.js
+        .post("hunting/scrap", sendData, {
           headers: getters.authHeader,
         })
         .then(({ data }) => {
-          console.log("프로젝트팀리스트받기성공");
+          console.log("프로젝트개인스크랩성공");
           console.log(data);
-          commit("SET_PROJECT_TEAMS", data.projectList);
+        })
+        .catch((e) => {
+          console.log("에러: " + e);
+        });
+    },
+    deleteProjectPersonScrap({ commit, getters }, param) {
+      console.log(commit);
+      http
+        .delete("hunting/scrap", param, {
+          headers: { Authorization: getters.authHeader },
+        })
+        .then(({ data }) => {
+          console.log("프로젝트개인스크랩삭제성공");
+          console.log(data);
         })
         .catch((e) => {
           console.log("에러: " + e);
@@ -172,6 +247,38 @@ export const recruitStore = {
         })
         .then(({ data }) => {
           console.log("스터디팀삭제성공");
+          console.log(data);
+        })
+        .catch((e) => {
+          console.log("에러: " + e);
+        });
+    },
+    setStudyTeamScrap({ commit, getters }, param) {
+      console.log(commit);
+      const sendData = {
+        studyId: param,
+        userId: getters.getLoginUserId,
+      };
+      http
+        .post("stud/scrap", sendData, {
+          headers: { Authorization: getters.authHeader },
+        })
+        .then(({ data }) => {
+          console.log("스터디팀스크랩성공");
+          console.log(data);
+        })
+        .catch((e) => {
+          console.log("에러: " + e);
+        });
+    },
+    deleteStudyTeamScrap({ commit, getters }, param) {
+      console.log(commit);
+      http
+        .delete("study/scrap", param, {
+          headers: { Authorization: getters.authHeader },
+        })
+        .then(({ data }) => {
+          console.log("스터디팀스크랩삭제성공");
           console.log(data);
         })
         .catch((e) => {
