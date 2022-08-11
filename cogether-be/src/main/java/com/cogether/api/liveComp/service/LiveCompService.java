@@ -4,6 +4,8 @@ import com.cogether.api.liveComp.domain.LiveCompRequest;
 import com.cogether.api.liveComp.domain.LiveCompResponse;
 import com.cogether.api.liveComp.repository.LiveCompRepository;
 import com.cogether.api.liveComp.domain.LiveComp;
+import com.cogether.api.rank.domain.Ranking;
+import com.cogether.api.rank.respository.RankingRepository;
 import com.cogether.api.user.domain.User;
 import com.cogether.api.user.exception.UserNotFoundException;
 import com.cogether.api.user.repository.UserRepository;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +24,7 @@ public class LiveCompService {
     private final LiveCompRepository liveCompRepository;
 
     private final UserRepository userRepository;
+    private final RankingRepository rankingRepository;
 
     // TODO: 시간 수정
     private  final LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.of(0, 0, 0));//어제
@@ -30,14 +34,27 @@ public class LiveCompService {
         LiveComp liveComp = findLiveComp(request.getUserId());
         liveComp.setTotalTime(liveComp.getTotalTime() + 1);
         LiveComp savedLiveComp = liveCompRepository.save(liveComp);
+        Ranking ranking = rankingRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
+        ranking.setWeek(ranking.getWeek() + 1);
+        ranking.setMonth(ranking.getMonth() + 1);
+        ranking.setTotal(ranking.getTotal() + 1);
+        rankingRepository.save(ranking);
         return LiveCompResponse.OnlyId.build(savedLiveComp);
     }
 
     public LiveCompResponse.GetLiveComp getLiveComp(int userId) {
         LiveComp liveComp = findLiveComp(userId);
-
         // TODO : 랭킹 구현
-        int ranking = 0;
+        List<LiveComp> rankList= liveCompRepository.findAllByCreatedAtBetweenOrderByTotalTimeDesc(startDatetime, endDatetime);
+        int ranking = 1;
+        for (int i = 0; i < rankList.size(); i++){
+            if(rankList.get(i).getId() == liveComp.getId()){
+                break;
+            }
+            if(rankList.get(i).getTotalTime() > liveComp.getTotalTime()){
+                ranking += 1;
+            }
+        }
         int cnt = userRepository.countAllByCompIsTrue();
         return LiveCompResponse.GetLiveComp.build(liveComp, ranking, cnt);
     }
