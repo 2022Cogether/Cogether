@@ -87,7 +87,7 @@ export const challengeStore = {
   actions: {
     getCompeteInfo({ commit, getters }, id) {
       http
-        .get("/livecomp/" + id, {
+        .get("/liveComp/" + id, {
           headers: { Authorization: getters.authHeader },
         })
         .then(({ data }) => {
@@ -106,7 +106,7 @@ export const challengeStore = {
         userId: id,
       };
       http
-        .patch("/livecomp", userid, {
+        .patch("/liveComp", userid, {
           headers: { Authorization: getters.authHeader },
         })
         .then(({ data }) => {
@@ -117,17 +117,17 @@ export const challengeStore = {
           console.log("에러: " + e);
         });
     },
-    //협력방만들기 (구현 예정)
-    createCoopRoom({ commit, getters }, param) {
+    //협력방만들기
+    async createCoopRoom({ commit, getters }, param) {
       const room = {
-        userId: 3,
+        userId: getters.getLoginUserId,
         maxMemNum: param.personnel,
         duration: parseInt(param.hour) * 60 + parseInt(param.min),
         title: param.title,
         content: param.content,
         inProgress: false,
       };
-      http
+      await http
         .post("/livecoop", room, {
           headers: { Authorization: getters.authHeader },
         })

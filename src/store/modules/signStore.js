@@ -66,7 +66,9 @@ export const signStore = {
     getLoginUserId(state) {
       return state.loginUserId;
     },
-
+    getToken(state) {
+      return state.token;
+    },
     // 인증키로 헤더 세팅 (장고 때 만든 거라 spring에서 다를 수 있음)
     authHeader(state) {
       return { Authorization: `token ${state.token}` };

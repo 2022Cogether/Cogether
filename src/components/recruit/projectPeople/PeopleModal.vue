@@ -90,4 +90,69 @@
 export default {};
 </script>
 
-<style></style>
+<style scoped>
+/* Modal */
+.modal-content {
+  background-color: #eff7f6;
+}
+
+.dropdown > button {
+  margin-right: 10px;
+}
+
+.image-box {
+  width: 75px;
+  height: 75px;
+  border-radius: 70%;
+  overflow: hidden;
+  margin-right: 25px;
+  border: 3px solid gold;
+}
+
+.image-box > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  margin: 5px auto;
+}
+
+.profile-detail-box {
+  margin-left: 80px;
+}
+
+.profile-detail-info > h5 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.tech-icon-container {
+  margin-top: 5px;
+}
+
+.user-introduction {
+  background-color: #2a9d8f;
+  border: 1px solid white;
+  border-radius: 10px;
+  width: 300px;
+  margin: 20px auto 10px;
+  padding: 10px;
+}
+
+.modal-header {
+  border: 0;
+}
+
+.modal-footer > .btn {
+  background-color: #2a9d8f;
+  color: #fff;
+}
+
+.list-group-item {
+  border-left: 0px;
+  border-right: 0px;
+}
+
+.list-group-item:hover {
+  background-color: #c1ebe6;
+}
+</style>

@@ -51,8 +51,8 @@ export default {
   props: ["searchText", "tabState"],
   setup() {
     const store = useStore();
-    store.dispatch("getProjectTeams", 1); //test userid
     const getters = computed(() => store.getters);
+    store.dispatch("getProjectTeams", getters.value.getLoginUserId);
 
     function checkScrap() {
       for (const item of getters.value.getProjectTeams) {
