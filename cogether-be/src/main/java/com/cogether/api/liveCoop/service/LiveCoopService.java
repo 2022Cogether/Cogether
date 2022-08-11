@@ -13,6 +13,7 @@ import com.cogether.api.user.exception.UserNotFoundException;
 import com.cogether.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,13 +47,20 @@ public class LiveCoopService {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         int cnt = liveCoopMemberRepository.countAllByUser(user);
         boolean enterCoop = false;
-        if (cnt != 0){
+        if (cnt != 0) {
             enterCoop = true;
             liveCoops.add(liveCoopRepository.findByUser(user));
             liveCoops.addAll(liveCoopRepository.findAllByIdNotOrderByCreatedAtDesc(liveCoops.get(0).getId()));
-        }else liveCoops = liveCoopRepository.findAllByOrderByCreatedAtDesc();
+        } else liveCoops = liveCoopRepository.findAllByOrderByCreatedAtDesc();
 
         return LiveCoopResponse.GetLiveCoops.build(liveCoops, enterCoop);
+    }
+
+    public LiveCoopResponse.OnlyLiveCoopId startLiveCoop(@RequestBody LiveCoopRequest.StartLiveCoop request) {
+        LiveCoop liveCoop = liveCoopRepository.findById(request.getLiveCoopId()).orElseThrow(LiveCoopNotFoundException::new);
+        liveCoop.setInProgress(true);
+        LiveCoop savedLiveCoop = liveCoopRepository.save(liveCoop);
+        return LiveCoopResponse.OnlyLiveCoopId.build(savedLiveCoop);
     }
 
     public LiveCoopResponse.OnlyLiveCoopId deleteLiveCoop(int id) {
