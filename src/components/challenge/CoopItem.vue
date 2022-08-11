@@ -11,9 +11,19 @@
       >
       <span class="icon-people"></span>
     </div>
+    <!-- 재입장 -->
     <button
-      v-if="!room.inProgress"
-      id="1"
+      v-if="room.userId == getters.getLoginUserId"
+      @click="openModal"
+      class="btn-coop-enter"
+      data-bs-toggle="modal"
+      data-bs-target="#coopRoomDetail"
+    >
+      재입장
+    </button>
+    <!-- 입장 -->
+    <button
+      v-else-if="!room.inProgress"
       @click="openModal"
       class="btn-coop-enter"
       data-bs-toggle="modal"
@@ -21,7 +31,8 @@
     >
       입장
     </button>
-    <button v-if="room.inProgress" class="btn-coop-enter">진행중</button>
+    <!-- 진행중 -->
+    <button v-else-if="room.inProgress" class="btn-coop-enter">진행중</button>
   </div>
 
   <!-- Modal -->
@@ -74,7 +85,7 @@
             class="btn"
             data-bs-dismiss="modal"
             aria-label="Close"
-            @click="btnEnter(getters.getRoomId)"
+            @click="btnEnter(getters.getRoomId, getters.getRoomUserId)"
           >
             참여하기
           </button>
@@ -92,13 +103,18 @@ import { computed } from "vue";
 import Swal from "sweetalert2";
 export default {
   name: "CoopItem",
-  props: ["room", "tabState"],
+  props: ["room", "tabState", "isEnterCoop"],
   setup(props) {
     const store = useStore();
     const getters = computed(() => store.getters);
     const $ = jQuery;
-    function btnEnter(roomId) {
-      if (getters.value.getEnterCoop) {
+    function btnEnter(roomId, roomUserId) {
+      if (roomUserId == getters.value.getLoginUserId) {
+        router.push({
+          name: "CoopRoom",
+          params: { roomNo: roomId },
+        });
+      } else if (getters.value.getEnterCoop) {
         const Toast = Swal.mixin({
           toast: true,
           position: "bottom-end",
@@ -123,6 +139,7 @@ export default {
     }
     function openModal() {
       store.commit("SET_ROOM_ID", props.room.id);
+      store.commit("SET_ROOM_USER_ID", props.room.userId);
       $(".modal .modal-body .modal-title").html(props.room.title);
       $(".modal .modal-body .modal-people").html(
         props.room.nowMemNum + " / " + props.room.maxMemNum

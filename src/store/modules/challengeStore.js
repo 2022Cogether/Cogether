@@ -8,9 +8,10 @@ export const challengeStore = {
     isCoopRoomExpand: true,
     competeTotal: " - ",
     competeRank: " - ",
-    competePeople: 100,
+    competePeople: null,
     rooms: [],
     roomId: null,
+    roomUserId: null,
     timeStarted: false,
     competedInterval: false,
     enterCoop: false,
@@ -41,6 +42,9 @@ export const challengeStore = {
     getRoomId(state) {
       return state.roomId;
     },
+    getRoomUserId(state) {
+      return state.roomUserId;
+    },
     getTimeStarted(state) {
       return state.timeStarted;
     },
@@ -67,6 +71,9 @@ export const challengeStore = {
     },
     SET_ROOM_ID(state, roomId) {
       state.roomId = roomId;
+    },
+    SET_ROOM_USER_ID(state, roomUserId) {
+      state.roomUserId = roomUserId;
     },
     SET_COMPETE_RANK(state, a) {
       state.competeRank = a;

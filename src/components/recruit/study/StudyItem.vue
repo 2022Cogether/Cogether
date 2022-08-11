@@ -104,6 +104,11 @@ export default {
 
     function bookmarkCheck() {
       state.bookmark = !state.bookmark;
+      if (state.bookmark) {
+        store.dispatch("setStudyTeamScrap", props.studyTeam.studyId);
+      } else {
+        store.dispatch("deleteStudyTeamScrap", props.studyTeam.studyId);
+      }
     }
 
     async function deleteStudy() {
