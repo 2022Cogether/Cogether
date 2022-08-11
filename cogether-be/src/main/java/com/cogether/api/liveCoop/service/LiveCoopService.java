@@ -14,6 +14,7 @@ import com.cogether.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,20 +42,17 @@ public class LiveCoopService {
     }
 
     public LiveCoopResponse.GetLiveCoops getLiveCoops(int userId) {
-        // TODO : 협력모드 진행중인 유저는 협력방리스트 첫 번째가 해당 방이고 true
-        List<LiveCoop> liveCoops = liveCoopRepository.findAll();
+        List<LiveCoop> liveCoops = new ArrayList<>();
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        return LiveCoopResponse.GetLiveCoops.build(liveCoops);
-//        List<LiveCoop> liveCoops = new ArrayList<>();
-//        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-//        int cnt = liveCoopRepository.countAllByUser(user);
-//        boolean isEnterCoop = false;
-//        if (cnt != 0){
-//            isEnterCoop = true;
-//            liveCoops.add()
-//        }else liveCoops = liveCoopRepository.findAll();
-//        //findbyuser;
-//        return LiveCoopResponse.GetLiveCoops.build(liveCoops);
+        int cnt = liveCoopMemberRepository.countAllByUser(user);
+        boolean enterCoop = false;
+        if (cnt != 0){
+            enterCoop = true;
+            liveCoops.add(liveCoopRepository.findByUser(user));
+            liveCoops.addAll(liveCoopRepository.findAllByIdNotOrderByCreatedAtDesc(liveCoops.get(0).getId()));
+        }else liveCoops = liveCoopRepository.findAllByOrderByCreatedAtDesc();
+
+        return LiveCoopResponse.GetLiveCoops.build(liveCoops, enterCoop);
     }
 
     public LiveCoopResponse.OnlyLiveCoopId deleteLiveCoop(int id) {
