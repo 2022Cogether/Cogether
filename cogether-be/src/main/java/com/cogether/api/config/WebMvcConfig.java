@@ -31,18 +31,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns(INTERCEPTOR_WHITE_LIST);
     }
 
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("*"); // e.g. http://domain1.com
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
 
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
 
 
     @Override
@@ -54,8 +43,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //		Set max age to 1800 seconds (30 minutes).
         registry.addMapping("/**")
                 .allowedOrigins("*")
+                .allowedHeaders("*")
 //			.allowedOrigins("http://localhost:8080", "http://localhost:8081")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH")
+                .allowedMethods("*")
+                .allowCredentials(false)
+                .exposedHeaders("ACCESS_TOKEN","REFRESH_TOKEN")
 //			.allowedHeaders("*")
                 .maxAge(6000);
 
