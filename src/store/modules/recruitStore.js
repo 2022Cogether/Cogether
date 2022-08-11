@@ -96,7 +96,7 @@ export const recruitStore = {
       console.log(commit);
       await http
         .delete("project/" + projectId, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log("프로젝트팀삭제성공");
@@ -154,7 +154,7 @@ export const recruitStore = {
       console.log(commit);
       await http
         .post("hunting", param, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log("스터디개인작성성공");
@@ -168,7 +168,7 @@ export const recruitStore = {
       console.log(commit);
       await http
         .delete("hunting/" + huntingId, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log("스터디개인삭제성공");
@@ -185,8 +185,9 @@ export const recruitStore = {
         userId: getters.getLoginUserId,
       };
       http
+<<<<<<< src/store/modules/recruitStore.js
         .post("hunting/scrap", sendData, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log("프로젝트개인스크랩성공");
@@ -228,7 +229,7 @@ export const recruitStore = {
       console.log(commit);
       http
         .post("study", param, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log("스터디팀작성성공");
@@ -242,7 +243,7 @@ export const recruitStore = {
       console.log(commit);
       await http
         .delete("study/" + studyId, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log("스터디팀삭제성공");

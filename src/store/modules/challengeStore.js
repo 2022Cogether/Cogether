@@ -95,7 +95,7 @@ export const challengeStore = {
     getCompeteInfo({ commit, getters }, id) {
       http
         .get("/liveComp/" + id, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           commit("SET_COMPETE_RANK", data.ranking);
@@ -114,7 +114,7 @@ export const challengeStore = {
       };
       http
         .patch("/liveComp", userid, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log(commit);
@@ -136,7 +136,7 @@ export const challengeStore = {
       };
       await http
         .post("/livecoop", room, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log(commit);
@@ -149,7 +149,7 @@ export const challengeStore = {
     async deleteCoopRoom({ commit, getters }, id) {
       await http
         .delete("/livecoop/" + id, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log(commit);
@@ -162,7 +162,7 @@ export const challengeStore = {
     getCoopRooms({ commit, getters }, id) {
       http
         .get("/livecoop/list/" + id, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log("방리스트받기성공");
@@ -177,7 +177,7 @@ export const challengeStore = {
     getDetailCoopRooms({ commit, getters }, id) {
       http
         .get("livecoop/" + id, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           commit("SET_ROOMS", data);

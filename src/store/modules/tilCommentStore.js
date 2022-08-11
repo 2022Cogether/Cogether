@@ -1,4 +1,4 @@
-import axios from "axios";
+import http from "@/api/http";
 
 export const tilCommentStore = {
   state: {},
@@ -14,18 +14,18 @@ export const tilCommentStore = {
   },
   actions: {
     fetchComments({ commit, getters }, tilId) {
-      axios
+      http
         .get("til/comment/list/" + tilId, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then((res) => commit("SET_COMMENTS", res.data))
         .catch((err) => console.error(err.response));
     },
 
-    removeComments({ dispatch, commit, getters }, payload) {
-      axios
+    removeComments({ dispatch, getters }, payload) {
+      http
         .delete("til/delete/" + payload.commentId, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then((res) => {
           if (res.status === 200) {
@@ -36,23 +36,23 @@ export const tilCommentStore = {
         .catch((err) => {
           // alert("삭제 실패??");
           console.error(err.response.data);
-          commit("SET_AUTH_ERROR", err.response.data);
-          const errorMessage = [];
-          for (const errors in err.response.data) {
-            for (const error of err.response.data[errors]) {
-              if (!errorMessage.includes(error)) {
-                errorMessage.push(error);
-              }
-            }
-          }
+          // commit("SET_AUTH_ERROR", err.response.data);
+          // const errorMessage = [];
+          // for (const errors in err.response.data) {
+          //   for (const error of err.response.data[errors]) {
+          //     if (!errorMessage.includes(error)) {
+          //       errorMessage.push(error);
+          //     }
+          //   }
+          // }
           // alert(errorMessage.join("\r\n"));
         });
     },
 
     updateComment({ dispatch, getters }, payload) {
-      axios
+      http
         .put("til/comment", payload.comment, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(() => {
           dispatch("fetchComments", payload.tilId);

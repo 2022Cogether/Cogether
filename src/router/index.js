@@ -3,7 +3,7 @@ import HomeView from "../views/HomeView.vue";
 import MainView from "../views/MainView.vue";
 // import SignView from "../views/SignView.vue";
 import RankingView from "../views/RankingView.vue";
-import ProfileMain from "../components/profile/ProfileMain.vue";
+import ProfileView from "../views/ProfileView.vue";
 
 const routes = [
   {
@@ -27,12 +27,12 @@ const routes = [
         component: () => import("@/components/til/TilCreate.vue"),
       },
       // {
-      //   path: ":tilPK",
+      //   path: ":tilPk",
       //   name: "TilDetail",
       //   component: () => import("@/components/til/TilDetail.vue"),
       // },
       {
-        path: ":tilPK/edit",
+        path: ":tilPk/edit",
         name: "TilUpdate",
         component: () => import("@/components/til/TilUpdate.vue"),
       },
@@ -139,9 +139,21 @@ const routes = [
     component: RankingView,
   },
   {
-    path: "/profile/:userId",
-    name: "profile",
-    component: ProfileMain,
+    path: "/profile",
+    name: "profileView",
+    component: ProfileView,
+    children: [
+      {
+        path: ":userId",
+        name: "profile",
+        component: () => import("@/components/profile/ProfileMain.vue"),
+      },
+      {
+        path: ":userId/edit",
+        name: "profileEdit",
+        component: () => import("@/components/profile/ProfileEdit.vue"),
+      },
+    ],
   },
 ];
 
@@ -159,7 +171,7 @@ router.beforeEach((to, from, next) => {
     to.name != "SignIn" &&
     to.name != "SignUp" &&
     to.name != "PassWordSeek" &&
-    !store.getters.isLoggedIn
+    store.getters.isLoggedIn
   )
     next({ name: "SignIn" }); // 아직 TOKEN 없어서 ! 붙여놓았음
   else next();
