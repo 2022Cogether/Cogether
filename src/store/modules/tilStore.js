@@ -1,4 +1,4 @@
-import axios from "axios";
+import http from "@/api/http";
 import router from "@/router";
 
 export const tilStore = {
@@ -108,7 +108,7 @@ export const tilStore = {
 
     // 피드 상세 조회
     fetchTil({ commit, getters }, credentials) {
-      axios
+      http
         .get("til/", credentials, {
           headers: { Authorization: getters.authHeader },
         })
@@ -127,7 +127,7 @@ export const tilStore = {
     fetchTilList({ commit, getters }, payload) {
       // const tilNum = getters.getTilListLength;
       // 현재 가지고 있는 til 목록의 수를 받아 벡에서 그 다음 til 들을 로딩하려고 만든 변수인데..
-      axios
+      http
         .get("til/list/" + payload.userId, {
           headers: { Authorization: getters.authHeader },
         })
@@ -157,14 +157,14 @@ export const tilStore = {
     },
 
     createTil({ dispatch, getters, state }, payload) {
-      axios
+      http
         .post("til", payload, {
           headers: { Authorization: getters.authHeader },
         })
         .then((res) => {
           router.push({
             name: "TilDetail",
-            params: { tilPK: res.data.tilId },
+            params: { tilPk: res.data.tilId },
           });
 
           const credentials = {
@@ -178,7 +178,7 @@ export const tilStore = {
     },
 
     updateTil({ dispatch, getters, state }, payload) {
-      axios
+      http
         .put("til/" + payload.pk, payload, {
           headers: { Authorization: getters.authHeader },
         }) // payload: Til 데이터
@@ -193,9 +193,9 @@ export const tilStore = {
         .catch((err) => console.error(err.response));
     },
 
-    removeTil({ commit, getters }, tilPK) {
-      axios
-        .delete("til/delete/" + tilPK, {
+    removeTil({ commit, getters }, tilPk) {
+      http
+        .delete("til/delete/" + tilPk, {
           headers: { Authorization: getters.authHeader },
         })
         .then((res) => {
@@ -222,7 +222,7 @@ export const tilStore = {
     },
 
     likeTil({ commit, getters }, tilPk) {
-      axios
+      http
         .post("til/like/" + tilPk, {
           headers: { Authorization: getters.authHeader },
         })
@@ -231,7 +231,7 @@ export const tilStore = {
     },
 
     dislikeTil({ commit, getters }, tilPk) {
-      axios
+      http
         .delete("til/like/" + tilPk, {
           headers: { Authorization: getters.authHeader },
         })
@@ -242,7 +242,7 @@ export const tilStore = {
 
     searchTil({ commit, getters }, payload) {
       // paylod => keyword, userId
-      axios
+      http
         .get("til/search/", payload, {
           headers: { Authorization: getters.authHeader },
         })
@@ -251,7 +251,7 @@ export const tilStore = {
     },
 
     createComment({ commit, getters }, payload) {
-      axios
+      http
         .post("/til/commment/create", payload, {
           headers: { Authorization: getters.authHeader },
         })
