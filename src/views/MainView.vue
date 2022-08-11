@@ -1,32 +1,26 @@
 <template>
-  <div v-if="isLoggedIn">
-    <!-- 검색바 -->
-    <div class="search-bar-block">
-      <div class="search-bar">
-        <input
-          class="input-search"
-          type="text"
-          v-model="searchWord"
-          @keyup.enter.prevent="onSubmit"
+  <!-- 검색바 -->
+  <div class="search-bar-block">
+    <div class="search-bar">
+      <input
+        class="input-search"
+        type="text"
+        v-model="searchWord"
+        @keyup.enter.prevent="onSubmit"
+      />
+      <button @click="onSubmit" class="btn-search">
+        <font-awesome-icon
+          icon="fa-solid fa-magnifying-glass"
+          class="icon-search"
         />
-        <button @click="onSubmit" class="btn-search">
-          <font-awesome-icon
-            icon="fa-solid fa-magnifying-glass"
-            class="icon-search"
-          />
-        </button>
-      </div>
+      </button>
     </div>
-    <!-- TilMainList -->
-    <TilMainList />
   </div>
-  <div v-else>
-    <SignIn />
-  </div>
+  <!-- TilMainList -->
+  <TilMainList />
 </template>
 <script>
 import TilMainList from "@/components/til/TilMainList.vue";
-import SignIn from "@/components/sign/SignIn.vue";
 
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
@@ -35,15 +29,12 @@ export default {
   name: "MainView",
   components: {
     TilMainList,
-    SignIn,
   },
   setup() {
     const store = useStore();
     const getters = computed(() => store.getters);
 
     const searchWord = ref("");
-
-    const isLoggedIn = getters.value.isLoggedIn;
 
     const onSubmit = () => {
       const payload = {
@@ -56,7 +47,6 @@ export default {
 
     return {
       searchWord,
-      isLoggedIn,
       onSubmit,
     };
   },

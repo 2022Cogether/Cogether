@@ -13,9 +13,11 @@ export const tilCommentStore = {
     },
   },
   actions: {
-    fetchComments({ commit }, tilId) {
+    fetchComments({ commit, getters }, tilId) {
       axios
-        .get("til/comment/list/" + tilId)
+        .get("til/comment/list/" + tilId, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then((res) => commit("SET_COMMENTS", res.data))
         .catch((err) => console.error(err.response));
     },
@@ -23,7 +25,7 @@ export const tilCommentStore = {
     removeComments({ dispatch, commit, getters }, payload) {
       axios
         .delete("til/delete/" + payload.commentId, {
-          headers: getters.authHeader,
+          headers: { Authorization: getters.authHeader },
         })
         .then((res) => {
           if (res.status === 200) {
@@ -49,7 +51,9 @@ export const tilCommentStore = {
 
     updateComment({ dispatch, getters }, payload) {
       axios
-        .put("til/comment", payload.comment, { headers: getters.authHeader })
+        .put("til/comment", payload.comment, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(() => {
           dispatch("fetchComments", payload.tilId);
         })

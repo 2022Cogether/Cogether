@@ -85,9 +85,11 @@ export const challengeStore = {
     },
   },
   actions: {
-    getCompeteInfo({ commit }, id) {
+    getCompeteInfo({ commit, getters }, id) {
       http
-        .get("/liveComp/" + id)
+        .get("/liveComp/" + id, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           commit("SET_COMPETE_RANK", data.ranking);
           commit("SET_COMPETE_TIME", data.totalTime);
@@ -99,12 +101,14 @@ export const challengeStore = {
         });
     },
     //경쟁 시간 보내기 (구현 예정)
-    sendCompeteTime({ commit }, id) {
+    sendCompeteTime({ commit, getters }, id) {
       const userid = {
         userId: id,
       };
       http
-        .patch("/liveComp", userid)
+        .patch("/liveComp", userid, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           console.log(commit);
           console.log(data);
@@ -113,7 +117,7 @@ export const challengeStore = {
           console.log("에러: " + e);
         });
     },
-    //협력방만들기 (구현 예정)
+    //협력방만들기
     async createCoopRoom({ commit, getters }, param) {
       const room = {
         userId: getters.getLoginUserId,
@@ -124,7 +128,9 @@ export const challengeStore = {
         inProgress: false,
       };
       await http
-        .post("/livecoop", room)
+        .post("/livecoop", room, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           console.log(commit);
           console.log(data);
@@ -133,9 +139,11 @@ export const challengeStore = {
           console.log("에러: " + e);
         });
     },
-    async deleteCoopRoom({ commit }, id) {
+    async deleteCoopRoom({ commit, getters }, id) {
       await http
-        .delete("/livecoop/" + id)
+        .delete("/livecoop/" + id, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           console.log(commit);
           console.log(data);
@@ -144,9 +152,11 @@ export const challengeStore = {
           console.log("에러: " + e);
         });
     },
-    getCoopRooms({ commit }, id) {
+    getCoopRooms({ commit, getters }, id) {
       http
-        .get("/livecoop/list/" + id)
+        .get("/livecoop/list/" + id, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           console.log("방리스트받기성공");
           console.log(data);
@@ -157,9 +167,11 @@ export const challengeStore = {
           console.log("에러: " + e);
         });
     },
-    getDetailCoopRooms({ commit }, id) {
+    getDetailCoopRooms({ commit, getters }, id) {
       http
-        .get("livecoop/" + id)
+        .get("livecoop/" + id, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           commit("SET_ROOMS", data);
         })

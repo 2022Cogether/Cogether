@@ -62,7 +62,9 @@ export default {
       store.dispatch("searchTil", payload);
     };
 
-    const tilList = store.getters.getTilList;
+    const tilList = computed(() => {
+      return store.getters.getTilList;
+    });
 
     const modalNum = computed(() => {
       return getters.value.getOpenTil;
@@ -75,48 +77,48 @@ export default {
     function getTilList() {
       store.dispatch("fetchTilList", { userId: userId });
     }
-    const eraseTilList = () => {
-      store.dispatch("removeTilList");
-    };
+    // const eraseTilList = () => {
+    //   store.dispatch("removeTilList");
+    // };
 
     // 페이지가 Created 될 때 list 가져옴
     getTilList();
     // 페이지에서 나가기 직전 list를 지움
     onBeforeUnmount(() => {
-      eraseTilList();
+      // eraseTilList();
     });
 
-    // 참조: https://renatello.com/check-if-a-user-has-scrolled-to-the-bottom-in-vue-js/
-    // 스크롤 거의 하단에 오면 추가 리스트 받아고는 메소드
-    const scroll = () => {
-      window.onscroll = () => {
-        let bottomOfWindow =
-          Math.max(
-            window.pageYOffset,
-            document.documentElement.scrollTop,
-            document.body.scrollTop
-          ) +
-            window.innerHeight >
-          document.documentElement.offsetHeight;
+    // // 참조: https://renatello.com/check-if-a-user-has-scrolled-to-the-bottom-in-vue-js/
+    // // 스크롤 거의 하단에 오면 추가 리스트 받아고는 메소드
+    // const scroll = () => {
+    //   window.onscroll = () => {
+    //     let bottomOfWindow =
+    //       Math.max(
+    //         window.pageYOffset,
+    //         document.documentElement.scrollTop,
+    //         document.body.scrollTop
+    //       ) +
+    //         window.innerHeight >
+    //       document.documentElement.offsetHeight;
 
-        if (bottomOfWindow) {
-          if (window.location.href == "http://localhost:8080/#/") {
-            getTilList();
-          }
-        }
-      };
-    };
+    //     if (bottomOfWindow) {
+    //       if (window.location.href == "http://localhost:8080/#/") {
+    //         getTilList();
+    //       }
+    //     }
+    //   };
+    // };
 
-    onMounted(() => {
-      scroll();
-    });
+    // onMounted(() => {
+    //   scroll();
+    // });
 
     return {
       searchWord,
       isLoggedIn,
       onSubmit,
       getTilList,
-      eraseTilList,
+      // eraseTilList,
       scroll,
       modalNum,
       isOpen,

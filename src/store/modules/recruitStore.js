@@ -42,10 +42,12 @@ export const recruitStore = {
           console.log("에러: " + e);
         });
     },
-    async createProjectTeam({ commit }, param) {
+    async createProjectTeam({ commit, getters }, param) {
       console.log(commit);
       await http
-        .post("project", param)
+        .post("project", param, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           console.log("프로젝트팀작성성공");
           console.log(data);
@@ -54,10 +56,12 @@ export const recruitStore = {
           console.log("에러: " + e);
         });
     },
-    async deleteProjectTeam({ commit }, projectId) {
+    async deleteProjectTeam({ commit, getters }, projectId) {
       console.log(commit);
       await http
-        .delete("project/" + projectId)
+        .delete("project/" + projectId, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           console.log("프로젝트팀삭제성공");
           console.log(data);
@@ -90,10 +94,12 @@ export const recruitStore = {
           console.log("에러: " + e);
         });
     },
-    async createProjectPerson({ commit }, param) {
+    async createProjectPerson({ commit, getters }, param) {
       console.log(commit);
       await http
-        .post("hunting", param)
+        .post("hunting", param, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           console.log("스터디개인작성성공");
           console.log(data);
@@ -102,10 +108,12 @@ export const recruitStore = {
           console.log("에러: " + e);
         });
     },
-    async deleteProjectPerson({ commit }, huntingId) {
+    async deleteProjectPerson({ commit, getters }, huntingId) {
       console.log(commit);
       await http
-        .delete("hunting/" + huntingId)
+        .delete("hunting/" + huntingId, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           console.log("스터디개인삭제성공");
           console.log(data);
@@ -114,9 +122,11 @@ export const recruitStore = {
           console.log("에러: " + e);
         });
     },
-    setProjectPersonScrap({ commit }, userId) {
+    setProjectPersonScrap({ commit, getters }, userId) {
       http
-        .get("project/list/" + userId)
+        .get("project/list/" + userId, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           console.log("프로젝트팀리스트받기성공");
           console.log(data);
@@ -139,11 +149,13 @@ export const recruitStore = {
           console.log("에러: " + e);
         });
     },
-    createStudyTeam({ commit }, param) {
+    createStudyTeam({ commit, getters }, param) {
       console.log(param);
       console.log(commit);
       http
-        .post("study", param)
+        .post("study", param, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           console.log("스터디팀작성성공");
           console.log(data);
@@ -152,10 +164,12 @@ export const recruitStore = {
           console.log("에러: " + e);
         });
     },
-    async deleteStudyTeam({ commit }, studyId) {
+    async deleteStudyTeam({ commit, getters }, studyId) {
       console.log(commit);
       await http
-        .delete("study/" + studyId)
+        .delete("study/" + studyId, {
+          headers: { Authorization: getters.authHeader },
+        })
         .then(({ data }) => {
           console.log("스터디팀삭제성공");
           console.log(data);
