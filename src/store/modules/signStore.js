@@ -132,7 +132,7 @@ export const signStore = {
     fetchCurrentUser({ commit, getters }, userId) {
       if (getters.isLoggedIn) {
         http
-          .get("sign/user" + userId, {
+          .get("sign/user/" + userId, {
             headers: getters.authHeader,
           })
           .then((res) => commit("SET_CURRENT_USER", res.data))
@@ -150,7 +150,7 @@ export const signStore = {
     fetchAnothertUser({ commit, getters }, userId) {
       if (getters.isLoggedIn) {
         http
-          .get("sign/user" + userId, {
+          .get("sign/user/" + userId, {
             headers: getters.authHeader,
           })
           .then((res) => commit("SET_ANOTHER_USER", res.data))
