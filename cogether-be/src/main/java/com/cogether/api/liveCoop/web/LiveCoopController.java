@@ -35,6 +35,13 @@ public class LiveCoopController {
         return ResponseEntity.ok().body(response);
     }
 
+    @PatchMapping("/livecoop")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<LiveCoopResponse.OnlyLiveCoopId> startLiveCoop(@RequestBody LiveCoopRequest.StartLiveCoop request) {
+        LiveCoopResponse.OnlyLiveCoopId response = liveCoopService.startLiveCoop(request);
+        return ResponseEntity.ok().body(response);
+    }
+
     @DeleteMapping("/livecoop/{liveCoopId}")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<LiveCoopResponse.OnlyLiveCoopId> deleteLiveCoop(@PathVariable int liveCoopId) {
