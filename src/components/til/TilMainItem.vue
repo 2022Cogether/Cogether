@@ -32,7 +32,7 @@
             class="dropdown-item"
             :to="{
               name: 'TilUpdate',
-              params: { tilPK: til.pk },
+              params: { tilPk: til.pk },
             }"
             >내용 수정</router-link
           >
@@ -250,7 +250,7 @@ export default {
 
     const onSubmit = () => {
       const payload = {
-        tilPK: props.til.pk,
+        tilPk: props.til.pk,
         content: commentContent,
       };
       store.dispatch("createComment", payload);

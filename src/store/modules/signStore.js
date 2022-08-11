@@ -6,18 +6,6 @@ export const signStore = {
     // http에서 성공/실패 여부가 component 로컬 변수에 영향을 줄 때 쓸 변수
     booleanValue: false,
 
-    // store에 저장되는 스킬 셋 목록, 서버를 통해 생성/업데이트 될 예정
-    skillSet: [
-      "c",
-      "cplusplus",
-      "python",
-      "java",
-      "javascript",
-      "spring",
-      "react",
-      "r",
-    ],
-
     // frontend에서 이메일, 비번, 닉네임의 유효성을 검사할 정규표현식
     emailPattern:
       /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/,
@@ -36,9 +24,6 @@ export const signStore = {
     anotherUser: {},
   },
   getters: {
-    getSkills(state) {
-      return state.skills;
-    },
     getBooleanValue(state) {
       const temp = state.booleanValue;
       if (state.booleanValue) {
@@ -59,9 +44,6 @@ export const signStore = {
     getNickPattern(state) {
       return state.nickPattern;
     },
-    getSkillSet(state) {
-      return state.skillSet;
-    },
     getLoginUserId(state) {
       return state.loginUserId;
     },
@@ -70,7 +52,7 @@ export const signStore = {
     },
     // 인증키로 헤더 세팅 (장고 때 만든 거라 spring에서 다를 수 있음)
     authHeader(state) {
-      return { Authorization: `token ${state.token}` };
+      return { ACCESS_TOKEN: `token ${state.token}` };
     },
     getCurrentUser(state) {
       return state.currentUser;
@@ -82,12 +64,6 @@ export const signStore = {
   mutations: {
     SET_BOOLEANVALUE: (state) => {
       state.booleanValue = true;
-    },
-
-    SET_SKILLSET: (state, skills) => {
-      for (const skill in skills) {
-        state.skillSet.push(skill);
-      }
     },
 
     SET_TOKEN: (state, token) => (state.token = token),
@@ -157,7 +133,7 @@ export const signStore = {
       if (getters.isLoggedIn) {
         http
           .get("sign/user" + userId, {
-            headers: { Authorization: getters.authHeader },
+            headers: getters.authHeader,
           })
           .then((res) => commit("SET_CURRENT_USER", res.data))
           .catch((err) => {
@@ -175,7 +151,7 @@ export const signStore = {
       if (getters.isLoggedIn) {
         http
           .get("sign/user" + userId, {
-            headers: { Authorization: getters.authHeader },
+            headers: getters.authHeader,
           })
           .then((res) => commit("SET_ANOTHER_USER", res.data))
           .catch((err) => {
@@ -196,7 +172,7 @@ export const signStore = {
           "sign/password",
           { email: email },
           {
-            headers: { Authorization: getters.authHeader },
+            headers: getters.authHeader,
           }
         )
         .then((res) => {
@@ -231,31 +207,11 @@ export const signStore = {
         });
     },
 
-    // 서버에서 Skill Set을 받고 store의 스킬 셋을 업데이트함
-    takeSkillSet({ commit, getters }) {
-      http
-        .get("sign/skill/", {
-          headers: { Authorization: getters.authHeader },
-        }) // api 필요 없음 AWS에서 사용!
-        .then((res) => {
-          if (res.data.status === 200) {
-            alert("스킬 셋을 성공적으로 받았습니다!");
-            commit("SET_SKILLSET", res.data);
-          } else {
-            alert("200이 아닌 다른 값이 반환되었습니다");
-          }
-        })
-        .catch((err) => {
-          alert("스킬셋 에러입니다.");
-          console.error(err.response.data);
-        });
-    },
-
     // 닉네임 중복 체크
     async checkNickName({ commit, getters }, nickName) {
       await http
         .get("verify/nickname/" + nickName, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           if (!data) {
@@ -275,7 +231,7 @@ export const signStore = {
       console.log("이메일 체크");
       await http
         .get("verify/email/" + email, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           if (!data) {
@@ -301,7 +257,7 @@ export const signStore = {
             newPassword: pwSet.newPassword,
           },
           {
-            headers: { Authorization: getters.authHeader },
+            headers: getters.authHeader,
           }
         )
         .then((res) => {
@@ -321,7 +277,7 @@ export const signStore = {
     logout({ commit, getters }, userId) {
       http
         .get("sign/signout/" + userId, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(() => {
           localStorage.removeItem("access_TOKEN");
@@ -346,7 +302,7 @@ export const signStore = {
           "sign/resign/",
           { password: password },
           {
-            headers: { Authorization: getters.authHeader },
+            headers: getters.authHeader,
           }
         )
         .then((res) => {
@@ -370,12 +326,29 @@ export const signStore = {
         });
     },
 
+    // Profile 업데이트
+    updateProfile({ dispatch, getters, state }, payload) {
+      http
+        .put("user/info/", payload, {
+          headers: getters.authHeader,
+        })
+        .then(() => {
+          dispatch("fetchCurrentUser", state.currentUser.id);
+        })
+        .catch((err) => {
+          alert("회원 정보 수정 에러입니다.");
+          console.error(err.response.data);
+        });
+    },
+
     // accessToken 재요청
     refreshToken({ commit }) {
       //accessToken 만료로 재발급 후 재요청시 비동기처리로는 제대로 처리가 안되서 promise로 처리함
       return new Promise((resolve, reject) => {
         http
-          .post("/v1/auth/certify") // URL 필요!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          .post("sign/token", null, {
+            headers: { Authorization: localStorage.getItem("REFRESH_TOKEN") },
+          })
           .then((res) => {
             commit("saveAccess", res.data.access_TOKEN);
             resolve(res.data.access_TOKEN);
