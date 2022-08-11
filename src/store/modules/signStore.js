@@ -66,7 +66,9 @@ export const signStore = {
     getLoginUserId(state) {
       return state.loginUserId;
     },
-
+    getToken(state) {
+      return state.token;
+    },
     // 인증키로 헤더 세팅 (장고 때 만든 거라 spring에서 다를 수 있음)
     authHeader(state) {
       return { Authorization: `token ${state.token}` };
@@ -111,7 +113,7 @@ export const signStore = {
         .post("sign/signin/", credentials)
         .then(({ data }) => {
           console.log(commit);
-          const token = data.key;
+          const token = data.access_TOKEN; //리프레쉬 토큰은?? jwt관련 미완성임
           const userId = data.userId;
           dispatch("saveToken", token); // 토큰 갱신
           dispatch("saveUserId", userId);
@@ -130,7 +132,7 @@ export const signStore = {
         .post("sign/signup/", credentials)
         .then((res) => {
           console.log(commit);
-          const token = res.data.key;
+          const token = res.data.access_TOKEN; //리프레쉬 토큰은?? jwt관련 미완성임
           dispatch("saveToken", token);
           dispatch("saveUserId", res.data.userId);
           dispatch("fetchCurrentUser", res.data.userId);
@@ -144,8 +146,8 @@ export const signStore = {
 
     fetchCurrentUser({ commit, getters }, userId) {
       if (getters.isLoggedIn) {
-        axios
-          .get("sign/user" + userId)
+        http
+          .get("user/" + userId)
           .then((res) => commit("SET_CURRENT_USER", res.data))
           .catch((err) => {
             alert("현 사용자 정보 저장 중 에러 발생");
@@ -160,8 +162,8 @@ export const signStore = {
 
     fetchAnothertUser({ commit, getters }, userId) {
       if (getters.isLoggedIn) {
-        axios
-          .get("sign/user" + userId)
+        http
+          .get("user/" + userId)
           .then((res) => commit("SET_ANOTHER_USER", res.data))
           .catch((err) => {
             alert("현 사용자 정보 저장 중 에러 발생");

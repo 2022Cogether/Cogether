@@ -87,7 +87,7 @@ export const challengeStore = {
   actions: {
     getCompeteInfo({ commit }, id) {
       http
-        .get("/livecomp/" + id)
+        .get("/liveComp/" + id)
         .then(({ data }) => {
           commit("SET_COMPETE_RANK", data.ranking);
           commit("SET_COMPETE_TIME", data.totalTime);
@@ -104,7 +104,7 @@ export const challengeStore = {
         userId: id,
       };
       http
-        .patch("/livecomp", userid)
+        .patch("/liveComp", userid)
         .then(({ data }) => {
           console.log(commit);
           console.log(data);
@@ -114,16 +114,16 @@ export const challengeStore = {
         });
     },
     //협력방만들기 (구현 예정)
-    createCoopRoom({ commit }, param) {
+    async createCoopRoom({ commit, getters }, param) {
       const room = {
-        userId: 3,
+        userId: getters.getLoginUserId,
         maxMemNum: param.personnel,
         duration: parseInt(param.hour) * 60 + parseInt(param.min),
         title: param.title,
         content: param.content,
         inProgress: false,
       };
-      http
+      await http
         .post("/livecoop", room)
         .then(({ data }) => {
           console.log(commit);

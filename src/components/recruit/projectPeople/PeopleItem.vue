@@ -1,8 +1,10 @@
 <template>
   <li class="list-group-item d-flex">
+    <!-- 프로필사진 -->
     <div class="profile-img-box">
       <img class="profile-img" src="@/assets/logo.png" alt="profile image" />
     </div>
+    <!-- 이름과 제목 -->
     <div
       class="user-info flex-fill"
       data-bs-toggle="modal"
@@ -11,15 +13,45 @@
       <h3>{{ projectPerson.userNickname }}</h3>
       <p>{{ projectPerson.title }}</p>
     </div>
-    <div class="d-flex align-self-end">
-      <div class="tech-icon-box">
+
+    <!-- 기술스택아이콘 -->
+    <div class="tech-icon-container">
+      <div
+        class="tech-icon-box"
+        v-for="(skillstack, i) in projectPerson.userSkillList"
+        :key="i"
+      >
         <img
           class="tech-icon"
-          src="@/assets/devicon/javascript-original.svg"
-          alt="TechStack Icons"
+          :src="
+            `https://cogethera801.s3.ap-northeast-2.amazonaws.com/devicon/` +
+            skillstack.skillName +
+            `-original.svg`
+          "
+          alt="img"
         />
       </div>
     </div>
+    <!-- 삭제 드롭다운 -->
+    <div v-if="projectPerson.userId == getters.getLoginUserId" class="dropdown">
+      <button
+        class="btn-dropdown"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        <font-awesome-icon
+          class="dropdown-icon"
+          icon="fa-solid fa-ellipsis-vertical"
+        />
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <button class="dropdown-item" @click="deletePerson">삭제</button>
+        </li>
+      </ul>
+    </div>
+    <!-- 스크랩 -->
     <div v-if="state.bookmark" class="bookmark-icon-box">
       <font-awesome-icon
         @click="bookmarkCheck"
@@ -35,17 +67,23 @@
       />
     </div>
   </li>
+
   <!-- 모달 -->
   <people-modal />
 </template>
 
 <script>
 import PeopleModal from "@/components/recruit/projectPeople/PeopleModal.vue";
-import { reactive } from "vue";
+import { reactive, computed } from "vue";
+import { useStore } from "vuex";
+import Swal from "sweetalert2";
+import router from "@/router";
 export default {
   name: "PeopleItem",
   props: ["projectPerson"],
   setup(props) {
+    const store = useStore();
+    const getters = computed(() => store.getters);
     const state = reactive({
       bookmark: props.projectPerson.scrap,
     });
@@ -54,7 +92,39 @@ export default {
       state.bookmark = !state.bookmark;
     }
 
-    return { bookmarkCheck, state };
+    async function deletePerson() {
+      await Swal.fire({
+        title: "정말 삭제하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "확인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          //취소하고 이동할 페이지
+          store.dispatch("deleteProjectPerson", props.projectPerson.huntingId);
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "bottom-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener("mouseenter", Swal.stopTimer);
+              toast.addEventListener("mouseleave", Swal.resumeTimer);
+            },
+          });
+          Toast.fire({
+            icon: "success",
+            title: "글이 삭제되었습니다.",
+          });
+          router.push({ name: "RecruitMain" });
+        }
+      });
+    }
+    return { bookmarkCheck, state, getters, deletePerson };
   },
   components: {
     PeopleModal,
@@ -63,6 +133,45 @@ export default {
 </script>
 
 <style scoped>
+/* 북마크 */
+.bookmark-icon:hover {
+  cursor: pointer;
+}
+.bookmark-icon-solid {
+  font-size: 25px;
+  padding: 0 10px;
+  color: #e63946;
+}
+/* 기술스택 */
+.tech-icon-container {
+  position: absolute;
+  right: 40px;
+  bottom: 0px;
+}
+
+.tech-icon-box {
+  display: inline-block;
+  text-align: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: #d8f3dc;
+  margin-left: 5px;
+  margin-bottom: 7px;
+}
+
+.tech-icon {
+  width: 15px;
+  height: 15px;
+  margin-bottom: 5px;
+}
+/* 드롭다운 */
+.btn-dropdown {
+  background-color: transparent;
+  border: 0px;
+  margin-right: 0px;
+}
+
 /* Profile Image */
 .profile-img-box {
   width: 50px;
@@ -79,7 +188,7 @@ export default {
   object-fit: cover;
 }
 
-/* User Information */
+/* 유저정보 */
 .user-info {
   margin-top: 10px;
 }
@@ -95,99 +204,12 @@ p {
   margin: 0;
 }
 
-/* Tech Stack */
-.tech-icon-box {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background-color: #d8f3dc;
-  margin-bottom: 7px;
-}
-
-.tech-icon {
-  display: block;
-  width: 13px;
-  height: 13px;
-  margin: 5px auto;
-}
-
 .bookmark-icon {
   font-size: 25px;
   padding: 0 10px;
 }
 
-.bookmark-icon-solid {
-  font-size: 25px;
-  padding: 0 10px;
-  color: #e63946;
-}
-
 li {
   padding: 0;
-}
-
-/* Modal */
-.modal-content {
-  background-color: #eff7f6;
-}
-
-.dropdown > button {
-  margin-right: 10px;
-}
-
-.image-box {
-  width: 75px;
-  height: 75px;
-  border-radius: 70%;
-  overflow: hidden;
-  margin-right: 25px;
-  border: 3px solid gold;
-}
-
-.image-box > img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  margin: 5px auto;
-}
-
-.profile-detail-box {
-  margin-left: 80px;
-}
-
-.profile-detail-info > h5 {
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.tech-icon-container {
-  margin-top: 5px;
-}
-
-.user-introduction {
-  background-color: #2a9d8f;
-  border: 1px solid white;
-  border-radius: 10px;
-  width: 300px;
-  margin: 20px auto 10px;
-  padding: 10px;
-}
-
-.modal-header {
-  border: 0;
-}
-
-.modal-footer > .btn {
-  background-color: #2a9d8f;
-  color: #fff;
-}
-
-.list-group-item {
-  border-left: 0px;
-  border-right: 0px;
-}
-
-.list-group-item:hover {
-  background-color: #c1ebe6;
 }
 </style>

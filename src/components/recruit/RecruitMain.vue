@@ -88,7 +88,6 @@ export default {
       tempText: null,
       searchText: null,
     });
-
     function btnTab1() {
       state.tabState = "project";
     }

@@ -71,7 +71,7 @@ export default {
 
 <style scoped>
 .list-group {
-  max-height: 500px;
+  max-height: 650px;
   overflow: auto;
 }
 
