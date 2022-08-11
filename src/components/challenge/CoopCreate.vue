@@ -97,7 +97,7 @@ export default {
         }
       });
     }
-    function createCoop() {
+    async function createCoop() {
       if (
         !state.content ||
         !state.hour ||
@@ -108,7 +108,7 @@ export default {
         return;
       }
       //actions axios 보내기
-      store.dispatch("createCoopRoom", state);
+      await store.dispatch("createCoopRoom", state);
       //sweetalert
       const Toast = Swal.mixin({
         toast: true,

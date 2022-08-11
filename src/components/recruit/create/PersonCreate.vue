@@ -23,13 +23,15 @@
 <script>
 import Swal from "sweetalert2";
 import router from "@/router";
-import { reactive } from "vue";
+import { reactive, computed } from "vue";
 import { useStore } from "vuex";
 export default {
   name: "RecruitCreate",
   setup() {
     const store = useStore();
+    const getters = computed(() => store.getters);
     const state = reactive({
+      userId: getters.value.getLoginUserId,
       title: null,
       content: null,
     });
@@ -50,12 +52,12 @@ export default {
         }
       });
     }
-    function createRecruitPerson() {
+    async function createRecruitPerson() {
       if (!state.title || !state.content) {
         return;
       }
 
-      store.dispatch("createProjectPerson", state);
+      await store.dispatch("createProjectPerson", state);
       //sweetalert
       const Toast = Swal.mixin({
         toast: true,
