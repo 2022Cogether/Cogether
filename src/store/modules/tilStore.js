@@ -110,7 +110,7 @@ export const tilStore = {
     fetchTil({ commit, getters }, credentials) {
       http
         .get("til/", credentials, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then((res) => {
           if (res.status === 200) {
@@ -129,7 +129,7 @@ export const tilStore = {
       // 현재 가지고 있는 til 목록의 수를 받아 벡에서 그 다음 til 들을 로딩하려고 만든 변수인데..
       http
         .get("til/list/" + payload.userId, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then((res) => {
           if (res.status === 200) {
@@ -159,7 +159,7 @@ export const tilStore = {
     createTil({ dispatch, getters, state }, payload) {
       http
         .post("til", payload, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then((res) => {
           router.push({
@@ -180,7 +180,7 @@ export const tilStore = {
     updateTil({ dispatch, getters, state }, payload) {
       http
         .put("til/" + payload.pk, payload, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         }) // payload: Til 데이터
         .then((res) => {
           const credentials = {
@@ -196,7 +196,7 @@ export const tilStore = {
     removeTil({ commit, getters }, tilPk) {
       http
         .delete("til/delete/" + tilPk, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then((res) => {
           if (res.status === 200) {
@@ -224,7 +224,7 @@ export const tilStore = {
     likeTil({ commit, getters }, tilPk) {
       http
         .post("til/like/" + tilPk, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then((res) => commit("SET_TIL", res.data))
         .catch((err) => console.error(err.response));
@@ -233,7 +233,7 @@ export const tilStore = {
     dislikeTil({ commit, getters }, tilPk) {
       http
         .delete("til/like/" + tilPk, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then((res) => commit("SET_TIL", res.data))
         // TIL state 모델이 확정나면, 거기서 is_like에 해당할 속성을 직접 바꿀 예정
@@ -244,7 +244,7 @@ export const tilStore = {
       // paylod => keyword, userId
       http
         .get("til/search/", payload, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then((res) => commit("ADD_TIL_LIST", res.data))
         .catch((err) => console.error(err.response));
@@ -253,7 +253,7 @@ export const tilStore = {
     createComment({ commit, getters }, payload) {
       http
         .post("/til/commment/create", payload, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then((res) => {
           commit("CLEAN_TIL_LIST");

@@ -46,7 +46,7 @@ export const recruitStore = {
       console.log(commit);
       await http
         .post("project", param, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log("프로젝트팀작성성공");
@@ -60,7 +60,7 @@ export const recruitStore = {
       console.log(commit);
       await http
         .delete("project/" + projectId, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log("프로젝트팀삭제성공");
@@ -98,7 +98,7 @@ export const recruitStore = {
       console.log(commit);
       await http
         .post("hunting", param, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log("스터디개인작성성공");
@@ -112,7 +112,7 @@ export const recruitStore = {
       console.log(commit);
       await http
         .delete("hunting/" + huntingId, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log("스터디개인삭제성공");
@@ -125,7 +125,7 @@ export const recruitStore = {
     setProjectPersonScrap({ commit, getters }, userId) {
       http
         .get("project/list/" + userId, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log("프로젝트팀리스트받기성공");
@@ -154,7 +154,7 @@ export const recruitStore = {
       console.log(commit);
       http
         .post("study", param, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log("스터디팀작성성공");
@@ -168,7 +168,7 @@ export const recruitStore = {
       console.log(commit);
       await http
         .delete("study/" + studyId, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log("스터디팀삭제성공");

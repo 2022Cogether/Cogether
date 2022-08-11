@@ -16,7 +16,7 @@ export const tilCommentStore = {
     fetchComments({ commit, getters }, tilId) {
       http
         .get("til/comment/list/" + tilId, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then((res) => commit("SET_COMMENTS", res.data))
         .catch((err) => console.error(err.response));
@@ -25,7 +25,7 @@ export const tilCommentStore = {
     removeComments({ dispatch, getters }, payload) {
       http
         .delete("til/delete/" + payload.commentId, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then((res) => {
           if (res.status === 200) {
@@ -52,7 +52,7 @@ export const tilCommentStore = {
     updateComment({ dispatch, getters }, payload) {
       http
         .put("til/comment", payload.comment, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(() => {
           dispatch("fetchComments", payload.tilId);

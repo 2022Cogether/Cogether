@@ -52,7 +52,7 @@ export const signStore = {
     },
     // 인증키로 헤더 세팅 (장고 때 만든 거라 spring에서 다를 수 있음)
     authHeader(state) {
-      return { Authorization: `token ${state.token}` };
+      return { ACCESS_TOKEN: `token ${state.token}` };
     },
     getCurrentUser(state) {
       return state.currentUser;
@@ -133,7 +133,7 @@ export const signStore = {
       if (getters.isLoggedIn) {
         http
           .get("sign/user" + userId, {
-            headers: { Authorization: getters.authHeader },
+            headers: getters.authHeader,
           })
           .then((res) => commit("SET_CURRENT_USER", res.data))
           .catch((err) => {
@@ -151,7 +151,7 @@ export const signStore = {
       if (getters.isLoggedIn) {
         http
           .get("sign/user" + userId, {
-            headers: { Authorization: getters.authHeader },
+            headers: getters.authHeader,
           })
           .then((res) => commit("SET_ANOTHER_USER", res.data))
           .catch((err) => {
@@ -172,7 +172,7 @@ export const signStore = {
           "sign/password",
           { email: email },
           {
-            headers: { Authorization: getters.authHeader },
+            headers: getters.authHeader,
           }
         )
         .then((res) => {
@@ -211,7 +211,7 @@ export const signStore = {
     async checkNickName({ commit, getters }, nickName) {
       await http
         .get("verify/nickname/" + nickName, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           if (!data) {
@@ -231,7 +231,7 @@ export const signStore = {
       console.log("이메일 체크");
       await http
         .get("verify/email/" + email, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           if (!data) {
@@ -257,7 +257,7 @@ export const signStore = {
             newPassword: pwSet.newPassword,
           },
           {
-            headers: { Authorization: getters.authHeader },
+            headers: getters.authHeader,
           }
         )
         .then((res) => {
@@ -277,7 +277,7 @@ export const signStore = {
     logout({ commit, getters }, userId) {
       http
         .get("sign/signout/" + userId, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(() => {
           localStorage.removeItem("access_TOKEN");
@@ -302,7 +302,7 @@ export const signStore = {
           "sign/resign/",
           { password: password },
           {
-            headers: { Authorization: getters.authHeader },
+            headers: getters.authHeader,
           }
         )
         .then((res) => {
@@ -347,7 +347,7 @@ export const signStore = {
       return new Promise((resolve, reject) => {
         http
           .post("sign/token", null, {
-            headers: { Authorization: localStorage.getItem("refresh_TOKEN") },
+            headers: { Authorization: localStorage.getItem("REFRESH_TOKEN") },
           })
           .then((res) => {
             commit("saveAccess", res.data.access_TOKEN);

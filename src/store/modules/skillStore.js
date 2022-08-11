@@ -38,7 +38,7 @@ export const skillStore = {
     takeUserSkillSet({ commit, getters }, userId) {
       http
         .get("sign/skills/" + userId, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then((res) => {
           if (res.data.status === 200) {
@@ -57,7 +57,7 @@ export const skillStore = {
     // takeSkillSet({ commit, getters }) {
     //   http
     //     .get("sign/skill/", {
-    //       headers: { Authorization: getters.authHeader },
+    //       headers: getters.authHeader,
     //     }) // api 필요 없음 AWS에서 사용!
     //     .then((res) => {
     //       if (res.data.status === 200) {
