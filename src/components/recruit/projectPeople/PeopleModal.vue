@@ -9,7 +9,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header justify-content-space-evenly">
-          <div v-if="bookmark" class="bookmark-icon-box">
+          <div v-if="projectPerson.scrap" class="bookmark-icon-box">
             <font-awesome-icon
               @click="bookmarkCheck"
               icon="fa-solid fa-bookmark"
@@ -52,8 +52,10 @@
               <img src="@/assets/logo.png" alt="profile image" />
             </div>
             <div class="profile-detail-info">
-              <h5 class="modal-title" id="personDetailInfoLabel">꼬꼬</h5>
-              <p>나 좀 데려가...</p>
+              <h5 class="modal-title" id="personDetailInfoLabel">
+                {{ projectPerson.userNickname }}
+              </h5>
+              <p>{{ projectPerson.title }}</p>
               <div class="tech-icon-container d-flex">
                 <div class="tech-icon-box">
                   <img
@@ -67,7 +69,7 @@
           </div>
           <div class="user-introduction">
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do e
+              {{ projectPerson.content }}
             </p>
           </div>
         </div>
@@ -87,7 +89,9 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props: ["projectPerson"],
+};
 </script>
 
 <style scoped>

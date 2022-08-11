@@ -67,13 +67,9 @@
       />
     </div>
   </li>
-
-  <!-- 모달 -->
-  <people-modal />
 </template>
 
 <script>
-import PeopleModal from "@/components/recruit/projectPeople/PeopleModal.vue";
 import { reactive, computed } from "vue";
 import { useStore } from "vuex";
 import Swal from "sweetalert2";
@@ -90,6 +86,14 @@ export default {
 
     function bookmarkCheck() {
       state.bookmark = !state.bookmark;
+      if (state.bookmark) {
+        store.dispatch("setProjectPersonScrap", props.projectPerson.huntingId);
+      } else {
+        store.dispatch(
+          "deleteProjectPersonScrap",
+          props.projectPerson.huntingId
+        );
+      }
     }
 
     async function deletePerson() {
@@ -126,9 +130,7 @@ export default {
     }
     return { bookmarkCheck, state, getters, deletePerson };
   },
-  components: {
-    PeopleModal,
-  },
+  components: {},
 };
 </script>
 
