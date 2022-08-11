@@ -56,6 +56,17 @@ public class HuntingService {
         return HuntingResponse.GetHuntings.build(huntingList);
     }
 
+    public HuntingResponse.GetHuntings getMyHuntingList(int userId) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        List<Hunting> hunting = huntingRepository.findAllByUserOrderByIdDesc(user);
+        List<HuntingResponse.GetHunting> huntingList = new ArrayList<>();
+        int len = hunting.size();
+        for (int idx = 0; idx < len; idx++)
+            huntingList.add(getHunting(userId, hunting.get(idx).getId()));
+
+        return HuntingResponse.GetHuntings.build(huntingList);
+    }
+
     public HuntingResponse.OnlyHuntingId delete(int id) {
         Hunting hunting = huntingRepository.findById(id).orElseThrow(HuntingNotFoundException::new);
         List<HuntingScrap> huntingScrapList = huntingScrapRepository.findAllByHunting(hunting);
