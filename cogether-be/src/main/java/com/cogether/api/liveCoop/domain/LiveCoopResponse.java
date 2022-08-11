@@ -62,9 +62,9 @@ public class LiveCoopResponse {
         private boolean enterCoop;
 
         // TODO : , boolean isEnterCoop 수정 필요
-        public static LiveCoopResponse.GetLiveCoops build(List<LiveCoop> liveCoops) {
+        public static LiveCoopResponse.GetLiveCoops build(List<LiveCoop> liveCoops, boolean enterCoop) {
             return LiveCoopResponse.GetLiveCoops.builder()
-                    .enterCoop(false)
+                    .enterCoop(enterCoop)
                     .liveCoops(liveCoops.stream().map(LiveCoopResponse.GetLiveCoop::build).collect(Collectors.toList()))
                     .build();
         }
