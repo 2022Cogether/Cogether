@@ -2,6 +2,7 @@ package com.cogether.api.liveComp.service;
 
 import com.cogether.api.liveComp.domain.LiveCompRequest;
 import com.cogether.api.liveComp.domain.LiveCompResponse;
+import com.cogether.api.liveComp.exception.RankingNotFoundException;
 import com.cogether.api.liveComp.repository.LiveCompRepository;
 import com.cogether.api.liveComp.domain.LiveComp;
 import com.cogether.api.rank.domain.Ranking;
@@ -27,14 +28,15 @@ public class LiveCompService {
     private final RankingRepository rankingRepository;
 
     // TODO: 시간 수정
-    private  final LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.of(0, 0, 0));//어제
+    private  final LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));//오늘
     private  final LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
 
     public LiveCompResponse.OnlyId update(LiveCompRequest.Update request) {
         LiveComp liveComp = findLiveComp(request.getUserId());
         liveComp.setTotalTime(liveComp.getTotalTime() + 1);
         LiveComp savedLiveComp = liveCompRepository.save(liveComp);
-        Ranking ranking = rankingRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
+        //TODO : findByUserId로 수정 필요할 것 같아요~ :) 우리 기존 유저들 랭킹 테이블에 추가해줘야겠다~
+        Ranking ranking = rankingRepository.findById(request.getUserId()).orElseThrow(RankingNotFoundException::new);
         ranking.setWeek(ranking.getWeek() + 1);
         ranking.setMonth(ranking.getMonth() + 1);
         ranking.setTotal(ranking.getTotal() + 1);

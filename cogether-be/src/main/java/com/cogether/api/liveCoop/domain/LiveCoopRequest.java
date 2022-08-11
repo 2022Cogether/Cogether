@@ -3,7 +3,7 @@ package com.cogether.api.liveCoop.domain;
 import com.cogether.api.user.domain.User;
 import lombok.*;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 public class LiveCoopRequest {
     @Getter
@@ -27,6 +27,7 @@ public class LiveCoopRequest {
                     .title(title)
                     .content(content)
                     .inProgress(inProgress)
+                    .createdAt(LocalDateTime.now())
                     .build();
         }
     }
