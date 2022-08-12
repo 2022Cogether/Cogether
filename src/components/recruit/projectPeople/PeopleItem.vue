@@ -9,6 +9,7 @@
       class="user-info flex-fill"
       data-bs-toggle="modal"
       data-bs-target="#personDetailInfo"
+      @click="setModal"
     >
       <h3>{{ projectPerson.userNickname }}</h3>
       <p>{{ projectPerson.title }}</p>
@@ -77,7 +78,10 @@ import router from "@/router";
 export default {
   name: "PeopleItem",
   props: ["projectPerson"],
-  setup(props) {
+  setup(props, { emit }) {
+    function setModal() {
+      emit("setModal", props.projectPerson);
+    }
     const store = useStore();
     const getters = computed(() => store.getters);
     const state = reactive({
@@ -128,7 +132,8 @@ export default {
         }
       });
     }
-    return { bookmarkCheck, state, getters, deletePerson };
+
+    return { bookmarkCheck, state, getters, deletePerson, setModal };
   },
   components: {},
 };
@@ -192,7 +197,7 @@ export default {
 
 /* 유저정보 */
 .user-info {
-  margin-top: 10px;
+  padding-top: 10px;
 }
 
 h3 {
