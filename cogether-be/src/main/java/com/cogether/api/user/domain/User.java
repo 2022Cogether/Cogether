@@ -68,8 +68,6 @@ public class User {
     @Column(name="resign")
     private boolean resign;
 
-    @Column(name="til_cnt")
-    private int tilCnt =0;
 
 
 

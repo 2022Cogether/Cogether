@@ -1,5 +1,6 @@
 package com.cogether.api.user.web;
 
+import com.cogether.api.config.jwt.TokenUtils;
 import com.cogether.api.user.dto.LoginRequest;
 import com.cogether.api.user.dto.TokenResponse;
 import com.cogether.api.user.dto.UserRequest;
@@ -30,7 +31,11 @@ public class UserController {
 
     private final UserService userService;
 
-    //회원가입
+    private final TokenUtils tokenUtils;
+
+    /**
+     * 회원가입
+     */
     @PostMapping("/sign/signup")
     public ResponseEntity signUp(@RequestBody UserRequest userRequest) {
         return userService.findByEmail(userRequest.getEmail()).isPresent()
@@ -38,14 +43,18 @@ public class UserController {
                 : ResponseEntity.ok(userService.signUp(userRequest));
     }
 
-    //로그인
+    /**
+     * 로그인
+     */
    @PostMapping("/sign/signin")
     public ResponseEntity<TokenResponse> signIn(@RequestBody UserRequest userRequest) throws Exception {
 
         return ResponseEntity.ok().body(userService.signIn(userRequest));
     }
 
-    //로그아웃
+    /**
+     * 로그아웃
+     */
     @GetMapping("/sign/signout/{id}")
     public ResponseEntity signOut(@PathVariable("id") int userId) throws Exception
     {
@@ -88,22 +97,33 @@ public class UserController {
         return nickNameIsPresent? ResponseEntity.ok().body(true) :ResponseEntity.ok().body(false);
     }
 
+    /**
+     * 유저 정보 조회
+     */
+    @GetMapping(value = "/user/{userId}",headers = "ACCESS_TOKEN")
+    public ResponseEntity findUser(@PathVariable int userId, @RequestHeader("ACCESS_TOKEN") String data) throws Exception{
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity findUser(@PathVariable int userId) throws Exception{
+
+
+        System.out.println("헤더값 가져오기"+data);
+        int id =tokenUtils.getUserIdFromToken(data);
+        System.out.println("userid : "+id);
 
         return ResponseEntity.ok().body(userService.findUserInfo(userId));
     }
 
-
-    //회원정보 변경
+    /**
+     * 유저 정보 변경
+     */
     @PutMapping("/user")
     public ResponseEntity modifyUserInfo(@RequestBody UserRequest userRequest) throws Exception
     {
         return ResponseEntity.ok().body(userService.modifyUserInfo(userRequest));
     }
 
-    //회원 탈퇴
+    /**
+     * 회원 탈퇴
+     */
     @PutMapping("/user/resign")
     public  ResponseEntity resignUser(@RequestBody UserRequest userRequest) throws  Exception
     {
@@ -116,7 +136,9 @@ public class UserController {
         return ResponseEntity.ok().body(body);
     }
 
-    //비밀번호 변경
+    /**
+     * 비밀번호 변경
+     */
     @PutMapping("/user/password")
     public  ResponseEntity modifyPassword(@RequestBody UserRequest userRequest) throws Exception
     {
@@ -124,9 +146,17 @@ public class UserController {
 
         userService.modifyPassword(userRequest);
 
-        body.put("id",Integer.toString(userRequest.getId()));
         body.put("modify","true");
         return ResponseEntity.ok().body(body);
+    }
+
+    /**
+     * 엑세스토큰 재발급
+     */
+    @PostMapping("/sign/token")
+    public  ResponseEntity reissuanceAccessToken(@RequestBody UserRequest userRequest) throws Exception
+    {
+        return ResponseEntity.ok().body(userService.reissuanceAccessToken(userRequest));
     }
 
 

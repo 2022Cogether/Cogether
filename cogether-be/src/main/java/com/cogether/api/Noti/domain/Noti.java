@@ -22,11 +22,11 @@ public class Noti {
     private int id ;
 
     @ManyToOne
-    @JoinColumn(name="to_id")
+    @JoinColumn(name="send_id")
     private User user;
 
-    @Column(name="from_id",nullable = false)
-    private int fromId;
+    @Column(name="receive_id",nullable = false)
+    private int receiveId;
 
     @Column(name="type", length=10,nullable = false)
     private String type;
