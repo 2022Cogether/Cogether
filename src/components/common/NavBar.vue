@@ -55,6 +55,7 @@
 <script>
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
+import router from "@/router";
 
 export default {
   name: "NavBar",
@@ -77,6 +78,9 @@ export default {
         email: getters.value.getCurrentUser.email,
       };
       store.dispatch("logout", payload);
+      if (store.getters.getBooleanValue) {
+        router.push({ name: "mainview" });
+      }
     };
 
     return { isLoggedIn, currentUser, checkOkay, logout, userId };

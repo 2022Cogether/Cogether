@@ -15,19 +15,19 @@
             </div>
             <div>
               <font-awesome-icon
-                v-if="(isCommenter || true) && !isEdit"
+                v-if="isCommenter && !isEdit"
                 @click="onEdit"
                 class="fa-lg m-1"
                 icon="fa-solid fa-pen-to-square"
                 style="cursor: pointer"
               />
               <font-awesome-icon
-                v-if="isCommenter || isWriter || true"
+                v-if="isCommenter || isWriter"
                 @click="deleteComment"
                 class="fa-lg m-1"
                 icon="fa-solid fa-rectangle-xmark"
                 style="cursor: pointer"
-              /><!-- axios 성공하면 || true 지우고 시험하기-->
+              />
             </div>
           </div>
           <p v-if="!isEdit" class="be-comment-text">

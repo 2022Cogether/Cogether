@@ -237,8 +237,10 @@
     </div>
   </div>
   <div class="mt-5 mb-3 d-flex justify-content-around">
-    <div class="btn btn-success" @click="edit">수정</div>
-    <router-link class="btn btn-success" @click="back">취소</router-link>
+    <div class="btn" @click="edit" style="background-color: 2A9D8F">수정</div>
+    <router-link class="btn" @click="back" style="background-color: 2A9D8F">
+      취소
+    </router-link>
   </div>
 </template>
 

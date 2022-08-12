@@ -243,6 +243,7 @@ export default {
         await store.dispatch("checkEmail", email.value);
         if (getters.value.getBooleanValue) {
           isEmailChecked.value = true;
+          await store.dispatch("postCode", email.value); // 인증 코드 전송
         }
       }
     };
@@ -353,6 +354,10 @@ export default {
           Toast.fire({
             icon: "success",
             title: "회원가입이 성공되었습니다.",
+          });
+          router.push({
+            name: "profile",
+            params: { userId: store.getters.getLoginUserId },
           });
         } else {
           Toast.fire({

@@ -73,11 +73,10 @@ export default {
     };
 
     const changePwd = () => {
-      const pwSet = {
-        password: password.value,
-        newPassword: newPassword.value,
-      };
-      store.dispatch("changePassword", pwSet);
+      store.dispatch("certifyPassword", password.value);
+      if (getters.value.getBooleanValue) {
+        store.dispatch("changePassword", newPassword.value);
+      }
     };
 
     return {

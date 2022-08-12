@@ -19,6 +19,7 @@
 <script>
 import { ref } from "vue";
 import { useStore } from "vuex";
+import router from "@/router";
 
 export default {
   name: "ReSign",
@@ -27,7 +28,13 @@ export default {
     const password = ref("");
 
     function withdraw() {
-      store.dispatch("resign", password.value);
+      store.dispatch("certifyPassword", password.value);
+      if (store.getters.getBooleanValue) {
+        store.dispatch("resign");
+        if (store.getters.getBooleanValue) {
+          router.push({ name: "mainview" });
+        }
+      }
     }
 
     return { password, withdraw };

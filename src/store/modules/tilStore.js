@@ -1,5 +1,4 @@
 import http from "@/api/http";
-import router from "@/router";
 
 export const tilStore = {
   state: {
@@ -108,7 +107,8 @@ export const tilStore = {
     // 피드 상세 조회
     fetchTil({ commit, getters }, credentials) {
       http
-        .get("til/", credentials, {
+        .get("til/", {
+          params: credentials,
           headers: getters.authHeader,
         })
         .then((res) => {
@@ -157,16 +157,14 @@ export const tilStore = {
     //   commit("CLEAN_TIL_LIST");
     // },
 
-    createTil({ dispatch, getters, state }, payload) {
+    createTil({ dispatch, getters, state, commit }, payload) {
       http
         .post("til", payload, {
           headers: getters.authHeader,
         })
         .then((res) => {
-          router.push({
-            name: "TilDetail",
-            params: { tilPk: res.data.tilId },
-          });
+          commit("SET_BOOLEANVALUE");
+          commit("SET_OPEN_TIL", res.data.tilId);
 
           const credentials = {
             tilId: res.data.tilId,
@@ -203,7 +201,7 @@ export const tilStore = {
           if (res.status === 200) {
             alert("삭제 성공!");
             commit("SET_TIL", {});
-            router.push({ name: "mainview" });
+            commit("SET_BOOLEANVALUE");
           }
         })
         .catch((err) => {
@@ -246,7 +244,8 @@ export const tilStore = {
     searchTil({ commit, getters }, payload) {
       // paylod => keyword, userId
       http
-        .get("til/search", payload, {
+        .get("til/search", {
+          params: payload,
           headers: getters.authHeader,
         })
         .then((res) => commit("SET_TIL_LIST", res.data))
@@ -255,7 +254,8 @@ export const tilStore = {
     searchMyTil({ commit, getters }, payload) {
       // paylod => keyword, userId
       http
-        .get("til/search/my", payload, {
+        .get("til/search/my", {
+          params: payload,
           headers: getters.authHeader,
         })
         .then((res) => commit("SET_TIL_LIST", res.data))

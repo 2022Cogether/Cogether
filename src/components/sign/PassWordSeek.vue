@@ -33,6 +33,7 @@
 <script>
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
+import router from "@/router";
 
 export default {
   name: "PassWordSeek",
@@ -48,7 +49,10 @@ export default {
 
     function sendEmail() {
       if (isValidEmail.value) {
-        store.dispatch("seekPassWord");
+        store.dispatch("getTempPassWord", email.value);
+        if (store.getters.getBooleanValue) {
+          router.push({ name: "SignIn" });
+        }
       } else {
         alert("올바른 형식의 이메일을 입력해주세요!");
       }

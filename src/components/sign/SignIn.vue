@@ -49,6 +49,7 @@
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import Swal from "sweetalert2";
+import router from "@/router";
 
 export default {
   name: "SignIn",
@@ -83,6 +84,11 @@ export default {
         Toast.fire({
           icon: "warning",
           title: "아이디 또는 비밀번호를 잘못 입력했습니다.",
+        });
+      } else {
+        router.push({
+          name: "profile",
+          params: { userId: store.getters.getLoginUserId },
         });
       }
     }
