@@ -171,7 +171,7 @@ router.beforeEach((to, from, next) => {
     to.name != "SignIn" &&
     to.name != "SignUp" &&
     to.name != "PassWordSeek" &&
-    store.getters.isLoggedIn
+    !store.getters.isLoggedIn
   )
     next({ name: "SignIn" }); // 아직 TOKEN 없어서 ! 붙여놓았음
   else next();
