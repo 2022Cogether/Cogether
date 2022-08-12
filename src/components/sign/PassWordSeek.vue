@@ -48,7 +48,7 @@ export default {
 
     function sendEmail() {
       if (isValidEmail.value) {
-        store.dispatch("takePassWord", email.value);
+        store.dispatch("seekPassWord");
       } else {
         alert("올바른 형식의 이메일을 입력해주세요!");
       }

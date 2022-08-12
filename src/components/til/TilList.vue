@@ -1,21 +1,4 @@
 <template>
-  <!-- 검색바 -->
-  <div class="search-bar-block">
-    <div class="search-bar">
-      <input
-        class="input-search"
-        type="text"
-        v-model="searchWord"
-        @keyup.enter.prevent="onSubmit"
-      />
-      <button @click="onSubmit" class="btn-search">
-        <font-awesome-icon
-          icon="fa-solid fa-magnifying-glass"
-          class="icon-search"
-        />
-      </button>
-    </div>
-  </div>
   <!-- TIL 리스트 -->
   <div class="til-list">
     <TilMainItem v-for="til in tilList" :key="til.pk" :til="til" />
@@ -32,12 +15,12 @@
 <script>
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import TilMainItem from "@/components/til/TilMainItem.vue";
 import TilDetail from "@/components/til/TilDetail.vue";
 
 export default {
-  name: "TilMainList",
+  name: "TilList",
   components: {
     TilMainItem,
     TilDetail,
@@ -53,15 +36,6 @@ export default {
 
     const isLoggedIn = getters.value.isLoggedIn;
 
-    const onSubmit = () => {
-      const payload = {
-        keyword: searchWord.value,
-        userId: getters.value.getCurrentUser.id,
-      };
-      console.log(payload);
-      store.dispatch("searchTil", payload);
-    };
-
     const tilList = computed(() => {
       return store.getters.getTilList;
     });
@@ -75,7 +49,7 @@ export default {
 
     // created 할 때 한 번 발생하고, 이후로 끝까지 스크롤하면 계속 실행되어 til list에 추가하는 방식
     function getTilList() {
-      store.dispatch("fetchTilList", { userId: userId });
+      store.dispatch("fetchMyTilList", { userId: userId });
     }
     // const eraseTilList = () => {
     //   store.dispatch("removeTilList");
@@ -83,47 +57,15 @@ export default {
 
     // 페이지가 Created 될 때 list 가져옴
     getTilList();
-    // 페이지에서 나가기 직전 list를 지움
-    onBeforeUnmount(() => {
-      // eraseTilList();
-    });
-
-    // // 참조: https://renatello.com/check-if-a-user-has-scrolled-to-the-bottom-in-vue-js/
-    // // 스크롤 거의 하단에 오면 추가 리스트 받아고는 메소드
-    // const scroll = () => {
-    //   window.onscroll = () => {
-    //     let bottomOfWindow =
-    //       Math.max(
-    //         window.pageYOffset,
-    //         document.documentElement.scrollTop,
-    //         document.body.scrollTop
-    //       ) +
-    //         window.innerHeight >
-    //       document.documentElement.offsetHeight;
-
-    //     if (bottomOfWindow) {
-    //       if (window.location.href == "http://localhost:8080/#/") {
-    //         getTilList();
-    //       }
-    //     }
-    //   };
-    // };
-
-    // onMounted(() => {
-    //   scroll();
-    // });
 
     return {
       searchWord,
       isLoggedIn,
-      onSubmit,
       getTilList,
-      // eraseTilList,
       scroll,
       modalNum,
       isOpen,
       tilList,
-      onBeforeUnmount,
       onMounted,
     };
   },

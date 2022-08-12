@@ -16,7 +16,6 @@
       </button>
     </div>
   </div>
-  <!-- TilMainList -->
   <TilList />
 </template>
 <script>
@@ -26,7 +25,7 @@ import { computed, ref } from "vue";
 import { useStore } from "vuex";
 
 export default {
-  name: "MainView",
+  name: "TilListLayout",
   components: {
     TilList,
   },
@@ -41,7 +40,7 @@ export default {
     const onSubmit = () => {
       const payload = {
         keyword: searchWord.value,
-        userId: getters.value.getCurrentUser.id,
+        userId: getters.value.getLoginUserId,
       };
       console.log(payload);
       store.dispatch("searchTil", payload);
