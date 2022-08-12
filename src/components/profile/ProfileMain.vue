@@ -6,13 +6,21 @@
     </button>
   </router-link>
   <!-- Profile -->
+  <router-link
+    v-if="!isMyProfile"
+    class="btn btn-success"
+    sytle="opacity: 0.5"
+    :to="{ name: 'profileEdit', params: { userId: this.$route.params.userId } }"
+  >
+    프로필 수정
+  </router-link>
   <div class="profile-info-container1 d-flex flex-column align-items-center">
     <div class="profile-img-box">
-      <img src="@/assets/logo.png" alt="profile image" class="profile-img" />
+      <img :src="profileUser.img_url" alt="profile image" class="profile-img" />
     </div>
     <div class="username-box d-flex">
       <img src="@/assets/gold_badge.png" alt="badge img" class="badge-img" />
-      <h3 class="username">삐약</h3>
+      <h3 class="username">{{ profileUser.nickname }}</h3>
     </div>
   </div>
   <div class="exp-bar d-flex justify-content-center align-items-center">
@@ -30,10 +38,23 @@
     </div>
   </div>
   <div class="profile-info-container2 d-flex flex-column align-items-center">
-    <p class="user-introduction">리액트 마스터가 되겠어!</p>
+    <p class="user-introduction">{{ profileUser.intro }}</p>
     <div class="follow-box d-flex">
       <p class="follower">팔로워 1</p>
       <p class="follow">팔로우 10</p>
+    </div>
+    <div v-if="!isMyProfile" class="container mb-3">
+      <div class="row d-flex justify-content-between">
+        <div
+          v-if="profileUser.isFollow"
+          class="btn btn-success col-6"
+          @click="unfollow"
+        >
+          언팔로우
+        </div>
+        <div v-else class="btn btn-success col-6" @click="follow">팔로우</div>
+        <div class="btn btn-secondary col-6">메세지</div>
+      </div>
     </div>
   </div>
   <!-- Tech Stack -->
@@ -69,9 +90,9 @@
       <div v-for="(webSmList, i) in webIconUrl" :key="i">
         <!-- vue3에서는 v-if가 v-for 보다 우선 순위 높다고 함 -->
         <div
-          v-if="true"
+          v-if="profileUser[webSmList[2]]"
           class="webpage-link-box"
-          :onclick="'location.href=' + profiletUser[webSmList[2]]"
+          :onclick="'location.href=' + profileUser[webSmList[2]]"
         >
           <img
             :src="webSmList[1]"
@@ -124,12 +145,9 @@
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
 />;
 import ProfileTil from "./ProfileTil.vue";
-import { ref } from "vue";
+import { ref, getters } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
-
-import skills from "@/assets/skills.js";
-import Swal from "sweetalert2";
 
 export default {
   name: "ProfileMain",
@@ -148,7 +166,7 @@ export default {
     const onSubmit = () => {
       const payload = {
         keyword: searchWord.value,
-        userId: profiletUser.id,
+        userId: profileUser.id,
       };
       console.log(payload);
       store.dispatch("searchTil", payload);
@@ -186,7 +204,7 @@ export default {
     if (!isMyProfile) {
       store.dispatch("fetchAnothertUser", userId);
     }
-    const profiletUser = isMyProfile
+    const profileUser = isMyProfile
       ? store.getters.getCurrentUser
       : store.getters.getAnotherUser;
 
@@ -200,129 +218,53 @@ export default {
     const tilList = store.getters.getTilList;
 
     // 모달 바깥을 클릭하면 모달을 닫게 하는 함수
+    const isOnModal = ref(false);
     const closeModal = (event) => {
       if (
         !document
           .querySelector(".modal")
           .querySelector("." + event.target.className) // 클릭한 박스의 클래스가 modal-card라는 클래스의 하위 클래스인지 아닌지
       ) {
-        isOnTechModal.value = false;
+        isOnModal.value = false;
       }
     };
 
-    //기술스택 및 자동완성관련 함수들
-    const isOnTechModal = ref(false);
-    const changeTechModal = () => {
-      isOnTechModal.value = !isOnTechModal.value;
-    };
-
-    //SWal 모달창
-    const Toast = Swal.mixin({
-      toast: true,
-      position: "bottom-end",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.addEventListener("mouseenter", Swal.stopTimer);
-        toast.addEventListener("mouseleave", Swal.resumeTimer);
-      },
-    });
-
-    const userLangSkills = ref(store.getters.getUserSkills);
-    console.log(userLangSkills.value);
-    const delLangSkills = (val) => {
-      if (userLangSkills.value.includes(val)) {
-        userLangSkills.value = userLangSkills.value.filter(
-          (element) => element !== val
-        );
-      } else {
-        alert("입력되지 않은 스킬입니다!");
+    // 팔로우
+    const follow = () => {
+      const payload = {
+        toID: store.getters.getLoginUserId,
+        fromId: profileUser.id,
+      };
+      store.dispatch("follow", payload);
+      if (getters.value.getBooleanValue) {
+        profileUser.isFollow = !profileUser.isFollow;
       }
     };
-
-    //기술스택 및 자동완성관련 함수들
-    const skillInput = ref("");
-    const result = ref("");
-    function submitAutoComplete() {
-      const autocomplete = document.querySelector(".autocomplete");
-      //입력이 없으면 자동완성리스트 제거(null)
-      if (skillInput.value == "") {
-        result.value = null;
-      } else if (skillInput.value) {
-        //값이 입력되면 자동완성 리스트 보이기
-        autocomplete.classList.remove("disabled");
-        result.value = skills.filter((skill) => {
-          //^는 모든 리스트 보이기, i는 대문자 > 소문자처리하는 파라미터
-          return skill.match(new RegExp("^" + skillInput.value, "i"));
-        });
-      } else {
-        autocomplete.classList.add("disabled");
-      }
-    }
-    //자동완성 리스트에서 스킬 클릭하면 해당 값을 입력값에 할당
-    function searchSkillAdd(res) {
-      skillInput.value = res;
-      submitAutoComplete();
-    }
-
-    const addLangSkills = (val) => {
-      //search 아이콘 클릭일 때
-      if (val.type == "click") {
-        val.target.value = skillInput.value;
-      }
-
-      //상자클릭이 아닐 때 skill리스트에 해당 스킬이 있나 검사
-      if (typeof val != "string" && skills.indexOf(val.target.value) < 0) {
-        return;
-      }
-
-      if (typeof val == "object") {
-        if (userLangSkills.value.includes(val.target.value)) {
-          Toast.fire({
-            icon: "error",
-            title: "이미 입력된 스킬입니다.",
-          });
-        } else {
-          userLangSkills.value.push(val.target.value);
-          skillInput.value = null; //입력을 하면 입력값 초기화
-          result.value = null; // 자동완성 리스트도 초기화
-        }
-      } else {
-        if (userLangSkills.value.includes(val)) {
-          Toast.fire({
-            icon: "warning",
-            title: "이미 입력된 스킬입니다.",
-          });
-        } else {
-          userLangSkills.value.push(val);
-          skillInput.value = null; //입력을 하면 입력값 초기화
-          result.value = null; // 자동완성 리스트도 초기화
-        }
+    // 언팔로우
+    const unfollow = () => {
+      const payload = {
+        toID: store.getters.getLoginUserId,
+        fromId: profileUser.id,
+      };
+      store.dispatch("unfollow", payload);
+      if (getters.value.getBooleanValue) {
+        profileUser.isFollow = !profileUser.isFollow;
       }
     };
 
     return {
       isLoggedIn,
       isMyProfile,
-      profiletUser,
+      profileUser,
       tilList,
       searchWord,
       onSubmit,
       webIconUrl,
 
       closeModal,
-      isOnTechModal,
-      changeTechModal,
 
-      submitAutoComplete,
-      result,
-      skillInput,
-      searchSkillAdd,
-      addLangSkills,
-      userLangSkills,
-      Toast,
-      delLangSkills,
+      follow,
+      unfollow,
     };
   },
 };

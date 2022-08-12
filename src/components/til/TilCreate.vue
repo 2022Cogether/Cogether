@@ -84,6 +84,12 @@ export default {
       console.log(state.imageUrls);
       //함수 작동 내용
       store.dispatch("createTil", state);
+      if (store.getters.getBooleanValue) {
+        router.push({
+          name: "TilDetail",
+          params: { tilPk: store.getters.getOpenTil },
+        });
+      }
     }
 
     return { exit, createTil, imgupload, state };

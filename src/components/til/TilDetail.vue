@@ -231,6 +231,7 @@ import CommentItem from "@/components/til/comment/CommentItem.vue";
 
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
+import router from "@/router";
 
 export default {
   name: "TilDetail",
@@ -253,7 +254,10 @@ export default {
 
     // Til 삭제
     const deleteTil = () => {
-      store.dispatch("removeTil", tilContent.value.pk); // pk??
+      store.dispatch("removeTil", tilContent.value.pk);
+      if (store.getters.getBooleanValue) {
+        router.push({ name: "mainview" });
+      }
     };
 
     // 좋아요/좋아요 취소
