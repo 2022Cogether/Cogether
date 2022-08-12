@@ -74,7 +74,7 @@ public class EmailService {
         MimeMessage  message = emailSender.createMimeMessage();
 
         message.addRecipients(RecipientType.TO, to);//보내는 대상
-        message.setSubject("COGETHER - 회원가입 이메일 인증");//제목
+        message.setSubject("COGETHER - 임시비밀번호 발급");//제목
 
         String msgg="";
         msgg+= "<div style='margin:100px;'>";
