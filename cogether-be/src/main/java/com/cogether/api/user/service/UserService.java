@@ -133,6 +133,9 @@ public class UserService {
         String refreshToken = "";
         Auth auth = new Auth();
 
+
+
+
         if (authEntity.isPresent()) {
             auth = authEntity.get();
             refreshToken = auth.getRefreshToken();
@@ -140,7 +143,6 @@ public class UserService {
             //리프레시토큰 검증
             if (tokenUtils.isValidRefreshToken(refreshToken)) {
                 accessToken = tokenUtils.generateJwtToken(auth.getUser());
-                refreshToken = tokenUtils.saveRefreshToken(user);
                 return TokenResponse.builder()
                         .ACCESS_TOKEN(accessToken)
                         .REFRESH_TOKEN(refreshToken)
@@ -161,6 +163,48 @@ public class UserService {
         }
 
     }
+
+    /**
+     * 엑세스토큰 재발급
+     * @param userRequest
+     * @return
+     * @throws Exception
+     */
+    public TokenResponse reissuanceAccessToken(UserRequest userRequest) throws Exception {
+        User user =
+                userRepository
+                        .findByEmail(userRequest.getEmail())
+                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        Auth auth =
+                authRepository
+                        .findByUserId(user.getId()).orElseThrow(() -> new IllegalArgumentException("Token 이 존재하지 않습니다."));
+
+        String accessToken = "";
+        String refreshToken = auth.getRefreshToken();
+
+
+        if (tokenUtils.isValidRefreshToken(refreshToken)){
+            accessToken = tokenUtils.generateJwtToken(auth.getUser());
+            return TokenResponse.builder()
+                    .ACCESS_TOKEN(accessToken)
+                    .REFRESH_TOKEN(refreshToken)
+                    .userId(user.getId())
+                    .build();
+        }else
+        {
+            accessToken = tokenUtils.generateJwtToken(auth.getUser());
+            refreshToken = tokenUtils.saveRefreshToken(user);
+            auth.refreshUpdate(refreshToken);
+
+            return TokenResponse.builder()
+                    .ACCESS_TOKEN(accessToken)
+                    .REFRESH_TOKEN(refreshToken)
+                    .userId(user.getId())
+                    .build();
+        }
+    }
+
+
 
     /**
      * 로그아웃
@@ -243,16 +287,20 @@ public class UserService {
     public User findUserInfo(int user_id) throws Exception {
         User user = userRepository
                 .findById(user_id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+
+
+
         return user;
     }
 
     /**
-     *
+     * 비밀번호 변경
      */
-
     public int modifyPassword(UserRequest userRequest) throws Exception {
         int id = userRequest.getId();
         String password = userRequest.getPassword();
+        System.out.println(id+" : "+password);
         String encodingPassword = passwordEncoder.encode(password);
 
         User user = userRepository
@@ -265,7 +313,9 @@ public class UserService {
         return 1;
     }
 
-    //탈퇴
+    /**
+     * 탈퇴
+     */
     public int resignUser(UserRequest userRequest) throws Exception {
 
         User user = userRepository
@@ -277,5 +327,9 @@ public class UserService {
 
         return 1;
     }
+
+
+
+
 
 }
