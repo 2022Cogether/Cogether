@@ -30,6 +30,7 @@ public class ProjectRequest {
                     .online(online)
                     .title(title)
                     .content(content)
+                    .createdAt(LocalDateTime.now())
                     .build();
         }
     }

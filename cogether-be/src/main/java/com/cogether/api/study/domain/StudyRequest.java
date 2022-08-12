@@ -31,6 +31,7 @@ public class StudyRequest {
                     .online(online)
                     .title(title)
                     .content(content)
+                    .createdAt(LocalDateTime.now())
                     .build();
         }
     }

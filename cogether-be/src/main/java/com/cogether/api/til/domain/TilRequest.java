@@ -4,6 +4,7 @@ import com.cogether.api.user.domain.User;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -40,6 +41,7 @@ public class TilRequest {
                     .id(tilId)
                     .title(title)
                     .content(content)
+                    .createdAt(LocalDateTime.now())
                     .build();
         }
     }
@@ -58,6 +60,7 @@ public class TilRequest {
                     .til(til)
                     .content(content)
                     .user(user)
+                    .createdAt(LocalDateTime.now())
                     .build();
         }
     }
