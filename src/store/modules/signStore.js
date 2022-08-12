@@ -27,8 +27,10 @@ export const signStore = {
 
     // 로그인 되면 access token 추가 / 로그아웃 되면 token 제거
     token: localStorage.getItem("access_TOKEN") || "",
+    // token: 1, //cors에러때문에 각 메뉴로 못 갈 때 이용 (test용)
 
     loginUserId: localStorage.getItem("userId") || "",
+    // loginUserId: 1, //cors에러때문에 각 메뉴로 못 갈 때 이용 (test용)
     // 현재 유저 정보(id, 닉네임 등)이 저장될 state
     currentUser: {},
 
