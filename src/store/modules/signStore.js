@@ -1,5 +1,4 @@
 import http from "@/api/http";
-import router from "@/router";
 
 export const signStore = {
   state: {
@@ -80,7 +79,7 @@ export const signStore = {
 
     saveUserId({ commit }, userId) {
       commit("SET_LOGIN_USERID", userId);
-      localStorage.setItem("userId", userId); // 로컬 저장소 필요?
+      localStorage.setItem("userId", userId);
     },
 
     async login({ commit, dispatch }, credentials) {
@@ -98,8 +97,6 @@ export const signStore = {
           dispatch("saveUserId", userId);
           dispatch("fetchCurrentUser", userId); // 현재 사용자 정보 추가
           commit("SET_BOOLEANVALUE");
-
-          router.push({ name: "profile", params: { userId: userId } });
         })
         .catch((err) => {
           console.error(err.response.data);
@@ -121,8 +118,6 @@ export const signStore = {
           dispatch("saveUserId", userId);
           dispatch("fetchCurrentUser", userId);
           commit("SET_BOOLEANVALUE");
-
-          router.push({ name: "profile", params: { userId: userId } });
         })
         .catch((err) => {
           console.error(err.response.data);
@@ -138,10 +133,10 @@ export const signStore = {
           .then((res) => commit("SET_CURRENT_USER", res.data))
           .catch((err) => {
             alert("현 사용자 정보 저장 중 에러 발생");
+            console.error(err.response.data);
             if (err.response.status === 401) {
               commit("SET_TOKEN", "");
               commit("SET_LOGIN_USERID", "");
-              router.push({ name: "login" });
             }
           });
       }
@@ -155,56 +150,70 @@ export const signStore = {
           })
           .then((res) => commit("SET_ANOTHER_USER", res.data))
           .catch((err) => {
-            alert("현 사용자 정보 저장 중 에러 발생");
-            if (err.response.status === 401) {
-              commit("SET_TOKEN", "");
-              commit("SET_LOGIN_USERID", "");
-              router.push({ name: "login" });
-            }
+            alert("다른 사용자 정보 불러오는 중 에러 발생");
+            console.error(err.response.data);
           });
       }
     },
 
-    // 이메일을 받고 이메일로 가입한 유저가 있으면 새 비밀번호를 보냄
-    // 비밀 번호 찾기
-    seekPassWord({ commit, getters }, email) {
+    // 비밀번호 검증
+    certifyPassword({ commit, getters }, password) {
       http
         .post(
-          "sign/password",
+          "verify/password",
+          { password: password },
+          {
+            headers: getters.authHeader,
+          }
+        )
+        .then(() => {
+          console.log("비밀번호 검증 성공");
+          commit("SET_BOOLEANVALUE");
+        })
+        .catch((err) => {
+          alert("비밀번호 검증 실패");
+          console.error(err.response.data);
+        });
+    },
+
+    // 이메일로 임시비밀번호 전송
+    getTempPassWord({ commit, getters }, email) {
+      http
+        .post(
+          "find/password",
           { email: email },
           {
             headers: getters.authHeader,
           }
         )
-        .then((res) => {
-          if (res.data.status === 200) {
-            alert("비밀번호를 성공적으로 보냈습니다!");
-            console.log(commit);
-            router.push({ name: "SignIn" });
-          } else {
-            alert("200이 아닌 다른 값이 반환되었습니다");
-          }
+        .then(() => {
+          alert("임시 비밀번호를 발급했습니다, 로그인해 주세요!");
+          commit("SET_BOOLEANVALUE");
         })
         .catch((err) => {
-          if (err.response.status === 404) {
-            alert("가입되지 않은 이메일입니다.");
-          } else if (err.response.status === 500) {
-            alert("서버 에러입니다.");
-          } else {
-            alert("그 외 에러입니다.");
-          }
-
+          alert("에러로 임시 비밀번호를 보내지 못했습니다!");
           console.error(err.response.data);
-          // commit("SET_AUTH_ERROR", err.response.data);
-          const errorMessage = [];
-          for (const errors in err.response.data) {
-            for (const error of err.response.data[errors]) {
-              if (!errorMessage.includes(error)) {
-                errorMessage.push(error);
-              }
-            }
+        });
+    },
+
+    // 비밀번호 변경
+    changePassword({ getters }, newPassword) {
+      http
+        .put(
+          "user/password/",
+          {
+            password: newPassword,
+          },
+          {
+            headers: getters.authHeader,
           }
-          alert(errorMessage.join("\r\n"));
+        )
+        .then(() => {
+          alert("비밀번호를 변경했습니다!");
+        })
+        .catch((err) => {
+          alert("비밀번호 변경 에러입니다.");
+          console.error(err.response.data);
         });
     },
 
@@ -239,22 +248,47 @@ export const signStore = {
             console.log("사용가능한 이메일!");
             commit("SET_BOOLEANVALUE");
           } else {
+            alert("이미 가입된 이메일입니다!");
             console.log("중복된 이메일!");
           }
         })
         .catch((e) => {
+          alert("이메일 체크에 실패하였습니다!");
           console.log("에러: " + e);
         });
     },
 
-    // 메일로 인증 코드 보내기
+    // 인증 코드 전송
+    async postCode({ commit, getters }, email) {
+      await http
+        .post(
+          "sign/verify",
+          {
+            email: email,
+          },
+          {
+            headers: getters.authHeader,
+          }
+        )
+        .then(() => {
+          console.log("인증 번호 전송 완료");
+          commit("SET_BOOLEANVALUE");
+        })
+        .catch((e) => {
+          alert("인증 코드를 보내지 못했습니다!");
+          console.log("에러: " + e);
+        });
+    },
+
+    // 인증 코드 검증
     async sendCode({ commit, getters }, payload) {
       await http
-        .post("sign/verify", payload, {
+        .get("sign/verify", {
+          params: payload,
           headers: getters.authHeader,
         })
         .then(() => {
-          console.log("인증 번호 전송 완료");
+          console.log("인증 번호 검증 완료");
           commit("SET_BOOLEANVALUE");
         })
         .catch((e) => {
@@ -262,55 +296,27 @@ export const signStore = {
         });
     },
 
-    // 변경된 비밀 번호를 받고 서버에 보내 수정
-    // 기존 비밀번호도 받아서 이 비밀번호가 유효하면 새 비밀번호로 변경되는 것을 가정함
-    changePassword({ getters }, pwSet) {
-      http
-        .put(
-          "sign/password/",
-          {
-            password: pwSet.password,
-            newPassword: pwSet.newPassword,
-          },
-          {
-            headers: getters.authHeader,
-          }
-        )
-        .then((res) => {
-          if (res.data.status === 200) {
-            alert("비밀번호를 변경했습니다!");
-            getters.isLoggedIn;
-          } else {
-            alert("200이 아닌 다른 값이 반환되었습니다");
-          }
-        })
-        .catch((err) => {
-          alert("비밀번호 변경 에러입니다.");
-          console.error(err.response.data);
-        });
-    },
-
     logout({ commit, getters }, payload) {
       http
-        .get(
-          "sign/signout/" + payload.userId,
-          {
+        .get("sign/signout/" + payload.userId, {
+          params: {
             email: payload.email,
           },
-          {
-            headers: getters.authHeader,
+          headers: getters.authHeader,
+        })
+        .then((res) => {
+          if (res.data.verified) {
+            localStorage.removeItem("access_TOKEN");
+            localStorage.removeItem("refresh_TOKEN");
+            localStorage.removeItem("userId");
+            alert("성공적으로 logout!");
+            commit("SET_CURRENT_USER", {});
+            commit("SET_TOKEN", "");
+            commit("SET_LOGIN_USERID", "");
+            commit("SET_BOOLEANVALUE");
+          } else {
+            alert("인증 실패로 logout 실패!");
           }
-        )
-        .then(() => {
-          localStorage.removeItem("access_TOKEN");
-          localStorage.removeItem("refresh_TOKEN");
-          localStorage.removeItem("userId");
-          alert("성공적으로 logout!");
-          commit("SET_CURRENT_USER", {});
-          commit("SET_TOKEN", "");
-          commit("SET_LOGIN_USERID", "");
-          router.push({ name: "mainview" });
-          router.go(); // 새로고침 한 번 더해야 로그인 창이됨...지울 수 있을까
         })
         .catch((err) => {
           alert("실패적으로 logout!");
@@ -318,15 +324,11 @@ export const signStore = {
         });
     },
 
-    resign({ commit, getters }, password) {
+    resign({ commit, getters }) {
       http
-        .put(
-          "sign/resign/",
-          { password: password },
-          {
-            headers: getters.authHeader,
-          }
-        )
+        .put("sign/resign/", {
+          headers: getters.authHeader,
+        })
         .then((res) => {
           if (res.data.status === 200) {
             alert("회원 탈퇴되었습니다!");
@@ -336,8 +338,7 @@ export const signStore = {
             commit("SET_CURRENT_USER", {});
             commit("SET_TOKEN", "");
             commit("SET_LOGIN_USERID", "");
-            router.push({ name: "mainview" });
-            router.go();
+            commit("SET_BOOLEANVALUE");
           } else {
             alert("200이 아닌 다른 값이 반환되었습니다");
           }
@@ -363,13 +364,44 @@ export const signStore = {
         });
     },
 
+    // 팔로우 언팔로우
+    follow({ commit, getters }, payload) {
+      http
+        .post("follow/", payload, {
+          headers: getters.authHeader,
+        })
+        .then(() => {
+          commit("SET_BOOLEANVALUE");
+          console.log("팔로우 완료");
+        })
+        .catch((err) => {
+          alert("팔로우 실패");
+          console.error(err.response.data);
+        });
+    },
+
+    unfollow({ commit, getters }, payload) {
+      http
+        .post("unfollow/", payload, {
+          headers: getters.authHeader,
+        })
+        .then(() => {
+          commit("SET_BOOLEANVALUE");
+          console.log("언팔로우 완료");
+        })
+        .catch((err) => {
+          alert("언팔로우 실패");
+          console.error(err.response.data);
+        });
+    },
+
     // accessToken 재요청
     refreshToken({ commit }) {
       //accessToken 만료로 재발급 후 재요청시 비동기처리로는 제대로 처리가 안되서 promise로 처리함
       return new Promise((resolve, reject) => {
         http
           .post("sign/token", null, {
-            headers: { Authorization: localStorage.getItem("REFRESH_TOKEN") },
+            headers: { REFRESH_TOKEN: localStorage.getItem("REFRESH_TOKEN") },
           })
           .then((res) => {
             commit("saveAccess", res.data.access_TOKEN);
