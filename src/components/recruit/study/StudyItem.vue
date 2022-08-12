@@ -1,5 +1,10 @@
 <template>
-  <div class="team-container">
+  <div
+    class="team-container"
+    data-bs-toggle="modal"
+    data-bs-target="#studyDetailInfo"
+    @click="setModal"
+  >
     <div class="title-box d-flex justify-content-between">
       <div class="d-flex">
         <div class="profile-img-box">
@@ -47,18 +52,10 @@
         </div>
       </div>
     </div>
-    <p
-      class="group-info"
-      data-bs-toggle="modal"
-      data-bs-target="#teamDetailInfo"
-    >
+    <p class="group-info">
       {{ studyTeam.content }}
     </p>
-    <div
-      class="info-box d-flex justify-content-between"
-      data-bs-toggle="modal"
-      data-bs-target="#teamDetailInfo"
-    >
+    <div class="info-box d-flex justify-content-between">
       <!-- 기술스택아이콘 -->
       <div class="tech-icon-container">
         <div
@@ -95,7 +92,10 @@ import router from "@/router";
 export default {
   name: "StudyItem",
   props: ["studyTeam"],
-  setup(props) {
+  setup(props, { emit }) {
+    function setModal() {
+      emit("setModal", props.studyTeam);
+    }
     const store = useStore();
     const getters = computed(() => store.getters);
     const state = reactive({
@@ -144,7 +144,7 @@ export default {
       });
     }
 
-    return { bookmarkCheck, state, deleteStudy, getters };
+    return { bookmarkCheck, state, deleteStudy, getters, setModal };
   },
 };
 </script>

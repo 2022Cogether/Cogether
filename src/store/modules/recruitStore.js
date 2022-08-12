@@ -2,42 +2,172 @@ import http from "@/api/http";
 
 export const recruitStore = {
   state: {
-    projectTeams: [],
+    projectTeams: [
+      {
+        projectId: 1,
+        userId: 1,
+        userNickname: "홍철",
+        userImgurl: null,
+        start: "2022-08-02T15:17:22",
+        total_mem: 6,
+        cur_mem: 2,
+        online: "미정",
+        title: "프로젝트 모집",
+        content: "프로젝트를 함께할 팀원을 모집합니다.",
+        skillList: [
+          {
+            projectSkillId: 1,
+            projectId: 1,
+            skillName: "java",
+          },
+          {
+            projectSkillId: 2,
+            projectId: 1,
+            skillName: "c",
+          },
+        ],
+        createdAt: null,
+        scrap: false,
+      },
+      {
+        projectId: 1,
+        userId: 1,
+        userNickname: "홍철",
+        userImgurl: null,
+        start: "2022-08-02T15:17:22",
+        total_mem: 6,
+        cur_mem: 2,
+        online: "미정",
+        title: "프로젝트 모집",
+        content: "두번째에요.",
+        skillList: [
+          {
+            projectSkillId: 1,
+            projectId: 1,
+            skillName: "java",
+          },
+          {
+            projectSkillId: 2,
+            projectId: 1,
+            skillName: "c",
+          },
+        ],
+        createdAt: null,
+        scrap: false,
+      },
+    ],
     projectPeople: [
       {
-        huntings: [
+        huntingId: 2,
+        userId: 1,
+        userNickname: "김싸피",
+        userImgUrl: null,
+        title: "나는 어때?",
+        content: "나 꽤 몽총한 사람이야",
+        scrap: false,
+        scrapId: 0,
+        userSkillList: [
           {
-            huntingId: 2,
-            userId: 1,
-            userNickname: "김싸피",
-            userImgUrl: null,
-            title: "나는 어때?",
-            content: "나 꽤 몽총한 사람이야",
-            scrap: false,
-            scrapId: 0,
-            userSkillList: [
-              {
-                userSkillId: 1,
-                skillName: "c",
-              },
-              {
-                userSkillId: 2,
-                skillName: "javascript",
-              },
-              {
-                userSkillId: 3,
-                skillName: "python",
-              },
-              {
-                userSkillId: 4,
-                skillName: "java",
-              },
-            ],
+            userSkillId: 1,
+            skillName: "c",
+          },
+          {
+            userSkillId: 2,
+            skillName: "javascript",
+          },
+          {
+            userSkillId: 3,
+            skillName: "python",
+          },
+          {
+            userSkillId: 4,
+            skillName: "java",
+          },
+        ],
+      },
+      {
+        huntingId: 2,
+        userId: 1,
+        userNickname: "나싸피",
+        userImgUrl: null,
+        title: "나는 어때?",
+        content: "나 꽤 몽총한 사람이야",
+        scrap: false,
+        scrapId: 0,
+        userSkillList: [
+          {
+            userSkillId: 1,
+            skillName: "c",
+          },
+          {
+            userSkillId: 2,
+            skillName: "javascript",
+          },
+          {
+            userSkillId: 3,
+            skillName: "python",
+          },
+          {
+            userSkillId: 4,
+            skillName: "java",
           },
         ],
       },
     ],
-    studyTeams: [],
+    studyTeams: [
+      {
+        studyId: 1,
+        userId: 1,
+        userNickname: "홍철",
+        userImgurl: null,
+        start: "2022-08-02T15:17:22",
+        total_mem: 6,
+        cur_mem: 2,
+        online: "미정",
+        title: "스터디 모집",
+        content: "스터디를 함께할 팀원을 모집합니다.",
+        skillList: [
+          {
+            projectSkillId: 1,
+            projectId: 1,
+            skillName: "java",
+          },
+          {
+            projectSkillId: 2,
+            projectId: 1,
+            skillName: "c",
+          },
+        ],
+        createdAt: null,
+        scrap: false,
+      },
+      {
+        studyId: 1,
+        userId: 1,
+        userNickname: "홍철",
+        userImgurl: null,
+        start: "2022-08-02T15:17:22",
+        total_mem: 6,
+        cur_mem: 2,
+        online: "미정",
+        title: "스터디 모집",
+        content: "두번째에요.",
+        skillList: [
+          {
+            studySkillId: 1,
+            studyId: 1,
+            skillName: "java",
+          },
+          {
+            studySkillId: 2,
+            studyId: 1,
+            skillName: "c",
+          },
+        ],
+        createdAt: null,
+        scrap: false,
+      },
+    ],
   },
   getters: {
     getProjectTeams(state) {
