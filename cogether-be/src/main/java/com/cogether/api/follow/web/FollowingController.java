@@ -39,13 +39,13 @@ public class FollowingController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping("/following")
+    @GetMapping(value = "/following",headers = "ACCESS_TOKEN")
     public ResponseEntity loadFollowingList(@RequestHeader("ACCESS_TOKEN")String accessToken)
     {
         return ResponseEntity.ok().body(followingService.loadFollowingList(accessToken));
     }
 
-    @GetMapping("/follower")
+    @GetMapping(value = "/follower",headers = "ACCESS_TOKEN")
     public ResponseEntity loadFollowerList(@RequestHeader("ACCESS_TOKEN")String accessToken)
     {
         return ResponseEntity.ok().body(followingService.loadFollowerList(accessToken));
