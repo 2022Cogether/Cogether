@@ -167,7 +167,7 @@ export const signStore = {
 
     // 이메일을 받고 이메일로 가입한 유저가 있으면 새 비밀번호를 보냄
     // 비밀 번호 찾기
-    takePassWord({ commit, getters }, email) {
+    seekPassWord({ commit, getters }, email) {
       http
         .post(
           "sign/password",
@@ -290,11 +290,17 @@ export const signStore = {
         });
     },
 
-    logout({ commit, getters }, userId) {
+    logout({ commit, getters }, payload) {
       http
-        .get("sign/signout/" + userId, {
-          headers: getters.authHeader,
-        })
+        .get(
+          "sign/signout/" + payload.userId,
+          {
+            email: payload.email,
+          },
+          {
+            headers: getters.authHeader,
+          }
+        )
         .then(() => {
           localStorage.removeItem("access_TOKEN");
           localStorage.removeItem("refresh_TOKEN");
@@ -349,7 +355,7 @@ export const signStore = {
           headers: getters.authHeader,
         })
         .then(() => {
-          dispatch("fetchCurrentUser", state.currentUser.id);
+          dispatch("fetchCurrentUser", state.loginUserId);
         })
         .catch((err) => {
           alert("회원 정보 수정 에러입니다.");

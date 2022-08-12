@@ -58,14 +58,14 @@ export default {
   setup(props) {
     const store = useStore();
 
-    const currentUser = store.getters.getCurrentUser;
+    const loginUserId = store.getters.getLoginUserId;
 
     // 유저 인증(isWrite -> 현재 유저가 TIL 글쓴이 isCommenter -> 현재 유저가 이 댓글 작성자)
     const isWriter = computed(() => {
-      return currentUser.pk == props.userId;
+      return props.userId == loginUserId;
     });
     const isCommenter = computed(() => {
-      return currentUser.pk == props.comment.user_id;
+      return props.comment.user_id == loginUserId;
     });
 
     // 코멘트 지우기

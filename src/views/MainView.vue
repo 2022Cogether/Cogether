@@ -39,7 +39,7 @@ export default {
     const onSubmit = () => {
       const payload = {
         keyword: searchWord.value,
-        userId: getters.value.getCurrentUser.id,
+        userId: getters.value.getLoginUserId,
       };
       console.log(payload);
       store.dispatch("searchTil", payload);
