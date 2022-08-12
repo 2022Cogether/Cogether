@@ -194,9 +194,11 @@ export const recruitStore = {
   actions: {
     //모달
     //프로젝트팀
-    getProjectTeams({ commit }, userId) {
+    getProjectTeams({ commit, getters }, userId) {
       http
-        .get("project/list/" + userId)
+        .get("project/list/" + userId, {
+          headers: getters.authHeader,
+        })
         .then(({ data }) => {
           console.log("프로젝트팀리스트받기성공");
           console.log(data);
@@ -244,7 +246,7 @@ export const recruitStore = {
       };
       http
         .post("project/scrap", sendData, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log("프로젝트팀스크랩성공");
@@ -258,7 +260,7 @@ export const recruitStore = {
       console.log(commit);
       http
         .delete("project/scrap", param, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log("프로젝트팀스크랩삭제성공");
@@ -269,9 +271,11 @@ export const recruitStore = {
         });
     },
     //프로젝트사람
-    getProjectPeople({ commit }, userId) {
+    getProjectPeople({ commit, getters }, userId) {
       http
-        .get("hunting/list/" + userId)
+        .get("hunting/list/" + userId, {
+          headers: getters.authHeader,
+        })
         .then(({ data }) => {
           console.log("프로젝트개인리스트받기성공");
           commit("SET_PROJECT_PEOPLE", data.huntings);
@@ -315,7 +319,6 @@ export const recruitStore = {
         userId: getters.getLoginUserId,
       };
       http
-<<<<<<< src/store/modules/recruitStore.js
         .post("hunting/scrap", sendData, {
           headers: getters.authHeader,
         })
@@ -331,7 +334,7 @@ export const recruitStore = {
       console.log(commit);
       http
         .delete("hunting/scrap", param, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log("프로젝트개인스크랩삭제성공");
@@ -342,9 +345,11 @@ export const recruitStore = {
         });
     },
     //스터디팀
-    getStudyTeams({ commit }, userId) {
+    getStudyTeams({ commit, getters }, userId) {
       http
-        .get("study/list/" + userId)
+        .get("study/list/" + userId, {
+          headers: getters.authHeader,
+        })
         .then(({ data }) => {
           console.log("스터디팀리스트받기성공");
           console.log(data);
@@ -391,7 +396,7 @@ export const recruitStore = {
       };
       http
         .post("stud/scrap", sendData, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log("스터디팀스크랩성공");
@@ -405,7 +410,7 @@ export const recruitStore = {
       console.log(commit);
       http
         .delete("study/scrap", param, {
-          headers: { Authorization: getters.authHeader },
+          headers: getters.authHeader,
         })
         .then(({ data }) => {
           console.log("스터디팀스크랩삭제성공");
