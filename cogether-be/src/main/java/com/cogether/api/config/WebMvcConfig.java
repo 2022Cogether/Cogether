@@ -18,11 +18,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private final JwtTokenInterceptor jwtTokenInterceptor;
 
     private final String [] INTERCEPTOR_WHITE_LIST=
-            {"/api/sign/*"};
+            {"/api/sign/**"};
 
     private final String [] INTERCEPTOR_LIST={
-            "/api/til/*","/api/project/*","/api/study/*","/api/hunting/*","/api/livecoop/*","/api/follow"
-            ,"/api/follower","/api/following","/api/chat/*","api/user/*"
+            "/api/til/**","/api/project/**","/api/study/**","/api/hunting/**","/api/livecoop/**","/api/follow/**"
+            ,"/api/follower/**","/api/following/**","/api/chat/**","api/user/**","api/verify/**","/api/skills/**"
     };
 
     public void addInterceptors(InterceptorRegistry registry) {
