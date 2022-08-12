@@ -16,13 +16,42 @@
             <p>올바른 이메일 주소를 입력해주세요</p>
           </div>
           <div>
-            <div v-if="isEmailChecked" class="btn active">인증 완료!</div>
+            <div v-if="isEmailChecked" class="d-flex justify-content-between">
+              <p>사용 가능한 이메일입니다</p>
+              <div class="btn active btn-warning" @keyup="certifyEmail">
+                재전송
+              </div>
+            </div>
             <div
               v-else
               class="btn btn-checks disable"
               @click.prevent="certifyEmail"
             >
               이메일 중복확인
+            </div>
+          </div>
+          <div v-if="isEmailChecked">
+            <div v-if="isCodeConfirmed">
+              <p>이메일 인증이 완료되었습니다</p>
+            </div>
+            <div v-else class="d-flex justify-content-between">
+              <div class="input-group mb-3 w-100">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="인증 코드"
+                  v-model="code"
+                />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-outline-secondary"
+                    type="button"
+                    @click="sendCode"
+                  >
+                    전송
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -200,15 +229,34 @@ export default {
     const isEmailChecked = ref(false);
     const checkValidEmail = () => {
       isValidEmail.value = getters.value.getEmailPattern.test(email.value);
+      // 인증 후 이메일을 바꾸는 꼼수 방지
       if (isEmailChecked.value) {
         isEmailChecked.value = false;
       }
+      if (isCodeConfirmed.value) {
+        isCodeConfirmed.value = false;
+      }
     };
+    const code = ref("");
     const certifyEmail = async () => {
       if (isValidEmail.value) {
         await store.dispatch("checkEmail", email.value);
         if (getters.value.getBooleanValue) {
           isEmailChecked.value = true;
+        }
+      }
+    };
+    const isCodeConfirmed = ref(false);
+    // 인증 코드 메일로 보내는 함수
+    const sendCode = async () => {
+      if (isValidEmail.value && isEmailChecked.value) {
+        const payload = {
+          email: email.value,
+          code: code.value,
+        };
+        await store.dispatch("sendCode", payload);
+        if (getters.value.getBooleanValue) {
+          isCodeConfirmed.value = true;
         }
       }
     };
@@ -282,6 +330,8 @@ export default {
     async function goRegister() {
       if (
         isValidEmail.value &&
+        isEmailChecked.value &&
+        isCodeConfirmed.value &&
         isPwdValid &&
         isPwdSame &&
         isNickValid &&
@@ -386,11 +436,17 @@ export default {
       skillInput,
       result,
       submitAutoComplete,
+
       isPageOne,
       changePage,
+
       email,
       isEmailChecked,
       certifyEmail,
+      code,
+      isCodeConfirmed,
+      sendCode,
+
       password,
       password2,
       nickName,

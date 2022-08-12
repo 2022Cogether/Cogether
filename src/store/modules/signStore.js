@@ -132,7 +132,7 @@ export const signStore = {
     fetchCurrentUser({ commit, getters }, userId) {
       if (getters.isLoggedIn) {
         http
-          .get("sign/user/" + userId, {
+          .get("user/" + userId, {
             headers: getters.authHeader,
           })
           .then((res) => commit("SET_CURRENT_USER", res.data))
@@ -150,7 +150,7 @@ export const signStore = {
     fetchAnothertUser({ commit, getters }, userId) {
       if (getters.isLoggedIn) {
         http
-          .get("sign/user/" + userId, {
+          .get("user/" + userId, {
             headers: getters.authHeader,
           })
           .then((res) => commit("SET_ANOTHER_USER", res.data))
@@ -166,6 +166,7 @@ export const signStore = {
     },
 
     // 이메일을 받고 이메일로 가입한 유저가 있으면 새 비밀번호를 보냄
+    // 비밀 번호 찾기
     takePassWord({ commit, getters }, email) {
       http
         .post(
@@ -240,6 +241,21 @@ export const signStore = {
           } else {
             console.log("중복된 이메일!");
           }
+        })
+        .catch((e) => {
+          console.log("에러: " + e);
+        });
+    },
+
+    // 메일로 인증 코드 보내기
+    async sendCode({ commit, getters }, payload) {
+      await http
+        .post("sign/verify", payload, {
+          headers: getters.authHeader,
+        })
+        .then(() => {
+          console.log("인증 번호 전송 완료");
+          commit("SET_BOOLEANVALUE");
         })
         .catch((e) => {
           console.log("에러: " + e);

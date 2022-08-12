@@ -37,7 +37,7 @@ export const skillStore = {
     // 유저 보유 스킬리스트 조회
     takeUserSkillSet({ commit, getters }, userId) {
       http
-        .get("sign/skills/" + userId, {
+        .get("skills/" + userId, {
           headers: getters.authHeader,
         })
         .then((res) => {

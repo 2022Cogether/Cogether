@@ -179,7 +179,7 @@ export const tilStore = {
 
     updateTil({ dispatch, getters, state }, payload) {
       http
-        .put("til/" + payload.pk, payload, {
+        .put("til/", payload, {
           headers: getters.authHeader,
         }) // payload: Til 데이터
         .then((res) => {
@@ -243,7 +243,7 @@ export const tilStore = {
     searchTil({ commit, getters }, payload) {
       // paylod => keyword, userId
       http
-        .get("til/search/", payload, {
+        .get("til/search", payload, {
           headers: getters.authHeader,
         })
         .then((res) => commit("ADD_TIL_LIST", res.data))
@@ -252,7 +252,7 @@ export const tilStore = {
 
     createComment({ commit, getters }, payload) {
       http
-        .post("/til/commment/create", payload, {
+        .post("/til/commment", payload, {
           headers: getters.authHeader,
         })
         .then((res) => {
