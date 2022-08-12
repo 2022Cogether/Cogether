@@ -53,7 +53,7 @@ export const signStore = {
     },
     // 인증키로 헤더 세팅 (장고 때 만든 거라 spring에서 다를 수 있음)
     authHeader(state) {
-      return { ACCESS_TOKEN: `token ${state.token}` };
+      return { ACCESS_TOKEN: state.token };
     },
     getCurrentUser(state) {
       return state.currentUser;

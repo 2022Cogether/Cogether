@@ -135,8 +135,14 @@
     >My TIL
   </router-link>
   <div class="til-container d-flex flex-wrap justify-content-evenly">
-    <ProfileTil v-for="til in tilList" :key="til.pk" :til="til" />
+    <ProfileTil
+      v-for="til in tilList"
+      :key="til.pk"
+      :til="til"
+      @click="setNum(til.pk)"
+    />
   </div>
+  <TilDetail v-if="isOpen" class="isModal" />
 </template>
 
 <script>
@@ -145,7 +151,9 @@
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
 />;
 import ProfileTil from "./ProfileTil.vue";
-import { ref, getters } from "vue";
+import TilDetail from "@/components/til/TilDetail.vue";
+
+import { ref, getters, computed } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 
@@ -153,6 +161,7 @@ export default {
   name: "ProfileMain",
   components: {
     ProfileTil,
+    TilDetail,
   },
   setup() {
     const store = useStore();
@@ -217,16 +226,18 @@ export default {
     getTilList();
     const tilList = store.getters.getTilList;
 
-    // 모달 바깥을 클릭하면 모달을 닫게 하는 함수
-    const isOnModal = ref(false);
-    const closeModal = (event) => {
-      if (
-        !document
-          .querySelector(".modal")
-          .querySelector("." + event.target.className) // 클릭한 박스의 클래스가 modal-card라는 클래스의 하위 클래스인지 아닌지
-      ) {
-        isOnModal.value = false;
-      }
+    // 모달 창
+    const modalNum = computed(() => {
+      return store.getters.getOpenTil;
+    });
+    const isOpen = computed(() => {
+      return modalNum.value != -1;
+    });
+    const setNum = (tilNum) => {
+      store.dispatch("fetchOpenTil", {
+        tilId: tilNum,
+        userId: store.getters.getCurrentUser,
+      });
     };
 
     // 팔로우
@@ -261,7 +272,9 @@ export default {
       onSubmit,
       webIconUrl,
 
-      closeModal,
+      modalNum,
+      isOpen,
+      setNum,
 
       follow,
       unfollow,
@@ -425,5 +438,13 @@ h4 {
 
 .pen-icon {
   font-size: 30px;
+}
+
+/* Modal 창 */
+.isModal {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
 }
 </style>
