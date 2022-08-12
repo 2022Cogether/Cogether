@@ -148,7 +148,7 @@ export default {
     const onSubmit = () => {
       const payload = {
         keyword: searchWord.value,
-        userId: store.getters.getCurrentUser,
+        userId: profiletUser.id,
       };
       console.log(payload);
       store.dispatch("searchTil", payload);
@@ -181,7 +181,7 @@ export default {
     ];
 
     // 내 프로필인지 아닌지 판단하고 알맞는 자료를 가져와 profile User 변수에 넣기
-    const isMyProfile = store.getters.getCurrentUser.pk == userId;
+    const isMyProfile = store.getters.getCurrentUser.id == userId;
 
     if (!isMyProfile) {
       store.dispatch("fetchAnothertUser", userId);

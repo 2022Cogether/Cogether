@@ -284,7 +284,7 @@ export default {
       ) {
         store.dispatch("fetchOpenTil", {
           tilId: -1,
-          userId: getters.value.getCurrentUser,
+          userId: getters.value.getCurrentUser.id,
         });
       }
     };
