@@ -40,14 +40,14 @@ public class FollowingController {
     }
 
     @GetMapping("/following")
-    public ResponseEntity loadFollowingList(@RequestBody FollowRequest followRequest)
+    public ResponseEntity loadFollowingList(@RequestHeader("ACCESS_TOKEN")String accessToken)
     {
-        return ResponseEntity.ok().body(followingService.loadFollowingList(followRequest));
+        return ResponseEntity.ok().body(followingService.loadFollowingList(accessToken));
     }
 
     @GetMapping("/follower")
-    public ResponseEntity loadFollowerList(@RequestBody FollowRequest followRequest)
+    public ResponseEntity loadFollowerList(@RequestHeader("ACCESS_TOKEN")String accessToken)
     {
-        return ResponseEntity.ok().body(followingService.loadFollowerList(followRequest));
+        return ResponseEntity.ok().body(followingService.loadFollowerList(accessToken));
     }
 }
