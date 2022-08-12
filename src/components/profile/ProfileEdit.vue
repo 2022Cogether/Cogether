@@ -4,7 +4,7 @@
     <div class="row">
       <div class="h5 col-3">프로필 사진</div>
       <div class="profile-img-box offset-1">
-        <img src="@/assets/logo.png" alt="profile image" class="profile-img" />
+        <img :src="img_url" alt="profile image" class="profile-img" />
       </div>
     </div>
     <div class="row my-3">
@@ -235,12 +235,14 @@
         />
       </div>
     </div>
-  </div>
-  <div class="mt-5 mb-3 d-flex justify-content-around">
-    <div class="btn" @click="edit" style="background-color: 2A9D8F">수정</div>
-    <router-link class="btn" @click="back" style="background-color: 2A9D8F">
-      취소
-    </router-link>
+    <div class="mt-5 mb-3 d-flex justify-content-around">
+      <button @click="edit" style="background-color: #2a9d8f; color: white">
+        수정
+      </button>
+      <button @click="back" style="background-color: #2a9d8f; color: white">
+        취소
+      </button>
+    </div>
   </div>
 </template>
 
