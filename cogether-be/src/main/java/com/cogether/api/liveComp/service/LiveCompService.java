@@ -36,7 +36,7 @@ public class LiveCompService {
         liveComp.setTotalTime(liveComp.getTotalTime() + 1);
         LiveComp savedLiveComp = liveCompRepository.save(liveComp);
         //TODO : findByUserId로 수정 필요할 것 같아요~ :) 우리 기존 유저들 랭킹 테이블에 추가해줘야겠다~
-        Ranking ranking = rankingRepository.findById(request.getUserId()).orElseThrow(RankingNotFoundException::new);
+        Ranking ranking = rankingRepository.findByUser_Id(request.getUserId());
         ranking.setWeek(ranking.getWeek() + 1);
         ranking.setMonth(ranking.getMonth() + 1);
         ranking.setTotal(ranking.getTotal() + 1);
