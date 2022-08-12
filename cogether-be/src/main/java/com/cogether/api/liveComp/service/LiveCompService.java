@@ -2,7 +2,6 @@ package com.cogether.api.liveComp.service;
 
 import com.cogether.api.liveComp.domain.LiveCompRequest;
 import com.cogether.api.liveComp.domain.LiveCompResponse;
-import com.cogether.api.liveComp.exception.RankingNotFoundException;
 import com.cogether.api.liveComp.repository.LiveCompRepository;
 import com.cogether.api.liveComp.domain.LiveComp;
 import com.cogether.api.rank.domain.Ranking;
