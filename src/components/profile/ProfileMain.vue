@@ -181,7 +181,7 @@ export default {
     ];
 
     // 내 프로필인지 아닌지 판단하고 알맞는 자료를 가져와 profile User 변수에 넣기
-    const isMyProfile = store.getters.getCurrentUser.id == userId;
+    const isMyProfile = store.getters.getLoginUserId == userId;
 
     if (!isMyProfile) {
       store.dispatch("fetchAnothertUser", userId);

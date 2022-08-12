@@ -37,9 +37,9 @@ const routes = [
         component: () => import("@/components/til/TilUpdate.vue"),
       },
       {
-        path: "list/:userId",
+        path: "list/my/:userId",
         name: "TilList",
-        component: () => import("@/components/til/TilList.vue"),
+        component: () => import("@/components/til/TilListLayout.vue"),
       },
     ],
   },

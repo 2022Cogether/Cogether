@@ -247,10 +247,9 @@ export default {
     const commentContent = ref("");
 
     // 사용자가 글쓴이인지 아닌지 확인
-    const currentUser = store.getters.getCurrentUser;
     const isWriter = computed(() => {
-      return currentUser.pk == tilContent.value.user_id || true;
-    }); // 확인을 위해 || true 해놓음
+      return tilContent.value.user_id == store.getters.getLoginUserId;
+    });
 
     // Til 삭제
     const deleteTil = () => {
@@ -284,7 +283,7 @@ export default {
       ) {
         store.dispatch("fetchOpenTil", {
           tilId: -1,
-          userId: getters.value.getCurrentUser.id,
+          userId: getters.value.getLoginUserId,
         });
       }
     };

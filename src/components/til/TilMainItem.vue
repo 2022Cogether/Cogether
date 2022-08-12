@@ -222,10 +222,9 @@ export default {
     const getters = computed(() => store.getters);
 
     // 사용자가 글쓴이인지 아닌지 확인
-    const currentUser = store.getters.getCurrentUser;
     const isWriter = computed(() => {
-      return currentUser.pk == props.til.user_id || true;
-    }); // 확인을 위해 || true 해놓음
+      return props.til.user_id == store.getters.getLoginUserId;
+    });
 
     const commentContent = ref("");
 

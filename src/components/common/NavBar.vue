@@ -72,7 +72,11 @@ export default {
     }
 
     const logout = () => {
-      store.dispatch("logout", getters.value.getLoginUserId);
+      const payload = {
+        userId: getters.value.getLoginUserId,
+        email: getters.value.getCurrentUser.email,
+      };
+      store.dispatch("logout", payload);
     };
 
     return { isLoggedIn, currentUser, checkOkay, logout, userId };
