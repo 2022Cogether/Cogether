@@ -21,8 +21,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
             {"/api/sign/**"};
 
     private final String [] INTERCEPTOR_LIST={
-            "/api/til/**","/api/project/**","/api/study/**","/api/hunting/**","/api/livecoop/**","/api/follow/**"
-            ,"/api/follower/**","/api/following/**","/api/chat/**","api/user/**","api/verify/**","/api/skills/**"
+            "/api/til/**","/api/project/**","/api/study/**","/api/hunting/**","/api/livecoop/**","/api/livecomp/**","/api/follow/**"
+            ,"/api/follower/**","/api/following/**","/api/chat/**","/api/user/**","/api/verify/**","/api/skills/**"
     };
 
     public void addInterceptors(InterceptorRegistry registry) {
