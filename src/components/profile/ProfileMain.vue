@@ -43,7 +43,7 @@
       <p class="follower">팔로워 1</p>
       <p class="follow">팔로우 10</p>
     </div>
-    <div v-if="!isMyProfile" class="container mb-3">
+    <div v-if="isMyProfile" class="container mb-3">
       <div class="row d-flex justify-content-between">
         <div
           v-if="profileUser.isFollow"
@@ -55,6 +55,14 @@
         <div v-else class="btn btn-success col-6" @click="follow">팔로우</div>
         <div class="btn btn-secondary col-6">메세지</div>
       </div>
+    </div>
+    <div v-else class="container mb-3 d-flex justify-content-center">
+      <div class="btn btn-success col-6" @click="followOpen">팔로창 열기</div>
+      <ProfileFollow
+        v-if="isFollowOpen"
+        class="isModal"
+        @closeModal="closeModal"
+      />
     </div>
   </div>
   <!-- Tech Stack -->
@@ -142,7 +150,7 @@
       @click="setNum(til.pk)"
     />
   </div>
-  <TilDetail v-if="isOpen" class="isModal" />
+  <TilDetail v-if="isTilOpen" class="isModal" />
 </template>
 
 <script>
@@ -151,6 +159,7 @@
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
 />;
 import ProfileTil from "./ProfileTil.vue";
+import ProfileFollow from "./ProfileFollow.vue";
 import TilDetail from "@/components/til/TilDetail.vue";
 
 import { ref, getters, computed } from "vue";
@@ -162,6 +171,7 @@ export default {
   components: {
     ProfileTil,
     TilDetail,
+    ProfileFollow,
   },
   setup() {
     const store = useStore();
@@ -230,7 +240,7 @@ export default {
     const modalNum = computed(() => {
       return store.getters.getOpenTil;
     });
-    const isOpen = computed(() => {
+    const isTilOpen = computed(() => {
       return modalNum.value != -1;
     });
     const setNum = (tilNum) => {
@@ -263,6 +273,15 @@ export default {
       }
     };
 
+    // 팔로우 모달창 열기/닫기
+    const isFollowOpen = ref(false);
+    const followOpen = () => {
+      isFollowOpen.value = true;
+    };
+    const closeModal = () => {
+      isFollowOpen.value = false;
+    };
+
     return {
       isLoggedIn,
       isMyProfile,
@@ -273,11 +292,14 @@ export default {
       webIconUrl,
 
       modalNum,
-      isOpen,
+      isTilOpen,
       setNum,
 
       follow,
       unfollow,
+      isFollowOpen,
+      followOpen,
+      closeModal,
     };
   },
 };
