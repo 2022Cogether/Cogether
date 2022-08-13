@@ -366,37 +366,6 @@ export const signStore = {
         });
     },
 
-    // 팔로우 언팔로우
-    follow({ commit, getters }, payload) {
-      http
-        .post("follow/", payload, {
-          headers: getters.authHeader,
-        })
-        .then(() => {
-          commit("SET_BOOLEANVALUE");
-          console.log("팔로우 완료");
-        })
-        .catch((err) => {
-          alert("팔로우 실패");
-          console.error(err.response.data);
-        });
-    },
-
-    unfollow({ commit, getters }, payload) {
-      http
-        .post("unfollow/", payload, {
-          headers: getters.authHeader,
-        })
-        .then(() => {
-          commit("SET_BOOLEANVALUE");
-          console.log("언팔로우 완료");
-        })
-        .catch((err) => {
-          alert("언팔로우 실패");
-          console.error(err.response.data);
-        });
-    },
-
     // accessToken 재요청
     refreshToken({ commit }) {
       //accessToken 만료로 재발급 후 재요청시 비동기처리로는 제대로 처리가 안되서 promise로 처리함

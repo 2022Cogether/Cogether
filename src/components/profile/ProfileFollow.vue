@@ -38,7 +38,15 @@
           role="tabpanel"
           aria-labelledby="pills-followings-tab"
         >
-          ...
+          <ul v-for="following in followingList" :key="following.id">
+            <font-awesome-icon
+              icon="fa-solid fa-rectangle-xmark"
+              @click="unfollow(following.id)"
+            />
+            <li @click="goProfile(following.id)" style="cursor: pointer">
+              {{ following.id }}: {{ following.email }}
+            </li>
+          </ul>
         </div>
         <div
           class="tab-pane fade"
@@ -46,15 +54,19 @@
           role="tabpanel"
           aria-labelledby="pills-followers-tab"
         >
-          ...
+          <ul v-for="follower in followerList" :key="follower.id">
+            <li @click="goProfile(follower.id)" style="cursor: pointer">
+              {{ follower.id }}: {{ follower.email }}
+            </li>
+          </ul>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { computed } from "vue";
 import { useStore } from "vuex";
+import router from "@/router";
 
 export default {
   name: "ProfileFollow",
@@ -62,9 +74,13 @@ export default {
   emits: ["closeModal"],
   setup(props, { emit }) {
     const store = useStore();
-    const getters = computed(() => store.getters);
-    props;
-    getters;
+    // props;
+
+    store.dispatch("fetchFollowingList");
+    store.dispatch("fetchFollowerList");
+
+    let followingList = store.getters.getMyFollowingList;
+    let followerList = store.getters.getMyFollowerList;
 
     // 모달 바깥을 클릭하면 모달을 닫게 하는 함수
     const closeModal = (event) => {
@@ -77,8 +93,34 @@ export default {
       }
     };
 
+    // 언팔로우
+    const unfollow = (userId) => {
+      const payload = {
+        toID: store.getters.getLoginUserId,
+        fromId: userId,
+      };
+      store.dispatch("unfollow", payload);
+      if (store.getters.getBooleanValue) {
+        followingList = followingList.filter(
+          (following) => following.id != userId
+        );
+      }
+    };
+
+    // 프로필로
+    const goProfile = (userID) => {
+      router.push({
+        name: "profile",
+        params: { userId: userID },
+      });
+    };
+
     return {
+      followingList,
+      followerList,
       closeModal,
+      unfollow,
+      goProfile,
     };
   },
 };
