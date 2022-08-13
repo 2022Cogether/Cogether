@@ -284,7 +284,7 @@ export default {
       if (
         !document
           .querySelector(".modal")
-          .querySelector("." + event.target.className) // 클릭한 박스의 클래스가 modal-card라는 클래스의 하위 클래스인지 아닌지
+          .querySelector("." + event.target.className.split(" ")[0]) // 클릭한 박스의 클래스가 modal-card라는 클래스의 하위 클래스인지 아닌지
       ) {
         isOnTechModal.value = false;
       }
