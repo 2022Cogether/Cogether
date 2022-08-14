@@ -1,12 +1,12 @@
 <template>
-  <div
-    class="team-container"
-    data-bs-toggle="modal"
-    data-bs-target="#teamDetailInfo"
-    @click="setModal"
-  >
+  <div class="team-container">
     <div class="d-flex justify-content-between">
-      <div class="d-flex">
+      <div
+        class="head d-flex"
+        data-bs-toggle="modal"
+        data-bs-target="#teamDetailInfo"
+        @click="setModal"
+      >
         <div class="profile-img-box">
           <img
             class="profile-img"
@@ -56,10 +56,20 @@
         </div>
       </div>
     </div>
-    <p class="group-info">
+    <p
+      class="group-info"
+      data-bs-toggle="modal"
+      data-bs-target="#teamDetailInfo"
+      @click="setModal"
+    >
       {{ projectTeam.content }}
     </p>
-    <div class="info-box d-flex justify-content-between">
+    <div
+      class="info-box d-flex justify-content-between"
+      data-bs-toggle="modal"
+      data-bs-target="#teamDetailInfo"
+      @click="setModal"
+    >
       <!-- 기술스택아이콘 -->
       <div class="tech-icon-container">
         <div
@@ -154,6 +164,10 @@ export default {
 </script>
 
 <style scoped>
+.head {
+  width: 90%;
+}
+
 /* 북마크 */
 .bookmark-icon:hover {
   cursor: pointer;

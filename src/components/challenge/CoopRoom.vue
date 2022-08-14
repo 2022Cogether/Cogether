@@ -65,6 +65,8 @@ import Swal from "sweetalert2";
 export default {
   name: "CoopRoom",
   setup() {
+    const store = useStore();
+    const getters = computed(() => store.getters);
     const state = reactive({
       isExpand: true,
     });
@@ -80,7 +82,9 @@ export default {
     });
     const roomNo = ref(router.currentRoute.value.params.roomNo);
     http
-      .get(`/LiveCoop/${roomNo.value}`)
+      .get(`/livecoop/${roomNo.value}`, {
+        headers: getters.value.authHeader,
+      })
       .then(({ data }) => {
         console.log(data);
         room.id = data.id;
@@ -95,8 +99,6 @@ export default {
       .catch((e) => {
         console.log("에러: " + e);
       });
-    const store = useStore();
-    const getters = computed(() => store.getters);
 
     function changeExpand() {
       state.isExpand = !state.isExpand;

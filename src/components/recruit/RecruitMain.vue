@@ -24,6 +24,10 @@
         <font-awesome-icon icon="fa-regular fa-bookmark" />
         스크랩
       </button>
+      <button type="button" class="btn" @click="btnTab4">
+        <font-awesome-icon icon="fa-regular fa-bookmark" />
+        내 글
+      </button>
     </div>
     <!-- 기술스택 필터 -->
     <!-- <div class="d-flex">
@@ -53,6 +57,18 @@
     </div>
     <!-- 스크랩 -->
     <div v-if="state.tabState === 'scrap'">
+      <div class="list-box">
+        <PeopleList :searchText="state.searchText" :tabState="state.tabState" />
+      </div>
+      <div class="list-box">
+        <TeamList :searchText="state.searchText" :tabState="state.tabState" />
+      </div>
+      <div class="list-box">
+        <StudyList :searchText="state.searchText" :tabState="state.tabState" />
+      </div>
+    </div>
+    <!-- 내가쓴글 -->
+    <div v-if="state.tabState === 'my'">
       <div class="list-box">
         <PeopleList :searchText="state.searchText" :tabState="state.tabState" />
       </div>
@@ -97,6 +113,9 @@ export default {
     function btnTab3() {
       state.tabState = "scrap";
     }
+    function btnTab4() {
+      state.tabState = "my";
+    }
 
     function recruitCreate() {
       router.push({ name: "RecruitCreate" });
@@ -113,6 +132,7 @@ export default {
       recruitCreate,
       search,
       btnTab3,
+      btnTab4,
     };
   },
   components: {

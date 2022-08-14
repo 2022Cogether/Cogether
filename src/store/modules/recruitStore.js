@@ -2,172 +2,9 @@ import http from "@/api/http";
 
 export const recruitStore = {
   state: {
-    projectTeams: [
-      {
-        projectId: 1,
-        userId: 1,
-        userNickname: "홍철",
-        userImgurl: null,
-        start: "2022-08-02T15:17:22",
-        total_mem: 6,
-        cur_mem: 2,
-        online: "미정",
-        title: "프로젝트 모집",
-        content: "프로젝트를 함께할 팀원을 모집합니다.",
-        skillList: [
-          {
-            projectSkillId: 1,
-            projectId: 1,
-            skillName: "java",
-          },
-          {
-            projectSkillId: 2,
-            projectId: 1,
-            skillName: "c",
-          },
-        ],
-        createdAt: null,
-        scrap: false,
-      },
-      {
-        projectId: 1,
-        userId: 1,
-        userNickname: "홍철",
-        userImgurl: null,
-        start: "2022-08-02T15:17:22",
-        total_mem: 6,
-        cur_mem: 2,
-        online: "미정",
-        title: "프로젝트 모집",
-        content: "두번째에요.",
-        skillList: [
-          {
-            projectSkillId: 1,
-            projectId: 1,
-            skillName: "java",
-          },
-          {
-            projectSkillId: 2,
-            projectId: 1,
-            skillName: "c",
-          },
-        ],
-        createdAt: null,
-        scrap: false,
-      },
-    ],
-    projectPeople: [
-      {
-        huntingId: 2,
-        userId: 1,
-        userNickname: "김싸피",
-        userImgUrl: null,
-        title: "나는 어때?",
-        content: "나 꽤 몽총한 사람이야",
-        scrap: false,
-        scrapId: 0,
-        userSkillList: [
-          {
-            userSkillId: 1,
-            skillName: "c",
-          },
-          {
-            userSkillId: 2,
-            skillName: "javascript",
-          },
-          {
-            userSkillId: 3,
-            skillName: "python",
-          },
-          {
-            userSkillId: 4,
-            skillName: "java",
-          },
-        ],
-      },
-      {
-        huntingId: 2,
-        userId: 1,
-        userNickname: "나싸피",
-        userImgUrl: null,
-        title: "나는 어때?",
-        content: "나 꽤 몽총한 사람이야",
-        scrap: false,
-        scrapId: 0,
-        userSkillList: [
-          {
-            userSkillId: 1,
-            skillName: "c",
-          },
-          {
-            userSkillId: 2,
-            skillName: "javascript",
-          },
-          {
-            userSkillId: 3,
-            skillName: "python",
-          },
-          {
-            userSkillId: 4,
-            skillName: "java",
-          },
-        ],
-      },
-    ],
-    studyTeams: [
-      {
-        studyId: 1,
-        userId: 1,
-        userNickname: "홍철",
-        userImgurl: null,
-        start: "2022-08-02T15:17:22",
-        total_mem: 6,
-        cur_mem: 2,
-        online: "미정",
-        title: "스터디 모집",
-        content: "스터디를 함께할 팀원을 모집합니다.",
-        skillList: [
-          {
-            projectSkillId: 1,
-            projectId: 1,
-            skillName: "java",
-          },
-          {
-            projectSkillId: 2,
-            projectId: 1,
-            skillName: "c",
-          },
-        ],
-        createdAt: null,
-        scrap: false,
-      },
-      {
-        studyId: 1,
-        userId: 1,
-        userNickname: "홍철",
-        userImgurl: null,
-        start: "2022-08-02T15:17:22",
-        total_mem: 6,
-        cur_mem: 2,
-        online: "미정",
-        title: "스터디 모집",
-        content: "두번째에요.",
-        skillList: [
-          {
-            studySkillId: 1,
-            studyId: 1,
-            skillName: "java",
-          },
-          {
-            studySkillId: 2,
-            studyId: 1,
-            skillName: "c",
-          },
-        ],
-        createdAt: null,
-        scrap: false,
-      },
-    ],
+    projectTeams: [],
+    projectPeople: [],
+    studyTeams: [],
   },
   getters: {
     getProjectTeams(state) {
@@ -201,6 +38,20 @@ export const recruitStore = {
         })
         .then(({ data }) => {
           console.log("프로젝트팀리스트받기성공");
+          console.log(data);
+          commit("SET_PROJECT_TEAMS", data.projectList);
+        })
+        .catch((e) => {
+          console.log("에러: " + e);
+        });
+    },
+    getMyProjectTeams({ commit, getters }, userId) {
+      http
+        .get("project/list/my/" + userId, {
+          headers: getters.authHeader,
+        })
+        .then(({ data }) => {
+          console.log("나의프로젝트팀리스트받기성공");
           console.log(data);
           commit("SET_PROJECT_TEAMS", data.projectList);
         })
@@ -284,6 +135,19 @@ export const recruitStore = {
           console.log("에러: " + e);
         });
     },
+    getMyProjectPeople({ commit, getters }, userId) {
+      http
+        .get("hunting/list/my/" + userId, {
+          headers: getters.authHeader,
+        })
+        .then(({ data }) => {
+          console.log("내프로젝트개인리스트받기성공");
+          commit("SET_PROJECT_PEOPLE", data.huntings);
+        })
+        .catch((e) => {
+          console.log("에러: " + e);
+        });
+    },
     async createProjectPerson({ commit, getters }, param) {
       console.log(commit);
       await http
@@ -359,6 +223,20 @@ export const recruitStore = {
           console.log("에러: " + e);
         });
     },
+    getMyStudyTeams({ commit, getters }, userId) {
+      http
+        .get("study/list/my/" + userId, {
+          headers: getters.authHeader,
+        })
+        .then(({ data }) => {
+          console.log("내스터디팀리스트받기성공");
+          console.log(data);
+          commit("SET_STUDY_TEAMS", data.studyList);
+        })
+        .catch((e) => {
+          console.log("에러: " + e);
+        });
+    },
     createStudyTeam({ commit, getters }, param) {
       console.log(param);
       console.log(commit);
@@ -395,7 +273,7 @@ export const recruitStore = {
         userId: getters.getLoginUserId,
       };
       http
-        .post("stud/scrap", sendData, {
+        .post("study/scrap", sendData, {
           headers: getters.authHeader,
         })
         .then(({ data }) => {
