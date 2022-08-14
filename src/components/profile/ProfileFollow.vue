@@ -42,6 +42,7 @@
             <font-awesome-icon
               icon="fa-solid fa-rectangle-xmark"
               @click="unfollow(following.id)"
+              style="cursor: pointer"
             />
             <li @click="goProfile(following.id)" style="cursor: pointer">
               {{ following.id }}: {{ following.email }}
