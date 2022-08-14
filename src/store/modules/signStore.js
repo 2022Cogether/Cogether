@@ -220,11 +220,9 @@ export const signStore = {
     },
 
     // 닉네임 중복 체크
-    async checkNickName({ commit, getters }, nickName) {
+    async checkNickName({ commit }, nickName) {
       await http
-        .get("verify/nickname/" + nickName, {
-          headers: getters.authHeader,
-        })
+        .get("verify/nickname/" + nickName)
         .then(({ data }) => {
           if (!data) {
             console.log("사용가능한 닉네임!");
@@ -239,12 +237,10 @@ export const signStore = {
     },
 
     // 이메일 중복 체크
-    async checkEmail({ commit, getters }, email) {
+    async checkEmail({ commit }, email) {
       console.log("이메일 체크");
       await http
-        .get("verify/email/" + email, {
-          headers: getters.authHeader,
-        })
+        .get("verify/email/" + email)
         .then(({ data }) => {
           if (!data) {
             console.log("사용가능한 이메일!");
@@ -298,12 +294,9 @@ export const signStore = {
         });
     },
 
-    logout({ commit, getters }, payload) {
+    logout({ commit, getters }) {
       http
-        .get("sign/signout/" + payload.userId, {
-          params: {
-            email: payload.email,
-          },
+        .get("sign/signout", {
           headers: getters.authHeader,
         })
         .then((res) => {
