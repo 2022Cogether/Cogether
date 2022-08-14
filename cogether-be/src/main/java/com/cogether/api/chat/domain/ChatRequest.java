@@ -61,4 +61,14 @@ public class ChatRequest {
         }
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class UpdateLastChat {
+        private int userId;
+        private int chatRoomId;
+        private int chatId;
+    }
+
 }
