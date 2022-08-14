@@ -41,3 +41,6 @@ out/
 
 ### db ###
 **/src/main/resources/application-db.properties
+
+### email ###
+**/src/main/resources/application-email.properties

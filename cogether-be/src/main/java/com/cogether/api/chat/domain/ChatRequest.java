@@ -3,10 +3,7 @@ package com.cogether.api.chat.domain;
 import com.cogether.api.user.domain.User;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import java.time.LocalDateTime;
 
 public class ChatRequest {
     @Getter
@@ -19,6 +16,7 @@ public class ChatRequest {
         public ChatRoom toEntity() {
             return ChatRoom.builder()
                     .type(type)
+                    .createdAt(LocalDateTime.now())
                     .build();
         }
     }
@@ -40,6 +38,7 @@ public class ChatRequest {
                     .chatRoom(chatRoom)
                     .sendUserId(sendUserId)
                     .message(message)
+                    .createdAt(LocalDateTime.now())
                     .build();
         }
     }
@@ -57,6 +56,7 @@ public class ChatRequest {
             return ChatMember.builder()
                     .user(user)
                     .chatRoom(chatRoom)
+                    .createdAt(LocalDateTime.now())
                     .build();
         }
     }
