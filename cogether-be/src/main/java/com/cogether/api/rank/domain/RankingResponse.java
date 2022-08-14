@@ -50,4 +50,46 @@ public class RankingResponse {
         }
     }
 
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class ExpRankList{
+        private int myRank;
+        private String userNickname;
+        private String userImg;
+        private int myExp;
+        private List<ExpRank> expRankList;
+
+        public static RankingResponse.ExpRankList build(int myRank, User user, List<ExpRank> expRankList){
+            return ExpRankList.builder()
+                    .myRank(myRank)
+                    .userNickname(user.getNickname())
+                    .userImg(user.getImgUrl())
+                    .myExp(user.getExp())
+                    .expRankList(expRankList)
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class ExpRank{
+        private int rank;
+        private String userNickname;
+        private String userImg;
+        private int Exp;
+
+        public static RankingResponse.ExpRank build(int rank, User user){
+            return ExpRank.builder()
+                    .rank(rank)
+                    .userNickname(user.getNickname())
+                    .userImg(user.getImgUrl())
+                    .Exp(user.getExp())
+                    .build();
+        }
+    }
 }

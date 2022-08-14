@@ -90,4 +90,82 @@ public class RankService {
         return RankingResponse.TilRankList.build(myRank, user, myRanking.getTilCnt(), tilRankList);
     }
 
+    public RankingResponse.ExpRankList getExpList(int userId, int page){
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        List<User> list = userRepository.findAllByOrderByExp();
+        int startIndex = 20*(page-1);
+        int endIndex = 20*(page);
+        if(endIndex > list.size()) {
+            endIndex = list.size();
+        }
+        List<RankingResponse.ExpRank> expRankList = new ArrayList<>();
+        for (int i = startIndex; i < endIndex; i++){
+            User u = list.get(i);
+            int rank = 1;
+            for (int j = 0; j < list.size(); j++){
+                if(list.get(j).getExp() == u.getExp()){
+                    break;
+                }
+                if(list.get(j).getExp() > u.getExp()){
+                    rank += 1;
+                }
+            }
+            expRankList.add(RankingResponse.ExpRank.build(rank, u));
+        }
+        int myRank = 1;
+        for (int i = 0; i < list.size(); i++){
+            if(list.get(i).getExp() == user.getExp()){
+                break;
+            }
+            if(list.get(i).getExp() > user.getExp()){
+                myRank += 1;
+            }
+        }
+        return RankingResponse.ExpRankList.build(myRank, user, expRankList);
+    }
+
+    public RankingResponse.ExpRankList getMyExpList(int userId, int page){
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        List<Follow> followList = followRepository.findByFollowing(userId);
+        List<User> followUserList = new ArrayList<>();
+        List<RankingResponse.ExpRank> expRankList = new ArrayList<>();
+        for (int i = 0; i < followUserList.size(); i++){
+            int followId = followList.get(i).getFromId();
+            followUserList.add(userRepository.findById(followId).orElseThrow(UserNotFoundException::new));
+        }
+        Collections.sort(followUserList, new Comparator<User>() {
+            @Override
+            public int compare(User o1, User o2) {
+                return o2.getExp()-o1.getExp();
+            }
+        });
+        int startIndex = 20*(page-1);
+        int endIndex = 20*page;
+        if(endIndex > followUserList.size()){
+            endIndex = followUserList.size();
+        }
+        for (int i = startIndex; i < endIndex; i++){
+            int rank = 1;
+            User u = followUserList.get(i);
+            for (int j = 0; j < followUserList.size(); j++){
+                if(followUserList.get(j).getExp() == u.getExp()){
+                    break;
+                }
+                if(followUserList.get(j).getExp() > u.getExp()){
+                    rank += 1;
+                }
+            }
+            expRankList.add(RankingResponse.ExpRank.build(rank, u));
+        }
+        int myRank = 1;
+        for (int i = 0; i < followUserList.size(); i++){
+            if(followUserList.get(i).getExp() == user.getExp()){
+                break;
+            }
+            if(followUserList.get(i).getExp() > user.getExp()){
+                myRank += 1;
+            }
+        }
+        return RankingResponse.ExpRankList.build(myRank, user, expRankList);
+    }
 }
