@@ -95,7 +95,10 @@ export default {
             store.dispatch("sendCompeteTime", getters.value.getLoginUserId);
             store.dispatch("getCompeteInfo", getters.value.getLoginUserId);
           }
-          if (!getters.value.getIsCompeteStarted) {
+          if (
+            !getters.value.getIsCompeteStarted ||
+            getters.value.getLoginUserId == ""
+          ) {
             //compete 꺼진 상태면 보내지 않기
             store.commit("SET_COMPETE_INTERVAL", false); //interval상태값 끄기
             clearInterval(interval);
