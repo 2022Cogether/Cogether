@@ -27,6 +27,7 @@ public class RankService {
     public RankingResponse.TilRankList getTilRank(int userId, int page){
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<Ranking> list = rankingRepository.findAllByOrderByTilCntDesc();
+        Ranking myRanking = rankingRepository.findByUser_Id(userId);
         int startIndex = 20*(page-1);
         int endIndex = 20*(page);
         if(endIndex > list.size()) {
@@ -34,11 +35,18 @@ public class RankService {
         }
         List<RankingResponse.TilRank> tilRankList = new ArrayList<>();
         for (int i = startIndex; i < endIndex; i++){
-            int rank = i+1;
+            int rank = 1;
             Ranking ranking = list.get(i);
+            for (int j = 0; j < list.size(); j++){
+                if(list.get(j).getTilCnt() == ranking.getTilCnt()){
+                    break;
+                }
+                if(list.get(j).getTilCnt() > ranking.getTilCnt()){
+                    rank += 1;
+                }
+            }
             tilRankList.add(RankingResponse.TilRank.build(rank, ranking.getUser(), ranking.getTilCnt()));
         }
-        Ranking myRanking = rankingRepository.findByUser_Id(userId);
         int myRank = 1;
         for (int i = 0; i < list.size(); i++){
             if(list.get(i).getTilCnt() == myRanking.getTilCnt()){
@@ -74,8 +82,16 @@ public class RankService {
             endIndex = followingList.size();
         }
         for (int i = startIndex; i < endIndex; i++){
-            int rank = i+1;
+            int rank = 1;
             Ranking ranking = followRankList.get(i);
+            for (int j = 0; j < followRankList.size(); j++){
+                if(followRankList.get(j).getTilCnt() == ranking.getTilCnt()){
+                    break;
+                }
+                if(followRankList.get(j).getTilCnt() > ranking.getTilCnt()){
+                    rank += 1;
+                }
+            }
             tilRankList.add(RankingResponse.TilRank.build(rank, ranking.getUser(), ranking.getTilCnt()));
         }
         int myRank = 1;
@@ -128,6 +144,7 @@ public class RankService {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<Follow> followList = followRepository.findByFollowing(userId);
         List<User> followUserList = new ArrayList<>();
+        followUserList.add(user);
         List<RankingResponse.ExpRank> expRankList = new ArrayList<>();
         for (int i = 0; i < followUserList.size(); i++){
             int followId = followList.get(i).getFromId();
