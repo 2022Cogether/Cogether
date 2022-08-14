@@ -39,14 +39,19 @@
           aria-labelledby="pills-followings-tab"
         >
           <ul v-for="following in followingList" :key="following.id">
-            <font-awesome-icon
-              icon="fa-solid fa-rectangle-xmark"
-              @click="unfollow(following.id)"
+            <li
+              class="profile-data-list"
               style="cursor: pointer"
-            />
-            <li @click="goProfile(following.id)" style="cursor: pointer">
+              @click="goProfile(following.id)"
+            >
               {{ following.id }}: {{ following.email }}
             </li>
+            <font-awesome-icon
+              v-if="isMyProfile"
+              icon="fa-solid fa-rectangle-xmark"
+              @click="unfollow(following.id)"
+              style="cursor: pointer; margin-left: 2vw"
+            />
           </ul>
         </div>
         <div
@@ -56,9 +61,19 @@
           aria-labelledby="pills-followers-tab"
         >
           <ul v-for="follower in followerList" :key="follower.id">
-            <li @click="goProfile(follower.id)" style="cursor: pointer">
+            <li
+              class="profile-data-list"
+              style="cursor: pointer"
+              @click="goProfile(props.userId)"
+            >
               {{ follower.id }}: {{ follower.email }}
             </li>
+            <font-awesome-icon
+              v-if="follower.id == store.getters.getLoginUserId"
+              icon="fa-solid fa-rectangle-xmark"
+              @click="unfollow(follower.id)"
+              style="cursor: pointer; margin-left: 2vw"
+            />
           </ul>
         </div>
       </div>
@@ -66,29 +81,38 @@
   </div>
 </template>
 <script>
+import { computed } from "vue";
 import { useStore } from "vuex";
 import router from "@/router";
 
 export default {
   name: "ProfileFollow",
-  props: {},
+  props: ["userId"],
   emits: ["closeModal"],
   setup(props, { emit }) {
     const store = useStore();
-    // props;
+    const isMyProfile = computed(() => {
+      return props.userId == store.getters.getLoginUserId;
+    });
 
-    store.dispatch("fetchFollowingList");
-    store.dispatch("fetchFollowerList");
+    store.dispatch("fetchFollowingList", props.userId);
+    store.dispatch("fetchFollowerList", props.userId);
 
-    let followingList = store.getters.getMyFollowingList;
-    let followerList = store.getters.getMyFollowerList;
+    // 리스트 받아오기
+    let followingList = computed(() => {
+      return store.getters.getMyFollowingList;
+    });
+    let followerList = computed(() => {
+      return store.getters.getMyFollowerList;
+    });
 
     // 모달 바깥을 클릭하면 모달을 닫게 하는 함수
     const closeModal = (event) => {
       if (
         !document
           .querySelector(".modal")
-          .querySelector("." + event.target.className.split(" ")[0]) // 클릭한 박스의 클래스가 modal-card라는 클래스의 하위 클래스인지 아닌지
+          .querySelector("." + event.target.className.split(" ")[0]) || // 클릭한 박스의 클래스가 modal-card라는 클래스의 하위 클래스인지 아닌지
+        event.target.tagName == "LI"
       ) {
         emit("closeModal");
       }
@@ -96,16 +120,12 @@ export default {
 
     // 언팔로우
     const unfollow = (userId) => {
-      const payload = {
-        toID: store.getters.getLoginUserId,
-        fromId: userId,
-      };
-      store.dispatch("unfollow", payload);
-      if (store.getters.getBooleanValue) {
-        followingList = followingList.filter(
-          (following) => following.id != userId
-        );
-      }
+      store.dispatch("unfollow", userId);
+      // if (store.getters.getBooleanValue) {
+      //   followingList = followingList.filter(
+      //     (following) => following.id != userId
+      //   );
+      // }
     };
 
     // 프로필로
@@ -117,6 +137,10 @@ export default {
     };
 
     return {
+      store,
+      props,
+
+      isMyProfile,
       followingList,
       followerList,
       closeModal,
