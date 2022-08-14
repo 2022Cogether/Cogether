@@ -25,29 +25,44 @@ public class FollowingController {
 
     private final FollowingService followingService;
 
-    @PostMapping("/follow")
-    public ResponseEntity registFollow(@RequestBody FollowRequest followRequest)
+    @PostMapping(value="/follow/{userId}",headers = "ACCESS_TOKEN")
+    public ResponseEntity registFollow(@PathVariable("userId")int Id,@RequestHeader("ACCESS_TOKEN")String token)
     {
-        followingService.registFollow(followRequest);
+        followingService.registFollow(Id,token);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @DeleteMapping("/follow")
-    public ResponseEntity resignFollow(@RequestBody FollowRequest followRequest)
+    @DeleteMapping(value = "/follow/{userId}",headers = "ACCESS_TOKEN")
+    public ResponseEntity resignFollow(@PathVariable("userId")int Id,@RequestHeader("ACCESS_TOKEN") String token)
     {
-        followingService.resignFollow(followRequest);
+        followingService.resignFollow(Id,token);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping(value = "/following",headers = "ACCESS_TOKEN")
-    public ResponseEntity loadFollowingList(@RequestHeader("ACCESS_TOKEN")String accessToken)
+    @GetMapping(value = "/following/{userId}")
+    public ResponseEntity loadFollowingList(@PathVariable("userId")int fromId)
     {
-        return ResponseEntity.ok().body(followingService.loadFollowingList(accessToken));
+        return ResponseEntity.ok().body(followingService.loadFollowingList(fromId));
     }
 
-    @GetMapping(value = "/follower",headers = "ACCESS_TOKEN")
-    public ResponseEntity loadFollowerList(@RequestHeader("ACCESS_TOKEN")String accessToken)
+    @GetMapping(value = "/following/lists/{userId}")
+    public ResponseEntity loadFollowerList(@PathVariable("userId")int fromId)
     {
-        return ResponseEntity.ok().body(followingService.loadFollowerList(accessToken));
+        return ResponseEntity.ok().body(followingService.loadFollowingListSize(fromId));
     }
+
+    @GetMapping(value = "/follower/{userId}")
+    public ResponseEntity loadFollowingListSize(@PathVariable("userId")int fromId)
+    {
+        return ResponseEntity.ok().body(followingService.loadFollowerList(fromId));
+    }
+
+    @GetMapping(value = "/follower/lists/{userId}")
+    public ResponseEntity loadFollowerListSize(@PathVariable("userId")int fromId)
+    {
+        return ResponseEntity.ok().body(followingService.loadFollowerListSize(fromId));
+    }
+
+
+
 }

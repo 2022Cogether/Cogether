@@ -35,11 +35,13 @@ public class FollowingService {
 
     private final TokenUtils tokenUtils;
     @Transactional
-    public int registFollow(FollowRequest followRequest) {
+    public int registFollow(int fromId, String token) {
 
-        User toUser = userRepository.findById(followRequest.getToId())
+        int id = tokenUtils.getUserIdFromToken(token);
+
+        User toUser = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        User fromUser = userRepository.findById(followRequest.getFromId())
+        User fromUser = userRepository.findById(fromId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         if(followRepository.findFollowId(toUser.getId(),fromUser.getId()).isEmpty()){
@@ -56,10 +58,12 @@ public class FollowingService {
     }
 
     @Transactional
-    public int resignFollow(FollowRequest followRequest) {
-        User toUser = userRepository.findById(followRequest.getToId())
+    public int resignFollow(int fromId, String token) {
+
+        int id = tokenUtils.getUserIdFromToken(token);
+        User toUser = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        User fromUser = userRepository.findById(followRequest.getFromId())
+        User fromUser = userRepository.findById(fromId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         System.out.println("삭제");
@@ -70,17 +74,17 @@ public class FollowingService {
     }
 
 
-    public List<Map<String, String>> loadFollowingList( String token) {
+    public List<Map<String, String>> loadFollowingList(int fromId ) {
         List<Follow> list ;
         String email="";
 
-        int id = tokenUtils.getUserIdFromToken(token);
+        //int id = tokenUtils.getUserIdFromToken(token);
 
-//        User toUser = userRepository.findById(id)
-//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        User fromUser = userRepository.findById(fromId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        System.out.println("유저 아이디"+id);
-        list = followRepository.findByFollowing(id);
+        //System.out.println("유저 아이디"+id);
+        list = followRepository.findByFollowing(fromId);
 
         List<Map<String,String>> followingList = new ArrayList<>();
 
@@ -96,16 +100,37 @@ public class FollowingService {
         return followingList;
     }
 
-    public List<Map<String, String>> loadFollowerList(String token) {
+    public Map<String, Integer> loadFollowingListSize(int fromId ) {
+        List<Follow> list ;
+        String email="";
+
+        //int id = tokenUtils.getUserIdFromToken(token);
+
+        User fromUser = userRepository.findById(fromId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        //System.out.println("유저 아이디"+id);
+        list = followRepository.findByFollowing(fromId);
+
+        int size = list.size();
+
+        Map<String,Integer> body = new HashMap<>();
+        body.put("size",size);
+
+        return body;
+    }
+
+
+
+    public List<Map<String, String>> loadFollowerList(int fromId) {
         List<Follow> list ;
 
-        int id = tokenUtils.getUserIdFromToken(token);
 
-//        User toUser = userRepository.findById(followRequest.getToId())
-//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        User toUser = userRepository.findById(fromId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
 
-        list = followRepository.findByFollower(id);
+        list = followRepository.findByFollower(toUser.getId());
 
         System.out.println("팔로워 수 : "+list.size());
 
@@ -121,6 +146,26 @@ public class FollowingService {
         }
 
         return followerList;
+    }
+
+    public Map<String, Integer> loadFollowerListSize(int fromId) {
+        List<Follow> list ;
+
+
+        User toUser = userRepository.findById(fromId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+
+        list = followRepository.findByFollower(toUser.getId());
+
+        int size = list.size();
+
+        //List<Map<String,String>> followerList = new ArrayList<>();
+
+        Map<String,Integer> body = new HashMap<>();
+        body.put("size",size);
+
+        return body;
     }
 
 }
