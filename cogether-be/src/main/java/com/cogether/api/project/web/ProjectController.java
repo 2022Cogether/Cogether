@@ -56,7 +56,7 @@ public class ProjectController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(path = "/projetct/list/my/{userId}")
+    @GetMapping(path = "/project/list/my/{userId}")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<ProjectResponse.ProjectList> getMyProjectList(@PathVariable int userId){
         ProjectResponse.ProjectList response = projectService.getMyProjectList(userId);
