@@ -29,4 +29,18 @@ public class RankController {
         return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping(path = "/ranking/exp")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<RankingResponse.ExpRankList> getExpList(@RequestParam int userId, @RequestParam int page){
+        RankingResponse.ExpRankList response = rankService.getExpList(userId, page);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping(path = "/ranking/exp/follow")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<RankingResponse.ExpRankList> getMyExpList(@RequestParam int userId, @RequestParam int page){
+        RankingResponse.ExpRankList response = rankService.getMyExpList(userId, page);
+        return ResponseEntity.ok().body(response);
+    }
+
 }
