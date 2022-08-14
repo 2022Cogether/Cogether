@@ -101,6 +101,7 @@ export default {
     }
 
     async function deletePerson() {
+      let flag = false;
       await Swal.fire({
         title: "정말 삭제하시겠습니까?",
         icon: "warning",
@@ -128,9 +129,13 @@ export default {
             icon: "success",
             title: "글이 삭제되었습니다.",
           });
-          router.push({ name: "RecruitMain" });
+          flag = true;
         }
       });
+      if (flag) {
+        console.log("dd");
+        router.push({ name: "RecruitMain" });
+      }
     }
 
     return { bookmarkCheck, state, getters, deletePerson, setModal };
