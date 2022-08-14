@@ -2,7 +2,6 @@ package com.cogether.api.chat.repository;
 
 import com.cogether.api.chat.domain.ChatMember;
 import com.cogether.api.chat.domain.ChatRoom;
-import com.cogether.api.liveCoop.domain.LiveCoop;
 import com.cogether.api.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,7 +12,9 @@ public interface ChatMemRepository extends JpaRepository<ChatMember, Integer> {
 
     ChatMember findByChatRoomAndUser(ChatRoom chatRoom, User user);
 
+    ChatMember findByUserNotAndChatRoom(User user, ChatRoom chatRoom);
+
     List<ChatMember> findAllByChatRoom(ChatRoom chatRoom);
 
-    List<ChatMember> findAllByUser(User user);
+    List<ChatMember> findAllByUserOrderByCreatedAtDesc(User user);
 }

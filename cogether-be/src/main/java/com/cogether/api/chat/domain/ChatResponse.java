@@ -113,19 +113,42 @@ public class ChatResponse {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class GetChatRoom {
+        private int chatRoomId;
+        private int chatMemberUserId;
+        private String chatMemberImage;
+        private String chatMemberName;
+        private String lastMessage;
+        private int messageCnt;
+
+        public static ChatResponse.GetChatRoom build(ChatMember chatMember, String lastMessage, int cnt) {
+            return GetChatRoom.builder()
+                    .chatRoomId(chatMember.getChatRoom().getId())
+                    .chatMemberUserId(chatMember.getUser().getId())
+                    .chatMemberImage(chatMember.getUser().getImgUrl())
+                    .chatMemberName(chatMember.getUser().getNickname())
+                    .lastMessage(lastMessage)
+                    .messageCnt(cnt)
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class GetLiveChatRoom {
         private int id;
         private boolean type;
         private List<ChatResponse.GetChatMember> chatMembers;
 
-        public static ChatResponse.GetChatRoom build(ChatRoom chatRoom, List<ChatMember> chatMembers) {
-            return GetChatRoom.builder()
+        public static ChatResponse.GetLiveChatRoom build(ChatRoom chatRoom, List<ChatMember> chatMembers) {
+            return GetLiveChatRoom.builder()
                     .id(chatRoom.getId())
                     .type(chatRoom.isType())
                     .chatMembers(chatMembers.stream().map(ChatResponse.GetChatMember::build).collect(Collectors.toList()))
                     .build();
         }
     }
-
 
     @Getter
     @Builder
