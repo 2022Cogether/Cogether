@@ -17,14 +17,14 @@ public class RankController {
 
     @GetMapping(path = "/ranking/til")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<RankingResponse.TilRankList> getTilRank(@RequestParam int userId, int page){
+    public ResponseEntity<RankingResponse.TilRankList> getTilRank(@RequestParam int userId, @RequestParam int page){
         RankingResponse.TilRankList response = rankService.getTilRank(userId, page);
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping(path = "/ranking/til/follow")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<RankingResponse.TilRankList> getMyTilRank(@RequestParam int userId, int page){
+    public ResponseEntity<RankingResponse.TilRankList> getMyTilRank(@RequestParam int userId, @RequestParam int page){
         RankingResponse.TilRankList response = rankService.getMyTilRank(userId, page);
         return ResponseEntity.ok().body(response);
     }
