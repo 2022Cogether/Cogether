@@ -39,15 +39,15 @@ public class FollowingController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping("/following")
-    public ResponseEntity loadFollowingList(@RequestBody FollowRequest followRequest)
+    @GetMapping(value = "/following",headers = "ACCESS_TOKEN")
+    public ResponseEntity loadFollowingList(@RequestHeader("ACCESS_TOKEN")String accessToken)
     {
-        return ResponseEntity.ok().body(followingService.loadFollowingList(followRequest));
+        return ResponseEntity.ok().body(followingService.loadFollowingList(accessToken));
     }
 
-    @GetMapping("/follower")
-    public ResponseEntity loadFollowerList(@RequestBody FollowRequest followRequest)
+    @GetMapping(value = "/follower",headers = "ACCESS_TOKEN")
+    public ResponseEntity loadFollowerList(@RequestHeader("ACCESS_TOKEN")String accessToken)
     {
-        return ResponseEntity.ok().body(followingService.loadFollowerList(followRequest));
+        return ResponseEntity.ok().body(followingService.loadFollowerList(accessToken));
     }
 }

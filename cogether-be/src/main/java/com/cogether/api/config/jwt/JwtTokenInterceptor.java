@@ -26,7 +26,11 @@ public class JwtTokenInterceptor implements HandlerInterceptor {
         String refreshToken = request.getHeader("REFRESH_TOKEN");
         System.out.println("RefreshToken:" + refreshToken);
 
-        if (accessToken != null) {
+        if(request.getMethod().equals("OPTIONS"))
+        {
+            return true;
+        }
+        if (accessToken != null ) {
             if (tokenUtils.isValidToken(accessToken)) {
                 System.out.println("컨트롤러 진입");
                 return true;  // 컨트롤러 진입
