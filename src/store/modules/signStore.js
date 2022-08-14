@@ -88,7 +88,7 @@ export const signStore = {
       await http
         .post("sign/signin/", credentials)
         .then(({ data }) => {
-          console.log(commit);
+          // console.log(commit);
           const access_TOKEN = data.access_TOKEN;
           const refresh_TOKEN = data.refresh_TOKEN;
           const userId = data.userId;
@@ -109,7 +109,7 @@ export const signStore = {
       await http
         .post("sign/signup/", credentials)
         .then(({ data }) => {
-          console.log(commit);
+          // console.log(commit);
           const access_TOKEN = data.access_TOKEN;
           const refresh_TOKEN = data.refresh_TOKEN;
           const userId = data.userId;
@@ -127,6 +127,7 @@ export const signStore = {
     },
 
     fetchCurrentUser({ commit, getters }, userId) {
+      alert("fetchCurrentUser!" + userId);
       if (getters.isLoggedIn) {
         http
           .get("user/" + userId, {
@@ -153,6 +154,7 @@ export const signStore = {
           .then((res) => commit("SET_ANOTHER_USER", res.data))
           .catch((err) => {
             alert("다른 사용자 정보 불러오는 중 에러 발생");
+            commit("SET_BOOLEANVALUE");
             console.error(err.response.data);
           });
       }
@@ -232,7 +234,7 @@ export const signStore = {
           }
         })
         .catch((e) => {
-          console.log("에러: " + e);
+          console.log("닉네임 중복 체크 에러: " + e);
         });
     },
 
@@ -252,7 +254,7 @@ export const signStore = {
         })
         .catch((e) => {
           alert("이메일 체크에 실패하였습니다!");
-          console.log("에러: " + e);
+          console.log("이메일 중복 체크 에러: " + e);
         });
     },
 
@@ -274,7 +276,7 @@ export const signStore = {
         })
         .catch((e) => {
           alert("인증 코드를 보내지 못했습니다!");
-          console.log("에러: " + e);
+          console.log("인증 번호 전송 에러: " + e);
         });
     },
 
@@ -290,7 +292,7 @@ export const signStore = {
           commit("SET_BOOLEANVALUE");
         })
         .catch((e) => {
-          console.log("에러: " + e);
+          console.log("인증 번호 검증 에러: " + e);
         });
     },
 
