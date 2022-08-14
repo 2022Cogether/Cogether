@@ -6,7 +6,6 @@ import com.cogether.api.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,13 +14,6 @@ import org.springframework.web.bind.annotation.*;
 public class ChatController {
 
     private final ChatService chatService;
-
-    @PostMapping("/chat")
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<ChatResponse.OnlyChatId> createChat(@RequestBody ChatRequest.CreateChat request) {
-        ChatResponse.OnlyChatId response = chatService.createChat(request);
-        return ResponseEntity.ok().body(response);
-    }
 
     @GetMapping("/chat/{chatId}")
     public ResponseEntity<ChatResponse.GetChat> getLiveCoop(@PathVariable int chatId) {
@@ -85,32 +77,3 @@ public class ChatController {
 //    }
 
 }
-
-
-
-
-//
-//import com.cogether.api.chat.dto.ChatMessage;
-//import org.springframework.messaging.handler.annotation.MessageMapping;
-//import org.springframework.messaging.handler.annotation.Payload;
-//import org.springframework.messaging.handler.annotation.SendTo;
-//import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-//import org.springframework.stereotype.Controller;
-//
-//@Controller
-//public class ChatController {
-//
-//    @MessageMapping("/chat.sendMessage")
-//    @SendTo("/topic/public")
-//    public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
-//        return chatMessage;
-//    }
-//
-//    @MessageMapping("/chat.addUser")
-//    @SendTo("/topic/public")
-//    public ChatMessage addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
-//        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-//        return chatMessage;
-//    }
-//}
-
