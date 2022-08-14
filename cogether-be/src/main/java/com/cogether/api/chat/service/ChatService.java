@@ -66,6 +66,15 @@ public class ChatService {
         return ChatResponse.OnlyMemId.build(savedChatMember);
     }
 
+    public ChatResponse.OnlyMemId updateLastChat(ChatRequest.UpdateLastChat request) {
+        User user = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
+        ChatRoom chatRoom = chatRoomRepository.findById(request.getChatRoomId()).orElseThrow(ChatRoomNotFoundException::new);
+        ChatMember chatMember = chatMemRepository.findByChatRoomAndUser(chatRoom, user);
+        chatMember.setLastReadChatId(request.getChatId());
+        ChatMember savedChatMember = chatMemRepository.save(chatMember);
+        return ChatResponse.OnlyMemId.build(savedChatMember);
+    }
+
     public ChatResponse.OnlyMemId deleteChatMember(int roomId, int userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(ChatRoomNotFoundException::new);
