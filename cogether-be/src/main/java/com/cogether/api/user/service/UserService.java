@@ -8,7 +8,6 @@ import com.cogether.api.user.domain.User;
 import com.cogether.api.user.domain.UserSkill;
 import com.cogether.api.user.dto.TokenResponse;
 import com.cogether.api.user.dto.UserRequest;
-import com.cogether.api.user.dto.UserResponse;
 import com.cogether.api.user.repository.AuthRepository;
 import com.cogether.api.user.repository.UserRepository;
 import com.cogether.api.user.repository.UserSkillRepository;
