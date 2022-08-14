@@ -7,10 +7,13 @@
   </router-link>
   <!-- Profile -->
   <router-link
-    v-if="!isMyProfile"
+    v-if="isMyProfile"
     class="btn btn-success"
     sytle="opacity: 0.5"
-    :to="{ name: 'profileEdit', params: { userId: this.$route.params.userId } }"
+    :to="{
+      name: 'profileEdit',
+      params: { userId: store.getters.getLoginUserId },
+    }"
   >
     프로필 수정
   </router-link>
@@ -40,8 +43,8 @@
   <div class="profile-info-container2 d-flex flex-column align-items-center">
     <p class="user-introduction">{{ profileUser.intro }}</p>
     <div class="follow-box d-flex">
-      <p class="follower">팔로워 1</p>
-      <p class="follow">팔로우 10</p>
+      <p class="follower">팔로워 {{ followerNum }}</p>
+      <p class="follow">팔로우 {{ followingNum }}</p>
     </div>
     <div v-if="!isMyProfile" class="container mb-3">
       <div class="row d-flex justify-content-between">
@@ -67,6 +70,7 @@
     <ProfileFollow
       v-if="isFollowOpen"
       class="isModal"
+      :userId="userId"
       @closeModal="closeModal"
     />
   </div>
@@ -134,14 +138,7 @@
     </button>
   </div>
   <!-- TIL -->
-  <router-link
-    :to="{
-      name: 'TilList',
-      params: { userId: this.$route.params.userId },
-    }"
-    class="h4 til-title"
-    >My TIL
-  </router-link>
+  <div class="h4 til-title">My TIL</div>
   <div class="til-container d-flex flex-wrap justify-content-evenly">
     <ProfileTil
       v-for="til in tilList"
@@ -162,7 +159,7 @@ import ProfileTil from "./ProfileTil.vue";
 import ProfileFollow from "./ProfileFollow.vue";
 import TilDetail from "@/components/til/TilDetail.vue";
 
-import { ref, getters, computed } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 
@@ -177,18 +174,32 @@ export default {
     const store = useStore();
     const route = useRoute();
     // const getters = computed(() => store.getters);
-    const userId = route.params.userId;
+    const userId = computed(() => {
+      return route.params.userId;
+    });
     const isLoggedIn = store.getters.isLoggedIn;
+
+    // 팔로 수
+    store.dispatch("fetchFollowingNumber", userId);
+    store.dispatch("fetchFollowerNumber", userId);
+    const followingNum = store.getters.getFollowingNumber;
+    const followerNum = store.getters.getFollowerNumber;
+
+    // 사용하는 기술 가져오기
+    store.dispatch("takeUserSkillSet", userId);
+    const userLangSkills = computed(() => {
+      return store.getters.getUserSkills;
+    });
 
     // TIL 검색 창
     const searchWord = ref("");
     const onSubmit = () => {
       const payload = {
         keyword: searchWord.value,
-        userId: profileUser.id,
+        userId: profileUser.value.id,
       };
-      console.log(payload);
-      store.dispatch("searchTil", payload);
+      console.log("onSubmit", payload);
+      store.dispatch("searchMyTil", payload);
     };
 
     // Skill set
@@ -218,18 +229,26 @@ export default {
     ];
 
     // 내 프로필인지 아닌지 판단하고 알맞는 자료를 가져와 profile User 변수에 넣기
-    const isMyProfile = store.getters.getLoginUserId == userId;
+    const isMyProfile = computed(() => {
+      return store.getters.getLoginUserId == userId.value;
+    });
 
-    if (!isMyProfile) {
+    if (!isMyProfile.value) {
       store.dispatch("fetchAnothertUser", userId);
+      // if (store.getters.getBooleanValue) {
+      //   router.back();
+      // }
     }
-    const profileUser = isMyProfile
-      ? store.getters.getCurrentUser
-      : store.getters.getAnotherUser;
+    const profileUser = computed(() => {
+      return isMyProfile.value
+        ? store.getters.getCurrentUser
+        : store.getters.getAnotherUser;
+    });
+    console.log("getCurrentUser", store.getters.getCurrentUser);
 
     // TilList 가져오기
     const getTilList = () => {
-      store.dispatch("fetchTilList", { userId: userId });
+      store.dispatch("fetchMyTilList", { userId: userId });
     };
 
     // 페이지가 Created 될 때 list 가져옴
@@ -246,7 +265,7 @@ export default {
     const setNum = (tilNum) => {
       store.dispatch("fetchOpenTil", {
         tilId: tilNum,
-        userId: store.getters.getCurrentUser,
+        userId: store.getters.getLoginUserId,
       });
     };
 
@@ -254,22 +273,18 @@ export default {
     const follow = () => {
       const payload = {
         toID: store.getters.getLoginUserId,
-        fromId: profileUser.id,
+        fromId: profileUser.value.id,
       };
       store.dispatch("follow", payload);
-      if (getters.value.getBooleanValue) {
-        profileUser.isFollow = !profileUser.isFollow;
+      if (store.getters.getBooleanValue) {
+        profileUser.value.isFollow = !profileUser.value.isFollow;
       }
     };
     // 언팔로우
     const unfollow = () => {
-      const payload = {
-        toID: store.getters.getLoginUserId,
-        fromId: profileUser.id,
-      };
-      store.dispatch("unfollow", payload);
-      if (getters.value.getBooleanValue) {
-        profileUser.isFollow = !profileUser.isFollow;
+      store.dispatch("unfollow", profileUser.value.id);
+      if (store.getters.getBooleanValue) {
+        profileUser.value.isFollow = !profileUser.value.isFollow;
       }
     };
 
@@ -283,8 +298,17 @@ export default {
     };
 
     return {
+      store,
+
+      userId,
       isLoggedIn,
       isMyProfile,
+
+      followingNum,
+      followerNum,
+
+      userLangSkills,
+
       profileUser,
       tilList,
       searchWord,
