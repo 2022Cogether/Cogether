@@ -43,7 +43,7 @@
       <p class="follower">팔로워 1</p>
       <p class="follow">팔로우 10</p>
     </div>
-    <div v-if="isMyProfile" class="container mb-3">
+    <div v-if="!isMyProfile" class="container mb-3">
       <div class="row d-flex justify-content-between">
         <div
           v-if="profileUser.isFollow"
@@ -54,16 +54,21 @@
         </div>
         <div v-else class="btn btn-success col-6" @click="follow">팔로우</div>
         <div class="btn btn-secondary col-6">메세지</div>
+        <div class="btn btn-warning col-12 mt-3 text-white" @click="followOpen">
+          팔로우/팔로잉 리스트
+        </div>
       </div>
     </div>
     <div v-else class="container mb-3 d-flex justify-content-center">
-      <div class="btn btn-success col-6" @click="followOpen">팔로창 열기</div>
-      <ProfileFollow
-        v-if="isFollowOpen"
-        class="isModal"
-        @closeModal="closeModal"
-      />
+      <div class="btn btn-success col-12 text-white" @click="followOpen">
+        팔로우/팔로잉 리스트
+      </div>
     </div>
+    <ProfileFollow
+      v-if="isFollowOpen"
+      class="isModal"
+      @closeModal="closeModal"
+    />
   </div>
   <!-- Tech Stack -->
   <div class="techstack-container">
@@ -88,12 +93,7 @@
   </div>
   <!-- Webpage Link -->
   <div class="webpage-link-container">
-    <div class="d-flex justify-content-between">
-      <h4>개인 웹페이지 링크</h4>
-      <div v-if="isLoggedIn">
-        <div class="btn btn-primary btn-sm">수정하기</div>
-      </div>
-    </div>
+    <h4>개인 웹페이지 링크</h4>
     <div class="d-flex flex-wrap">
       <div v-for="(webSmList, i) in webIconUrl" :key="i">
         <!-- vue3에서는 v-if가 v-for 보다 우선 순위 높다고 함 -->
