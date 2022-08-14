@@ -85,26 +85,45 @@ public class ChatService {
         return ChatResponse.OnlyRoomId.build(savedChatRoom);
     }
 
-    public ChatResponse.GetChatRoom getChatRoom(int chatRoomId) {
+    public ChatResponse.GetLiveChatRoom getLiveChatRoom(int chatRoomId) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(ChatRoomNotFoundException::new);
         List<ChatMember> chatMembers = chatMemRepository.findAllByChatRoom(chatRoom);
-        return ChatResponse.GetChatRoom.build(chatRoom, chatMembers);
+        return ChatResponse.GetLiveChatRoom.build(chatRoom, chatMembers);
     }
 
     public ChatResponse.GetChatRooms getChatRooms(int userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        List<ChatMember> chatMems = chatMemRepository.findAllByUser(user);
+        List<ChatMember> chatMems = chatMemRepository.findAllByUserOrderByCreatedAtDesc(user);
         List<ChatResponse.GetChatRoom> getChatRooms = new ArrayList<>();
         int len = chatMems.size();
-
         for (int idx = 0; idx < len; idx++) {
-            ChatRoom chatRoom = chatMems.get(idx).getChatRoom();
-            List<ChatMember> chatMembers = chatMemRepository.findAllByChatRoom(chatRoom);
-            getChatRooms.add(ChatResponse.GetChatRoom.build(chatRoom, chatMembers));
+            ChatMember nowChatMember = chatMems.get(idx);
+            ChatRoom chatRoom = nowChatMember.getChatRoom();
+            if (chatRoom.isType())
+                continue;
+            ChatMember chatMember = chatMemRepository.findByUserNotAndChatRoom(user, chatRoom);
+            List<Chat> chats = chatRepository.findAllByChatRoom(chatRoom);
+            int cnt = chatRepository.countAllByIdAfterAndChatRoom(nowChatMember.getLastReadChatId(), chatRoom);
+            getChatRooms.add(ChatResponse.GetChatRoom.build(chatMember, chats.size() > 0 ? chats.get(chats.size() - 1).getMessage() : "", cnt));
         }
 
         return ChatResponse.GetChatRooms.build(getChatRooms);
     }
+
+//    public ChatResponse.GetChatRooms getChatRooms(int userId) {
+//        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+//        List<ChatMember> chatMems = chatMemRepository.findAllByUserOrderByCreatedAtDesc(user);
+//        List<ChatResponse.GetChatRoom> getChatRooms = new ArrayList<>();
+//        int len = chatMems.size();
+//
+//        for (int idx = 0; idx < len; idx++) {
+//            ChatRoom chatRoom = chatMems.get(idx).getChatRoom();
+//            List<ChatMember> chatMembers = chatMemRepository.findAllByChatRoom(chatRoom);
+//            getChatRooms.add(ChatResponse.GetChatRoom.build(chatRoom, chatMembers));
+//        }
+//
+//        return ChatResponse.GetChatRooms.build(getChatRooms);
+//    }
 
     public ChatResponse.OnlyRoomId deleteChatRoom(int chatRoomId) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(ChatRoomNotFoundException::new);
