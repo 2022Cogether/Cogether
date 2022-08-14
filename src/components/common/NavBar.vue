@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useStore } from "vuex";
 import router from "@/router";
 
@@ -65,8 +65,12 @@ export default {
 
     const currentUser = store.getters.getCurrentUser;
 
-    const userId = ref(getters.value.getLoginUserId);
-    const isLoggedIn = getters.value.isLoggedIn;
+    const userId = computed(() => {
+      return getters.value.getLoginUserId;
+    });
+    const isLoggedIn = computed(() => {
+      return getters.value.isLoggedIn;
+    });
 
     function checkOkay() {
       console.log("CLICKED!!");
