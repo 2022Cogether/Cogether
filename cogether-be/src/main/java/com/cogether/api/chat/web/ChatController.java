@@ -56,11 +56,11 @@ public class ChatController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/chat/room/{chatRoomId}")
-    public ResponseEntity<ChatResponse.GetChatRoom> getChatRoom(@PathVariable int chatRoomId) {
-        ChatResponse.GetChatRoom response = chatService.getChatRoom(chatRoomId);
-        return ResponseEntity.ok().body(response);
-    }
+//    @GetMapping("/chat/room/{chatRoomId}") // 이거 라이브coop 채팅룸할지도
+//    public ResponseEntity<ChatResponse.GetChatRoom> getChatRoom(@PathVariable int chatRoomId) {
+//        ChatResponse.GetChatRoom response = chatService.getChatRoom(chatRoomId);
+//        return ResponseEntity.ok().body(response);
+//    }
 
     @GetMapping("/chat/room/list/{userId}")
     public ResponseEntity<ChatResponse.GetChatRooms> getChatRooms(@PathVariable int userId) {
