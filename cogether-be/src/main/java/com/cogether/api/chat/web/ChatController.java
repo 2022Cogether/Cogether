@@ -42,6 +42,13 @@ public class ChatController {
         return ResponseEntity.ok().body(response);
     }
 
+    @PatchMapping("/chat/member")
+    public ResponseEntity<ChatResponse.OnlyMemId> updateLastChat(@RequestBody ChatRequest.UpdateLastChat request) {
+        ChatResponse.OnlyMemId response = chatService.updateLastChat(request);
+        return ResponseEntity.ok().body(response);
+    }
+
+
 //    @Transactional
 //    @DeleteMapping("/chat/member")
 //    @ResponseStatus(value = HttpStatus.OK)
