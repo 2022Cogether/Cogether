@@ -9,6 +9,7 @@ import com.cogether.api.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import java.util.Map;
  * 1. 회원가입
  * 2. 로그인
  * 3. 로그아웃
+ * 4. 비밀번호 검증 (verify/password
  */
 
 
@@ -55,18 +57,18 @@ public class UserController {
     /**
      * 로그아웃
      */
-    @GetMapping("/sign/signout/{id}")
-    public ResponseEntity signOut(@PathVariable("id") int userId) throws Exception
+    @GetMapping(value="/sign/signout",headers = "ACCESS_TOKEN")
+    public ResponseEntity signOut(@RequestHeader("ACCESS_TOKEN") String token) throws Exception
     {
-        userService.signOut(userId);
         System.out.println("로그아웃");
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok().body(userService.signOut(token));
     }
 
-    //이메일 인증
 
-
-    //이메일 중복확인      true : 중복 false : 중복 x
+    /**
+     * 이메일 중복확인
+     * true : 중복 false : 중복 x
+     */
     @GetMapping("/verify/email/{email}")
     public ResponseEntity  verifyDuplicationOfEmail(@PathVariable("email") String email) throws Exception {
 
@@ -82,7 +84,10 @@ public class UserController {
     }
 
 
-    //닉네임 중복확인      true : 중복 false : 중복 x
+    /**
+     * 닉네임 중복확인
+     * true : 중복 false : 중복 x
+     */
     @GetMapping("/verify/nickname/{nickname}")
     public ResponseEntity verifyDuplicationOfNickName(@PathVariable("nickname") String nickname) throws Exception {
 
@@ -100,14 +105,12 @@ public class UserController {
     /**
      * 유저 정보 조회
      */
-    @GetMapping(value = "/user/{userId}",headers = "ACCESS_TOKEN")
-    public ResponseEntity findUser(@PathVariable int userId, @RequestHeader("ACCESS_TOKEN") String data) throws Exception{
+    @GetMapping(value = "/user/info/{userId}")
+    public ResponseEntity findUser( @PathVariable("userId") int userId) throws Exception{
 
 
 
-        System.out.println("헤더값 가져오기"+data);
-        int id =tokenUtils.getUserIdFromToken(data);
-        System.out.println("userid : "+id);
+      //  System.out.println("헤더값 가져오기"+token);
 
         return ResponseEntity.ok().body(userService.findUserInfo(userId));
     }
@@ -115,23 +118,24 @@ public class UserController {
     /**
      * 유저 정보 변경
      */
-    @PutMapping("/user")
-    public ResponseEntity modifyUserInfo(@RequestBody UserRequest userRequest) throws Exception
+    @PutMapping(value="/user/info",headers = "ACCESS_TOKEN")
+    public ResponseEntity modifyUserInfo(@RequestBody UserRequest userRequest,@RequestHeader("ACCESS_TOKEN") String token) throws Exception
     {
-        return ResponseEntity.ok().body(userService.modifyUserInfo(userRequest));
+
+        return ResponseEntity.ok().body(userService.modifyUserInfo(userRequest,token));
     }
 
     /**
      * 회원 탈퇴
      */
-    @PutMapping("/user/resign")
-    public  ResponseEntity resignUser(@RequestBody UserRequest userRequest) throws  Exception
+    @PutMapping(value="/user/resign",headers = "ACCESS_TOKEN")
+    public  ResponseEntity resignUser(@RequestHeader("ACCESS_TOKEN")String token) throws  Exception
     {
-        Map<String,String> body = new HashMap<>();
+        Map<String,Object> body = new HashMap<>();
 
-        userService.resignUser(userRequest);
-        body.put("id",Integer.toString(userRequest.getId()));
-        body.put("resign","true");
+        int id= userService.resignUser(token);
+        body.put("id",id);
+        body.put("resign",true);
 
         return ResponseEntity.ok().body(body);
     }
@@ -156,6 +160,9 @@ public class UserController {
     @PostMapping("/sign/token")
     public  ResponseEntity reissuanceAccessToken(@RequestBody UserRequest userRequest) throws Exception
     {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("ACCESS_TOKEN",userService.reissuanceAccessToken(userRequest).getACCESS_TOKEN());
+        headers.set("REFRESH_TOKEN",userService.reissuanceAccessToken(userRequest).getREFRESH_TOKEN());
         return ResponseEntity.ok().body(userService.reissuanceAccessToken(userRequest));
     }
 
