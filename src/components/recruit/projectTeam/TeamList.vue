@@ -25,6 +25,20 @@
         </span>
       </span>
     </span>
+    <!-- 내가 쓴 글 -->
+    <span v-else-if="tabState == 'my'">
+      <span v-for="(projectTeam, i) in getters.getProjectTeams" :key="i">
+        <span
+          v-if="
+            searchText == null ||
+            projectTeam.title.indexOf(searchText) != -1 ||
+            projectTeam.userNickname.indexOf(searchText) != -1
+          "
+        >
+          <TeamItem :projectTeam="projectTeam" @setModal="setModal" />
+        </span>
+      </span>
+    </span>
     <!-- 프로젝트 탭 -->
     <span v-else>
       <span v-for="(projectTeam, i) in getters.getProjectTeams" :key="i">
@@ -116,10 +130,15 @@ import TeamItem from "@/components/recruit/projectTeam/TeamItem.vue";
 export default {
   name: "TeamList",
   props: ["searchText", "tabState"],
-  setup() {
+  setup(props) {
     const store = useStore();
     const getters = computed(() => store.getters);
-    store.dispatch("getProjectTeams", getters.value.getLoginUserId);
+
+    if (props.tabState == "my") {
+      store.dispatch("getMyProjectTeams", getters.value.getLoginUserId);
+    } else {
+      store.dispatch("getProjectTeams", getters.value.getLoginUserId);
+    }
 
     function checkScrap() {
       for (const item of getters.value.getProjectTeams) {

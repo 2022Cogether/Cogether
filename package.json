@@ -21,10 +21,12 @@
     "jquery": "^3.6.0",
     "sass": "^1.53.0",
     "sass-loader": "^10.3.1",
+    "sockjs-client": "^1.6.1",
     "sweetalert2": "^11.4.23",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
-    "vuex": "^4.0.0"
+    "vuex": "^4.0.0",
+    "webstomp-client": "^1.2.6"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

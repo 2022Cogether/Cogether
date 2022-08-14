@@ -25,6 +25,20 @@
         </span>
       </span>
     </span>
+    <!--  내가 작성한 글 -->
+    <span v-else-if="tabState == 'my'">
+      <span v-for="(projectPerson, i) in getters.getProjectPeople" :key="i">
+        <span
+          v-if="
+            searchText == null ||
+            projectPerson.title.indexOf(searchText) != -1 ||
+            projectPerson.userNickname.indexOf(searchText) != -1
+          "
+        >
+          <PeopleItem :projectPerson="projectPerson" @setModal="setModal" />
+        </span>
+      </span>
+    </span>
     <!-- 프로젝트 탭 -->
     <span v-else>
       <span v-for="(projectPerson, i) in getters.getProjectPeople" :key="i">
@@ -104,10 +118,15 @@ import { useStore } from "vuex";
 export default {
   name: "PeopleList",
   props: ["searchText", "tabState"],
-  setup() {
+  setup(props) {
     const store = useStore();
     const getters = computed(() => store.getters);
-    store.dispatch("getProjectPeople", getters.value.getLoginUserId);
+
+    if (props.tabState == "my") {
+      store.dispatch("getMyProjectPeople", getters.value.getLoginUserId);
+    } else {
+      store.dispatch("getProjectPeople", getters.value.getLoginUserId);
+    }
 
     function checkScrap() {
       for (const item of getters.value.getProjectPeople) {

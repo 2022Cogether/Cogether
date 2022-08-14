@@ -25,6 +25,20 @@
         </span>
       </span>
     </span>
+    <!-- 내가 쓴 글 -->
+    <span v-else-if="tabState == 'my'">
+      <span v-for="(studyTeam, i) in getters.getStudyTeams" :key="i">
+        <span
+          v-if="
+            searchText == null ||
+            studyTeam.title.indexOf(searchText) != -1 ||
+            studyTeam.userNickname.indexOf(searchText) != -1
+          "
+        >
+          <StudyItem :studyTeam="studyTeam" @setModal="setModal" />
+        </span>
+      </span>
+    </span>
     <!-- 스터디 탭 -->
     <span v-else>
       <span v-for="(studyTeam, i) in getters.getStudyTeams" :key="i">
@@ -116,10 +130,15 @@ import { useStore } from "vuex";
 export default {
   name: "StudyList",
   props: ["searchText", "tabState"],
-  setup() {
+  setup(props) {
     const store = useStore();
     const getters = computed(() => store.getters);
-    store.dispatch("getStudyTeams", getters.value.getLoginUserId);
+
+    if (props.tabState == "my") {
+      store.dispatch("getMyStudyTeams", getters.value.getLoginUserId);
+    } else {
+      store.dispatch("getStudyTeams", getters.value.getLoginUserId);
+    }
 
     function checkScrap() {
       for (const item of getters.value.getStudyTeams) {
