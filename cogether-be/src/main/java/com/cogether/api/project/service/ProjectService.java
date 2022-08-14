@@ -41,9 +41,14 @@ public class ProjectService {
     public ProjectResponse.OnlyId delete(int projectId){
         Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
         List<ProjectSkill> list = projectSkillRepository.findAllByProject_Id(projectId);
+        List<ProjectScrap> scrapList = projectScrapRepository.findAllByProject_Id(projectId);
         for (int i = 0 ; i<list.size(); i++){
             ProjectSkill projectSkill = list.get(i);
             projectSkillRepository.deleteById(projectSkill.getId());
+        }
+        for (int i = 0; i < scrapList.size(); i++){
+            ProjectScrap projectScrap = scrapList.get(i);
+            projectScrapRepository.deleteById(projectScrap.getId());
         }
         projectRepository.deleteById(projectId);
         return ProjectResponse.OnlyId.build(project);

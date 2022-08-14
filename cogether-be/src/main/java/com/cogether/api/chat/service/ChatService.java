@@ -6,11 +6,6 @@ import com.cogether.api.chat.exception.ChatRoomNotFoundException;
 import com.cogether.api.chat.repository.ChatMemRepository;
 import com.cogether.api.chat.repository.ChatRepository;
 import com.cogether.api.chat.repository.ChatRoomRepository;
-import com.cogether.api.liveCoop.domain.LiveCoop;
-import com.cogether.api.liveCoop.domain.LiveCoopRequest;
-import com.cogether.api.liveCoop.domain.LiveCoopResponse;
-import com.cogether.api.liveCoop.exception.LiveCoopNotFoundException;
-import com.cogether.api.liveCoop.repository.LiveCoopRepository;
 import com.cogether.api.user.domain.User;
 import com.cogether.api.user.exception.UserNotFoundException;
 import com.cogether.api.user.repository.UserRepository;
@@ -28,12 +23,12 @@ public class ChatService {
     private final ChatMemRepository chatMemRepository;
     private final UserRepository userRepository;
 
-    public ChatResponse.OnlyChatId createChat(ChatRequest.CreateChat request) {
+    public ChatResponse.GetChat createChat(ChatRequest.CreateChat request) {
         ChatRoom chatRoom = chatRoomRepository.findById(request.getChatRoomId()).orElseThrow(ChatRoomNotFoundException::new);
-        // User user = userRepository.findById(request.getSendUserId()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(request.getSendUserId()).orElseThrow(UserNotFoundException::new);
         Chat chat = request.toEntity(chatRoom);
         Chat savedChat = chatRepository.save(chat);
-        return ChatResponse.OnlyChatId.build(savedChat);
+        return ChatResponse.GetChat.build(savedChat, user);
     }
 
     public ChatResponse.GetChat getChat(int chatId) {
@@ -62,6 +57,15 @@ public class ChatService {
         User user = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
         ChatRoom chatRoom = chatRoomRepository.findById(request.getChatRoomId()).orElseThrow(ChatRoomNotFoundException::new);
         ChatMember chatMember = request.toEntity(chatRoom, user);
+        ChatMember savedChatMember = chatMemRepository.save(chatMember);
+        return ChatResponse.OnlyMemId.build(savedChatMember);
+    }
+
+    public ChatResponse.OnlyMemId updateLastChat(ChatRequest.UpdateLastChat request) {
+        User user = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
+        ChatRoom chatRoom = chatRoomRepository.findById(request.getChatRoomId()).orElseThrow(ChatRoomNotFoundException::new);
+        ChatMember chatMember = chatMemRepository.findByChatRoomAndUser(chatRoom, user);
+        chatMember.setLastReadChatId(request.getChatId());
         ChatMember savedChatMember = chatMemRepository.save(chatMember);
         return ChatResponse.OnlyMemId.build(savedChatMember);
     }

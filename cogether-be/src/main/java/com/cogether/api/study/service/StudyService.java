@@ -41,9 +41,14 @@ public class StudyService {
     public StudyResponse.OnlyId delete(int studyId){
         Study study = studyRepository.findById(studyId).orElseThrow(UserNotFoundException::new);
         List<StudySkill> list = studySkillRepository.findAllByStudy_Id(studyId);
+        List<StudyScrap> scrapList = studyScrapRepository.findAllByStudy_Id(studyId);
         for (int i = 0; i < list.size(); i++){
             StudySkill studySkill = list.get(i);
             studySkillRepository.deleteById(studySkill.getId());
+        }
+        for (int i = 0; i < scrapList.size(); i++){
+            StudyScrap studyScrap = scrapList.get(i);
+            studyScrapRepository.deleteById(studyScrap.getId());
         }
         studyRepository.deleteById(studyId);
         return StudyResponse.OnlyId.build(study);
