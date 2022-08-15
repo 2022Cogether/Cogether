@@ -7,6 +7,8 @@ import com.cogether.api.user.dto.UserRequest;
 import com.cogether.api.user.service.SkillService;
 import com.cogether.api.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
@@ -157,15 +159,16 @@ public class UserController {
     /**
      * 엑세스토큰 재발급
      */
-    @PostMapping(value="/sign/token",headers = "ACCESS_TOKEN")
-    public  ResponseEntity reissuanceAccessToken(@RequestHeader("ACCESS_TOKEN")String token) throws Exception
+    @PostMapping(value="/sign/token/{userId}",headers = "REFRESH_TOKEN")
+    public  ResponseEntity reissuanceAccessToken(@RequestHeader("REFRESH_TOKEN")String token,@PathVariable("userId")int id) throws Exception
     {
         HttpHeaders headers = new HttpHeaders();
-        TokenResponse tokenResponse= userService.reissuanceAccessToken(token);
+        System.out.println(token);
+        TokenResponse tokenResponse= userService.reissuanceAccessToken(token,id);
         headers.set("ACCESS_TOKEN",tokenResponse.getACCESS_TOKEN());
         headers.set("REFRESH_TOKEN",tokenResponse.getREFRESH_TOKEN());
 
-        return ResponseEntity.ok().headers(headers).body(userService.reissuanceAccessToken(token));
+        return ResponseEntity.ok().headers(headers).build();
     }
 
 
