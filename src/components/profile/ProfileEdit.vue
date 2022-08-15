@@ -4,7 +4,7 @@
     <div class="row">
       <div class="h5 col-3">프로필 사진</div>
       <div class="profile-img-box offset-1">
-        <img :src="img_url" alt="profile image" class="profile-img" />
+        <img :src="imgUrl" alt="profile image" class="profile-img" />
       </div>
     </div>
     <div class="row my-3">
@@ -166,7 +166,7 @@
           type="text"
           size="60"
           style="background-color: #e2e2e2; border-radius: 5px"
-          v-model="git_url"
+          v-model="gitUrl"
         />
       </div>
     </div>
@@ -179,7 +179,7 @@
           type="text"
           size="60"
           style="background-color: #e2e2e2; border-radius: 5px"
-          v-model="tistory_url"
+          v-model="tistoryUrl"
         />
       </div>
     </div>
@@ -192,7 +192,7 @@
           type="text"
           size="60"
           style="background-color: #e2e2e2; border-radius: 5px"
-          v-model="velog_url"
+          v-model="velogUrl"
         />
       </div>
     </div>
@@ -205,33 +205,20 @@
           type="text"
           size="60"
           style="background-color: #e2e2e2; border-radius: 5px"
-          v-model="notion_url"
+          v-model="notionUrl"
         />
       </div>
     </div>
     <div class="container my-2">
       <div class="col-3 h6" style="display: inline-block; float: left">
-        기타 링크 1
+        기타 링크
       </div>
       <div class="offset-4">
         <input
           type="text"
           size="60"
           style="background-color: #e2e2e2; border-radius: 5px"
-          v-model="etc_url1"
-        />
-      </div>
-    </div>
-    <div class="container my-2">
-      <div class="col-3 h6" style="display: inline-block; float: left">
-        기타 링크 2
-      </div>
-      <div class="offset-4">
-        <input
-          type="text"
-          size="60"
-          style="background-color: #e2e2e2; border-radius: 5px"
-          v-model="etc_url2"
+          v-model="etcUrl"
         />
       </div>
     </div>
@@ -268,16 +255,15 @@ export default {
 
     const profiletUser = store.getters.getCurrentUser;
 
-    const img_url = ref(profiletUser.img_url);
+    const imgUrl = ref(profiletUser.imgUrl);
     const nickname = ref(profiletUser.nickname);
     const intro = ref(profiletUser.intro);
     const userLangSkills = ref(store.getters.getUserSkills);
-    const git_url = ref(profiletUser.git_url);
-    const tistory_url = ref(profiletUser.tistory_url);
-    const velog_url = ref(profiletUser.velog_url);
-    const notion_url = ref(profiletUser.notion_url);
-    const etc_url1 = ref(profiletUser.etc_url1);
-    const etc_url2 = ref(profiletUser.etc_url2);
+    const gitUrl = ref(profiletUser.gitUrl);
+    const tistoryUrl = ref(profiletUser.tistoryUrl);
+    const velogUrl = ref(profiletUser.velogUrl);
+    const notionUrl = ref(profiletUser.notionUrl);
+    const etcUrl = ref(profiletUser.etcUrl);
 
     // 모달 바깥을 클릭하면 모달을 닫게 하는 함수
     const closeModal = (event) => {
@@ -405,16 +391,15 @@ export default {
 
     const edit = () => {
       const payload = {
-        img_url: img_url.value,
+        imgUrl: imgUrl.value,
         nickname: nickname.value,
         intro: intro.value,
         userLangSkills: userLangSkills.value,
-        git_url: git_url.value,
-        tistory_url: tistory_url.value,
-        velog_url: velog_url.value,
-        notion_url: notion_url.value,
-        etc_url1: etc_url1.value,
-        etc_url2: etc_url2.value,
+        gitUrl: gitUrl.value,
+        tistoryUrl: tistoryUrl.value,
+        velogUrl: velogUrl.value,
+        notionUrl: notionUrl.value,
+        etcUrl: etcUrl.value,
       };
       store.dispatch("updateProfile", payload);
     };
@@ -423,15 +408,14 @@ export default {
       userId,
       profiletUser,
 
-      img_url,
+      imgUrl,
       nickname,
       intro,
-      git_url,
-      tistory_url,
-      velog_url,
-      notion_url,
-      etc_url1,
-      etc_url2,
+      gitUrl,
+      tistoryUrl,
+      velogUrl,
+      notionUrl,
+      etcUrl,
 
       back,
       edit,

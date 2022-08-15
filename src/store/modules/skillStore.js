@@ -37,7 +37,7 @@ export const skillStore = {
     // 유저 보유 스킬리스트 조회
     takeUserSkillSet({ commit, getters }, userId) {
       http
-        .get("skills/" + userId, {
+        .get("skills/list/" + userId, {
           headers: getters.authHeader,
         })
         .then((res) => {
@@ -49,7 +49,9 @@ export const skillStore = {
         })
         .catch((err) => {
           alert("유저 스킬리스트 에러입니다.");
-          console.error(err.response.data);
+          console.log("유저 스킬리스트 받아오기 에러");
+          console.log(err.message);
+          console.log(err.response);
         });
     },
 

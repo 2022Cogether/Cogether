@@ -2,7 +2,7 @@ import store from "@/store";
 import axios from "axios";
 
 // axios 객체 생성
-export default axios.create({
+const http = axios.create({
   baseURL: "http://i7a801.p.ssafy.io:8080/api",
   // "https://cors-anywhere.herokuapp.com/http://i7a801.p.ssafy.io:8080/api",
   headers: {
@@ -10,11 +10,13 @@ export default axios.create({
   },
 });
 
+export default http;
+
 // axios interceptors를 통해 access 토큰 검증 -> refresh 배출
 let isRefreshing = false;
 let subscribers = [];
 
-axios.interceptors.response.use(
+http.interceptors.response.use(
   (response) => {
     return response;
   },
@@ -34,9 +36,9 @@ axios.interceptors.response.use(
     // if (originalRequest.url.include("login_check")) {
     //   return Promise.reject(err);
     // }
-
     if (status === 401) {
       if (!isRefreshing) {
+        alert("refresh 들어서기 전!");
         isRefreshing = true;
         store
           .dispatch("refreshToken")
@@ -49,6 +51,7 @@ axios.interceptors.response.use(
           .catch((error) => {
             console.log(error);
           });
+        alert("refresh 지나감!");
       }
 
       const requestSubscribers = new Promise((resolve) => {
