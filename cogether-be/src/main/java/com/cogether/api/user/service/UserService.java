@@ -119,13 +119,13 @@ public class UserService {
                 userRepository
                         .findByEmail(userRequest.getEmail())
                         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-//        Optional<Auth> authEntity =
-//                authRepository
-//                        .findByUserId(user.getId());
-
-        Auth auth =
+        Optional<Auth> authEntity =
                 authRepository
-                        .findByUserId(user.getId()).orElseThrow(() -> new IllegalArgumentException("Token 이 존재하지 않습니다."));
+                        .findByUserId(user.getId());
+
+//        Auth auth =
+//                authRepository
+//                        .findByUserId(user.getId()).orElseThrow(() -> new IllegalArgumentException("Token 이 존재하지 않습니다."));
 
         if (!passwordEncoder.matches(userRequest.getPassword(), user.getPassword())) {
             throw new Exception("비밀번호가 일치하지 않습니다.");
@@ -133,57 +133,59 @@ public class UserService {
         String accessToken = "";
         String refreshToken = "";
 
-        refreshToken = auth.getRefreshToken();;
-
-        if(tokenUtils.isValidRefreshToken(refreshToken))
-        {
-            accessToken=tokenUtils.generateJwtToken(auth.getUser());
-            return TokenResponse.builder()
-                        .ACCESS_TOKEN(accessToken)
-                        .REFRESH_TOKEN(refreshToken)
-                        .userId(user.getId())
-                        .build();
-        }else
-        {
-            //리프레시 토큰으로 액세스 토큰 발급 받기. . .
-            accessToken = tokenUtils.generateJwtToken(auth.getUser());
-            refreshToken = refreshToken;
-            //auth.refreshUpdate(refreshToken);
-
-            return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).userId(user.getId()).build();
-        }
 
 
-//        Auth auth = new Auth();
+//        refreshToken = auth.getRefreshToken();;
 //
-//
-//
-//
-//        if (authEntity.isPresent()) {
-//            auth = authEntity.get();
-//            refreshToken = auth.getRefreshToken();
-//
-//            //리프레시토큰 검증
-//            if (tokenUtils.isValidRefreshToken(refreshToken)) {
-//                accessToken = tokenUtils.generateJwtToken(auth.getUser());
-//                return TokenResponse.builder()
+//        if(tokenUtils.isValidRefreshToken(refreshToken))
+//        {
+//            accessToken=tokenUtils.generateJwtToken(auth.getUser());
+//            return TokenResponse.builder()
 //                        .ACCESS_TOKEN(accessToken)
 //                        .REFRESH_TOKEN(refreshToken)
 //                        .userId(user.getId())
 //                        .build();
-//            } else {
-//                accessToken = tokenUtils.generateJwtToken(auth.getUser());
-//                refreshToken = tokenUtils.saveRefreshToken(user);
-//                auth.refreshUpdate(refreshToken);
-//            }
+//        }else
+//        {
+//            //리프레시 토큰으로 액세스 토큰 발급 받기. . .
+//            accessToken = tokenUtils.generateJwtToken(auth.getUser());
+//            refreshToken = refreshToken;
+//            //auth.refreshUpdate(refreshToken);
 //
 //            return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).userId(user.getId()).build();
-//        } else {
-//            accessToken = tokenUtils.generateJwtToken(user);
-//            refreshToken = tokenUtils.saveRefreshToken(user);
-//            authRepository.save(Auth.builder().user(user).refreshToken(refreshToken).build());
-//            return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).userId(user.getId()).build();
-   //    }
+//        }
+
+
+        Auth auth = new Auth();
+
+
+
+
+        if (authEntity.isPresent()) {
+            auth = authEntity.get();
+            refreshToken = auth.getRefreshToken();
+
+            //리프레시토큰 검증
+            if (tokenUtils.isValidRefreshToken(refreshToken)) {
+                accessToken = tokenUtils.generateJwtToken(auth.getUser());
+                return TokenResponse.builder()
+                        .ACCESS_TOKEN(accessToken)
+                        .REFRESH_TOKEN(refreshToken)
+                        .userId(user.getId())
+                        .build();
+            } else {
+                accessToken = tokenUtils.generateJwtToken(auth.getUser());
+                refreshToken = tokenUtils.saveRefreshToken(user);
+                auth.refreshUpdate(refreshToken);
+            }
+
+            return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).userId(user.getId()).build();
+        } else {
+            accessToken = tokenUtils.generateJwtToken(user);
+            refreshToken = tokenUtils.saveRefreshToken(user);
+            authRepository.save(Auth.builder().user(user).refreshToken(refreshToken).build());
+            return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).userId(user.getId()).build();
+       }
 
     }
 
