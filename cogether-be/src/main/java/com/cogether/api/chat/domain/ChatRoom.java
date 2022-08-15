@@ -25,4 +25,11 @@ public class ChatRoom {
     @Column(name="created_at")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
+
+    public static ChatRoom toEntity(boolean type) {
+        return ChatRoom.builder()
+                .type(type)
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
 }
