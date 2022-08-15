@@ -111,7 +111,7 @@ public class EmailService {
         mailForm += "</tr>";
         mailForm += "<tr>";
         mailForm += "<td width='70' height='80'></td>";
-        mailForm += "<td width='820' height='80'></td>";
+        mailForm += "<td width='70' height='80'></td>";
         mailForm += "<td width='70' height='200'></td>";
         mailForm += "</tr>";
         mailForm += "</tbody>";
@@ -119,36 +119,13 @@ public class EmailService {
         mailForm += "<p1><a href='https://i7a801.p.ssafy.io'><img src='https://cogethera801.s3.ap-northeast-2.amazonaws.com/logo.png' alt='코게더 로고' style='height:32px;'/></a><p1>";
         mailForm+= "<div width='100'></div>";
 
-        mailForm +="고객센터 | cogether.service@gmail.com" +"광고문의 | cogether.service@gmail.com ";
+        mailForm +="고객센터 | cogether.service@gmail.com <br>" +"광고문의 | cogether.service@gmail.com <br>";
 
-        mailForm+="제휴 및 대외 협력 | cogether.service@gmail.com";
-        mailForm += "대표 | 김진회 고나령 신성은 유지연 최홍철 | 서울특별시 강남구 테헤란로 212 멀티캠퍼스 17층";
+        mailForm+="제휴 및 대외 협력 | cogether.service@gmail.com<br>";
+        mailForm += "대표 | 김진회 고나령 신성은 유지연 최홍철 | 서울특별시 강남구 테헤란로 212 멀티캠퍼스 17층<br>";
         mailForm += "</div>";
         message.setText(mailForm, "UTF-8", "html");
 
-//        고객센터 | themint@mint.co.kr
-//
-//                광고문의 | themint@mint.co.kr
-//
-//        제휴 및 대외 협력 | themint@mint.co.kr
-
-
-//        String msgg="";
-//        msgg+= "<div style='margin:100px;'>";
-//        msgg+= "<h1> COGETHER </h1>";
-//        msgg+= "<br>";
-//        msgg+= "<p>안녕하세요, COGETHER에 가입해주셔서 감사합니다 !<p>";
-//        msgg+= "<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>";
-//        msgg+= "<br>";
-//        msgg+= "<p>감사합니다!<p>";
-//        msgg+= "<br>";
-//        msgg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
-//        msgg+= "<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>";
-//        msgg+= "<div style='font-size:130%'>";
-//        msgg+= "CODE : <strong>";
-//        msgg+= ePw+"</strong><div><br/> ";
-//        msgg+= "</div>";
-  //      message.setText(msgg, "utf-8", "html");//내용
         message.setFrom(new InternetAddress("cogether.service@gmail.com","COGETHER.Support"));//보내는 사람
 
         return message;
@@ -157,28 +134,91 @@ public class EmailService {
     private MimeMessage createMessageIssuetemporarypassword
             (String to)throws Exception{
         System.out.println("보내는 대상 : "+ to);
-        System.out.println("인증 번호 : "+ePw);
+        System.out.println("인증 번호 : "+tempPassword);
         MimeMessage  message = emailSender.createMimeMessage();
 
         message.addRecipients(RecipientType.TO, to);//보내는 대상
         message.setSubject("COGETHER - 임시비밀번호 발급");//제목
 
-        String msgg="";
-        msgg+= "<div style='margin:100px;'>";
-        msgg+= "<h1> COGETHER </h1>";
-        msgg+= "<br>";
-        msgg+= "<p>안녕하세요,"+to+"님, 임시비밀번호 발급드립니다 <p>";
-        msgg+= "<p>아래 임시비밀번호로 재로그인하여 새로운 비밀번호로 변경해주세요.<p>";
-        msgg+= "<br>";
-        msgg+= "<p>감사합니다!<p>";
-        msgg+= "<br>";
-        msgg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
-        msgg+= "<h3 style='color:blue;'>임시비밀번호입니다.</h3>";
-        msgg+= "<div style='font-size:130%'>";
-        msgg+= "CODE : <strong>";
-        msgg+= tempPassword+"</strong><div><br/> ";
-        msgg+= "</div>";
-        message.setText(msgg, "utf-8", "html");//내용
+        String mailForm = "<div style='width:960px; margin:0 auto;'>";
+        mailForm += "<table  cellpadding='0' cellspacing='0' border='0' width='960' align='left' valign='middle' style='margin:0 auto; padding:0; min-width:960px; border:1px solid #ebebeb; font-family:'맑은 고딕', 'Malgun Gothic', '돋움', Dotum, sans-serif; font-size:18px; color:#666666; letter-spacing:-1.3px; line-height:1.8;'>";
+        mailForm += "<tbody>";
+        mailForm += "<tr>";
+        mailForm += "<td width='70' height='80'></td>";
+        mailForm += "<td width='820' height='80'></td>";
+        mailForm += "<td width='70' height='80'></td>";
+        mailForm += "</tr>";
+        mailForm += "<tr>";
+        mailForm += "<td height='30'></td>";
+        mailForm += "<td height='30' align='right'>";
+        mailForm += "<a href='https://i7a801.p.ssafy.io'><img src='https://cogethera801.s3.ap-northeast-2.amazonaws.com/icon.png' alt='코게더 로고' style='height:72px;'/></a>";
+        mailForm += "</td>";
+        mailForm += "<td height='30'></td>";
+        mailForm += "</tr>";
+        mailForm += "<tr>";
+        mailForm += "<td height='30'></td>";
+        mailForm += "<td height='30'></td>";
+        mailForm += "<td height='30'></td>";
+        mailForm += "</tr>";
+        mailForm += "<tr>";
+        mailForm += "<td></td>";
+        mailForm += "<td>";
+        mailForm += "<p style='font-size:40px; color:#333333; font-weight:300; line-height:1; letter-spacing:-4px;'>임시비밀번호 발급 안내</p>";
+        mailForm += "</td>";
+        mailForm += "<td></td>";
+        mailForm += "</tr>";
+        mailForm += "<tr>";
+        mailForm += "<td height='30'></td>";
+        mailForm += "<td height='30'></td>";
+        mailForm += "<td height='30'></td>";
+        mailForm += "</tr>";
+        mailForm += "<tr>";
+        mailForm += "<td></td>";
+        mailForm += "<td>";
+        mailForm += "<p style='font-size:16px;'>안녕하세요."+to + " 님. 해당 임시 비밀번호로 로그인한 후 비밀번호 변경을 진행해주세요. ";
+        mailForm += "</td>";
+        mailForm += "<td></td>";
+        mailForm += "</tr>";
+        mailForm += "<tr>";
+        mailForm += "<td height='15'></td>";
+        mailForm += "<td height='15'></td>";
+        mailForm += "<td height='15'></td>";
+        mailForm += "</tr>";
+        mailForm += "<tr>";
+        mailForm += "<td></td>";
+        mailForm += "<td style='padding:30px; background:#f5f5f5; text-align:center;'>";
+        mailForm += "<p style='font-size:25px; font-weight:500; color:#333333;'><span style='margin-right:20px; color:#666666;'>가입코드 : </span>" + tempPassword + "</p>";
+        mailForm += "</td>";
+        mailForm += "<td></td>";
+        mailForm += "</tr>";
+        mailForm += "<tr>";
+        mailForm += "<td height='15'></td>";
+        mailForm += "<td height='15'></td>";
+        mailForm += "<td height='15'></td>";
+        mailForm += "</tr>";
+        mailForm += "<tr>";
+        mailForm += "<td></td>";
+        mailForm += "<td>";
+        mailForm += "<p style='font-size:16px;'>감사합니다.</p>";
+        mailForm += "</td>";
+        mailForm += "<td></td>";
+        mailForm += "</tr>";
+        mailForm += "<tr>";
+        mailForm += "<td width='70' height='80'></td>";
+        mailForm += "<td width='70' height='80'></td>";
+        mailForm += "<td width='70' height='200'></td>";
+        mailForm += "</tr>";
+        mailForm += "</tbody>";
+        mailForm += "</table>";
+        mailForm += "<p1><a href='https://i7a801.p.ssafy.io'><img src='https://cogethera801.s3.ap-northeast-2.amazonaws.com/logo.png' alt='코게더 로고' style='height:32px;'/></a><p1>";
+        mailForm+= "<div width='100'></div>";
+
+        mailForm +="고객센터 | cogether.service@gmail.com <br>" +"광고문의 | cogether.service@gmail.com <br>";
+
+        mailForm+="제휴 및 대외 협력 | cogether.service@gmail.com<br>";
+        mailForm += "대표 | 김진회 고나령 신성은 유지연 최홍철 | 서울특별시 강남구 테헤란로 212 멀티캠퍼스 17층<br>";
+        mailForm += "</div>";
+        message.setText(mailForm, "utf-8", "html");//내용
         message.setFrom(new InternetAddress("cogether.service@gmail.com","COGETHER.Support"));//보내는 사람
 
         return message;
@@ -277,7 +317,7 @@ public class EmailService {
             es.printStackTrace();
             throw new IllegalArgumentException();
         }
-        return ePw;
+        return tempPassword;
     }
 
     public String findVerificationSignUpCode (String email)
@@ -291,14 +331,14 @@ public class EmailService {
     }
 
     @Transactional
-    public String deleteVerificationSignUpCode (String email)
+    public boolean deleteVerificationSignUpCode (String email)
     {
         Verification verification = emailRepository.searchByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 이메일입니다"));
 
         emailRepository.deleteByEmail(verification.getEmail());
 
-        return "fuck you";
+        return true;
     }
 
 }
