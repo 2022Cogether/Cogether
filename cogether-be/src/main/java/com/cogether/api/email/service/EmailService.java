@@ -46,7 +46,7 @@ public class EmailService {
         message.addRecipients(RecipientType.TO, to);//보내는 대상
         message.setSubject("COGETHER - 회원가입 이메일 인증");//제목
 
-        String mailForm = "<div style='width:960px; margin:0 auto;'>";
+        String mailForm = "<div style='width:960px; margin:0 auto; background-color:#CAE4E1'>";
         mailForm += "<table  cellpadding='0' cellspacing='0' border='0' width='960' align='left' valign='middle' style='margin:0 auto; padding:0; min-width:960px; border:1px solid #ebebeb; font-family:'맑은 고딕', 'Malgun Gothic', '돋움', Dotum, sans-serif; font-size:18px; color:#666666; letter-spacing:-1.3px; line-height:1.8;'>";
         mailForm += "<tbody>";
         mailForm += "<tr>";
@@ -140,7 +140,7 @@ public class EmailService {
         message.addRecipients(RecipientType.TO, to);//보내는 대상
         message.setSubject("COGETHER - 임시비밀번호 발급");//제목
 
-        String mailForm = "<div style='width:960px; margin:0 auto;'>";
+        String mailForm = "<div style='width:960px; margin:0 auto;background-color:#CAE4E1'>";
         mailForm += "<table  cellpadding='0' cellspacing='0' border='0' width='960' align='left' valign='middle' style='margin:0 auto; padding:0; min-width:960px; border:1px solid #ebebeb; font-family:'맑은 고딕', 'Malgun Gothic', '돋움', Dotum, sans-serif; font-size:18px; color:#666666; letter-spacing:-1.3px; line-height:1.8;'>";
         mailForm += "<tbody>";
         mailForm += "<tr>";
