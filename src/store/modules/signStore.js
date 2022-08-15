@@ -85,6 +85,7 @@ export const signStore = {
     },
 
     async login({ commit, dispatch }, credentials) {
+      console.log(credentials);
       await http
         .post("sign/signin/", credentials)
         .then(({ data }) => {
@@ -101,6 +102,7 @@ export const signStore = {
           commit("SET_BOOLEANVALUE");
         })
         .catch((err) => {
+          alert("로그인 에러!");
           console.error(err.response.data);
         });
     },
@@ -130,12 +132,16 @@ export const signStore = {
       alert("fetchCurrentUser!" + userId);
       if (getters.isLoggedIn) {
         http
-          .get("user/" + userId, {
+          .get("user/info/" + userId, {
             headers: getters.authHeader,
           })
-          .then((res) => commit("SET_CURRENT_USER", res.data))
+          .then((res) => {
+            console.log(res.data);
+            commit("SET_CURRENT_USER", res.data);
+          })
           .catch((err) => {
             alert("현 사용자 정보 저장 중 에러 발생");
+            console.log("현 사용자 정보 저장 중 에러 발생");
             console.error(err.response.data);
             if (err.response.status === 401) {
               commit("SET_TOKEN", "");
@@ -146,14 +152,20 @@ export const signStore = {
     },
 
     fetchAnothertUser({ commit, getters }, userId) {
+      alert("fetchAnotherUser!" + userId);
       if (getters.isLoggedIn) {
         http
-          .get("user/" + userId, {
+          .get("user/info/" + userId, {
             headers: getters.authHeader,
           })
-          .then((res) => commit("SET_ANOTHER_USER", res.data))
+          .then((res) => {
+            console.log("다른 유저 프로필");
+            console.log(res.data);
+            commit("SET_ANOTHER_USER", res.data);
+          })
           .catch((err) => {
             alert("다른 사용자 정보 불러오는 중 에러 발생");
+            console.log("다른 사용자 정보 저장 중 에러 발생");
             commit("SET_BOOLEANVALUE");
             console.error(err.response.data);
           });
@@ -298,7 +310,7 @@ export const signStore = {
 
     logout({ commit, getters }) {
       http
-        .get("sign/signout", {
+        .delete("sign/signout", {
           headers: getters.authHeader,
         })
         .then((res) => {
@@ -360,24 +372,49 @@ export const signStore = {
           console.error(err.response.data);
         });
     },
-
+    // { REFRESH_TOKEN: localStorage.getItem("REFRESH_TOKEN") }
     // accessToken 재요청
-    refreshToken({ commit }) {
+    async refreshToken({ dispatch }) {
+      // headers: { REFRESH_TOKEN: localStorage.getItem("refresh_TOKEN") }
       //accessToken 만료로 재발급 후 재요청시 비동기처리로는 제대로 처리가 안되서 promise로 처리함
-      return new Promise((resolve, reject) => {
+      alert("promise 앞에서서"); // 2
+      let promise = new Promise((resolve, reject) => {
         http
           .post("sign/token", null, {
-            headers: { REFRESH_TOKEN: localStorage.getItem("REFRESH_TOKEN") },
+            // headers: getters.authHeader,
+            headers: { REFRESH_TOKEN: localStorage.getItem("refresh_TOKEN") },
           })
           .then((res) => {
-            commit("saveAccess", res.data.access_TOKEN);
-            resolve(res.data.access_TOKEN);
+            console.log("res data!");
+            console.log(
+              "예전 access여 안녕!",
+              localStorage.getItem("access_TOKEN")
+            );
+            console.log(
+              "예전 refresh여 안녕!",
+              localStorage.getItem("refresh_TOKEN")
+            );
+
+            dispatch("saveAccess", res.headers.access_token);
+            localStorage.setItem("refresh_TOKEN", res.headers.refresh_token);
+            console.log(
+              "새로운 access여 안녕!",
+              localStorage.getItem("access_TOKEN")
+            );
+            console.log(
+              "새로운? refresh여 안녕!",
+              localStorage.getItem("refresh_TOKEN")
+            );
+            resolve(res.data);
           })
           .catch((err) => {
-            console.log("refreshToken error : ", err.config);
-            reject(err.config.data);
+            console.log("refreshToken error : ", err);
+            reject(err.response);
           });
       });
+      let result = await promise;
+
+      return result;
     },
   },
 };
