@@ -57,32 +57,32 @@ public class RankController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(path = "/ranking/week")
-    @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<RankingResponse.LiveCompRankList> getWeekRank(@RequestParam int userId, @RequestParam int page){
-        RankingResponse.LiveCompRankList response = rankService.getWeekRank(userId, page);
-        return ResponseEntity.ok().body(response);
-    }
-
-    @GetMapping(path = "/ranking/week/follow")
-    @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<RankingResponse.LiveCompRankList> getMyWeekRank(@RequestParam int userId, @RequestParam int page){
-        RankingResponse.LiveCompRankList response = rankService.getMyWeekRank(userId, page);
-        return ResponseEntity.ok().body(response);
-    }
-
-    @GetMapping(path = "/ranking/month")
-    @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<RankingResponse.LiveCompRankList> getMonthRank(@RequestParam int userId, @RequestParam int page){
-        RankingResponse.LiveCompRankList response = rankService.getMonthRank(userId, page);
-        return ResponseEntity.ok().body(response);
-    }
-
-    @GetMapping(path = "/ranking/month/follow")
-    @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<RankingResponse.LiveCompRankList> getMyMonthRank(@RequestParam int userId, @RequestParam int page){
-        RankingResponse.LiveCompRankList response = rankService.getMyMonthRank(userId, page);
-        return ResponseEntity.ok().body(response);
-    }
+//    @GetMapping(path = "/ranking/week")
+//    @ResponseStatus(value = HttpStatus.OK)
+//    public ResponseEntity<RankingResponse.LiveCompRankList> getWeekRank(@RequestParam int userId, @RequestParam int page){
+//        RankingResponse.LiveCompRankList response = rankService.getWeekRank(userId, page);
+//        return ResponseEntity.ok().body(response);
+//    }
+//
+//    @GetMapping(path = "/ranking/week/follow")
+//    @ResponseStatus(value = HttpStatus.OK)
+//    public ResponseEntity<RankingResponse.LiveCompRankList> getMyWeekRank(@RequestParam int userId, @RequestParam int page){
+//        RankingResponse.LiveCompRankList response = rankService.getMyWeekRank(userId, page);
+//        return ResponseEntity.ok().body(response);
+//    }
+//
+//    @GetMapping(path = "/ranking/month")
+//    @ResponseStatus(value = HttpStatus.OK)
+//    public ResponseEntity<RankingResponse.LiveCompRankList> getMonthRank(@RequestParam int userId, @RequestParam int page){
+//        RankingResponse.LiveCompRankList response = rankService.getMonthRank(userId, page);
+//        return ResponseEntity.ok().body(response);
+//    }
+//
+//    @GetMapping(path = "/ranking/month/follow")
+//    @ResponseStatus(value = HttpStatus.OK)
+//    public ResponseEntity<RankingResponse.LiveCompRankList> getMyMonthRank(@RequestParam int userId, @RequestParam int page){
+//        RankingResponse.LiveCompRankList response = rankService.getMyMonthRank(userId, page);
+//        return ResponseEntity.ok().body(response);
+//    }
 
 }
