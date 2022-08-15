@@ -28,24 +28,24 @@ public class StudyController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(path = "/study")
+    @GetMapping(path = "/study/{studyId}")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<StudyResponse.StudyAll> getStudyDetail(@RequestParam int studyId, @RequestParam int userId){
-        StudyResponse.StudyAll response = studyService.getStudyDetail(studyId, userId);
+    public ResponseEntity<StudyResponse.StudyAll> getStudyDetail(@PathVariable int studyId, @RequestHeader("ACCESS_TOKEN") String token){
+        StudyResponse.StudyAll response = studyService.getStudyDetail(studyId, token);
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(path = "/study/list/{userId}")
+    @GetMapping(path = "/study/list")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<StudyResponse.StudyList> getStudyList(@PathVariable int userId){
-        StudyResponse.StudyList response = studyService.getStudyList(userId);
+    public ResponseEntity<StudyResponse.StudyList> getStudyList(@RequestHeader("ACCESS_TOKEN") String token){
+        StudyResponse.StudyList response = studyService.getStudyList(token);
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(path = "/study/list/my/{userId}")
+    @GetMapping(path = "/study/list/my")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<StudyResponse.StudyList> getMyStudyList(@PathVariable int userId){
-        StudyResponse.StudyList response = studyService.getMyStudyList(userId);
+    public ResponseEntity<StudyResponse.StudyList> getMyStudyList(@RequestHeader("ACCESS_TOKEN") String token){
+        StudyResponse.StudyList response = studyService.getMyStudyList(token);
         return ResponseEntity.ok().body(response);
     }
 
