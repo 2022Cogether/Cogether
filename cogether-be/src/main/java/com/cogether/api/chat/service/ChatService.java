@@ -41,16 +41,23 @@ public class ChatService {
         return ChatResponse.GetChat.build(chat, user);
     }
 
-    public ChatResponse.GetChats getChats(int chatRoomId) {
+    public ChatResponse.GetChats getChats(int chatRoomId, String token) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(ChatRoomNotFoundException::new);
         List<Chat> chats = chatRepository.findAllByChatRoom(chatRoom);
         List<ChatResponse.GetChat> getChats = new ArrayList<>();
         int len = chats.size();
 
-        for (int idx = 0; idx < len; idx++) {
-            Chat chat = chats.get(idx);
-            User user = userRepository.findById(chat.getSendUserId()).orElseThrow(UserNotFoundException::new);
-            getChats.add(ChatResponse.GetChat.build(chat, user));
+        if (len > 0) {
+            for (int idx = 0; idx < len; idx++) {
+                Chat chat = chats.get(idx);
+                User user = userRepository.findById(chat.getSendUserId()).orElseThrow(UserNotFoundException::new);
+                getChats.add(ChatResponse.GetChat.build(chat, user));
+            }
+
+            User loginUser = userRepository.findById(tokenUtils.getUserIdFromToken(token)).orElseThrow(UserNotFoundException::new);
+            ChatMember chatMember = chatMemRepository.findByChatRoomAndUser(chatRoom, loginUser);
+            chatMember.setLastReadChatId(chats.get(len - 1).getId());
+            chatMemRepository.save(chatMember);
         }
 
         return ChatResponse.GetChats.build(getChats);
