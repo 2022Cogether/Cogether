@@ -21,9 +21,9 @@ public class ChatController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/chat/list/{chatRoomId}")
-    public ResponseEntity<ChatResponse.GetChats> getChats(@PathVariable int chatRoomId) {
-        ChatResponse.GetChats response = chatService.getChats(chatRoomId);
+    @GetMapping(value ="/chat/list/{chatRoomId}", headers = "ACCESS_TOKEN")
+    public ResponseEntity<ChatResponse.GetChats> getChats(@PathVariable int chatRoomId, @RequestHeader("ACCESS_TOKEN") String token) {
+        ChatResponse.GetChats response = chatService.getChats(chatRoomId, token);
         return ResponseEntity.ok().body(response);
     }
 
