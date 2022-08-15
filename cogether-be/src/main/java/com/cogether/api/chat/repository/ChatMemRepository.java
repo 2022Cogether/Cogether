@@ -17,4 +17,6 @@ public interface ChatMemRepository extends JpaRepository<ChatMember, Integer> {
     List<ChatMember> findAllByChatRoom(ChatRoom chatRoom);
 
     List<ChatMember> findAllByUserOrderByCreatedAtDesc(User user);
+
+    List<ChatMember> findAllByUser(User user);
 }
