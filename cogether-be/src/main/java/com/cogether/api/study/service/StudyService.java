@@ -1,5 +1,6 @@
 package com.cogether.api.study.service;
 
+import com.cogether.api.config.jwt.TokenUtils;
 import com.cogether.api.study.domain.*;
 import com.cogether.api.study.exception.StudyNotFoundException;
 import com.cogether.api.study.repository.StudyRepository;
@@ -24,6 +25,7 @@ public class StudyService {
     private final StudySkillRepository studySkillRepository;
     private final StudyScrapRepository studyScrapRepository;
     private final UserRepository userRepository;
+    private final TokenUtils tokenUtils;
 
     public StudyResponse.OnlyId create(StudyRequest.Create_Study create_study){
         User user = userRepository.findById(create_study.getUserId()).orElseThrow(UserNotFoundException::new);
@@ -54,7 +56,8 @@ public class StudyService {
         return StudyResponse.OnlyId.build(study);
     }
 
-    public StudyResponse.StudyAll getStudyDetail(int studyId, int userId){
+    public StudyResponse.StudyAll getStudyDetail(int studyId, String token){
+        int userId = tokenUtils.getUserIdFromToken(token);
         Study study = studyRepository.findById(studyId).orElseThrow(StudyNotFoundException::new);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<StudySkill> list = studySkillRepository.findAllByStudy_Id(studyId);
@@ -68,7 +71,8 @@ public class StudyService {
         return StudyResponse.StudyAll.build(study,list,scrapId, isScrap);
     }
 
-    public StudyResponse.StudyList getStudyList(int userId){
+    public StudyResponse.StudyList getStudyList(String token){
+        int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<StudyResponse.StudyAll> studyList = new ArrayList<>();
         List<Study> list = studyRepository.findAll();
@@ -93,7 +97,8 @@ public class StudyService {
         return StudyResponse.StudyList.build(studyList);
     }
 
-    public StudyResponse.StudyList getMyStudyList(int userId){
+    public StudyResponse.StudyList getMyStudyList(String token){
+        int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<StudyResponse.StudyAll> studyList = new ArrayList<>();
         List<Study> list = studyRepository.findAllByUserOrderByCreatedAtDesc(user);

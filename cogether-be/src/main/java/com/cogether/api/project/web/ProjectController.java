@@ -28,17 +28,17 @@ public class ProjectController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(path = "/project")
+    @GetMapping(path = "/project/{projectId}")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<ProjectResponse.ProjectAll> getProjectDetail(@RequestParam int projectId, @RequestParam int userId){
-        ProjectResponse.ProjectAll response = projectService.getProjectDetail(projectId, userId);
+    public ResponseEntity<ProjectResponse.ProjectAll> getProjectDetail(@PathVariable int projectId, @RequestHeader("ACCESS_TOKEN") String token){
+        ProjectResponse.ProjectAll response = projectService.getProjectDetail(projectId, token);
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(path = "/project/list/{userId}")
+    @GetMapping(path = "/project/list")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<ProjectResponse.ProjectList> getProjectList(@PathVariable int userId){
-        ProjectResponse.ProjectList response = projectService.getProjectList(userId);
+    public ResponseEntity<ProjectResponse.ProjectList> getProjectList(@RequestHeader("ACCESS_TOKEN") String token){
+        ProjectResponse.ProjectList response = projectService.getProjectList(token);
         return ResponseEntity.ok().body(response);
     }
 
@@ -56,10 +56,10 @@ public class ProjectController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(path = "/project/list/my/{userId}")
+    @GetMapping(path = "/project/list/my")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<ProjectResponse.ProjectList> getMyProjectList(@PathVariable int userId){
-        ProjectResponse.ProjectList response = projectService.getMyProjectList(userId);
+    public ResponseEntity<ProjectResponse.ProjectList> getMyProjectList(@RequestHeader("ACCESS_TOKEN") String token){
+        ProjectResponse.ProjectList response = projectService.getMyProjectList(token);
         return ResponseEntity.ok().body(response);
     }
 

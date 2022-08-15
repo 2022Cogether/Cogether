@@ -47,10 +47,10 @@ public class TilController {
         return ResponseEntity.ok().body(response);
     }
 
-    @DeleteMapping(path = "/til/like")
+    @DeleteMapping(path = "/til/like/{tilId}")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<TilResponse.OnlyLikeId> deleteLike(@RequestParam int tilId, @RequestParam int userId){
-        TilResponse.OnlyLikeId response = tilService.deleteLike(tilId, userId);
+    public ResponseEntity<TilResponse.OnlyLikeId> deleteLike(@PathVariable int tilId, @RequestHeader("ACCESS_TOKEN") String token){
+        TilResponse.OnlyLikeId response = tilService.deleteLike(tilId, token);
         return ResponseEntity.ok().body(response);
     }
 
@@ -75,38 +75,38 @@ public class TilController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(path = "/til")
+    @GetMapping(path = "/til/{tilId}")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<TilResponse.TilAll> getTilDetail(@RequestParam int tilId, @RequestParam int userId){
-        TilResponse.TilAll response = tilService.getTilDetail(tilId, userId);
+    public ResponseEntity<TilResponse.TilAll> getTilDetail(@PathVariable int tilId, @RequestHeader("ACCESS_TOKEN") String token){
+        TilResponse.TilAll response = tilService.getTilDetail(tilId, token);
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(path = "/til/search")
+    @GetMapping(path = "/til/search/{keyword}")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<TilResponse.TilList> getSearchTil(@RequestParam String keyword, @RequestParam int userId){
-        TilResponse.TilList response = tilService.getSearchTil(keyword, userId);
+    public ResponseEntity<TilResponse.TilList> getSearchTil(@PathVariable String keyword, @RequestHeader("ACCESS_TOKEN") String token){
+        TilResponse.TilList response = tilService.getSearchTil(keyword, token);
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(path = "/til/list/my/{userId}")
+    @GetMapping(path = "/til/list/my")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<TilResponse.TilList> getMyTilList(@PathVariable int userId){
-        TilResponse.TilList response = tilService.getMyTilList(userId);
+    public ResponseEntity<TilResponse.TilList> getMyTilList(@RequestHeader("ACCESS_TOKEN") String token){
+        TilResponse.TilList response = tilService.getMyTilList(token);
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(path = "/til/search/my")
+    @GetMapping(path = "/til/search/my/{keyword}")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<TilResponse.TilList> getMySearchTil(@RequestParam String keyword, @RequestParam int userId){
-        TilResponse.TilList response = tilService.getMySearchTil(keyword, userId);
+    public ResponseEntity<TilResponse.TilList> getMySearchTil(@PathVariable String keyword, @RequestHeader("ACCESS_TOKEN") String token){
+        TilResponse.TilList response = tilService.getMySearchTil(keyword, token);
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(path = "/til/list/{userId}")
+    @GetMapping(path = "/til/list")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<TilResponse.TilList> getMainTil(@PathVariable int userId){
-        TilResponse.TilList response = tilService.getMainTil(userId);
+    public ResponseEntity<TilResponse.TilList> getMainTil(@RequestHeader("ACCESS_TOKEN") String token){
+        TilResponse.TilList response = tilService.getMainTil(token);
         return ResponseEntity.ok().body(response);
     }
 }
