@@ -11,4 +11,7 @@ public interface RankingRepository extends JpaRepository<Ranking, Integer> {
     Ranking findByUser_Id(int userId);
 
     List<Ranking> findAllByOrderByTilCntDesc();
+    List<Ranking> findAllByOrderByTotalDesc();
+//    List<Ranking> findAllByOrderByWeekDesc();
+//    List<Ranking> findAllByOrderByMonthDesc();
 }

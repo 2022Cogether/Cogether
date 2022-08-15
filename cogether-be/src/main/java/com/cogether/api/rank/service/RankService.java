@@ -79,7 +79,7 @@ public class RankService {
         int startIndex = 20*(page-1);
         int endIndex = 20*page;
         if(endIndex > followRankList.size()){
-            endIndex = followingList.size();
+            endIndex = followRankList.size();
         }
         for (int i = startIndex; i < endIndex; i++){
             int rank = 1;
@@ -106,7 +106,7 @@ public class RankService {
         return RankingResponse.TilRankList.build(myRank, user, myRanking.getTilCnt(), tilRankList);
     }
 
-    public RankingResponse.ExpRankList getExpList(int userId, int page){
+    public RankingResponse.ExpRankList getExpRank(int userId, int page){
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<User> list = userRepository.findAllByOrderByExp();
         int startIndex = 20*(page-1);
@@ -140,7 +140,7 @@ public class RankService {
         return RankingResponse.ExpRankList.build(myRank, user, expRankList);
     }
 
-    public RankingResponse.ExpRankList getMyExpList(int userId, int page){
+    public RankingResponse.ExpRankList getMyExpRank(int userId, int page){
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<Follow> followList = followRepository.findByFollowing(userId);
         List<User> followUserList = new ArrayList<>();
@@ -185,4 +185,250 @@ public class RankService {
         }
         return RankingResponse.ExpRankList.build(myRank, user, expRankList);
     }
+
+    public RankingResponse.LiveCompRankList getTotalRank(int userId, int page){
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        List<Ranking> list = rankingRepository.findAllByOrderByTotalDesc();
+        List<RankingResponse.LiveCompRank> totalRankList = new ArrayList<>();
+        Ranking myRanking = rankingRepository.findByUser_Id(userId);
+        int startIndex = 20*(page-1);
+        int endIndex = 20*page;
+        if(endIndex > list.size()){
+            endIndex = list.size();
+        }
+        for (int i = startIndex; i < endIndex; i++){
+            int rank = 1;
+            Ranking ranking = list.get(i);
+            for (int j = 0; j < list.size(); j++){
+                if(list.get(j).getTotal() == ranking.getTotal()){
+                    break;
+                }
+                if(list.get(j).getTotal() > ranking.getTotal()){
+                    rank += 1;
+                }
+            }
+            totalRankList.add(RankingResponse.LiveCompRank.build(rank, ranking.getUser(), ranking.getTotal()));
+        }
+        int myRank = 1;
+        for (int i = 0; i < list.size(); i++){
+            if(list.get(i).getTotal() == myRanking.getTotal()){
+                break;
+            }
+            if(list.get(i).getTotal() > myRanking.getTotal()){
+                myRank += 1;
+            }
+        }
+        return RankingResponse.LiveCompRankList.build(myRank, user, myRanking.getTotal(), totalRankList);
+    }
+
+    public RankingResponse.LiveCompRankList getMyTotalRank(int userId, int page){
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        List<Follow> followList = followRepository.findByFollowing(userId);
+        List<Ranking> followRankList = new ArrayList<>();
+        Ranking myRanking = rankingRepository.findByUser_Id(userId);
+        followRankList.add(myRanking);
+        List<RankingResponse.LiveCompRank> totalRankList = new ArrayList<>();
+        for (int i = 0; i < followList.size(); i++){
+            int followId = followList.get(i).getFromId();
+            followRankList.add(rankingRepository.findByUser_Id(followId));
+        }
+        Collections.sort(followRankList, new Comparator<Ranking>() {
+            @Override
+            public int compare(Ranking o1, Ranking o2) {
+                return o2.getTotal()-o1.getTotal();
+            }
+        });
+        int startIndex = 20*(page-1);
+        int endIndex = 20 * page;
+        if(endIndex > followRankList.size()){
+            endIndex = followRankList.size();
+        }
+        for (int i = startIndex; i < endIndex; i++){
+            int rank = 1;
+            Ranking ranking = followRankList.get(i);
+            for (int j = 0; j < followRankList.size(); j++){
+                if(followRankList.get(j).getTotal() == ranking.getTotal()){
+                    break;
+                }
+                if(followRankList.get(j).getTotal() > ranking.getTotal()){
+                    rank += 1;
+                }
+            }
+            totalRankList.add(RankingResponse.LiveCompRank.build(rank, ranking.getUser(), ranking.getTotal()));
+        }
+        int myRank = 1;
+        for (int i = 0; i < followRankList.size(); i++){
+            if(followRankList.get(i).getTotal() == myRanking.getTotal()){
+                break;
+            }
+            if(followRankList.get(i).getTotal() > myRanking.getTotal()){
+                myRank += 1;
+            }
+        }
+        return RankingResponse.LiveCompRankList.build(myRank, user, myRanking.getTotal(), totalRankList);
+    }
+
+//    public RankingResponse.LiveCompRankList getWeekRank(int userId, int page){
+//        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+//        List<Ranking> list = rankingRepository.findAllByOrderByWeekDesc();
+//        List<RankingResponse.LiveCompRank> weekRankList = new ArrayList<>();
+//        Ranking myRanking = rankingRepository.findByUser_Id(userId);
+//        int startIndex = 20*(page-1);
+//        int endIndex = 20*page;
+//        if(endIndex > list.size()){
+//            endIndex = list.size();
+//        }
+//        for (int i = startIndex; i < endIndex; i++){
+//            int rank = 1;
+//            Ranking ranking = list.get(i);
+//            for (int j = 0; j < list.size(); j++){
+//                if(list.get(j).getWeek() == ranking.getWeek()){
+//                    break;
+//                }
+//                if(list.get(j).getWeek() > ranking.getWeek()){
+//                    rank += 1;
+//                }
+//            }
+//            weekRankList.add(RankingResponse.LiveCompRank.build(rank, ranking.getUser(), ranking.getWeek()));
+//        }
+//        int myRank = 1;
+//        for (int i = 0; i < list.size(); i++){
+//            if(list.get(i).getWeek() == myRanking.getWeek()){
+//                break;
+//            }
+//            if(list.get(i).getWeek() > myRanking.getWeek()){
+//                myRank += 1;
+//            }
+//        }
+//        return RankingResponse.LiveCompRankList.build(myRank, user, myRanking.getWeek(), weekRankList);
+//    }
+//
+//    public RankingResponse.LiveCompRankList getMyWeekRank(int userId, int page){
+//        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+//        List<Follow> followList = followRepository.findByFollowing(userId);
+//        List<Ranking> followRankList = new ArrayList<>();
+//        Ranking myRanking = rankingRepository.findByUser_Id(userId);
+//        followRankList.add(myRanking);
+//        List<RankingResponse.LiveCompRank> weekRankList = new ArrayList<>();
+//        for (int i = 0; i < followList.size(); i++){
+//            int followId = followList.get(i).getFromId();
+//            followRankList.add(rankingRepository.findByUser_Id(followId));
+//        }
+//        Collections.sort(followRankList, new Comparator<Ranking>() {
+//            @Override
+//            public int compare(Ranking o1, Ranking o2) {
+//                return o2.getWeek()-o1.getWeek();
+//            }
+//        });
+//        int startIndex = 20*(page-1);
+//        int endIndex = 20 * page;
+//        if(endIndex > followRankList.size()){
+//            endIndex = followRankList.size();
+//        }
+//        for (int i = startIndex; i < endIndex; i++){
+//            int rank = 1;
+//            Ranking ranking = followRankList.get(i);
+//            for (int j = 0; j < followRankList.size(); j++){
+//                if(followRankList.get(j).getWeek() == ranking.getWeek()){
+//                    break;
+//                }
+//                if(followRankList.get(j).getWeek() > ranking.getWeek()){
+//                    rank += 1;
+//                }
+//            }
+//            weekRankList.add(RankingResponse.LiveCompRank.build(rank, ranking.getUser(), ranking.getWeek()));
+//        }
+//        int myRank = 1;
+//        for (int i = 0; i < followRankList.size(); i++){
+//            if(followRankList.get(i).getWeek() == myRanking.getWeek()){
+//                break;
+//            }
+//            if(followRankList.get(i).getWeek() > myRanking.getWeek()){
+//                myRank += 1;
+//            }
+//        }
+//        return RankingResponse.LiveCompRankList.build(myRank, user, myRanking.getWeek(), weekRankList);
+//    }
+//
+//    public RankingResponse.LiveCompRankList getMonthRank(int userId, int page){
+//        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+//        List<Ranking> list = rankingRepository.findAllByOrderByMonthDesc();
+//        List<RankingResponse.LiveCompRank> monthRankList = new ArrayList<>();
+//        Ranking myRanking = rankingRepository.findByUser_Id(userId);
+//        int startIndex = 20*(page-1);
+//        int endIndex = 20*page;
+//        if(endIndex > list.size()){
+//            endIndex = list.size();
+//        }
+//        for (int i = startIndex; i < endIndex; i++){
+//            int rank = 1;
+//            Ranking ranking = list.get(i);
+//            for (int j = 0; j < list.size(); j++){
+//                if(list.get(j).getMonth() == ranking.getMonth()){
+//                    break;
+//                }
+//                if(list.get(j).getMonth() > ranking.getMonth()){
+//                    rank += 1;
+//                }
+//            }
+//            monthRankList.add(RankingResponse.LiveCompRank.build(rank, ranking.getUser(), ranking.getMonth()));
+//        }
+//        int myRank = 1;
+//        for (int i = 0; i < list.size(); i++){
+//            if(list.get(i).getMonth() == myRanking.getMonth()){
+//                break;
+//            }
+//            if(list.get(i).getMonth() > myRanking.getMonth()){
+//                myRank += 1;
+//            }
+//        }
+//        return RankingResponse.LiveCompRankList.build(myRank, user, myRanking.getMonth(), monthRankList);
+//    }
+//
+//    public RankingResponse.LiveCompRankList getMyMonthRank(int userId, int page){
+//        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+//        List<Follow> followList = followRepository.findByFollowing(userId);
+//        List<Ranking> followRankList = new ArrayList<>();
+//        Ranking myRanking = rankingRepository.findByUser_Id(userId);
+//        followRankList.add(myRanking);
+//        List<RankingResponse.LiveCompRank> monthRankList = new ArrayList<>();
+//        for (int i = 0; i < followList.size(); i++){
+//            int followId = followList.get(i).getFromId();
+//            followRankList.add(rankingRepository.findByUser_Id(followId));
+//        }
+//        Collections.sort(followRankList, new Comparator<Ranking>() {
+//            @Override
+//            public int compare(Ranking o1, Ranking o2) {
+//                return o2.getMonth()-o1.getMonth();
+//            }
+//        });
+//        int startIndex = 20*(page-1);
+//        int endIndex = 20 * page;
+//        if(endIndex > followRankList.size()){
+//            endIndex = followRankList.size();
+//        }
+//        for (int i = startIndex; i < endIndex; i++){
+//            int rank = 1;
+//            Ranking ranking = followRankList.get(i);
+//            for (int j = 0; j < followRankList.size(); j++){
+//                if(followRankList.get(j).getMonth() == ranking.getMonth()){
+//                    break;
+//                }
+//                if(followRankList.get(j).getMonth() > ranking.getMonth()){
+//                    rank += 1;
+//                }
+//            }
+//            monthRankList.add(RankingResponse.LiveCompRank.build(rank, ranking.getUser(), ranking.getMonth()));
+//        }
+//        int myRank = 1;
+//        for (int i = 0; i < followRankList.size(); i++){
+//            if(followRankList.get(i).getMonth() == myRanking.getMonth()){
+//                break;
+//            }
+//            if(followRankList.get(i).getMonth() > myRanking.getMonth()){
+//                myRank += 1;
+//            }
+//        }
+//        return RankingResponse.LiveCompRankList.build(myRank, user, myRanking.getMonth(), monthRankList);
+//    }
 }
