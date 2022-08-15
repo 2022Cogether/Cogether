@@ -22,9 +22,9 @@ public class LiveCompController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/liveComp/{userId}")
-    public ResponseEntity<LiveCompResponse.GetLiveComp> getLiveComp(@PathVariable int userId) {
-        LiveCompResponse.GetLiveComp response = liveCompService.getLiveComp(userId);
+    @GetMapping(value = "/liveComp", headers = "ACCESS_TOKEN")
+    public ResponseEntity<LiveCompResponse.GetLiveComp> getLiveComp(@RequestHeader("ACCESS_TOKEN") String token) {
+        LiveCompResponse.GetLiveComp response = liveCompService.getLiveComp(token);
         return ResponseEntity.ok().body(response);
     }
 

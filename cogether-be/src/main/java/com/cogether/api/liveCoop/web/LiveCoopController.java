@@ -29,9 +29,9 @@ public class LiveCoopController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/livecoop/list/{userId}")
-    public ResponseEntity<LiveCoopResponse.GetLiveCoops> getLiveCoops(@PathVariable int userId) {
-        LiveCoopResponse.GetLiveCoops response = liveCoopService.getLiveCoops(userId);
+    @GetMapping(value = "/livecoop/list", headers = "ACCESS_TOKEN")
+    public ResponseEntity<LiveCoopResponse.GetLiveCoops> getLiveCoops(@RequestHeader("ACCESS_TOKEN") String token) {
+        LiveCoopResponse.GetLiveCoops response = liveCoopService.getLiveCoops(token);
         return ResponseEntity.ok().body(response);
     }
 

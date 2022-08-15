@@ -1,5 +1,6 @@
 package com.cogether.api.hunting.web;
 
+import com.cogether.api.config.jwt.TokenUtils;
 import com.cogether.api.hunting.domain.HuntingRequest;
 import com.cogether.api.hunting.domain.HuntingResponse;
 import com.cogether.api.hunting.service.HuntingService;
@@ -15,6 +16,8 @@ public class HuntingController {
 
     private final HuntingService huntingService;
 
+    private final TokenUtils tokenUtils;
+
     @PostMapping("/hunting")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<HuntingResponse.OnlyHuntingId> create(@RequestBody HuntingRequest.CreateHunting request) {
@@ -22,21 +25,21 @@ public class HuntingController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/hunting")
-    public ResponseEntity<HuntingResponse.GetHunting> getHunting(@RequestParam int userId, @RequestParam int huntingId) {
-        HuntingResponse.GetHunting response = huntingService.getHunting(userId, huntingId);
+    @GetMapping(value = "/hunting/{huntingId}", headers = "ACCESS_TOKEN")
+    public ResponseEntity<HuntingResponse.GetHunting> getHunting(@PathVariable int huntingId, @RequestHeader("ACCESS_TOKEN") String token) {
+        HuntingResponse.GetHunting response = huntingService.getHunting(huntingId, tokenUtils.getUserIdFromToken(token));
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/hunting/list/{userId}")
-    public ResponseEntity<HuntingResponse.GetHuntings> getHuntingList(@PathVariable int userId) {
-        HuntingResponse.GetHuntings response = huntingService.getHuntingList(userId);
+    @GetMapping(value = "/hunting/list", headers = "ACCESS_TOKEN")
+    public ResponseEntity<HuntingResponse.GetHuntings> getHuntingList(@RequestHeader("ACCESS_TOKEN") String token) {
+        HuntingResponse.GetHuntings response = huntingService.getHuntingList(token);
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/hunting/list/my/{userId}")
-    public ResponseEntity<HuntingResponse.GetHuntings> getMyHuntingList(@PathVariable int userId) {
-        HuntingResponse.GetHuntings response = huntingService.getMyHuntingList(userId);
+    @GetMapping(value = "/hunting/list/my", headers = "ACCESS_TOKEN")
+    public ResponseEntity<HuntingResponse.GetHuntings> getMyHuntingList(@RequestHeader("ACCESS_TOKEN") String token) {
+        HuntingResponse.GetHuntings response = huntingService.getMyHuntingList(token);
         return ResponseEntity.ok().body(response);
     }
 
