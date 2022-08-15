@@ -246,7 +246,6 @@ export default {
         ? store.getters.getCurrentUser
         : store.getters.getAnotherUser;
     });
-    console.log("getCurrentUser", store.getters.getCurrentUser);
 
     // TilList 가져오기
     const getTilList = () => {
@@ -278,7 +277,6 @@ export default {
         fromId: profileUser.value.id,
       };
       console.log(payload);
-      console.log(profileUser.value.nickname);
       store.dispatch("follow", payload);
       if (store.getters.getBooleanValue) {
         profileUser.value.isFollow = !profileUser.value.isFollow;

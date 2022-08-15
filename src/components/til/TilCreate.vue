@@ -49,10 +49,11 @@ export default {
 
     const state = reactive({
       //사용할 변수들 선언
-      title: null,
-      content: null,
-      imageUrls: [],
+      title: "",
+      content: "",
+      multipartFiles: [],
     });
+    console.log(state);
     function exit() {
       Swal.fire({
         title: "나가시겠습니까?",
@@ -66,29 +67,28 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           //취소하고 이동할 페이지
-          router.push({ name: "mainview" });
+          router.go(-1);
         }
       });
     }
     function imgupload(e) {
       let imageFile = e.target.files; // 업로드한 파일의 데이터가 여기있음.
       console.log(imageFile);
-      let url = URL.createObjectURL(imageFile[0]); // 파일의 필요한 데이터만을 url 변수에 넣음
-      console.log(url); // 확인
-      this.state.imageUrls.push(url);
+      // let url = URL.createObjectURL(imageFile[0]); // 파일의 필요한 데이터만을 url 변수에 넣음
+      // console.log(url); // 확인
+      for (let i = 0; i < imageFile.length; i++) {
+        state.multipartFiles.push(imageFile[i]);
+      }
     }
     function createTil() {
       //확인
       console.log(state.title);
       console.log(state.content);
-      console.log(state.imageUrls);
+      console.log(state.multipartFiles);
       //함수 작동 내용
       store.dispatch("createTil", state);
       if (store.getters.getBooleanValue) {
-        router.push({
-          name: "TilDetail",
-          params: { tilPk: store.getters.getOpenTil },
-        });
+        router.go(-1);
       }
     }
 

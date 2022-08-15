@@ -253,17 +253,25 @@ export default {
     const route = useRoute();
     const userId = route.params.userId;
 
-    const profiletUser = store.getters.getCurrentUser;
+    if (!store.getters.getCurrentUser) {
+      store.dispatch("fetchCurrentUser", store.getters.getLoginUserId);
+    }
+    const profileUser = store.getters.getCurrentUser;
 
-    const imgUrl = ref(profiletUser.imgUrl);
-    const nickname = ref(profiletUser.nickname);
-    const intro = ref(profiletUser.intro);
+    const imgUrl = ref(profileUser.imgUrl);
+    const nickname = ref(profileUser.nickname);
+    const intro = ref(profileUser.intro);
+    const gitUrl = ref(profileUser.gitUrl);
+    const tistoryUrl = ref(profileUser.tistoryUrl);
+    const velogUrl = ref(profileUser.velogUrl);
+    const notionUrl = ref(profileUser.notionUrl);
+    const etcUrl = ref(profileUser.etcUrl);
+
+    if (!store.getters.getUserSkills) {
+      store.dispatch("takeUserSkillSet", store.getters.getLoginUserId);
+    }
+    const originalSkillList = store.getters.getUserSkills;
     const userLangSkills = ref(store.getters.getUserSkills);
-    const gitUrl = ref(profiletUser.gitUrl);
-    const tistoryUrl = ref(profiletUser.tistoryUrl);
-    const velogUrl = ref(profiletUser.velogUrl);
-    const notionUrl = ref(profiletUser.notionUrl);
-    const etcUrl = ref(profiletUser.etcUrl);
 
     // 모달 바깥을 클릭하면 모달을 닫게 하는 함수
     const closeModal = (event) => {
@@ -390,11 +398,36 @@ export default {
     };
 
     const edit = () => {
+      let editUserSkills = [];
+      for (let i = 0; i < userLangSkills.value.length; i++) {
+        editUserSkills.push(userLangSkills.value[i]);
+      }
+      let originalSkillArray = [];
+      for (let i = 0; i < originalSkillList.length; i++) {
+        originalSkillArray.push(originalSkillList[i]);
+      }
+
+      const plusSkills = editUserSkills.filter((skill) => {
+        return originalSkillArray.indexOf(skill) == -1;
+      });
+      const minusSkills = originalSkillArray.filter((skill) => {
+        return editUserSkills.indexOf(skill) == -1;
+      });
+
+      store.dispatch("plusUserSkillSet", {
+        email: profileUser.email,
+        skills: plusSkills,
+      });
+      store.dispatch("minusUserSkillSet", {
+        email: profileUser.email,
+        skills: minusSkills,
+      });
+
       const payload = {
         imgUrl: imgUrl.value,
         nickname: nickname.value,
         intro: intro.value,
-        userLangSkills: userLangSkills.value,
+        // userLangSkills: userLangSkills.value,
         gitUrl: gitUrl.value,
         tistoryUrl: tistoryUrl.value,
         velogUrl: velogUrl.value,
@@ -406,7 +439,7 @@ export default {
 
     return {
       userId,
-      profiletUser,
+      profileUser,
 
       imgUrl,
       nickname,
@@ -435,6 +468,7 @@ export default {
       searchSkillAdd,
       addLangSkills,
       userLangSkills,
+      originalSkillList,
       Toast,
       delLangSkills,
     };

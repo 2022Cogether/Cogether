@@ -37,19 +37,44 @@ export const skillStore = {
     // 유저 보유 스킬리스트 조회
     takeUserSkillSet({ commit, getters }, userId) {
       http
-        .get("skills/list/" + userId, {
+        .get("skills/" + userId, {
           headers: getters.authHeader,
         })
         .then((res) => {
-          if (res.data.status === 200) {
-            commit("SET_USER_SKILLSET", res.data);
-          } else {
-            alert("200이 아닌 다른 값이 반환되었습니다");
-          }
+          commit("SET_USER_SKILLSET", res.data);
         })
         .catch((err) => {
           alert("유저 스킬리스트 에러입니다.");
           console.log("유저 스킬리스트 받아오기 에러");
+          console.log(err.message);
+          console.log(err.response);
+        });
+    },
+
+    plusUserSkillSet({ getters }, payload) {
+      http
+        .post("skills", payload, {
+          headers: getters.authHeader,
+        })
+        .then(() => {})
+        .catch((err) => {
+          alert("유저 스킬리스트 추가 에러입니다.");
+          console.log("유저 스킬리스트 추가하기 에러");
+          console.log(err.message);
+          console.log(err.response);
+        });
+    },
+
+    minusUserSkillSet({ getters }, payload) {
+      http
+        .delete("skills/" + getters.getLoginUserId, {
+          data: payload,
+          headers: getters.authHeader,
+        })
+        .then(() => {})
+        .catch((err) => {
+          alert("유저 스킬리스트 삭제 에러입니다.");
+          console.log("유저 스킬리스트 삭제하기 에러");
           console.log(err.message);
           console.log(err.response);
         });

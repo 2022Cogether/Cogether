@@ -102,6 +102,7 @@ export const signStore = {
           commit("SET_BOOLEANVALUE");
         })
         .catch((err) => {
+          alert("로그인 에러!");
           console.error(err.response.data);
         });
     },
@@ -160,7 +161,7 @@ export const signStore = {
           .then((res) => {
             console.log("다른 유저 프로필");
             console.log(res.data);
-            commit("SET_CURRENT_USER", res.data);
+            commit("SET_ANOTHER_USER", res.data);
           })
           .catch((err) => {
             alert("다른 사용자 정보 불러오는 중 에러 발생");

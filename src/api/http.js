@@ -1,5 +1,6 @@
 import store from "@/store";
 import axios from "axios";
+import router from "@/router";
 
 // axios 객체 생성
 const http = axios.create({
@@ -38,7 +39,7 @@ http.interceptors.response.use(
     // }
     if (status === 401) {
       if (!isRefreshing) {
-        alert("refresh 들어서기 전!");
+        // alert("refresh 들어서기 전!"); // 1
         isRefreshing = true;
         store
           .dispatch("refreshToken")
@@ -50,8 +51,11 @@ http.interceptors.response.use(
           })
           .catch((error) => {
             console.log(error);
+            router.push({
+              name: "SignIn",
+            });
           });
-        alert("refresh 지나감!");
+        // alert("refresh 지나감!"); // 4
       }
 
       const requestSubscribers = new Promise((resolve) => {
