@@ -157,13 +157,15 @@ public class UserController {
     /**
      * 엑세스토큰 재발급
      */
-    @PostMapping("/sign/token")
-    public  ResponseEntity reissuanceAccessToken(@RequestBody UserRequest userRequest) throws Exception
+    @PostMapping(value="/sign/token",headers = "ACCESS_TOKEN")
+    public  ResponseEntity reissuanceAccessToken(@RequestHeader("ACCESS_TOKEN")String token) throws Exception
     {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("ACCESS_TOKEN",userService.reissuanceAccessToken(userRequest).getACCESS_TOKEN());
-        headers.set("REFRESH_TOKEN",userService.reissuanceAccessToken(userRequest).getREFRESH_TOKEN());
-        return ResponseEntity.ok().body(userService.reissuanceAccessToken(userRequest));
+        TokenResponse tokenResponse= userService.reissuanceAccessToken(token);
+        headers.set("ACCESS_TOKEN",tokenResponse.getACCESS_TOKEN());
+        headers.set("REFRESH_TOKEN",tokenResponse.getREFRESH_TOKEN());
+
+        return ResponseEntity.ok().headers(headers).body(userService.reissuanceAccessToken(token));
     }
 
 

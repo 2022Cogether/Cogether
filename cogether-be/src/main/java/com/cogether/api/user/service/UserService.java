@@ -191,14 +191,16 @@ public class UserService {
 
     /**
      * 엑세스토큰 재발급
-     * @param userRequest
      * @return
      * @throws Exception
      */
-    public TokenResponse reissuanceAccessToken(UserRequest userRequest) throws Exception {
+    public TokenResponse reissuanceAccessToken(String token) throws Exception {
+
+        int id = tokenUtils.getUserIdFromToken(token);
+
         User user =
                 userRepository
-                        .findByEmail(userRequest.getEmail())
+                        .findById(id)
                         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
         Auth auth =
                 authRepository
@@ -220,6 +222,7 @@ public class UserService {
             accessToken = tokenUtils.generateJwtToken(auth.getUser());
             refreshToken = tokenUtils.saveRefreshToken(user);
             auth.refreshUpdate(refreshToken);
+            authRepository.save(auth);
 
             return TokenResponse.builder()
                     .ACCESS_TOKEN(accessToken)
