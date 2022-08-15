@@ -36,4 +36,12 @@ public class ChatMember {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
 
+    public static ChatMember toEntity(ChatRoom chatRoom, User user) {
+        return ChatMember.builder()
+                .user(user)
+                .chatRoom(chatRoom)
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
+
 }
