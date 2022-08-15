@@ -1,5 +1,6 @@
 package com.cogether.api.user.service;
 
+import com.cogether.api.config.jwt.TokenUtils;
 import com.cogether.api.user.domain.User;
 import com.cogether.api.user.domain.UserSkill;
 import com.cogether.api.user.dto.UserRequest;
@@ -25,6 +26,7 @@ public class SkillService {
     private final UserRepository userRepository;
     private final UserSkillRepository userSkillRepository;
 
+    private final TokenUtils tokenUtils;
     public User getUser(int userId) throws Exception
     {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
@@ -53,9 +55,10 @@ public class SkillService {
      * @return
      */
     @Transactional
-    public int addUserSkill(List<String> skills, int userId) throws Exception
+    public String addUserSkill(List<String> skills, String token) throws Exception
     {
-        User user = userRepository.findById(userId)
+        int id =tokenUtils.getUserIdFromToken(token);
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         for(String skill : skills) {
@@ -64,7 +67,7 @@ public class SkillService {
                     .skillId(skill)
                     .build());
         }
-        return 1;
+        return "add SkillList";
     }
 
     /**
@@ -126,16 +129,18 @@ public class SkillService {
      * @throws Exception
      */
     @Transactional
-    public int removeUserSkill(List<String> skills,int userId) throws Exception
+    public String removeUserSkill(List<String> skills,String token) throws Exception
     {
-        User user = userRepository.findById(userId)
+        int id = tokenUtils.getUserIdFromToken(token);
+
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         for(String skill : skills) {
-            userSkillRepository.deleteUserSkill(skill,userId);
+            userSkillRepository.deleteUserSkill(skill,id);
         }
 
-        return 1;
+        return "remove skills";
     }
 
 
