@@ -122,7 +122,7 @@ public class EmailService {
         mailForm +="고객센터 | cogether.service@gmail.com <br>" +"광고문의 | cogether.service@gmail.com <br>";
 
         mailForm+="제휴 및 대외 협력 | cogether.service@gmail.com<br>";
-        mailForm += "대표 | 김진회 고나령 신성은 유지연 최홍철 | 서울특별시 강남구 테헤란로 212 멀티캠퍼스 17층<br>";
+        mailForm += "대표 | 김진회 고나령 신성은 유지연 박홍철 | 서울특별시 강남구 테헤란로 212 멀티캠퍼스 17층<br>";
         mailForm += "</div>";
         message.setText(mailForm, "UTF-8", "html");
 
@@ -216,7 +216,7 @@ public class EmailService {
         mailForm +="고객센터 | cogether.service@gmail.com <br>" +"광고문의 | cogether.service@gmail.com <br>";
 
         mailForm+="제휴 및 대외 협력 | cogether.service@gmail.com<br>";
-        mailForm += "대표 | 김진회 고나령 신성은 유지연 최홍철 | 서울특별시 강남구 테헤란로 212 멀티캠퍼스 17층<br>";
+        mailForm += "대표 | 김진회 고나령 신성은 유지연 박홍철 | 서울특별시 강남구 테헤란로 212 멀티캠퍼스 17층<br>";
         mailForm += "</div>";
         message.setText(mailForm, "utf-8", "html");//내용
         message.setFrom(new InternetAddress("cogether.service@gmail.com","COGETHER.Support"));//보내는 사람
