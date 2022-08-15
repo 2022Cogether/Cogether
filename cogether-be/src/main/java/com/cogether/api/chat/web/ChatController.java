@@ -49,10 +49,10 @@ public class ChatController {
 //        return ResponseEntity.ok().body(response);
 //    }
 
-    @PostMapping("/chat/room")
+    @PostMapping(value = "/chat/room", headers = "ACCESS_TOKEN")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<ChatResponse.OnlyRoomId> createChatRoom(@RequestBody ChatRequest.CreateChatRoom request) {
-        ChatResponse.OnlyRoomId response = chatService.createChatRoom(request);
+    public ResponseEntity<ChatResponse.OnlyRoomId> createChatRoom(@RequestBody ChatRequest.CreateChatRoom request, @RequestHeader("ACCESS_TOKEN") String token) {
+        ChatResponse.OnlyRoomId response = chatService.createChatRoom(request, token);
         return ResponseEntity.ok().body(response);
     }
 
