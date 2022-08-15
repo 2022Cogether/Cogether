@@ -1,5 +1,6 @@
 package com.cogether.api.project.service;
 
+import com.cogether.api.config.jwt.TokenUtils;
 import com.cogether.api.project.domain.*;
 import com.cogether.api.project.exception.ProjectNotFoundException;
 import com.cogether.api.project.repository.ProjectRepository;
@@ -24,6 +25,7 @@ public class ProjectService {
     private final ProjectSkillRepository projectSkillRepository;
     private final ProjectScrapRepository projectScrapRepository;
     private final UserRepository userRepository;
+    private final TokenUtils tokenUtils;
 
     public ProjectResponse.OnlyId create(ProjectRequest.Create_Project create_project){
         User user = userRepository.findById(create_project.getUserId()).orElseThrow(UserNotFoundException::new);
@@ -54,7 +56,8 @@ public class ProjectService {
         return ProjectResponse.OnlyId.build(project);
     }
 
-    public ProjectResponse.ProjectAll getProjectDetail(int projectId, int userId){
+    public ProjectResponse.ProjectAll getProjectDetail(int projectId, String token){
+        int userId = tokenUtils.getUserIdFromToken(token);
         Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<ProjectSkill> list = projectSkillRepository.findAllByProject_Id(projectId);
@@ -68,7 +71,8 @@ public class ProjectService {
         return ProjectResponse.ProjectAll.build(project, list, scrapId,isScrap);
     }
 
-    public ProjectResponse.ProjectList getProjectList(int userId){
+    public ProjectResponse.ProjectList getProjectList(String token){
+        int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<ProjectResponse.ProjectAll> projectList = new ArrayList<>();
         List<Project> list = projectRepository.findAll();
@@ -107,7 +111,8 @@ public class ProjectService {
         return ProjectResponse.OnlyProjectScrapId.build(projectScrap);
     }
 
-    public ProjectResponse.ProjectList getMyProjectList(int userId){
+    public ProjectResponse.ProjectList getMyProjectList(String token){
+        int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<ProjectResponse.ProjectAll> projectList = new ArrayList<>();
         List<Project> list = projectRepository.findAllByUserOrderByCreatedAtDesc(user);

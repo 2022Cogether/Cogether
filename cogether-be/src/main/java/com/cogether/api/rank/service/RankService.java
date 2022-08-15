@@ -1,5 +1,6 @@
 package com.cogether.api.rank.service;
 
+import com.cogether.api.config.jwt.TokenUtils;
 import com.cogether.api.follow.domain.Follow;
 import com.cogether.api.follow.repository.FollowRepository;
 import com.cogether.api.rank.domain.Ranking;
@@ -23,8 +24,10 @@ public class RankService {
     private final RankingRepository rankingRepository;
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
+    private final TokenUtils tokenUtils;
 
-    public RankingResponse.TilRankList getTilRank(int userId, int page){
+    public RankingResponse.TilRankList getTilRank(String token, int page){
+        int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<Ranking> list = rankingRepository.findAllByOrderByTilCntDesc();
         Ranking myRanking = rankingRepository.findByUser_Id(userId);
@@ -59,7 +62,8 @@ public class RankService {
         return RankingResponse.TilRankList.build(myRank, user, myRanking.getTilCnt(), tilRankList);
     }
 
-    public RankingResponse.TilRankList getMyTilRank(int userId, int page){
+    public RankingResponse.TilRankList getMyTilRank(String token, int page){
+        int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<Follow> followingList = followRepository.findByFollowing(userId);
         List<Ranking> followRankList = new ArrayList<>();
@@ -106,7 +110,8 @@ public class RankService {
         return RankingResponse.TilRankList.build(myRank, user, myRanking.getTilCnt(), tilRankList);
     }
 
-    public RankingResponse.ExpRankList getExpRank(int userId, int page){
+    public RankingResponse.ExpRankList getExpRank(String token, int page){
+        int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<User> list = userRepository.findAllByOrderByExp();
         int startIndex = 20*(page-1);
@@ -140,7 +145,8 @@ public class RankService {
         return RankingResponse.ExpRankList.build(myRank, user, expRankList);
     }
 
-    public RankingResponse.ExpRankList getMyExpRank(int userId, int page){
+    public RankingResponse.ExpRankList getMyExpRank(String token, int page){
+        int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<Follow> followList = followRepository.findByFollowing(userId);
         List<User> followUserList = new ArrayList<>();
@@ -186,7 +192,8 @@ public class RankService {
         return RankingResponse.ExpRankList.build(myRank, user, expRankList);
     }
 
-    public RankingResponse.LiveCompRankList getTotalRank(int userId, int page){
+    public RankingResponse.LiveCompRankList getTotalRank(String token, int page){
+        int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<Ranking> list = rankingRepository.findAllByOrderByTotalDesc();
         List<RankingResponse.LiveCompRank> totalRankList = new ArrayList<>();
@@ -221,7 +228,8 @@ public class RankService {
         return RankingResponse.LiveCompRankList.build(myRank, user, myRanking.getTotal(), totalRankList);
     }
 
-    public RankingResponse.LiveCompRankList getMyTotalRank(int userId, int page){
+    public RankingResponse.LiveCompRankList getMyTotalRank(String token, int page) {
+        int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<Follow> followList = followRepository.findByFollowing(userId);
         List<Ranking> followRankList = new ArrayList<>();
@@ -268,7 +276,8 @@ public class RankService {
         return RankingResponse.LiveCompRankList.build(myRank, user, myRanking.getTotal(), totalRankList);
     }
 
-//    public RankingResponse.LiveCompRankList getWeekRank(int userId, int page){
+//    public RankingResponse.LiveCompRankList getWeekRank(String token, int page){
+//        int userId = tokenUtils.getUserIdFromToken(token);v
 //        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 //        List<Ranking> list = rankingRepository.findAllByOrderByWeekDesc();
 //        List<RankingResponse.LiveCompRank> weekRankList = new ArrayList<>();
@@ -303,7 +312,8 @@ public class RankService {
 //        return RankingResponse.LiveCompRankList.build(myRank, user, myRanking.getWeek(), weekRankList);
 //    }
 //
-//    public RankingResponse.LiveCompRankList getMyWeekRank(int userId, int page){
+//    public RankingResponse.LiveCompRankList getMyWeekRank(String token, int page){
+//        int userId = tokenUtils.getUserIdFromToken(token);
 //        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 //        List<Follow> followList = followRepository.findByFollowing(userId);
 //        List<Ranking> followRankList = new ArrayList<>();
@@ -350,7 +360,8 @@ public class RankService {
 //        return RankingResponse.LiveCompRankList.build(myRank, user, myRanking.getWeek(), weekRankList);
 //    }
 //
-//    public RankingResponse.LiveCompRankList getMonthRank(int userId, int page){
+//    public RankingResponse.LiveCompRankList getMonthRank(String token, int page){
+//        int userId = tokenUtils.getUserIdFromToken(token);
 //        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 //        List<Ranking> list = rankingRepository.findAllByOrderByMonthDesc();
 //        List<RankingResponse.LiveCompRank> monthRankList = new ArrayList<>();
@@ -385,7 +396,8 @@ public class RankService {
 //        return RankingResponse.LiveCompRankList.build(myRank, user, myRanking.getMonth(), monthRankList);
 //    }
 //
-//    public RankingResponse.LiveCompRankList getMyMonthRank(int userId, int page){
+//    public RankingResponse.LiveCompRankList getMyMonthRank(String token, int page){
+//        int userId = tokenUtils.getUserIdFromToken(token);
 //        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 //        List<Follow> followList = followRepository.findByFollowing(userId);
 //        List<Ranking> followRankList = new ArrayList<>();

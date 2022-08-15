@@ -1,5 +1,6 @@
 package com.cogether.api.til.service;
 
+import com.cogether.api.config.jwt.TokenUtils;
 import com.cogether.api.file.service.FileUploadService;
 import com.cogether.api.follow.domain.Follow;
 import com.cogether.api.follow.repository.FollowRepository;
@@ -34,6 +35,7 @@ public class TilService {
     private final FileUploadService fileUploadService;
     private final FollowRepository followRepository;
     private final RankingRepository rankingRepository;
+    private final TokenUtils tokenUtils;
     public TilResponse.OnlyId create(TilRequest.Create_Til create_til, List<MultipartFile> multipartFiles){
         User user = userRepository.findById(create_til.getUserId()).orElseThrow(UserNotFoundException::new);
         Til til = create_til.toEntity(user);
@@ -92,7 +94,8 @@ public class TilService {
         return TilResponse.OnlyLikeId.build(savedTilLike);
     }
 
-    public TilResponse.OnlyLikeId deleteLike(int tilId, int userId){
+    public TilResponse.OnlyLikeId deleteLike(int tilId, String token){
+        int userId = tokenUtils.getUserIdFromToken(token);
         Til til = tilRepository.findById(tilId).orElseThrow(TilNotFoundException::new);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         TilLike tilLike = tilLikeRepository.findByTilAndUser(til, user);
@@ -121,7 +124,8 @@ public class TilService {
         return TilResponse.OnlyCommentId.build(tilComment);
     }
 
-    public TilResponse.TilAll getTilDetail(int tilId, int userId){
+    public TilResponse.TilAll getTilDetail(int tilId, String token){
+        int userId = tokenUtils.getUserIdFromToken(token);
         Til til = tilRepository.findById(tilId).orElseThrow(TilNotFoundException::new);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<TilImg> imgList = tilImgRepository.findAllByTil(til);
@@ -135,7 +139,8 @@ public class TilService {
         return TilResponse.TilAll.build(til, imgList, commentList, likeCnt, isLike);
     }
 
-    public TilResponse.TilList getSearchTil(String keyword, int userId){
+    public TilResponse.TilList getSearchTil(String keyword, String token){
+        int userId = tokenUtils.getUserIdFromToken(token);
         List<TilResponse.TilAll> tilList = new ArrayList<>();
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<Til> list = tilRepository.findAllByContentContainingIgnoreCaseOrTitleContainingIgnoreCaseOrUser_NicknameContainingIgnoreCaseOrderByCreatedAtDesc(keyword, keyword, keyword);
@@ -154,7 +159,8 @@ public class TilService {
         return TilResponse.TilList.build(tilList);
     }
 
-    public TilResponse.TilList getMyTilList(int userId){
+    public TilResponse.TilList getMyTilList(String token){
+        int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<TilResponse.TilAll> tilList = new ArrayList<>();
         List<Til> list = tilRepository.findAllByUserOrderByCreatedAtDesc(user);
@@ -173,7 +179,8 @@ public class TilService {
         return TilResponse.TilList.build(tilList);
     }
 
-    public TilResponse.TilList getMySearchTil(String keyword, int userId){
+    public TilResponse.TilList getMySearchTil(String keyword, String token){
+        int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<TilResponse.TilAll> tilList = new ArrayList<>();
         List<Til> list = tilRepository.findAllByTitleContainingIgnoreCaseAndUserOrderByCreatedAtDesc(keyword, user);
@@ -192,7 +199,8 @@ public class TilService {
         return TilResponse.TilList.build(tilList);
     }
 
-    public TilResponse.TilList getMainTil(int userId){
+    public TilResponse.TilList getMainTil(String token){
+        int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<Follow> userList = followRepository.findByFollowing(userId);
         List<TilResponse.TilAll> tilList = new ArrayList<>();
