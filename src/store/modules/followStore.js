@@ -61,7 +61,9 @@ export const followStore = {
         })
         .catch((err) => {
           alert("팔로잉 리스트 불러오기 실패");
-          console.error(err.response.data);
+          console.log("팔로잉 리스트 불러오기 실패");
+          console.log(err.message);
+          console.log(err.response);
         });
     },
 
@@ -76,7 +78,9 @@ export const followStore = {
         })
         .catch((err) => {
           alert("팔로워 리스트 불러오기 실패");
-          console.error(err.response.data);
+          console.log("팔로워 리스트 불러오기 실패");
+          console.log(err.message);
+          console.log(err.response);
         });
     },
 
@@ -91,7 +95,9 @@ export const followStore = {
         })
         .catch((err) => {
           alert("팔로잉 수 체크 실패");
-          console.error(err.response.data);
+          console.log("팔로잉 수 불러오기 실패");
+          console.log(err.message);
+          console.log(err.response);
         });
     },
 
@@ -106,7 +112,9 @@ export const followStore = {
         })
         .catch((err) => {
           alert("팔로워 수 체크 실패");
-          console.error(err.response.data);
+          console.log("팔로워 수 불러오기 실패");
+          console.log(err.message);
+          console.log(err.response);
         });
     },
 
@@ -122,7 +130,8 @@ export const followStore = {
         })
         .catch((err) => {
           alert("팔로우 실패");
-          console.error(err.response.data);
+          console.log(err.message);
+          console.log(err.response);
         });
     },
 
@@ -137,7 +146,8 @@ export const followStore = {
         })
         .catch((err) => {
           alert("언팔로우 실패");
-          console.error(err.response.data);
+          console.log(err.message);
+          console.log(err.response);
         });
     },
   },

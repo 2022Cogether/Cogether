@@ -142,12 +142,15 @@ export const tilStore = {
           headers: getters.authHeader,
         })
         .then((res) => {
+          console.log("내 TIL");
+          console.log(res);
           if (res.status === 200) {
             console.log("개인 목록 새로 받아왔습니다!");
             commit("SET_TIL_LIST", res.data);
           }
         })
         .catch((err) => {
+          alert("내 리스트가 에러라고??");
           console.error(err.response.data);
         });
     },
@@ -157,23 +160,32 @@ export const tilStore = {
     //   commit("CLEAN_TIL_LIST");
     // },
 
-    createTil({ dispatch, getters, state, commit }, payload) {
+    createTil({ commit }, payload) {
       http
         .post("til", payload, {
-          headers: getters.authHeader,
+          headers: {
+            ACCESS_TOKEN: localStorage.getItem("access_TOKEN"),
+            "Content-Type": "multipart/form-data",
+          },
         })
         .then((res) => {
+          console.log("til 생성 response");
+          console.log(res);
           commit("SET_BOOLEANVALUE");
-          commit("SET_OPEN_TIL", res.data.tilId);
+          // commit("SET_OPEN_TIL", res.data.tilId);
 
-          const credentials = {
-            tilId: res.data.tilId,
-            userId: state.loginUserId,
-          };
+          // const credentials = {
+          //   tilId: res.data.tilId,
+          //   userId: state.loginUserId,
+          // };
 
-          dispatch("fetchOpenTil", credentials);
+          // dispatch("fetchOpenTil", credentials);
         })
-        .catch((err) => console.error(err.response));
+        .catch((err) => {
+          alert("TIL 생성 오류!");
+          console.log("TIL 생성 오류!");
+          console.error(err.response);
+        });
     },
 
     updateTil({ dispatch, getters, state }, payload) {
