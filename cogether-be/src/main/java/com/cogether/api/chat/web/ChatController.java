@@ -42,10 +42,10 @@ public class ChatController {
 
 
 //    @Transactional
-//    @DeleteMapping("/chat/member")
+//    @DeleteMapping("/chat/member/{chatRoomId}")
 //    @ResponseStatus(value = HttpStatus.OK)
-//    public ResponseEntity<ChatResponse.OnlyMemId> deleteChatMember(@RequestParam int chatRoomId, @RequestParam int userId) {
-//        ChatResponse.OnlyMemId response = chatService.deleteChatMember(chatRoomId, userId);
+//    public ResponseEntity<ChatResponse.OnlyMemId> deleteChatMember(@PathVariable int chatRoomId, @RequestHeader("ACCESS_TOKEN") String token) {
+//        ChatResponse.OnlyMemId response = chatService.deleteChatMember(chatRoomId, token);
 //        return ResponseEntity.ok().body(response);
 //    }
 
@@ -62,9 +62,9 @@ public class ChatController {
 //        return ResponseEntity.ok().body(response);
 //    }
 
-    @GetMapping("/chat/room/list/{userId}")
-    public ResponseEntity<ChatResponse.GetChatRooms> getChatRooms(@PathVariable int userId) {
-        ChatResponse.GetChatRooms response = chatService.getChatRooms(userId);
+    @GetMapping(value = "/chat/room/list", headers = "ACCESS_TOKEN")
+    public ResponseEntity<ChatResponse.GetChatRooms> getChatRooms(@RequestHeader("ACCESS_TOKEN") String token) {
+        ChatResponse.GetChatRooms response = chatService.getChatRooms(token);
         return ResponseEntity.ok().body(response);
     }
 

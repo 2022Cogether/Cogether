@@ -1,5 +1,6 @@
 package com.cogether.api.liveCoop.service;
 
+import com.cogether.api.config.jwt.TokenUtils;
 import com.cogether.api.liveCoop.domain.LiveCoop;
 import com.cogether.api.liveCoop.domain.LiveCoopMember;
 import com.cogether.api.liveCoop.domain.LiveCoopRequest;
@@ -28,6 +29,8 @@ public class LiveCoopService {
 
     private final UserRepository userRepository;
 
+    private final TokenUtils tokenUtils;
+
     public LiveCoopResponse.OnlyLiveCoopId createLiveCoop(LiveCoopRequest.CreateLiveCoop request) {
         User user = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
         LiveCoop liveCoop = request.toEntity(user);
@@ -42,14 +45,14 @@ public class LiveCoopService {
         return LiveCoopResponse.GetLiveCoop.build(liveCoop);
     }
 
-    public LiveCoopResponse.GetLiveCoops getLiveCoops(int userId) {
+    public LiveCoopResponse.GetLiveCoops getLiveCoops(String token) {
         List<LiveCoop> liveCoops = new ArrayList<>();
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        int cnt = liveCoopMemberRepository.countAllByUser(user);
+        User loginUser = userRepository.findById(tokenUtils.getUserIdFromToken(token)).orElseThrow(UserNotFoundException::new);
+        int cnt = liveCoopMemberRepository.countAllByUser(loginUser);
         boolean enterCoop = false;
         if (cnt != 0) {
             enterCoop = true;
-            liveCoops.add(liveCoopRepository.findByUser(user));
+            liveCoops.add(liveCoopRepository.findByUser(loginUser));
             liveCoops.addAll(liveCoopRepository.findAllByIdNotOrderByCreatedAtDesc(liveCoops.get(0).getId()));
         } else liveCoops = liveCoopRepository.findAllByOrderByCreatedAtDesc();
 
