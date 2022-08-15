@@ -247,13 +247,8 @@ export default {
         : store.getters.getAnotherUser;
     });
 
-    // TilList 가져오기
-    const getTilList = () => {
-      store.dispatch("fetchMyTilList", { userId: userId });
-    };
-
     // 페이지가 Created 될 때 list 가져옴
-    getTilList();
+    store.dispatch("fetchMyTilList", { userId: userId });
     const tilList = store.getters.getTilList;
 
     // 모달 창

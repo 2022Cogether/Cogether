@@ -81,12 +81,20 @@ export default {
       }
     }
     function createTil() {
+      let fileArray = [];
+      for (let i = 0; i < state.multipartFiles.length; i++) {
+        fileArray.push(state.multipartFiles[i]);
+      }
+      const payload = {
+        title: state.title,
+        content: state.content,
+        multipartFiles: fileArray,
+      };
       //확인
-      console.log(state.title);
-      console.log(state.content);
-      console.log(state.multipartFiles);
+      console.log(payload);
+      console.log(payload.multipartFiles);
       //함수 작동 내용
-      store.dispatch("createTil", state);
+      store.dispatch("createTil", payload);
       if (store.getters.getBooleanValue) {
         router.go(-1);
       }

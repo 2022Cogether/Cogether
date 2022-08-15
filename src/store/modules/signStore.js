@@ -374,29 +374,44 @@ export const signStore = {
     },
     // { REFRESH_TOKEN: localStorage.getItem("REFRESH_TOKEN") }
     // accessToken 재요청
-    async refreshToken({ commit, getters }) {
-      // alert(localStorage.getItem("refresh_TOKEN"));
+    async refreshToken({ dispatch }) {
+      // headers: { REFRESH_TOKEN: localStorage.getItem("refresh_TOKEN") }
       //accessToken 만료로 재발급 후 재요청시 비동기처리로는 제대로 처리가 안되서 promise로 처리함
       alert("promise 앞에서서"); // 2
       let promise = new Promise((resolve, reject) => {
         http
           .post("sign/token", null, {
-            headers: getters.authHeader,
+            // headers: getters.authHeader,
+            headers: { REFRESH_TOKEN: localStorage.getItem("refresh_TOKEN") },
           })
           .then((res) => {
             console.log("res data!");
-            // alert("refresh 재발급 성공?!"); // 5
-            console.log(res);
-            commit("saveAccess", res.data.access_TOKEN);
+            console.log(
+              "예전 access여 안녕!",
+              localStorage.getItem("access_TOKEN")
+            );
+            console.log(
+              "예전 refresh여 안녕!",
+              localStorage.getItem("refresh_TOKEN")
+            );
+
+            dispatch("saveAccess", res.headers.access_token);
+            localStorage.setItem("refresh_TOKEN", res.headers.refresh_token);
+            console.log(
+              "새로운 access여 안녕!",
+              localStorage.getItem("access_TOKEN")
+            );
+            console.log(
+              "새로운? refresh여 안녕!",
+              localStorage.getItem("refresh_TOKEN")
+            );
             resolve(res.data);
           })
           .catch((err) => {
-            // alert("에러: refreshToken"); // 6
             console.log("refreshToken error : ", err);
             reject(err.response);
           });
       });
-      // alert("result 앞에서서"); // 3
       let result = await promise;
 
       return result;

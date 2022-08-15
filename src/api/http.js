@@ -39,7 +39,6 @@ http.interceptors.response.use(
     // }
     if (status === 401) {
       if (!isRefreshing) {
-        // alert("refresh 들어서기 전!"); // 1
         isRefreshing = true;
         store
           .dispatch("refreshToken")
@@ -55,7 +54,6 @@ http.interceptors.response.use(
               name: "SignIn",
             });
           });
-        // alert("refresh 지나감!"); // 4
       }
 
       const requestSubscribers = new Promise((resolve) => {
