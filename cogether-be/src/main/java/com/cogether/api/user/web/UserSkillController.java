@@ -22,18 +22,17 @@ public class UserSkillController {
 
     private final SkillService skillService;
 
-    @PostMapping("/skills")
-    public ResponseEntity addUserSkills(@RequestBody UserRequest userRequest) throws Exception
+    @PostMapping(value="/skills",headers = "ACCESS_TOKEN")
+    public ResponseEntity addUserSkills(@RequestBody UserRequest userRequest,@RequestHeader("ACCESS_TOKEN")String token) throws Exception
     {
-        System.out.println("진입");
-        System.out.println(userRequest.getEmail());
-        User user =skillService.getUser(userRequest.getEmail());
+        //System.out.println("진입");
+        //System.out.println(userRequest.getEmail());
+        //User user =skillService.getUser(userRequest.getEmail());
+        //System.out.println(user.getEmail());
 
-        System.out.println(user.getEmail());
 
-        skillService.addUserSkill(userRequest.getSkills(), user.getId());
 
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok().body( skillService.addUserSkill(userRequest.getSkills(), token));
     }
 
 
@@ -73,14 +72,14 @@ public class UserSkillController {
      * @return
      * @throws Exception
      */
-    @DeleteMapping("/skills/{userid}")
-    public ResponseEntity removeUserSkill( @RequestBody UserRequest userRequest )  throws  Exception
+    @DeleteMapping(value="/skills/{userid}",headers = "ACCESS_TOKEN")
+    public ResponseEntity removeUserSkill( @RequestBody UserRequest userRequest,@RequestHeader("ACCESS_TOKEN")String token )  throws  Exception
     {
-        User user = skillService.getUser(userRequest.getEmail());
-        System.out.println(user.getEmail());
-        skillService.removeUserSkill(userRequest.getSkills(),user.getId());
+        //User user = skillService.getUser(userRequest.getEmail());
+        //System.out.println(user.getEmail());
+        // skillService.removeUserSkill(userRequest.getSkills(),token);
 
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok().body(skillService.removeUserSkill(userRequest.getSkills(),token));
     }
 
 }
