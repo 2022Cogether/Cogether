@@ -92,4 +92,46 @@ public class RankingResponse {
                     .build();
         }
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class LiveCompRankList{
+        private int myRank;
+        private String userNickname;
+        private String userImg;
+        private int myLiveComp;
+        private List<LiveCompRank> liveCompRankList;
+
+        public static RankingResponse.LiveCompRankList build(int myRank, User user, int myLiveComp, List<LiveCompRank> liveCompRankList){
+            return LiveCompRankList.builder()
+                    .myRank(myRank)
+                    .userNickname(user.getNickname())
+                    .userImg(user.getImgUrl())
+                    .myLiveComp(myLiveComp)
+                    .liveCompRankList(liveCompRankList)
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class LiveCompRank{
+        private int rank;
+        private String userNickname;
+        private String userImg;
+        private int liveComp;
+
+        public static RankingResponse.LiveCompRank build(int rank, User user, int liveComp){
+            return LiveCompRank.builder()
+                    .rank(rank)
+                    .userNickname(user.getNickname())
+                    .userImg(user.getImgUrl())
+                    .liveComp(liveComp)
+                    .build();
+        }
+    }
 }
