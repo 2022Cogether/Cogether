@@ -57,7 +57,7 @@ public class UserController {
     /**
      * 로그아웃
      */
-    @GetMapping(value="/sign/signout",headers = "ACCESS_TOKEN")
+    @DeleteMapping(value="/sign/signout",headers = "ACCESS_TOKEN")
     public ResponseEntity signOut(@RequestHeader("ACCESS_TOKEN") String token) throws Exception
     {
         System.out.println("로그아웃");
