@@ -1,5 +1,7 @@
 package com.cogether.api.liveCoop.service;
 
+import com.cogether.api.chat.domain.ChatRoom;
+import com.cogether.api.chat.service.ChatService;
 import com.cogether.api.config.jwt.TokenUtils;
 import com.cogether.api.liveCoop.domain.LiveCoop;
 import com.cogether.api.liveCoop.domain.LiveCoopMember;
@@ -29,11 +31,14 @@ public class LiveCoopService {
 
     private final UserRepository userRepository;
 
+    private final ChatService chatService;
+
     private final TokenUtils tokenUtils;
 
     public LiveCoopResponse.OnlyLiveCoopId createLiveCoop(LiveCoopRequest.CreateLiveCoop request) {
         User user = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
-        LiveCoop liveCoop = request.toEntity(user);
+        ChatRoom chatRoom = chatService.createLiveChatRoom(request.getUserId());
+        LiveCoop liveCoop = request.toEntity(user, chatRoom);
         LiveCoop savedLiveCoop = liveCoopRepository.save(liveCoop);
         LiveCoopMember liveCoopMember = LiveCoopMember.toEntity(user, savedLiveCoop);
         liveCoopMemberRepository.save(liveCoopMember);
