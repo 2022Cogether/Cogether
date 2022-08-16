@@ -23,6 +23,7 @@ public class TilRequest {
                     .title(title)
                     .content(content)
                     .user(user)
+                    .createdAt(LocalDateTime.now())
                     .build();
         }
     }
@@ -41,7 +42,6 @@ public class TilRequest {
                     .id(tilId)
                     .title(title)
                     .content(content)
-                    .createdAt(LocalDateTime.now())
                     .build();
         }
     }
