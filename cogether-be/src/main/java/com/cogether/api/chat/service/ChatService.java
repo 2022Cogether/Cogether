@@ -63,14 +63,6 @@ public class ChatService {
         return ChatResponse.GetChats.build(getChats);
     }
 
-    public ChatResponse.OnlyMemId createChatMember(ChatRequest.CreateChatMember request) {
-        User user = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
-        ChatRoom chatRoom = chatRoomRepository.findById(request.getChatRoomId()).orElseThrow(ChatRoomNotFoundException::new);
-        ChatMember chatMember = ChatMember.toEntity(chatRoom, user);
-        ChatMember savedChatMember = chatMemRepository.save(chatMember);
-        return ChatResponse.OnlyMemId.build(savedChatMember);
-    }
-
     public ChatResponse.OnlyMemId updateLastChat(ChatRequest.UpdateLastChat request) {
         User user = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
         ChatRoom chatRoom = chatRoomRepository.findById(request.getChatRoomId()).orElseThrow(ChatRoomNotFoundException::new);
@@ -134,7 +126,15 @@ public class ChatService {
             ChatMember chatMember = chatMemRepository.findByUserNotAndChatRoom(loginUser, chatRoom);
             List<Chat> chats = chatRepository.findAllByChatRoom(chatRoom);
             int cnt = chatRepository.countAllByIdAfterAndChatRoom(nowChatMember.getLastReadChatId(), chatRoom);
-            getChatRooms.add(ChatResponse.GetChatRoom.build(chatMember, chats.size() > 0 ? chats.get(chats.size() - 1).getMessage() : "", cnt));
+
+            String lastMsg = "";
+            if (chats.size() > 0) {
+                lastMsg = chats.get(chats.size() - 1).getMessage();
+                if(lastMsg.length() > 9)
+                    lastMsg = lastMsg.substring(0, 9);
+            }
+
+            getChatRooms.add(ChatResponse.GetChatRoom.build(chatMember, lastMsg, cnt));
         }
 
         return ChatResponse.GetChatRooms.build(getChatRooms);
@@ -146,12 +146,9 @@ public class ChatService {
         return ChatResponse.OnlyRoomId.build(chatRoom);
     }
 
-    public ChatRoom createLiveChatRoom(int userId) {
-        User loginUser = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+    public ChatRoom createLiveChatRoom() {
         ChatRoom chatRoom = ChatRoom.toEntity(true);
         ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
-        ChatMember chatMember = ChatMember.toEntity(savedChatRoom, loginUser);
-        chatMemRepository.save(chatMember);
         return savedChatRoom;
     }
 }
