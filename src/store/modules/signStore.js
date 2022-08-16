@@ -129,7 +129,6 @@ export const signStore = {
     },
 
     async fetchCurrentUser({ commit, getters }, userId) {
-      alert("fetchCurrentUser!" + userId);
       if (userId == getters.getLoginUserId) {
         await http
           .get("user/info/" + userId, {
@@ -154,7 +153,6 @@ export const signStore = {
     },
 
     async fetchAnothertUser({ commit, getters }, userId) {
-      alert("fetchAnotherUser!" + userId);
       await http
         .get("user/info/" + userId, {
           headers: getters.authHeader,

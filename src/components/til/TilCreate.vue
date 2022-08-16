@@ -81,21 +81,37 @@ export default {
       }
     }
     function createTil() {
-      let fileArray = [];
-      for (let i = 0; i < state.multipartFiles.length; i++) {
-        fileArray.push(state.multipartFiles[i]);
-      }
       const formData = new FormData();
 
-      formData.append("title", state.title);
-      formData.append("content", state.content);
-      formData.append("multipartFiles", fileArray);
-      // const payload = {
-      //   title: state.title,
-      //   content: state.content,
-      //   multipartFiles: fileArray,
-      // };
-      //확인
+      const data = {
+        content: state.content,
+        title: state.title,
+        userId: store.getters.getLoginUserId,
+      };
+      // const blob = new Blob([JSON.stringify(data)], {
+      //   type: "application/json",
+      // });
+      formData.append(
+        "data",
+        new Blob([JSON.stringify(data)], {
+          type: "application/json",
+        })
+      );
+
+      // let fileArray = [];
+      for (let i = 0; i < state.multipartFiles.length; i++) {
+        // fileArray.push(state.multipartFiles[i]);
+        formData.append("image", state.multipartFiles[i]);
+      }
+
+      // formData.append("title", state.title);
+      // formData.append("content", state.content);
+      // formData.append("multipartFiles", fileArray);
+
+      // formData.append("image", fileArray, {
+      //   contentType: "multipart/form-data",
+      // });
+
       for (var key of formData.keys()) {
         console.log(key);
       }
