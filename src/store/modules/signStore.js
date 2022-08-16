@@ -370,6 +370,25 @@ export const signStore = {
           console.error(err.response.data);
         });
     },
+
+    updateUserImage(context, formData) {
+      http
+        .put("user/info/profileimg/", formData, {
+          headers: {
+            ACCESS_TOKEN: localStorage.getItem("access_TOKEN"),
+            "Content-Type": "multipart/form-data",
+            // ...payload.getHeaders(),
+          },
+        })
+        .then(() => {
+          console.log("이미지 수정 성공");
+        })
+        .catch((err) => {
+          alert("회원 이미지 추가 에러입니다.");
+          console.error(err.response.data);
+        });
+    },
+
     // { REFRESH_TOKEN: localStorage.getItem("REFRESH_TOKEN") }
     // accessToken 재요청
     async refreshToken({ dispatch, getters }) {

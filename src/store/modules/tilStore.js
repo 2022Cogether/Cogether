@@ -106,20 +106,22 @@ export const tilStore = {
 
     // 피드 상세 조회
     fetchTil({ commit, getters }, credentials) {
-      http
-        .get("til/" + credentials.tilId, {
-          headers: getters.authHeader,
-        })
-        .then((res) => {
-          console.log(res.data);
-          console.log(res.status);
-          if (res.status === 200) {
-            commit("SET_TIL", res.data);
-          }
-        })
-        .catch((err) => {
-          console.error(err.response.data);
-        });
+      if (credentials.tilId != -1) {
+        http
+          .get("til/" + credentials.tilId, {
+            headers: getters.authHeader,
+          })
+          .then((res) => {
+            console.log(res.data);
+            console.log(res.status);
+            if (res.status === 200) {
+              commit("SET_TIL", res.data);
+            }
+          })
+          .catch((err) => {
+            console.error(err.response.data);
+          });
+      }
     },
 
     async fetchTilList({ commit, getters }) {

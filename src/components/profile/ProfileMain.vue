@@ -173,9 +173,9 @@
       </div>
       <!-- etc -->
       <div
-        v-if="!!etcUr"
+        v-if="!!etcUrl"
         class="webpage-link-box"
-        :onclick="'location.href=' + etcUr"
+        :onclick="'location.href=' + etcUrl"
       >
         <img
           src="https://pic.onlinewebfonts.com/svg/img_229126.png"
@@ -267,11 +267,6 @@ export default {
       store.dispatch("searchMyTil", searchWord.value);
     };
 
-    // Skill set
-    // if (!getters.value.getSkillSet) {
-    //   store.dispatch("takeSkillSet");
-    // }
-
     // 내 프로필인지 아닌지 판단하고 알맞는 자료를 가져와 profile User 변수에 넣기
     const isMyProfile = computed(() => {
       return store.getters.getLoginUserId == userId.value;
@@ -280,7 +275,7 @@ export default {
     let profileUser = ref({});
     const level = ref(0);
     const percentage = ref(0);
-    let tilList = [];
+    const tilList = ref([]);
     const imgUrl = ref("");
     const nickname = ref("");
     const intro = ref("");
@@ -328,13 +323,32 @@ export default {
         // 페이지가 Created 될 때 list 가져옴
         await store.dispatch("fetchMyTilList");
         const tempList = store.getters.getTilList.tilList;
-        // console.log("tilList", tempList.tilList[0]);
-        // console.log("tempList", tempList);
-        // console.log("value", tempList[0]);
-        // console.log("length", tempList.length);
         for (let i = 0; i < tempList.length; i++) {
-          tilList.push(tempList[i]);
+          let tpa = {
+            tilId: tempList[i].tilId,
+            tilTitle: tempList[i].tilTitle,
+            tilContent: tempList[i].tilContent,
+            userId: tempList[i].userId,
+            userImg: tempList[i].userImg,
+            commentList: tempList[i].commentList,
+            createdAt: tempList[i].createdAt,
+            imgUrl: [],
+            like: tempList[i].like,
+            likeCnt: tempList[i].likeCnt,
+            userNickname: tempList[i].userNickname,
+          };
+          // console.log(tempList[i].imgUrl[0]);
+          for (let j = 0; j < tempList[i].imgUrl.length; j++) {
+            console.log(tpa.imgUrl);
+            tpa.imgUrl.push({
+              tilImgId: tempList[i].imgUrl[j].tilImgId,
+              tilId: tempList[i].imgUrl[j].tilId,
+              imgUrl: tempList[i].imgUrl[j].imgUrl,
+            });
+          }
+          tilList.value.push(tpa);
         }
+        // console.log("tilList", tilList.value);
 
         await store.dispatch("fetchFollowerList", userId.value);
         const tempfollowerList = store.getters.getMyFollowerList;
@@ -349,7 +363,7 @@ export default {
             isFollow.value = true;
           }
         }
-        console.log("isFollow", isFollow);
+        console.log("isFollow", isFollow.value);
       })();
     });
 

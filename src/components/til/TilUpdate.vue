@@ -128,7 +128,7 @@ export default {
         console.log(value);
       }
       //함수 작동 내용
-      store.dispatch("createTil", formData);
+      store.dispatch("updateTil", formData);
       if (store.getters.getBooleanValue) {
         router.go(-1);
       }

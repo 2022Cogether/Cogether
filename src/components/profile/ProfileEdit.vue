@@ -428,15 +428,9 @@ export default {
     };
 
     // 이미지 넣기
-    let multipartFiles = [];
+    let multipartFiles;
     function imgupload(e) {
-      let imageFile = e.target.files; // 업로드한 파일의 데이터가 여기있음.
-      console.log(imageFile);
-      // let url = URL.createObjectURL(imageFile[0]); // 파일의 필요한 데이터만을 url 변수에 넣음
-      // console.log(url); // 확인
-      for (let i = 0; i < imageFile.length; i++) {
-        multipartFiles.push(imageFile[i]);
-      }
+      multipartFiles = e.target.files[0];
     }
 
     const back = () => {
@@ -483,6 +477,10 @@ export default {
         etc_url: etcUrl.value,
       };
       console.log(payload);
+
+      const formData = new FormData();
+      formData.append("image", multipartFiles);
+      store.dispatch("updateUserImage", formData);
       store.dispatch("updateProfile", payload);
       router.push({
         name: "profile",

@@ -1,8 +1,19 @@
 <template>
-  <img src="@/assets/test1.jpg" alt="My TIL image" />
+  <img :src="props.til.imgUrl[0].imgUrl" alt="My TIL image" />
 </template>
 
-<script></script>
+<script>
+export default {
+  name: "ProfileTil",
+  props: {
+    til: Object,
+  },
+  setup(props) {
+    console.log("props til", props.til);
+    return { props };
+  },
+};
+</script>
 
 <style scoped>
 img {

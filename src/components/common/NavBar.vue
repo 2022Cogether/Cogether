@@ -5,7 +5,7 @@
       <div class="text-center align-self-center logo-area">
         <span>
           <a href="#">
-            <img class="logo" src="../../assets/logo.png" alt="로고" />
+            <img class="logo" src="../../assets/cogether_logo.png" alt="로고" />
           </a>
         </span>
         <span> COGETHER </span>

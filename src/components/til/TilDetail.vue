@@ -272,7 +272,7 @@ export default {
     const onSubmit = () => {
       const payload = {
         tilPk: tilContent.value.tilId,
-        content: commentContent,
+        content: commentContent.value,
       };
       store.dispatch("createComment", payload);
     };
