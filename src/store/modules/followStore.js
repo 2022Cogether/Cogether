@@ -119,8 +119,8 @@ export const followStore = {
     },
 
     // 팔로우 언팔로우
-    follow({ commit, getters }, payload) {
-      http
+    async follow({ commit, getters }, payload) {
+      await http
         .post("follow/", payload, {
           headers: getters.authHeader,
         })

@@ -19,11 +19,11 @@
   </router-link>
   <div class="profile-info-container1 d-flex flex-column align-items-center">
     <div class="profile-img-box">
-      <img :src="profileUser.imgUrl" alt="profile image" class="profile-img" />
+      <img :src="imgUrl" alt="profile image" class="profile-img" />
     </div>
     <div class="username-box d-flex">
       <img src="@/assets/gold_badge.png" alt="badge img" class="badge-img" />
-      <h3 class="username">{{ profileUser.nickname }}</h3>
+      <h3 class="username">{{ nickname }}</h3>
     </div>
   </div>
   <div class="exp-bar d-flex justify-content-center align-items-center">
@@ -41,18 +41,14 @@
     </div>
   </div>
   <div class="profile-info-container2 d-flex flex-column align-items-center">
-    <p class="user-introduction">{{ profileUser.intro }}</p>
+    <p class="user-introduction">{{ intro }}</p>
     <div class="follow-box d-flex">
       <p class="follower">팔로워 {{ followerNum }}</p>
       <p class="follow">팔로우 {{ followingNum }}</p>
     </div>
     <div v-if="!isMyProfile" class="container mb-3">
       <div class="row d-flex justify-content-between">
-        <div
-          v-if="profileUser.isFollow"
-          class="btn btn-success col-6"
-          @click="unfollow"
-        >
+        <div v-if="isFollow" class="btn btn-success col-6" @click="unfollow">
           언팔로우
         </div>
         <div v-else class="btn btn-success col-6" @click="follow">팔로우</div>
@@ -99,26 +95,100 @@
   <div class="webpage-link-container">
     <h4>개인 웹페이지 링크</h4>
     <div class="d-flex flex-wrap">
-      <div v-for="(webSmList, i) in webIconUrl" :key="i">
-        <!-- vue3에서는 v-if가 v-for 보다 우선 순위 높다고 함 -->
-        <div
-          v-if="profileUser[webSmList[2]]"
-          class="webpage-link-box"
-          :onclick="'location.href=' + profileUser[webSmList[2]]"
-        >
-          <img
-            :src="webSmList[1]"
-            :alt="'webpage' + webSmList[0] + 'icon'"
-            class="webpage-link-img"
-          />
-        </div>
-        <div v-else class="webpage-link-box opacity-50">
-          <img
-            :src="webSmList[1]"
-            :alt="'webpage' + webSmList[0] + 'icon'"
-            class="webpage-link-img"
-          />
-        </div>
+      <!-- git -->
+      <div
+        v-if="!!gitUrl"
+        class="webpage-link-box"
+        :onclick="'location.href=' + gitUrl"
+      >
+        <img
+          src="https://cogethera801.s3.ap-northeast-2.amazonaws.com/devicon/github-original.svg"
+          alt="webpage github icon"
+          class="webpage-link-img"
+        />
+      </div>
+      <div v-else class="webpage-link-box opacity-50">
+        <img
+          src="https://cogethera801.s3.ap-northeast-2.amazonaws.com/devicon/github-original.svg"
+          alt="webpage github icon"
+          class="webpage-link-img"
+        />
+      </div>
+      <!-- velog -->
+      <div
+        v-if="!!velogUrl"
+        class="webpage-link-box"
+        :onclick="'location.href=' + velogUrl"
+      >
+        <img
+          src="https://velog.velcdn.com/images/velog/profile/9aa07f66-5fcd-41f4-84f2-91d73afcec28/green%20favicon.png"
+          alt="'webpage velog icon'"
+          class="webpage-link-img"
+        />
+      </div>
+      <div v-else class="webpage-link-box opacity-50">
+        <img
+          src="https://velog.velcdn.com/images/velog/profile/9aa07f66-5fcd-41f4-84f2-91d73afcec28/green%20favicon.png"
+          :alt="'webpage velog icon'"
+          class="webpage-link-img"
+        />
+      </div>
+      <!-- tistory -->
+      <div
+        v-if="!!tistoryUrl"
+        class="webpage-link-box"
+        :onclick="'location.href=' + tistoryUrl"
+      >
+        <img
+          src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=http%3A%2F%2Fcfile27.uf.tistory.com%2Fimage%2F9931DF3D5B9542810872FD"
+          alt="webpage tistory icon"
+          class="webpage-link-img"
+        />
+      </div>
+      <div v-else class="webpage-link-box opacity-50">
+        <img
+          src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=http%3A%2F%2Fcfile27.uf.tistory.com%2Fimage%2F9931DF3D5B9542810872FD"
+          alt="webpage tistory icon"
+          class="webpage-link-img"
+        />
+      </div>
+      <!-- notion -->
+      <div
+        v-if="!!notionUrl"
+        class="webpage-link-box"
+        :onclick="'location.href=' + notionUrl"
+      >
+        <img
+          src="https://img.icons8.com/ios/500/notion.png"
+          alt="webpage notion icon"
+          class="webpage-link-img"
+        />
+      </div>
+      <div v-else class="webpage-link-box opacity-50">
+        <img
+          src="https://img.icons8.com/ios/500/notion.png"
+          alt="webpage notion icon"
+          class="webpage-link-img"
+        />
+      </div>
+      <!-- etc -->
+      <div
+        v-if="!!etcUr"
+        class="webpage-link-box"
+        :onclick="'location.href=' + etcUr"
+      >
+        <img
+          src="https://pic.onlinewebfonts.com/svg/img_229126.png"
+          alt="webpage etc icon"
+          class="webpage-link-img"
+        />
+      </div>
+      <div v-else class="webpage-link-box opacity-50">
+        <img
+          src="https://pic.onlinewebfonts.com/svg/img_229126.png"
+          alt="webpage etc icon"
+          class="webpage-link-img"
+        />
       </div>
     </div>
   </div>
@@ -142,9 +212,9 @@
   <div class="til-container d-flex flex-wrap justify-content-evenly">
     <ProfileTil
       v-for="til in tilList"
-      :key="til.pk"
+      :key="til.tilId"
       :til="til"
-      @click="setNum(til.pk)"
+      @click="setNum(til.tilId)"
     />
   </div>
   <TilDetail v-if="isTilOpen" class="isModal" />
@@ -159,7 +229,7 @@ import ProfileTil from "./ProfileTil.vue";
 import ProfileFollow from "./ProfileFollow.vue";
 import TilDetail from "@/components/til/TilDetail.vue";
 
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 
@@ -202,27 +272,6 @@ export default {
     //   store.dispatch("takeSkillSet");
     // }
 
-    // 웹페이지 아이콘 url
-    const webIconUrl = [
-      [
-        "github",
-        "https://cogethera801.s3.ap-northeast-2.amazonaws.com/devicon/github-original.svg",
-        "gitUrl",
-      ],
-      [
-        "velog",
-        "https://velog.velcdn.com/images/velog/profile/9aa07f66-5fcd-41f4-84f2-91d73afcec28/green%20favicon.png",
-        "velogUrl",
-      ],
-      [
-        "tistory",
-        "data:image/png;base64,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",
-        "tistoryUrl",
-      ],
-      ["notion", "https://img.icons8.com/ios/500/notion.png", "notionUrl"],
-      ["etc", "https://pic.onlinewebfonts.com/svg/img_229126.png", "etcUrl"],
-    ];
-
     // 내 프로필인지 아닌지 판단하고 알맞는 자료를 가져와 profile User 변수에 넣기
     const isMyProfile = computed(() => {
       return store.getters.getLoginUserId == userId.value;
@@ -231,30 +280,78 @@ export default {
     let profileUser = ref({});
     const level = ref(0);
     const percentage = ref(0);
+    let tilList = [];
+    const imgUrl = ref("");
+    const nickname = ref("");
+    const intro = ref("");
+    const gitUrl = ref("");
+    const tistoryUrl = ref("");
+    const velogUrl = ref("");
+    const notionUrl = ref("");
+    const etcUrl = ref("");
+    const isFollow = ref(false);
 
-    (async () => {
-      if (!isMyProfile.value) {
-        await store.dispatch("fetchAnothertUser", userId.value);
-        // if (store.getters.getBooleanValue) {
-        //   router.back();
-        // }
-      } else {
-        await store.dispatch("fetchCurrentUser", store.getters.getLoginUserId);
-      }
-      profileUser = computed(() => {
-        return isMyProfile.value
-          ? store.getters.getCurrentUser
-          : store.getters.getAnotherUser;
-      });
+    onMounted(() => {
+      (async () => {
+        if (!isMyProfile.value) {
+          await store.dispatch("fetchAnothertUser", userId.value);
+          // if (store.getters.getBooleanValue) {
+          //   router.back();
+          // }
+        } else {
+          await store.dispatch(
+            "fetchCurrentUser",
+            store.getters.getLoginUserId
+          );
+        }
+        profileUser = computed(() => {
+          return isMyProfile.value
+            ? store.getters.getCurrentUser
+            : store.getters.getAnotherUser;
+        });
 
-      // 레벨과 잔여 경험치
-      level.value = parseInt(profileUser.value.exp / 100);
-      percentage.value = profileUser.value.exp % 100;
-    })();
+        // 레벨과 잔여 경험치
+        level.value = parseInt(profileUser.value.exp / 100);
+        percentage.value = profileUser.value.exp % 100;
 
-    // 페이지가 Created 될 때 list 가져옴
-    store.dispatch("fetchMyTilList");
-    const tilList = store.getters.getTilList;
+        imgUrl.value = profileUser.value.imgUrl;
+        nickname.value = profileUser.value.nickname;
+        intro.value = profileUser.value.intro;
+        gitUrl.value = profileUser.value.gitUrl;
+        tistoryUrl.value = profileUser.value.tistoryUrl;
+        velogUrl.value = profileUser.value.velogUrl;
+        notionUrl.value = profileUser.value.notionUrl;
+        etcUrl.value = profileUser.value.etcUrl;
+        console.log("프로필!", profileUser.value);
+        console.log("제발", profileUser.value["gitUrl"]);
+
+        // 페이지가 Created 될 때 list 가져옴
+        await store.dispatch("fetchMyTilList");
+        const tempList = store.getters.getTilList.tilList;
+        // console.log("tilList", tempList.tilList[0]);
+        // console.log("tempList", tempList);
+        // console.log("value", tempList[0]);
+        // console.log("length", tempList.length);
+        for (let i = 0; i < tempList.length; i++) {
+          tilList.push(tempList[i]);
+        }
+
+        await store.dispatch("fetchFollowerList", userId.value);
+        const tempfollowerList = store.getters.getMyFollowerList;
+        console.log("tempfollowerList", tempfollowerList);
+        let followerList = [];
+        for (let i = 0; i < tempfollowerList.length; i++) {
+          followerList.push(tempfollowerList[i]);
+        }
+        console.log("followerList", followerList);
+        for (let i = 0; i < followerList.length; i++) {
+          if (followerList[i].id == store.getters.getLoginUserId) {
+            isFollow.value = true;
+          }
+        }
+        console.log("isFollow", isFollow);
+      })();
+    });
 
     // 모달 창
     const modalNum = computed(() => {
@@ -279,14 +376,14 @@ export default {
       console.log(payload);
       store.dispatch("follow", payload);
       if (store.getters.getBooleanValue) {
-        profileUser.value.isFollow = !profileUser.value.isFollow;
+        isFollow.value = true;
       }
     };
     // 언팔로우
     const unfollow = () => {
       store.dispatch("unfollow", profileUser.value.id);
       if (store.getters.getBooleanValue) {
-        profileUser.value.isFollow = !profileUser.value.isFollow;
+        isFollow.value = false;
       }
     };
 
@@ -315,12 +412,12 @@ export default {
       tilList,
       searchWord,
       onSubmit,
-      webIconUrl,
 
       modalNum,
       isTilOpen,
       setNum,
 
+      isFollow,
       follow,
       unfollow,
       isFollowOpen,
@@ -329,6 +426,14 @@ export default {
 
       level,
       percentage,
+      imgUrl,
+      nickname,
+      intro,
+      gitUrl,
+      tistoryUrl,
+      velogUrl,
+      notionUrl,
+      etcUrl,
     };
   },
 };

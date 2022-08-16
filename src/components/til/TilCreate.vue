@@ -88,9 +88,7 @@ export default {
         title: state.title,
         userId: store.getters.getLoginUserId,
       };
-      // const blob = new Blob([JSON.stringify(data)], {
-      //   type: "application/json",
-      // });
+
       formData.append(
         "data",
         new Blob([JSON.stringify(data)], {
@@ -103,14 +101,6 @@ export default {
         // fileArray.push(state.multipartFiles[i]);
         formData.append("image", state.multipartFiles[i]);
       }
-
-      // formData.append("title", state.title);
-      // formData.append("content", state.content);
-      // formData.append("multipartFiles", fileArray);
-
-      // formData.append("image", fileArray, {
-      //   contentType: "multipart/form-data",
-      // });
 
       for (var key of formData.keys()) {
         console.log(key);

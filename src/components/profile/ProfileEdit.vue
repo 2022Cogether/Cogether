@@ -7,6 +7,17 @@
         <img :src="imgUrl" alt="profile image" class="profile-img" />
       </div>
     </div>
+    <div class="d-flex justify-content-center">
+      <label class="file-label" for="imageFile">이미지 등록</label>
+      <input
+        @change="imgupload"
+        class="file"
+        id="imageFile"
+        type="file"
+        multiple
+        accept="image/*"
+      />
+    </div>
     <div class="row my-3">
       <div class="h5 col-3" style="display: inline-block; float: left">
         닉네임
@@ -399,7 +410,7 @@ export default {
 
     // 닉네임 중복 체크
     const getters = computed(() => store.getters);
-    const isNickValid = ref(false);
+    const isNickValid = ref(true);
     const isNickChecked = ref(false);
     const checkNickValid = () => {
       isNickValid.value = getters.value.getNickPattern.test(nickname.value);
@@ -415,6 +426,18 @@ export default {
         }
       }
     };
+
+    // 이미지 넣기
+    let multipartFiles = [];
+    function imgupload(e) {
+      let imageFile = e.target.files; // 업로드한 파일의 데이터가 여기있음.
+      console.log(imageFile);
+      // let url = URL.createObjectURL(imageFile[0]); // 파일의 필요한 데이터만을 url 변수에 넣음
+      // console.log(url); // 확인
+      for (let i = 0; i < imageFile.length; i++) {
+        multipartFiles.push(imageFile[i]);
+      }
+    }
 
     const back = () => {
       router.go(-1);
@@ -461,6 +484,10 @@ export default {
       };
       console.log(payload);
       store.dispatch("updateProfile", payload);
+      router.push({
+        name: "profile",
+        params: { userId: store.getters.getLoginUserId },
+      });
     };
 
     return {
@@ -486,6 +513,10 @@ export default {
       isNickChecked,
       checkNickValid,
       certifyNickName,
+
+      // 이미지 넣기
+      multipartFiles,
+      imgupload,
 
       submitAutoComplete,
       result,
@@ -607,5 +638,20 @@ h4 {
   padding-left: 10px;
   border: 1px solid #dbdbdb;
   background-color: white;
+}
+
+/* 이미지 넣기 */
+.file-label {
+  margin-top: 30px;
+  background-color: #5b975b;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  width: 65%;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.file {
+  display: none;
 }
 </style>

@@ -6,7 +6,7 @@
           <div class="d-flex justify-content-between">
             <div>
               <span class="be-comment-name">
-                <a href="#">{{ comment.user_id }}</a>
+                <a href="#">{{ comment.userId }}</a>
               </span>
               <span class="be-comment-time">
                 <i class="fa fa-clock-o"></i>
@@ -31,7 +31,7 @@
             </div>
           </div>
           <p v-if="!isEdit" class="be-comment-text">
-            {{ comment.content }}
+            {{ comment.commentContent }}
           </p>
           <input
             v-else
@@ -53,7 +53,7 @@ export default {
   props: {
     comment: Object,
     userId: Number,
-    tilPk: Number,
+    tilId: Number,
   },
   setup(props) {
     const store = useStore();
@@ -65,14 +65,14 @@ export default {
       return props.userId == loginUserId;
     });
     const isCommenter = computed(() => {
-      return props.comment.user_id == loginUserId;
+      return props.comment.userId == loginUserId;
     });
 
     // 코멘트 지우기
     const deleteComment = () => {
       const payload = {
-        commentId: props.comment.pk,
-        tilId: props.tilPk,
+        commentId: props.comment.commentId,
+        tilId: props.tilId,
       };
       store.dispatch("removeComments", payload);
     };
@@ -88,11 +88,12 @@ export default {
       let payload = {};
       payload.comment = props.comment;
       payload.comment.content = event.target.value;
-      payload.tilID = props.tilPk;
+      payload.tilId = props.tilId;
       store.dispatch("updateComment", payload);
     };
 
     return {
+      props,
       isWriter,
       isCommenter,
       deleteComment,

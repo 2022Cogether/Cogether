@@ -1,15 +1,17 @@
 import http from "@/api/http";
 
 export const tilCommentStore = {
-  state: {},
+  state: {
+    comments: [],
+  },
   getters: {
     getComments(state) {
-      return state.tilContent.comments;
+      return state.comments;
     },
   },
   mutations: {
     SET_COMMENTS: (state, commentList) => {
-      state.tilContent.comments = commentList;
+      state.comments = commentList;
     },
   },
   actions: {
@@ -36,16 +38,6 @@ export const tilCommentStore = {
         .catch((err) => {
           // alert("삭제 실패??");
           console.error(err.response.data);
-          // commit("SET_AUTH_ERROR", err.response.data);
-          // const errorMessage = [];
-          // for (const errors in err.response.data) {
-          //   for (const error of err.response.data[errors]) {
-          //     if (!errorMessage.includes(error)) {
-          //       errorMessage.push(error);
-          //     }
-          //   }
-          // }
-          // alert(errorMessage.join("\r\n"));
         });
     },
 
