@@ -164,8 +164,8 @@ export const tilStore = {
       http
         .post("til", payload, {
           headers: {
-            ACCESS_TOKEN: localStorage.getItem("access_TOKEN"),
             "Content-Type": "multipart/form-data",
+            ACCESS_TOKEN: localStorage.getItem("access_TOKEN"),
           },
         })
         .then((res) => {

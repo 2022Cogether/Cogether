@@ -53,7 +53,7 @@ export default {
       content: "",
       multipartFiles: [],
     });
-    console.log(state);
+
     function exit() {
       Swal.fire({
         title: "나가시겠습니까?",
@@ -85,16 +85,25 @@ export default {
       for (let i = 0; i < state.multipartFiles.length; i++) {
         fileArray.push(state.multipartFiles[i]);
       }
-      const payload = {
-        title: state.title,
-        content: state.content,
-        multipartFiles: fileArray,
-      };
+      const formData = new FormData();
+
+      formData.append("title", state.title);
+      formData.append("content", state.content);
+      formData.append("multipartFiles", fileArray);
+      // const payload = {
+      //   title: state.title,
+      //   content: state.content,
+      //   multipartFiles: fileArray,
+      // };
       //확인
-      console.log(payload);
-      console.log(payload.multipartFiles);
+      for (var key of formData.keys()) {
+        console.log(key);
+      }
+      for (var value of formData.values()) {
+        console.log(value);
+      }
       //함수 작동 내용
-      store.dispatch("createTil", payload);
+      store.dispatch("createTil", formData);
       if (store.getters.getBooleanValue) {
         router.go(-1);
       }

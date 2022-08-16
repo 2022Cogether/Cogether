@@ -3,24 +3,24 @@ import http from "@/api/http";
 export const followStore = {
   state: {
     myFollowingList: [
-      {
-        id: 3,
-        email: "wldusdl1023@naver.com1",
-      },
-      {
-        id: 4,
-        email: "wldusdl1023@naver.com11",
-      },
+      // {
+      //   id: 3,
+      //   email: "wldusdl1023@naver.com1",
+      // },
+      // {
+      //   id: 4,
+      //   email: "wldusdl1023@naver.com11",
+      // },
     ],
     myFollowerList: [
-      {
-        id: 3,
-        email: "wldusdl1023@naver.com1",
-      },
-      {
-        id: 4,
-        email: "wldusdl1023@naver.com11",
-      },
+      // {
+      //   id: 3,
+      //   email: "wldusdl1023@naver.com1",
+      // },
+      // {
+      //   id: 4,
+      //   email: "wldusdl1023@naver.com11",
+      // },
     ],
 
     followingNumber: 0,

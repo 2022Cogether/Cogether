@@ -252,27 +252,49 @@ export default {
     const store = useStore();
     const route = useRoute();
     const userId = route.params.userId;
+    const profileUser = ref({});
 
-    if (store.getters.getCurrentUser.id == undefined) {
-      store.dispatch("fetchCurrentUser", store.getters.getLoginUserId);
-    }
-    const profileUser = store.getters.getCurrentUser;
-    console.log(profileUser);
+    const imgUrl = ref("");
+    const nickname = ref("");
+    const intro = ref("");
+    const gitUrl = ref("");
+    const tistoryUrl = ref("");
+    const velogUrl = ref("");
+    const notionUrl = ref("");
+    const etcUrl = ref("");
 
-    const imgUrl = ref(profileUser.imgUrl);
-    const nickname = ref(profileUser.nickname);
-    const intro = ref(profileUser.intro);
-    const gitUrl = ref(profileUser.gitUrl);
-    const tistoryUrl = ref(profileUser.tistoryUrl);
-    const velogUrl = ref(profileUser.velogUrl);
-    const notionUrl = ref(profileUser.notionUrl);
-    const etcUrl = ref(profileUser.etcUrl);
+    let originalSkillList = [];
+    const userLangSkills = ref([]);
 
-    if (!store.getters.getUserSkills) {
-      store.dispatch("takeUserSkillSet", store.getters.getLoginUserId);
-    }
-    const originalSkillList = store.getters.getUserSkills;
-    const userLangSkills = ref(store.getters.getUserSkills);
+    (async () => {
+      if (store.getters.getCurrentUser.id == undefined) {
+        await store.dispatch("fetchCurrentUser", store.getters.getLoginUserId);
+      }
+      const profileUser = computed(() => {
+        return store.getters.getCurrentUser;
+      });
+      console.log("프로필 값", profileUser.value);
+
+      imgUrl.value = profileUser.value.imgUrl;
+      nickname.value = profileUser.value.nickname;
+      intro.value = profileUser.value.intro;
+      gitUrl.value = profileUser.value.gitUrl;
+      tistoryUrl.value = profileUser.value.tistoryUrl;
+      velogUrl.value = profileUser.value.velogUrl;
+      notionUrl.value = profileUser.value.notionUrl;
+      etcUrl.value = profileUser.value.etcUrl;
+
+      if (!store.getters.getUserSkills[0]) {
+        await store.dispatch("takeUserSkillSet", store.getters.getLoginUserId);
+      }
+      const temp_list = computed(() => {
+        return store.getters.getUserSkills;
+      });
+      for (let i = 0; i < temp_list.value.length; i++) {
+        originalSkillList.push(temp_list.value[i]);
+      }
+      userLangSkills.value = temp_list.value;
+    })();
 
     // 모달 바깥을 클릭하면 모달을 닫게 하는 함수
     const closeModal = (event) => {
@@ -418,31 +440,31 @@ export default {
       console.log(minusSkills);
 
       store.dispatch("plusUserSkillSet", {
-        email: profileUser.email,
+        email: profileUser.value.email,
         skills: plusSkills,
       });
       store.dispatch("minusUserSkillSet", {
-        email: profileUser.email,
+        email: profileUser.value.email,
         skills: minusSkills,
       });
 
       const payload = {
-        imgUrl: imgUrl.value,
+        img_url: imgUrl.value,
         nickname: nickname.value,
         intro: intro.value,
         // userLangSkills: userLangSkills.value,
-        gitUrl: gitUrl.value,
-        tistoryUrl: tistoryUrl.value,
-        velogUrl: velogUrl.value,
-        notionUrl: notionUrl.value,
-        etcUrl: etcUrl.value,
+        git_url: gitUrl.value,
+        tistory_url: tistoryUrl.value,
+        velog_url: velogUrl.value,
+        notion_url: notionUrl.value,
+        etc_url: etcUrl.value,
       };
+      console.log(payload);
       store.dispatch("updateProfile", payload);
     };
 
     return {
       userId,
-      profileUser,
 
       imgUrl,
       nickname,

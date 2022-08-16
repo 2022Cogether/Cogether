@@ -128,10 +128,10 @@ export const signStore = {
         });
     },
 
-    fetchCurrentUser({ commit, getters }, userId) {
+    async fetchCurrentUser({ commit, getters }, userId) {
       alert("fetchCurrentUser!" + userId);
-      if (getters.isLoggedIn) {
-        http
+      if (userId == getters.getLoginUserId) {
+        await http
           .get("user/info/" + userId, {
             headers: getters.authHeader,
           })
@@ -148,28 +148,28 @@ export const signStore = {
               commit("SET_LOGIN_USERID", "");
             }
           });
+      } else {
+        alert("현재 이 유저가 아닌 거 같습니다..");
       }
     },
 
-    fetchAnothertUser({ commit, getters }, userId) {
+    async fetchAnothertUser({ commit, getters }, userId) {
       alert("fetchAnotherUser!" + userId);
-      if (getters.isLoggedIn) {
-        http
-          .get("user/info/" + userId, {
-            headers: getters.authHeader,
-          })
-          .then((res) => {
-            console.log("다른 유저 프로필");
-            console.log(res.data);
-            commit("SET_ANOTHER_USER", res.data);
-          })
-          .catch((err) => {
-            alert("다른 사용자 정보 불러오는 중 에러 발생");
-            console.log("다른 사용자 정보 저장 중 에러 발생");
-            commit("SET_BOOLEANVALUE");
-            console.error(err.response.data);
-          });
-      }
+      await http
+        .get("user/info/" + userId, {
+          headers: getters.authHeader,
+        })
+        .then((res) => {
+          console.log("다른 유저 프로필");
+          console.log(res.data);
+          commit("SET_ANOTHER_USER", res.data);
+        })
+        .catch((err) => {
+          alert("다른 사용자 정보 불러오는 중 에러 발생");
+          console.log("다른 사용자 정보 저장 중 에러 발생");
+          commit("SET_BOOLEANVALUE");
+          console.error(err.response.data);
+        });
     },
 
     // 비밀번호 검증

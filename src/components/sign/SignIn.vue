@@ -18,6 +18,7 @@
           required
         />
         <img
+          @click="goLogin"
           src="@/assets/login_button.png"
           alt="로그인"
           style="
@@ -25,6 +26,7 @@
             margin-left: 5vw;
             margin-top: 2vh;
             margin-bottom: 1vh;
+            cursor: pointer;
           "
         />
       </form>

@@ -27,14 +27,14 @@
     </div>
   </div>
   <div class="exp-bar d-flex justify-content-center align-items-center">
-    <p class="level">lv. 2</p>
+    <p class="level">lv. {{ level }}</p>
     <div class="progress">
       <div
         class="progress-bar"
         role="progressbar"
         aria-label="Basic example"
-        style="width: 50%"
-        aria-valuenow="50"
+        :style="'width: ' + percentage + '%'"
+        :aria-valuenow="percentage"
         aria-valuemin="0"
         aria-valuemax="100"
       ></div>
@@ -228,19 +228,29 @@ export default {
       return store.getters.getLoginUserId == userId.value;
     });
 
-    if (!isMyProfile.value) {
-      store.dispatch("fetchAnothertUser", userId.value);
-      // if (store.getters.getBooleanValue) {
-      //   router.back();
-      // }
-    } else {
-      store.dispatch("fetchCurrentUser", store.getters.getLoginUserId);
-    }
-    const profileUser = computed(() => {
-      return isMyProfile.value
-        ? store.getters.getCurrentUser
-        : store.getters.getAnotherUser;
-    });
+    let profileUser = ref({});
+    const level = ref(0);
+    const percentage = ref(0);
+
+    (async () => {
+      if (!isMyProfile.value) {
+        await store.dispatch("fetchAnothertUser", userId.value);
+        // if (store.getters.getBooleanValue) {
+        //   router.back();
+        // }
+      } else {
+        await store.dispatch("fetchCurrentUser", store.getters.getLoginUserId);
+      }
+      profileUser = computed(() => {
+        return isMyProfile.value
+          ? store.getters.getCurrentUser
+          : store.getters.getAnotherUser;
+      });
+
+      // 레벨과 잔여 경험치
+      level.value = parseInt(profileUser.value.exp / 100);
+      percentage.value = profileUser.value.exp % 100;
+    })();
 
     // 페이지가 Created 될 때 list 가져옴
     store.dispatch("fetchMyTilList");
@@ -263,7 +273,7 @@ export default {
     // 팔로우
     const follow = () => {
       const payload = {
-        toID: store.getters.getLoginUserId,
+        toId: store.getters.getLoginUserId,
         fromId: profileUser.value.id,
       };
       console.log(payload);
@@ -316,6 +326,9 @@ export default {
       isFollowOpen,
       followOpen,
       closeModal,
+
+      level,
+      percentage,
     };
   },
 };
