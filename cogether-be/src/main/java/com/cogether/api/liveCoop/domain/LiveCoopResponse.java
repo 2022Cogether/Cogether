@@ -20,6 +20,22 @@ public class LiveCoopResponse {
         }
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class OnlyLiveCoopChatRoomId {
+        private int liveCoopId;
+        private int chatRoomId;
+
+        public static LiveCoopResponse.OnlyLiveCoopChatRoomId build(int liveCoopId, int chatRoomId) {
+            return OnlyLiveCoopChatRoomId.builder()
+                    .liveCoopId(liveCoopId)
+                    .chatRoomId(chatRoomId)
+                    .build();
+        }
+    }
+
 
     @Getter
     @Builder
