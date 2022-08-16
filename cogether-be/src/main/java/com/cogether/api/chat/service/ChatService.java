@@ -48,7 +48,7 @@ public class ChatService {
         int len = chats.size();
 
         if (len > 0) {
-            for (int idx = 0; idx < len; idx++) {
+            for (int idx = len - 1; idx >= 0; idx--) {
                 Chat chat = chats.get(idx);
                 User user = userRepository.findById(chat.getSendUserId()).orElseThrow(UserNotFoundException::new);
                 getChats.add(ChatResponse.GetChat.build(chat, user));
@@ -58,6 +58,21 @@ public class ChatService {
             ChatMember chatMember = chatMemRepository.findByChatRoomAndUser(chatRoom, loginUser);
             chatMember.setLastReadChatId(chats.get(len - 1).getId());
             chatMemRepository.save(chatMember);
+        }
+
+        return ChatResponse.GetChats.build(getChats);
+    }
+
+    public ChatResponse.GetChats getCoopChats(int chatRoomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(ChatRoomNotFoundException::new);
+        List<Chat> chats = chatRepository.findAllByChatRoom(chatRoom);
+        List<ChatResponse.GetChat> getChats = new ArrayList<>();
+        int len = chats.size();
+
+        for (int idx = len - 1; idx >= 0; idx--) {
+            Chat chat = chats.get(idx);
+            User user = userRepository.findById(chat.getSendUserId()).orElseThrow(UserNotFoundException::new);
+            getChats.add(ChatResponse.GetChat.build(chat, user));
         }
 
         return ChatResponse.GetChats.build(getChats);
@@ -130,7 +145,7 @@ public class ChatService {
             String lastMsg = "";
             if (chats.size() > 0) {
                 lastMsg = chats.get(chats.size() - 1).getMessage();
-                if(lastMsg.length() > 9)
+                if (lastMsg.length() > 9)
                     lastMsg = lastMsg.substring(0, 9);
             }
 

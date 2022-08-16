@@ -79,7 +79,6 @@ public class LiveCoopResponse {
         private List<GetLiveCoop> liveCoops;
         private boolean enterCoop;
 
-        // TODO : , boolean isEnterCoop 수정 필요
         public static LiveCoopResponse.GetLiveCoops build(List<LiveCoop> liveCoops, boolean enterCoop) {
             return LiveCoopResponse.GetLiveCoops.builder()
                     .enterCoop(enterCoop)
