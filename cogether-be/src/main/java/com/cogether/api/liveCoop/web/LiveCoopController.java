@@ -1,5 +1,7 @@
 package com.cogether.api.liveCoop.web;
 
+import com.cogether.api.chat.domain.ChatResponse;
+import com.cogether.api.chat.service.ChatService;
 import com.cogether.api.liveCoop.domain.LiveCoopRequest;
 import com.cogether.api.liveCoop.domain.LiveCoopResponse;
 import com.cogether.api.liveCoop.service.LiveCoopService;
@@ -15,6 +17,13 @@ import org.springframework.web.bind.annotation.*;
 public class LiveCoopController {
 
     private final LiveCoopService liveCoopService;
+    private final ChatService chatService;
+
+    @GetMapping(value = "/livecoop/chat/list/{chatRoomId}")
+    public ResponseEntity<ChatResponse.GetChats> getCoopChats(@PathVariable int chatRoomId) {
+        ChatResponse.GetChats response = chatService.getCoopChats(chatRoomId);
+        return ResponseEntity.ok().body(response);
+    }
 
     @PostMapping("/livecoop")
     @ResponseStatus(value = HttpStatus.CREATED)
