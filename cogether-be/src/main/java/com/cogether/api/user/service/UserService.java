@@ -365,6 +365,8 @@ public class UserService {
         user.setIntro(userRequest.getIntro());
         user.setGitUrl(userRequest.getGit_url());
         user.setTistoryUrl(userRequest.getTistory_url());
+        user.setVelogUrl(userRequest.getVelog_url());
+        user.setNotionUrl(userRequest.getNotion_url());
         user.setImgUrl(userRequest.getImg_url());
 
         userRepository.save(user);

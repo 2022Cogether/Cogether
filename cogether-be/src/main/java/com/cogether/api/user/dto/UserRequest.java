@@ -21,6 +21,8 @@ public class UserRequest {
     private String git_url;
     private String notion_url;
     private String tistory_url;
+    private String velog_url;
+
     private String etc_url;
 
     private String img_url;
