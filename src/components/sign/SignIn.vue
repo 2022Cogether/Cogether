@@ -17,7 +17,16 @@
           placeholder="Password"
           required
         />
-        <button class="submit mt-2">Login</button>
+        <img
+          src="@/assets/login_button.png"
+          alt="로그인"
+          style="
+            max-width: 8vw;
+            margin-left: 5vw;
+            margin-top: 2vh;
+            margin-bottom: 1vh;
+          "
+        />
       </form>
     </div>
     <div class="d-flex justify-content-center mt-3">
@@ -26,7 +35,12 @@
           <p>아직 회원이 아니신가요?</p>
         </div>
         <div>
-          <router-link class="link" to="/sign/signup"> 회원가입 </router-link>
+          <router-link class="link" to="/sign/signup">
+            <img
+              src="@/assets/register_button.png"
+              alt="회원가입"
+              style="max-width: 5vw; margin-bottom: 1vh"
+          /></router-link>
         </div>
       </div>
     </div>

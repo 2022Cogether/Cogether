@@ -374,13 +374,13 @@ export const signStore = {
     },
     // { REFRESH_TOKEN: localStorage.getItem("REFRESH_TOKEN") }
     // accessToken 재요청
-    async refreshToken({ dispatch }) {
+    async refreshToken({ dispatch, getters }) {
       // headers: { REFRESH_TOKEN: localStorage.getItem("refresh_TOKEN") }
       //accessToken 만료로 재발급 후 재요청시 비동기처리로는 제대로 처리가 안되서 promise로 처리함
       alert("promise 앞에서서"); // 2
       let promise = new Promise((resolve, reject) => {
         http
-          .post("sign/token", null, {
+          .post("sign/token" + getters.getLoginUserId, null, {
             // headers: getters.authHeader,
             headers: { REFRESH_TOKEN: localStorage.getItem("refresh_TOKEN") },
           })
@@ -395,6 +395,7 @@ export const signStore = {
               localStorage.getItem("refresh_TOKEN")
             );
 
+            console.log("res: ", res);
             dispatch("saveAccess", res.headers.access_token);
             localStorage.setItem("refresh_TOKEN", res.headers.refresh_token);
             console.log(

@@ -23,7 +23,12 @@
           <p>아직 회원이 아니신가요?</p>
         </div>
         <div>
-          <router-link to="/sign/signup"> 회원가입 </router-link>
+          <router-link class="link" to="/sign/signup">
+            <img
+              src="@/assets/register_button.png"
+              alt="회원가입"
+              style="max-width: 5vw; margin-bottom: 1vh"
+          /></router-link>
         </div>
       </div>
     </div>

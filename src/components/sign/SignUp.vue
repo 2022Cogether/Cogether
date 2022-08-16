@@ -107,8 +107,18 @@
             @click="checkTerm"
           /><label for="terms">이메일 정보 제공에 동의합니다.</label>
           <div class="mt-2 d-flex justify-content-between">
-            <button class="submit" @click="changePage">Next</button>
-            <button class="submit" @click="goRegister">Register</button>
+            <img
+              @click="changePage"
+              src="@/assets/next_button.png"
+              alt="다음"
+              style="max-width: 7vw; cursor: pointer"
+            />
+            <img
+              @click="goRegister"
+              src="@/assets/register_button.png"
+              alt="회원가입"
+              style="max-width: 7vw; cursor: pointer"
+            />
           </div>
         </div>
         <div v-show="!isPageOne">
@@ -184,7 +194,12 @@
           </div>
           <div class="mt-2 d-flex justify-content-between">
             <button class="submit" @click="changePage">Prev</button>
-            <button class="submit" @click="goRegister">Register</button>
+            <img
+              @click="goRegister"
+              src="@/assets/register_button.png"
+              alt="회원가입"
+              style="max-width: 7vw; cursor: pointer"
+            />
           </div>
         </div>
       </div>
@@ -195,7 +210,12 @@
           <p>혹시 회원이신가요?</p>
         </div>
         <div>
-          <router-link to="/sign/signin" class="link"> 로그인 </router-link>
+          <router-link to="/sign/signin" class="link">
+            <img
+              src="@/assets/login_button.png"
+              alt="로그인"
+              style="max-width: 5vw; margin-bottom: 1vh"
+          /></router-link>
         </div>
       </div>
     </div>

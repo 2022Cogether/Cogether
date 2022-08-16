@@ -413,6 +413,8 @@ export default {
       const minusSkills = originalSkillArray.filter((skill) => {
         return editUserSkills.indexOf(skill) == -1;
       });
+      console.log(plusSkills);
+      console.log(minusSkills);
 
       store.dispatch("plusUserSkillSet", {
         email: profileUser.email,
