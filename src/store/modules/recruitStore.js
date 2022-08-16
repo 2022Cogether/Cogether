@@ -31,9 +31,9 @@ export const recruitStore = {
   actions: {
     //모달
     //프로젝트팀
-    getProjectTeams({ commit, getters }, userId) {
+    getProjectTeams({ commit, getters }) {
       http
-        .get("project/list/" + userId, {
+        .get("project/list", {
           headers: getters.authHeader,
         })
         .then(({ data }) => {
@@ -45,9 +45,9 @@ export const recruitStore = {
           console.log("에러: " + e);
         });
     },
-    getMyProjectTeams({ commit, getters }, userId) {
+    getMyProjectTeams({ commit, getters }) {
       http
-        .get("project/list/my/" + userId, {
+        .get("project/list/my", {
           headers: getters.authHeader,
         })
         .then(({ data }) => {
@@ -122,9 +122,9 @@ export const recruitStore = {
         });
     },
     //프로젝트사람
-    getProjectPeople({ commit, getters }, userId) {
+    getProjectPeople({ commit, getters }) {
       http
-        .get("hunting/list/" + userId, {
+        .get("hunting/list", {
           headers: getters.authHeader,
         })
         .then(({ data }) => {
@@ -135,9 +135,9 @@ export const recruitStore = {
           console.log("에러: " + e);
         });
     },
-    getMyProjectPeople({ commit, getters }, userId) {
+    getMyProjectPeople({ commit, getters }) {
       http
-        .get("hunting/list/my/" + userId, {
+        .get("hunting/list/my", {
           headers: getters.authHeader,
         })
         .then(({ data }) => {
@@ -209,9 +209,9 @@ export const recruitStore = {
         });
     },
     //스터디팀
-    getStudyTeams({ commit, getters }, userId) {
+    getStudyTeams({ commit, getters }) {
       http
-        .get("study/list/" + userId, {
+        .get("study/list", {
           headers: getters.authHeader,
         })
         .then(({ data }) => {
@@ -223,9 +223,9 @@ export const recruitStore = {
           console.log("에러: " + e);
         });
     },
-    getMyStudyTeams({ commit, getters }, userId) {
+    getMyStudyTeams({ commit, getters }) {
       http
-        .get("study/list/my/" + userId, {
+        .get("study/list/my", {
           headers: getters.authHeader,
         })
         .then(({ data }) => {
