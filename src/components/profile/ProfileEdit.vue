@@ -253,10 +253,11 @@ export default {
     const route = useRoute();
     const userId = route.params.userId;
 
-    if (!store.getters.getCurrentUser) {
+    if (store.getters.getCurrentUser.id == undefined) {
       store.dispatch("fetchCurrentUser", store.getters.getLoginUserId);
     }
     const profileUser = store.getters.getCurrentUser;
+    console.log(profileUser);
 
     const imgUrl = ref(profileUser.imgUrl);
     const nickname = ref(profileUser.nickname);

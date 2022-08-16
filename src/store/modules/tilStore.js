@@ -121,9 +121,9 @@ export const tilStore = {
         });
     },
 
-    fetchTilList({ commit, getters }, payload) {
+    fetchTilList({ commit, getters }) {
       http
-        .get("til/list/" + payload.userId, {
+        .get("til/list/", {
           headers: getters.authHeader,
         })
         .then((res) => {
@@ -136,9 +136,9 @@ export const tilStore = {
           console.error(err.response.data);
         });
     },
-    fetchMyTilList({ commit, getters }, payload) {
+    fetchMyTilList({ commit, getters }) {
       http
-        .get("til/list/my/" + payload.userId, {
+        .get("til/list/my/", {
           headers: getters.authHeader,
         })
         .then((res) => {
@@ -253,21 +253,19 @@ export const tilStore = {
         .catch((err) => console.error(err.response));
     },
 
-    searchTil({ commit, getters }, payload) {
+    searchTil({ commit, getters }, keyword) {
       // paylod => keyword, userId
       http
-        .get("til/search", {
-          params: payload,
+        .get("til/search" + keyword, {
           headers: getters.authHeader,
         })
         .then((res) => commit("SET_TIL_LIST", res.data))
         .catch((err) => console.error(err.response));
     },
-    searchMyTil({ commit, getters }, payload) {
+    searchMyTil({ commit, getters }, keyword) {
       // paylod => keyword, userId
       http
-        .get("til/search/my", {
-          params: payload,
+        .get("til/search/my" + keyword, {
           headers: getters.authHeader,
         })
         .then((res) => commit("SET_TIL_LIST", res.data))

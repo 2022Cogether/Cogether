@@ -22,7 +22,7 @@
 <script>
 import TilMainList from "@/components/til/TilMainList.vue";
 
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 
 export default {
@@ -32,17 +32,11 @@ export default {
   },
   setup() {
     const store = useStore();
-    const getters = computed(() => store.getters);
 
     const searchWord = ref("");
 
     const onSubmit = () => {
-      const payload = {
-        keyword: searchWord.value,
-        userId: getters.value.getLoginUserId,
-      };
-      console.log(payload);
-      store.dispatch("searchTil", payload);
+      store.dispatch("searchTil", searchWord.value);
     };
 
     return {

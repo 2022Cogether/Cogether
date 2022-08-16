@@ -40,7 +40,7 @@ export default {
 
     // created 할 때 한 번 발생하고, 이후로 끝까지 스크롤하면 계속 실행되어 til list에 추가하는 방식
     const getTilList = () => {
-      store.dispatch("fetchTilList", { userId: 1 });
+      store.dispatch("fetchTilList");
     };
     // const eraseTilList = () => {
     //   store.dispatch("removeTilList");

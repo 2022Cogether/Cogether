@@ -194,12 +194,7 @@ export default {
     // TIL 검색 창
     const searchWord = ref("");
     const onSubmit = () => {
-      const payload = {
-        keyword: searchWord.value,
-        userId: profileUser.value.id,
-      };
-      console.log("onSubmit", payload);
-      store.dispatch("searchMyTil", payload);
+      store.dispatch("searchMyTil", searchWord.value);
     };
 
     // Skill set
@@ -248,7 +243,7 @@ export default {
     });
 
     // 페이지가 Created 될 때 list 가져옴
-    store.dispatch("fetchMyTilList", { userId: userId });
+    store.dispatch("fetchMyTilList");
     const tilList = store.getters.getTilList;
 
     // 모달 창

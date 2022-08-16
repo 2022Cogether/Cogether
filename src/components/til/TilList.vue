@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { computed, onMounted, ref } from "vue";
 import TilMainItem from "@/components/til/TilMainItem.vue";
@@ -28,9 +27,6 @@ export default {
   setup() {
     const store = useStore();
     const getters = computed(() => store.getters);
-    const route = useRoute();
-
-    const userId = route.params.userId;
 
     const searchWord = ref("");
 
@@ -49,7 +45,7 @@ export default {
 
     // created 할 때 한 번 발생하고, 이후로 끝까지 스크롤하면 계속 실행되어 til list에 추가하는 방식
     function getTilList() {
-      store.dispatch("fetchMyTilList", { userId: userId });
+      store.dispatch("fetchMyTilList");
     }
     // const eraseTilList = () => {
     //   store.dispatch("removeTilList");
