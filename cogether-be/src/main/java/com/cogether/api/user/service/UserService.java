@@ -1,6 +1,7 @@
 package com.cogether.api.user.service;
 
 import com.cogether.api.config.jwt.TokenUtils;
+import com.cogether.api.file.service.FileUploadService;
 import com.cogether.api.rank.domain.Ranking;
 import com.cogether.api.rank.respository.RankingRepository;
 import com.cogether.api.user.domain.Auth;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -49,6 +51,8 @@ public class UserService {
     private final UserSkillRepository userSkillRepository;
 
     private final RankingRepository rankingRepository;
+
+    private final FileUploadService fileUploadService;
 
     public Optional<User> findByEmail(String userEmail) {
 
@@ -441,6 +445,31 @@ public class UserService {
         userRepository.save(user);
 
         return userId;
+    }
+
+    /**
+     * 프로필 이미지 서버 업로드
+     */
+
+    @Transactional
+    public Map<String,Integer> uploadProfileImg(String token, MultipartFile multipartFile)
+    {
+        Map<String, Integer> body= new HashMap<>();
+
+        int id =tokenUtils.getUserIdFromToken(token);
+
+        User user =userRepository
+                .findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+
+        if(!multipartFile.isEmpty())
+        {
+            String img_url = fileUploadService.uploadImage(multipartFile);
+            user.setImgUrl(img_url);
+            userRepository.save(user);
+        }
+
+        return body;
     }
 
 
