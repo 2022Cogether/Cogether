@@ -239,10 +239,10 @@ export const signStore = {
         .get("verify/nickname/" + nickName)
         .then(({ data }) => {
           if (!data) {
-            console.log("사용가능한 닉네임!");
+            alert("사용가능한 닉네임입니다");
             commit("SET_BOOLEANVALUE");
           } else {
-            console.log("중복된 닉네임!");
+            alert("중복된 닉네임입니다");
           }
         })
         .catch((e) => {
