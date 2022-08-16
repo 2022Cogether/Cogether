@@ -6,29 +6,27 @@
       </a>
     </div>
     <div class="chat-content" @click="clickItem">
-      <div class="chat-name">이름</div>
-      <div class="chat-text">내용</div>
+      <div class="chat-name">{{ chatRoom.chatMemberName }}</div>
+      <div class="chat-text">{{ chatRoom.lastMessage }}</div>
+      <p>{{ chatRoom.messageCnt }}</p>
     </div>
   </div>
 </template>
 
 <script>
-import { computed, reactive } from "vue";
+import { computed } from "vue";
 import { useStore } from "vuex";
 export default {
   name: "ChatItem",
-  setup() {
+  props: ["chatRoom"],
+  setup(props) {
     const store = useStore();
     const getters = computed(() => store.getters);
-    const state = reactive({
-      chatUser: getters.value.chatUser,
-    });
     function clickItem() {
-      console.log("event");
-      store.commit("SET_CHAT_USER", 1);
-      console.log(getters.value.chatUser);
+      store.commit("SET_CHAT_USER_ID", props.chatRoom.chatMemberUserId);
+      store.commit("SET_CHAT_ROOM", props.chatRoom);
     }
-    return { clickItem, getters, store, state };
+    return { clickItem, getters, store };
   },
 };
 </script>

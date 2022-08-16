@@ -296,7 +296,7 @@ export const signStore = {
 
     logout({ commit, getters }) {
       http
-        .get("sign/signout", {
+        .delete("sign/signout", {
           headers: getters.authHeader,
         })
         .then((res) => {

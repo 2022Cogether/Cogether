@@ -92,9 +92,9 @@ export const challengeStore = {
     },
   },
   actions: {
-    getCompeteInfo({ commit, getters }, id) {
+    getCompeteInfo({ commit, getters }) {
       http
-        .get("/liveComp/" + id, {
+        .get("/liveComp", {
           headers: getters.authHeader,
         })
         .then(({ data }) => {
@@ -159,9 +159,9 @@ export const challengeStore = {
           console.log("에러: " + e);
         });
     },
-    getCoopRooms({ commit, getters }, id) {
+    getCoopRooms({ commit, getters }) {
       http
-        .get("/livecoop/list/" + id, {
+        .get("/livecoop/list", {
           headers: getters.authHeader,
         })
         .then(({ data }) => {
@@ -174,9 +174,9 @@ export const challengeStore = {
           console.log("에러: " + e);
         });
     },
-    getDetailCoopRooms({ commit, getters }, id) {
+    getDetailCoopRooms({ commit, getters }, roomId) {
       http
-        .get("livecoop/" + id, {
+        .get("livecoop/" + roomId, {
           headers: getters.authHeader,
         })
         .then(({ data }) => {

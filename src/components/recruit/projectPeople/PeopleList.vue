@@ -101,7 +101,7 @@
           data-bs-dismiss="modal"
           aria-label="Close"
         >
-          <button type="button" class="btn">
+          <button type="button" class="btn" @click="sendDM">
             <font-awesome-icon icon="fa-solid fa-comments" />
             DM 보내기
           </button>
@@ -115,6 +115,7 @@
 import PeopleItem from "@/components/recruit/projectPeople/PeopleItem.vue";
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
+import router from "@/router";
 export default {
   name: "PeopleList",
   props: ["searchText", "tabState"],
@@ -141,7 +142,14 @@ export default {
       emitPerson.value = data;
     }
 
-    return { store, getters, checkScrap, emitPerson, setModal };
+    async function sendDM() {
+      await store.dispatch("createChatRoom", emitPerson.value.userId);
+      store.dispatch("getChatRoomList", getters.value.getLoginUserId);
+      store.commit("SET_IS_CHAT_SHOW", !getters.value.getIsChatShow);
+      router.push({ name: "RecruitMain" });
+    }
+
+    return { store, getters, checkScrap, emitPerson, setModal, sendDM };
   },
   components: {
     PeopleItem,
