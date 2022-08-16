@@ -53,7 +53,7 @@ export default {
       content: "",
       multipartFiles: [],
     });
-    console.log(state);
+
     function exit() {
       Swal.fire({
         title: "나가시겠습니까?",
@@ -81,20 +81,35 @@ export default {
       }
     }
     function createTil() {
-      let fileArray = [];
-      for (let i = 0; i < state.multipartFiles.length; i++) {
-        fileArray.push(state.multipartFiles[i]);
-      }
-      const payload = {
-        title: state.title,
+      const formData = new FormData();
+
+      const data = {
         content: state.content,
-        multipartFiles: fileArray,
+        title: state.title,
+        userId: store.getters.getLoginUserId,
       };
-      //확인
-      console.log(payload);
-      console.log(payload.multipartFiles);
+
+      formData.append(
+        "data",
+        new Blob([JSON.stringify(data)], {
+          type: "application/json",
+        })
+      );
+
+      // let fileArray = [];
+      for (let i = 0; i < state.multipartFiles.length; i++) {
+        // fileArray.push(state.multipartFiles[i]);
+        formData.append("image", state.multipartFiles[i]);
+      }
+
+      for (var key of formData.keys()) {
+        console.log(key);
+      }
+      for (var value of formData.values()) {
+        console.log(value);
+      }
       //함수 작동 내용
-      store.dispatch("createTil", payload);
+      store.dispatch("createTil", formData);
       if (store.getters.getBooleanValue) {
         router.go(-1);
       }

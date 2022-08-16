@@ -9,10 +9,10 @@
             <font-awesome-icon class="fs-3" icon="fa-solid fa-user" />
           </div>
           <div class="til-title">
-            {{ tilContent.title }}
+            {{ tilContent.tilTitle }}
           </div>
           <div class="til-info">
-            <span class="til-user">{{ tilContent.user_id }}</span>
+            <span class="til-user">{{ tilContent.userId }}</span>
             <!-- created_at을 통해서 시간 계산 v-if나 함수로 1일 이하면 시간으로 표시 -->
             <span class="til-time">1 시간 전</span>
           </div>
@@ -36,7 +36,7 @@
                 class="dropdown-item"
                 :to="{
                   name: 'TilUpdate',
-                  params: { tilPk: tilContent.pk },
+                  params: { tilPk: tilContent.tilId },
                 }"
                 >내용 수정</router-link
               >
@@ -47,7 +47,7 @@
         <!-- 첨부 이미지 캐러셀 -->
         <div class="til-body">
           <div
-            :id="'carouselExampleIndicatorsForDetail' + tilContent.pk"
+            :id="'carouselExampleIndicatorsForDetail' + tilContent.tilId"
             class="carousel slide"
             data-bs-ride="false"
           >
@@ -55,7 +55,7 @@
               <button
                 type="button"
                 :data-bs-target="
-                  '#carouselExampleIndicatorsForDetail' + tilContent.pk
+                  '#carouselExampleIndicatorsForDetail' + tilContent.tilId
                 "
                 data-bs-slide-to="0"
                 class="active"
@@ -65,7 +65,7 @@
               <button
                 type="button"
                 :data-bs-target="
-                  '#carouselExampleIndicatorsForDetail' + tilContent.pk
+                  '#carouselExampleIndicatorsForDetail' + tilContent.tilId
                 "
                 data-bs-slide-to="1"
                 aria-label="Slide 2"
@@ -73,28 +73,26 @@
               <button
                 type="button"
                 :data-bs-target="
-                  '#carouselExampleIndicatorsForDetail' + tilContent.pk
+                  '#carouselExampleIndicatorsForDetail' + tilContent.tilId
                 "
                 data-bs-slide-to="2"
                 aria-label="Slide 3"
               ></button>
             </div>
-            <div class="carousel-inner">
-              <div class="carousel-item active">
-                <img src="@/assets/test1.jpg" class="d-block w-100" alt="..." />
-              </div>
-              <div class="carousel-item">
-                <img src="@/assets/test2.jpg" class="d-block w-100" alt="..." />
-              </div>
-              <div class="carousel-item">
-                <img src="@/assets/test3.jpg" class="d-block w-100" alt="..." />
+            <div
+              class="carousel-inner"
+              v-for="(image, i) in tilContent.imgUrl"
+              :key="i"
+            >
+              <div :class="['carousel-item', i == 0 ? 'active' : '']">
+                <img :src="image.imgUrl" class="d-block w-100" alt="..." />
               </div>
             </div>
             <button
               class="carousel-control-prev"
               type="button"
               :data-bs-target="
-                '#carouselExampleIndicatorsForDetail' + tilContent.pk
+                '#carouselExampleIndicatorsForDetail' + tilContent.tilId
               "
               data-bs-slide="prev"
             >
@@ -108,7 +106,7 @@
               class="carousel-control-next"
               type="button"
               :data-bs-target="
-                '#carouselExampleIndicatorsForDetail' + tilContent.pk
+                '#carouselExampleIndicatorsForDetail' + tilContent.tilId
               "
               data-bs-slide="next"
             >
@@ -129,7 +127,7 @@
               <input
                 type="checkbox"
                 id="checkbox"
-                :checked="tilContent.isLike"
+                :checked="tilContent.like"
                 @click="sendLike"
               />
               <label for="checkbox">
@@ -201,18 +199,16 @@
           <span class="like-count"> 좋아요 0개 </span>
           <!-- v-if: "is_Current_User_Like_This_TIL?" 등으로 sendlike/senddislike 바꾸어야 할 듯 <- currentUser 완성 뒤 -->
           <div class="til-content">
-            {{ tilContent.content }}
+            {{ tilContent.tilContent }}
           </div>
         </div>
         <!-- 댓글창 -->
         <div class="til-comment">
           <h1 class="comments-title">Comments (3)</h1>
-          <CommentItem
-            v-for="comment in tilContent.comments"
-            :key="comment.pk"
-            :comment="comment"
-            :userId="tilContent.user_id"
-            :tilPk="tilContent.pk"
+          <CommentList
+            :comments="tilComments"
+            :userId="tilContent.userId"
+            :tilId="tilContent.tilId"
           />
           <input
             type="text"
@@ -227,7 +223,7 @@
 </template>
 
 <script>
-import CommentItem from "@/components/til/comment/CommentItem.vue";
+import CommentList from "@/components/til/comment/CommentList.vue";
 
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
@@ -236,7 +232,7 @@ import router from "@/router";
 export default {
   name: "TilDetail",
   components: {
-    CommentItem,
+    CommentList,
   },
   setup() {
     const store = useStore();
@@ -245,16 +241,19 @@ export default {
     const tilContent = computed(() => {
       return getters.value.getTilContent;
     });
+    const tilComments = computed(() => {
+      return getters.value.getComments;
+    });
     const commentContent = ref("");
 
     // 사용자가 글쓴이인지 아닌지 확인
     const isWriter = computed(() => {
-      return tilContent.value.user_id == store.getters.getLoginUserId;
+      return tilContent.value.userId == store.getters.getLoginUserId;
     });
 
     // Til 삭제
     const deleteTil = () => {
-      store.dispatch("removeTil", tilContent.value.pk);
+      store.dispatch("removeTil", tilContent.value.tilId);
       if (store.getters.getBooleanValue) {
         router.push({ name: "mainview" });
       }
@@ -262,18 +261,18 @@ export default {
 
     // 좋아요/좋아요 취소
     const sendLike = () => {
-      if (!tilContent.value.isLike) {
-        store.dispatch("likeTil", tilContent.value.pk);
+      if (!tilContent.value.like) {
+        store.dispatch("likeTil", tilContent.value.tilId);
       } else {
-        store.dispatch("dislikeTil", tilContent.value.pk);
+        store.dispatch("dislikeTil", tilContent.value.tilId);
       }
       store.commit("SET_TIL_LIKE");
     };
 
     const onSubmit = () => {
       const payload = {
-        tilPk: tilContent.value.pk,
-        content: commentContent,
+        tilPk: tilContent.value.tilId,
+        content: commentContent.value,
       };
       store.dispatch("createComment", payload);
     };
@@ -294,16 +293,17 @@ export default {
 
     // Comment 메소드
     const getComments = () => {
-      store.dispatch("fetchComments", tilContent.value.pk);
+      store.dispatch("fetchComments", tilContent.value.tilId);
     };
     getComments(); // 시작할 때 til 댓글 가져옴
 
-    console.log(tilContent.value.comments);
+    // console.log(tilContent.value.comments);
 
     return {
       isWriter,
       deleteTil,
       tilContent,
+      tilComments,
       commentContent,
       sendLike,
       onSubmit,

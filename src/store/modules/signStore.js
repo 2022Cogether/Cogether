@@ -128,10 +128,9 @@ export const signStore = {
         });
     },
 
-    fetchCurrentUser({ commit, getters }, userId) {
-      alert("fetchCurrentUser!" + userId);
-      if (getters.isLoggedIn) {
-        http
+    async fetchCurrentUser({ commit, getters }, userId) {
+      if (userId == getters.getLoginUserId) {
+        await http
           .get("user/info/" + userId, {
             headers: getters.authHeader,
           })
@@ -148,28 +147,27 @@ export const signStore = {
               commit("SET_LOGIN_USERID", "");
             }
           });
+      } else {
+        alert("현재 이 유저가 아닌 거 같습니다..");
       }
     },
 
-    fetchAnothertUser({ commit, getters }, userId) {
-      alert("fetchAnotherUser!" + userId);
-      if (getters.isLoggedIn) {
-        http
-          .get("user/info/" + userId, {
-            headers: getters.authHeader,
-          })
-          .then((res) => {
-            console.log("다른 유저 프로필");
-            console.log(res.data);
-            commit("SET_ANOTHER_USER", res.data);
-          })
-          .catch((err) => {
-            alert("다른 사용자 정보 불러오는 중 에러 발생");
-            console.log("다른 사용자 정보 저장 중 에러 발생");
-            commit("SET_BOOLEANVALUE");
-            console.error(err.response.data);
-          });
-      }
+    async fetchAnothertUser({ commit, getters }, userId) {
+      await http
+        .get("user/info/" + userId, {
+          headers: getters.authHeader,
+        })
+        .then((res) => {
+          console.log("다른 유저 프로필");
+          console.log(res.data);
+          commit("SET_ANOTHER_USER", res.data);
+        })
+        .catch((err) => {
+          alert("다른 사용자 정보 불러오는 중 에러 발생");
+          console.log("다른 사용자 정보 저장 중 에러 발생");
+          commit("SET_BOOLEANVALUE");
+          console.error(err.response.data);
+        });
     },
 
     // 비밀번호 검증
@@ -239,10 +237,10 @@ export const signStore = {
         .get("verify/nickname/" + nickName)
         .then(({ data }) => {
           if (!data) {
-            console.log("사용가능한 닉네임!");
+            alert("사용가능한 닉네임입니다");
             commit("SET_BOOLEANVALUE");
           } else {
-            console.log("중복된 닉네임!");
+            alert("중복된 닉네임입니다");
           }
         })
         .catch((e) => {
@@ -372,15 +370,34 @@ export const signStore = {
           console.error(err.response.data);
         });
     },
+
+    updateUserImage(context, formData) {
+      http
+        .put("user/info/profileimg/", formData, {
+          headers: {
+            ACCESS_TOKEN: localStorage.getItem("access_TOKEN"),
+            "Content-Type": "multipart/form-data",
+            // ...payload.getHeaders(),
+          },
+        })
+        .then(() => {
+          console.log("이미지 수정 성공");
+        })
+        .catch((err) => {
+          alert("회원 이미지 추가 에러입니다.");
+          console.error(err.response.data);
+        });
+    },
+
     // { REFRESH_TOKEN: localStorage.getItem("REFRESH_TOKEN") }
     // accessToken 재요청
-    async refreshToken({ dispatch }) {
+    async refreshToken({ dispatch, getters }) {
       // headers: { REFRESH_TOKEN: localStorage.getItem("refresh_TOKEN") }
       //accessToken 만료로 재발급 후 재요청시 비동기처리로는 제대로 처리가 안되서 promise로 처리함
       alert("promise 앞에서서"); // 2
       let promise = new Promise((resolve, reject) => {
         http
-          .post("sign/token", null, {
+          .post("sign/token" + getters.getLoginUserId, null, {
             // headers: getters.authHeader,
             headers: { REFRESH_TOKEN: localStorage.getItem("refresh_TOKEN") },
           })
@@ -395,6 +412,7 @@ export const signStore = {
               localStorage.getItem("refresh_TOKEN")
             );
 
+            console.log("res: ", res);
             dispatch("saveAccess", res.headers.access_token);
             localStorage.setItem("refresh_TOKEN", res.headers.refresh_token);
             console.log(

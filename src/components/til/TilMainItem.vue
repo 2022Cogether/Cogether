@@ -6,7 +6,7 @@
         <font-awesome-icon class="fs-3" icon="fa-solid fa-user" />
       </div>
       <div class="til-title" @click="setNum">
-        {{ til.title }}
+        {{ til.tilTitle }}
       </div>
       <div class="til-info">
         <span class="til-user">삐약이</span>
@@ -32,7 +32,7 @@
             class="dropdown-item"
             :to="{
               name: 'TilUpdate',
-              params: { tilPk: til.pk },
+              params: { tilPk: til.tilId },
             }"
             >내용 수정</router-link
           >
@@ -43,14 +43,14 @@
     <!-- 첨부 이미지 캐러셀 -->
     <div class="til-body">
       <div
-        :id="'carouselExampleIndicators' + til.pk"
+        :id="'carouselExampleIndicators' + til.tilId"
         class="carousel slide"
         data-bs-ride="false"
       >
         <div class="carousel-indicators">
           <button
             type="button"
-            :data-bs-target="'#carouselExampleIndicators' + til.pk"
+            :data-bs-target="'#carouselExampleIndicators' + til.tilId"
             data-bs-slide-to="0"
             class="active"
             aria-current="true"
@@ -58,13 +58,13 @@
           ></button>
           <button
             type="button"
-            :data-bs-target="'#carouselExampleIndicators' + til.pk"
+            :data-bs-target="'#carouselExampleIndicators' + til.tilId"
             data-bs-slide-to="1"
             aria-label="Slide 2"
           ></button>
           <button
             type="button"
-            :data-bs-target="'#carouselExampleIndicators' + til.pk"
+            :data-bs-target="'#carouselExampleIndicators' + til.tilId"
             data-bs-slide-to="2"
             aria-label="Slide 3"
           ></button>
@@ -83,7 +83,7 @@
         <button
           class="carousel-control-prev"
           type="button"
-          :data-bs-target="'#carouselExampleIndicators' + til.pk"
+          :data-bs-target="'#carouselExampleIndicators' + til.tilId"
           data-bs-slide="prev"
         >
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -92,7 +92,7 @@
         <button
           class="carousel-control-next"
           type="button"
-          :data-bs-target="'#carouselExampleIndicators' + til.pk"
+          :data-bs-target="'#carouselExampleIndicators' + til.tilId"
           data-bs-slide="next"
         >
           <span class="carousel-control-next-icon" aria-hidden="true"></span>
@@ -108,11 +108,11 @@
           <!-- 나중에 id에 til id 넣고 밑에 label 태그의 for랑 맞추면 개별 하트 효과 및 데이터 전송 가능 -->
           <input
             type="checkbox"
-            :id="'checkbox' + til.pk"
-            :checked="til.isLike"
+            :id="'checkbox' + til.tilId"
+            :checked="til.like"
             @click="sendLike"
           />
-          <label :for="'checkbox' + til.pk">
+          <label :for="'checkbox' + til.tilId">
             <svg
               id="heart-svg"
               viewBox="467 392 58 57"
@@ -193,7 +193,7 @@
         />
       </div> -->
       <div class="til-content">
-        {{ til.content }}
+        {{ til.tilContent }}
       </div>
     </div>
     <!-- 댓글 입력창 -->
@@ -223,13 +223,13 @@ export default {
 
     // 사용자가 글쓴이인지 아닌지 확인
     const isWriter = computed(() => {
-      return props.til.user_id == store.getters.getLoginUserId;
+      return props.til.userId == store.getters.getLoginUserId;
     });
 
     const commentContent = ref("");
 
     function setNum() {
-      const tilNum = props.til.pk;
+      const tilNum = props.til.tilId;
       store.dispatch("fetchOpenTil", {
         tilId: tilNum,
         userId: getters.value.getCurrentUser,
@@ -238,18 +238,18 @@ export default {
 
     // 좋아요/좋아요 취소
     const sendLike = () => {
-      if (!props.til.isLike) {
-        store.dispatch("likeTil", props.til.pk);
+      if (!props.til.like) {
+        store.dispatch("likeTil", props.til.tilId);
       } else {
-        store.dispatch("dislikeTil", props.til.pk);
+        store.dispatch("dislikeTil", props.til.tilId);
       }
       // props.til.isLike = !props.til.isLike;
-      store.commit("SET_TILLIST_LIKE", props.til.pk);
+      store.commit("SET_TILLIST_LIKE", props.til.tilId);
     };
 
     const onSubmit = () => {
       const payload = {
-        tilPk: props.til.pk,
+        tilPk: props.til.tilId,
         content: commentContent,
       };
       store.dispatch("createComment", payload);
