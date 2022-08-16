@@ -42,7 +42,6 @@ public class TilService {
         Til savedTil = tilRepository.save(til);
         if(multipartFiles.size() != 0){
             for (int i = 0; i < multipartFiles.size(); i++){
-                //TODO: 등록테스트 필요
                 MultipartFile file = multipartFiles.get(i);
                 String img_url = fileUploadService.uploadImage(file);
                 TilImg tilimg = TilImg.toEntity(savedTil, img_url);
@@ -204,6 +203,19 @@ public class TilService {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<Follow> userList = followRepository.findByFollowing(userId);
         List<TilResponse.TilAll> tilList = new ArrayList<>();
+        List<Til> myList = tilRepository.findAllByUser_Id(userId);
+        for (int i = 0; i < myList.size(); i++){
+            Til myTil = myList.get(i);
+            List<TilImg> myTilImgList = tilImgRepository.findAllByTil(myTil);
+            List<TilComment> myTilCommentList = tilCommentRepository.findAllByTil(myTil);
+            int likeCnt = tilLikeRepository.countAllByTil(myTil);
+            int check = tilLikeRepository.countAllByTilAndUser(myTil, user);
+            boolean isLike = false;
+            if(check == 1){
+                isLike = true;
+            }
+            tilList.add(TilResponse.TilAll.build(myTil, myTilImgList, myTilCommentList, likeCnt, isLike));
+        }
         for (int i = 0; i < userList.size(); i++){
             int userFollowingId = userList.get(i).getFromId();
             List<Til> tilFollowingList = tilRepository.findAllByUser_Id(userFollowingId);
