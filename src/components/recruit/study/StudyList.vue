@@ -114,8 +114,10 @@
             data-bs-dismiss="modal"
             aria-label="Close"
           >
-            <font-awesome-icon icon="fa-solid fa-comments" />
-            DM 보내기
+            <button type="button" class="btn" @click="sendDM">
+              <font-awesome-icon icon="fa-solid fa-comments" />
+              DM 보내기
+            </button>
           </button>
         </div>
       </div>
@@ -127,6 +129,7 @@
 import StudyItem from "@/components/recruit/study/StudyItem.vue";
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
+import router from "@/router";
 export default {
   name: "StudyList",
   props: ["searchText", "tabState"],
@@ -154,7 +157,14 @@ export default {
       emitStudy.value.start = data.start.substring(0, 10);
     }
 
-    return { store, getters, checkScrap, setModal, emitStudy };
+    async function sendDM() {
+      await store.dispatch("createChatRoom", emitStudy.value.userId);
+      store.dispatch("getChatRoomList", getters.value.getLoginUserId);
+      store.commit("SET_IS_CHAT_SHOW", !getters.value.getIsChatShow);
+      router.push({ name: "RecruitMain" });
+    }
+
+    return { store, getters, checkScrap, setModal, emitStudy, sendDM };
   },
   components: {
     StudyItem,

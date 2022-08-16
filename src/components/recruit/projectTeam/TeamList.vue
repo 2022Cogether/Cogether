@@ -114,8 +114,10 @@
             data-bs-dismiss="modal"
             aria-label="Close"
           >
-            <font-awesome-icon icon="fa-solid fa-comments" />
-            DM 보내기
+            <button type="button" class="btn" @click="sendDM">
+              <font-awesome-icon icon="fa-solid fa-comments" />
+              DM 보내기
+            </button>
           </button>
         </div>
       </div>
@@ -126,6 +128,7 @@
 <script>
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
+import router from "@/router";
 import TeamItem from "@/components/recruit/projectTeam/TeamItem.vue";
 export default {
   name: "TeamList",
@@ -154,7 +157,14 @@ export default {
       emitTeam.value.start = data.start.substring(0, 10);
     }
 
-    return { store, getters, checkScrap, emitTeam, setModal };
+    async function sendDM() {
+      await store.dispatch("createChatRoom", emitTeam.value.userId);
+      store.dispatch("getChatRoomList", getters.value.getLoginUserId);
+      store.commit("SET_IS_CHAT_SHOW", !getters.value.getIsChatShow);
+      router.push({ name: "RecruitMain" });
+    }
+
+    return { store, getters, checkScrap, emitTeam, setModal, sendDM };
   },
   components: {
     TeamItem,
@@ -259,6 +269,11 @@ export default {
 }
 
 .modal-footer > .btn {
+  background-color: #2a9d8f;
+  color: #fff;
+}
+
+.btn {
   background-color: #2a9d8f;
   color: #fff;
 }

@@ -7,8 +7,10 @@
     <!-- 채팅 열기 -->
     <div v-if="getters.getIsChatShow" class="chat-body">
       <!-- 채팅방 리스트 보이기 (톡방 들어가기 전) -->
-      <div v-if="getters.getChatUser == null" class="chat-content">
-        <chat-item v-for="(i, index) in 20" :key="index" />
+      <div v-if="getters.getChatRoom == null" class="chat-content">
+        <span v-for="(chatRoom, i) in getters.getRoomList" :key="i">
+          <chat-item :chatRoom="chatRoom" />
+        </span>
       </div>
       <!-- 톡방 들어간 후 -->
       <div v-else class="chat-content">
@@ -27,9 +29,13 @@ export default {
   setup() {
     const store = useStore();
     const getters = computed(() => store.getters);
-    function showChatList() {
+    async function showChatList() {
+      await store.dispatch("getChatRoomList", getters.value.getLoginUserId);
+      store.commit("SET_CHAT_USER_ID", null);
+      store.commit("SET_CHAT_ROOM", null);
       store.commit("SET_IS_CHAT_SHOW", !getters.value.getIsChatShow);
     }
+
     return { showChatList, store, getters };
   },
   components: {
@@ -79,7 +85,7 @@ export default {
 
 .chat-content {
   height: 100%;
-  widows: 100%;
+  width: 100%;
   overflow: auto;
 }
 
