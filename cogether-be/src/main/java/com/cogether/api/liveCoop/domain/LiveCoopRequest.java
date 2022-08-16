@@ -1,5 +1,6 @@
 package com.cogether.api.liveCoop.domain;
 
+import com.cogether.api.chat.domain.ChatRoom;
 import com.cogether.api.user.domain.User;
 import lombok.*;
 
@@ -18,7 +19,7 @@ public class LiveCoopRequest {
         private String content;
         private boolean inProgress;
 
-        public LiveCoop toEntity(User user) {
+        public LiveCoop toEntity(User user, ChatRoom chatRoom) {
             return LiveCoop.builder()
                     .user(user)
                     .memNum(maxMemNum)
@@ -27,6 +28,7 @@ public class LiveCoopRequest {
                     .title(title)
                     .content(content)
                     .inProgress(inProgress)
+                    .chatRoom(chatRoom)
                     .createdAt(LocalDateTime.now())
                     .build();
         }

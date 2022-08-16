@@ -146,4 +146,12 @@ public class ChatService {
         return ChatResponse.OnlyRoomId.build(chatRoom);
     }
 
+    public ChatRoom createLiveChatRoom(int userId) {
+        User loginUser = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        ChatRoom chatRoom = ChatRoom.toEntity(true);
+        ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
+        ChatMember chatMember = ChatMember.toEntity(savedChatRoom, loginUser);
+        chatMemRepository.save(chatMember);
+        return savedChatRoom;
+    }
 }
