@@ -52,10 +52,11 @@ export default {
 
     const state = reactive({
       //사용할 변수들 선언
-      title: tilContent.title,
-      content: tilContent.content,
-      imageUrls: [],
+      title: tilContent.tilTitle,
+      content: tilContent.tilContent,
+      multipartFiles: tilContent.imgUrl,
     });
+
     function exit() {
       Swal.fire({
         title: "나가시겠습니까?",
@@ -94,16 +95,43 @@ export default {
     function imgupload(e) {
       let imageFile = e.target.files; // 업로드한 파일의 데이터가 여기있음.
       console.log(imageFile);
-      let url = URL.createObjectURL(imageFile[0]); // 파일의 필요한 데이터만을 url 변수에 넣음
-      console.log(url); // 확인
-      this.state.imageUrls.push(url);
+      for (let i = 0; i < imageFile.length; i++) {
+        state.multipartFiles.push(imageFile[i]);
+      }
     }
     function modifyTil() {
-      //확인
-      console.log(state.title);
-      console.log(state.content);
-      console.log(state.imageUrls);
+      const formData = new FormData();
+
+      const data = {
+        content: tilContent.tilContent,
+        title: tilContent.tilTitle,
+        userId: store.getters.getLoginUserId,
+      };
+
+      formData.append(
+        "data",
+        new Blob([JSON.stringify(data)], {
+          type: "application/json",
+        })
+      );
+
+      // let fileArray = [];
+      for (let i = 0; i < state.multipartFiles.length; i++) {
+        // fileArray.push(state.multipartFiles[i]);
+        formData.append("image", state.multipartFiles[i]);
+      }
+
+      for (var key of formData.keys()) {
+        console.log(key);
+      }
+      for (var value of formData.values()) {
+        console.log(value);
+      }
       //함수 작동 내용
+      store.dispatch("updateTil", formData);
+      if (store.getters.getBooleanValue) {
+        router.go(-1);
+      }
     }
 
     return { exit, modifyTil, imgupload, tilContent, deleteTil, state };

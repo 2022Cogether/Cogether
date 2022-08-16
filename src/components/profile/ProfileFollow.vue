@@ -134,6 +134,7 @@ export default {
         name: "profile",
         params: { userId: userID },
       });
+      router.go();
     };
 
     return {

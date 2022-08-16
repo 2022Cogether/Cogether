@@ -3,24 +3,24 @@ import http from "@/api/http";
 export const followStore = {
   state: {
     myFollowingList: [
-      {
-        id: 3,
-        email: "wldusdl1023@naver.com1",
-      },
-      {
-        id: 4,
-        email: "wldusdl1023@naver.com11",
-      },
+      // {
+      //   id: 3,
+      //   email: "wldusdl1023@naver.com1",
+      // },
+      // {
+      //   id: 4,
+      //   email: "wldusdl1023@naver.com11",
+      // },
     ],
     myFollowerList: [
-      {
-        id: 3,
-        email: "wldusdl1023@naver.com1",
-      },
-      {
-        id: 4,
-        email: "wldusdl1023@naver.com11",
-      },
+      // {
+      //   id: 3,
+      //   email: "wldusdl1023@naver.com1",
+      // },
+      // {
+      //   id: 4,
+      //   email: "wldusdl1023@naver.com11",
+      // },
     ],
 
     followingNumber: 0,
@@ -119,8 +119,8 @@ export const followStore = {
     },
 
     // 팔로우 언팔로우
-    follow({ commit, getters }, payload) {
-      http
+    async follow({ commit, getters }, payload) {
+      await http
         .post("follow/", payload, {
           headers: getters.authHeader,
         })

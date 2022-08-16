@@ -7,6 +7,17 @@
         <img :src="imgUrl" alt="profile image" class="profile-img" />
       </div>
     </div>
+    <div class="d-flex justify-content-center">
+      <label class="file-label" for="imageFile">이미지 등록</label>
+      <input
+        @change="imgupload"
+        class="file"
+        id="imageFile"
+        type="file"
+        multiple
+        accept="image/*"
+      />
+    </div>
     <div class="row my-3">
       <div class="h5 col-3" style="display: inline-block; float: left">
         닉네임
@@ -252,26 +263,49 @@ export default {
     const store = useStore();
     const route = useRoute();
     const userId = route.params.userId;
+    const profileUser = ref({});
 
-    if (!store.getters.getCurrentUser) {
-      store.dispatch("fetchCurrentUser", store.getters.getLoginUserId);
-    }
-    const profileUser = store.getters.getCurrentUser;
+    const imgUrl = ref("");
+    const nickname = ref("");
+    const intro = ref("");
+    const gitUrl = ref("");
+    const tistoryUrl = ref("");
+    const velogUrl = ref("");
+    const notionUrl = ref("");
+    const etcUrl = ref("");
 
-    const imgUrl = ref(profileUser.imgUrl);
-    const nickname = ref(profileUser.nickname);
-    const intro = ref(profileUser.intro);
-    const gitUrl = ref(profileUser.gitUrl);
-    const tistoryUrl = ref(profileUser.tistoryUrl);
-    const velogUrl = ref(profileUser.velogUrl);
-    const notionUrl = ref(profileUser.notionUrl);
-    const etcUrl = ref(profileUser.etcUrl);
+    let originalSkillList = [];
+    const userLangSkills = ref([]);
 
-    if (!store.getters.getUserSkills) {
-      store.dispatch("takeUserSkillSet", store.getters.getLoginUserId);
-    }
-    const originalSkillList = store.getters.getUserSkills;
-    const userLangSkills = ref(store.getters.getUserSkills);
+    (async () => {
+      if (store.getters.getCurrentUser.id == undefined) {
+        await store.dispatch("fetchCurrentUser", store.getters.getLoginUserId);
+      }
+      const profileUser = computed(() => {
+        return store.getters.getCurrentUser;
+      });
+      console.log("프로필 값", profileUser.value);
+
+      imgUrl.value = profileUser.value.imgUrl;
+      nickname.value = profileUser.value.nickname;
+      intro.value = profileUser.value.intro;
+      gitUrl.value = profileUser.value.gitUrl;
+      tistoryUrl.value = profileUser.value.tistoryUrl;
+      velogUrl.value = profileUser.value.velogUrl;
+      notionUrl.value = profileUser.value.notionUrl;
+      etcUrl.value = profileUser.value.etcUrl;
+
+      if (!store.getters.getUserSkills[0]) {
+        await store.dispatch("takeUserSkillSet", store.getters.getLoginUserId);
+      }
+      const temp_list = computed(() => {
+        return store.getters.getUserSkills;
+      });
+      for (let i = 0; i < temp_list.value.length; i++) {
+        originalSkillList.push(temp_list.value[i]);
+      }
+      userLangSkills.value = temp_list.value;
+    })();
 
     // 모달 바깥을 클릭하면 모달을 닫게 하는 함수
     const closeModal = (event) => {
@@ -376,7 +410,7 @@ export default {
 
     // 닉네임 중복 체크
     const getters = computed(() => store.getters);
-    const isNickValid = ref(false);
+    const isNickValid = ref(true);
     const isNickChecked = ref(false);
     const checkNickValid = () => {
       isNickValid.value = getters.value.getNickPattern.test(nickname.value);
@@ -392,6 +426,12 @@ export default {
         }
       }
     };
+
+    // 이미지 넣기
+    let multipartFiles;
+    function imgupload(e) {
+      multipartFiles = e.target.files[0];
+    }
 
     const back = () => {
       router.go(-1);
@@ -413,33 +453,43 @@ export default {
       const minusSkills = originalSkillArray.filter((skill) => {
         return editUserSkills.indexOf(skill) == -1;
       });
+      console.log(plusSkills);
+      console.log(minusSkills);
 
       store.dispatch("plusUserSkillSet", {
-        email: profileUser.email,
+        email: profileUser.value.email,
         skills: plusSkills,
       });
       store.dispatch("minusUserSkillSet", {
-        email: profileUser.email,
+        email: profileUser.value.email,
         skills: minusSkills,
       });
 
       const payload = {
-        imgUrl: imgUrl.value,
+        img_url: imgUrl.value,
         nickname: nickname.value,
         intro: intro.value,
         // userLangSkills: userLangSkills.value,
-        gitUrl: gitUrl.value,
-        tistoryUrl: tistoryUrl.value,
-        velogUrl: velogUrl.value,
-        notionUrl: notionUrl.value,
-        etcUrl: etcUrl.value,
+        git_url: gitUrl.value,
+        tistory_url: tistoryUrl.value,
+        velog_url: velogUrl.value,
+        notion_url: notionUrl.value,
+        etc_url: etcUrl.value,
       };
+      console.log(payload);
+
+      const formData = new FormData();
+      formData.append("image", multipartFiles);
+      store.dispatch("updateUserImage", formData);
       store.dispatch("updateProfile", payload);
+      router.push({
+        name: "profile",
+        params: { userId: store.getters.getLoginUserId },
+      });
     };
 
     return {
       userId,
-      profileUser,
 
       imgUrl,
       nickname,
@@ -461,6 +511,10 @@ export default {
       isNickChecked,
       checkNickValid,
       certifyNickName,
+
+      // 이미지 넣기
+      multipartFiles,
+      imgupload,
 
       submitAutoComplete,
       result,
@@ -582,5 +636,20 @@ h4 {
   padding-left: 10px;
   border: 1px solid #dbdbdb;
   background-color: white;
+}
+
+/* 이미지 넣기 */
+.file-label {
+  margin-top: 30px;
+  background-color: #5b975b;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  width: 65%;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.file {
+  display: none;
 }
 </style>

@@ -35,8 +35,8 @@ export const skillStore = {
 
   actions: {
     // 유저 보유 스킬리스트 조회
-    takeUserSkillSet({ commit, getters }, userId) {
-      http
+    async takeUserSkillSet({ commit, getters }, userId) {
+      await http
         .get("skills/" + userId, {
           headers: getters.authHeader,
         })

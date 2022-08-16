@@ -38,12 +38,7 @@ export default {
     const isLoggedIn = getters.value.isLoggedIn;
 
     const onSubmit = () => {
-      const payload = {
-        keyword: searchWord.value,
-        userId: getters.value.getLoginUserId,
-      };
-      console.log(payload);
-      store.dispatch("searchTil", payload);
+      store.dispatch("searchTil", searchWord.value);
     };
 
     return {

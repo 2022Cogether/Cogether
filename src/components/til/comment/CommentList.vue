@@ -1,9 +1,11 @@
 <template>
   <div class="comment-list">
     <comment-item
-      v-for="comment in comments"
+      v-for="comment in props.comments"
+      :userId="props.userId"
+      :tilId="props.tilId"
       :comment="comment"
-      :key="comment.pk"
+      :key="comment.commentId"
     >
     </comment-item>
   </div>
@@ -17,7 +19,14 @@ export default {
   components: {
     CommentItem,
   },
-  props: { comments: Array },
+  props: {
+    comments: Array,
+    userId: Number,
+    tilId: Number,
+  },
+  setup(props) {
+    return { props };
+  },
 };
 </script>
 

@@ -5,7 +5,7 @@ export const tilStore = {
     openTil: -1, // 모달창으로 디테일이 열릴 til의 번호, -1이면 안 열린 상태!
     tilList: [
       {
-        pk: 10,
+        pk: 12,
         created_at: "2022-03-31",
         title: "til 마지막글",
         content:
@@ -106,29 +106,33 @@ export const tilStore = {
 
     // 피드 상세 조회
     fetchTil({ commit, getters }, credentials) {
-      http
-        .get("til/", {
-          params: credentials,
-          headers: getters.authHeader,
-        })
-        .then((res) => {
-          if (res.status === 200) {
-            commit("SET_TIL", res.data);
-          }
-        })
-        .catch((err) => {
-          console.error(err.response.data);
-        });
+      if (credentials.tilId != -1) {
+        http
+          .get("til/" + credentials.tilId, {
+            headers: getters.authHeader,
+          })
+          .then((res) => {
+            console.log(res.data);
+            console.log(res.status);
+            if (res.status === 200) {
+              commit("SET_TIL", res.data);
+            }
+          })
+          .catch((err) => {
+            console.error(err.response.data);
+          });
+      }
     },
 
-    fetchTilList({ commit, getters }, payload) {
-      http
-        .get("til/list/" + payload.userId, {
+    async fetchTilList({ commit, getters }) {
+      await http
+        .get("til/list/", {
           headers: getters.authHeader,
         })
         .then((res) => {
           if (res.status === 200) {
             console.log("전체 목록 새로 받아왔습니다!");
+            console.log("til 전체 목록", res.data);
             commit("SET_TIL_LIST", res.data);
           }
         })
@@ -136,9 +140,9 @@ export const tilStore = {
           console.error(err.response.data);
         });
     },
-    fetchMyTilList({ commit, getters }, payload) {
-      http
-        .get("til/list/my/" + payload.userId, {
+    async fetchMyTilList({ commit, getters }) {
+      await http
+        .get("til/list/my/", {
           headers: getters.authHeader,
         })
         .then((res) => {
@@ -147,6 +151,7 @@ export const tilStore = {
           if (res.status === 200) {
             console.log("개인 목록 새로 받아왔습니다!");
             commit("SET_TIL_LIST", res.data);
+            console.log(res.data);
           }
         })
         .catch((err) => {
@@ -166,11 +171,12 @@ export const tilStore = {
           headers: {
             ACCESS_TOKEN: localStorage.getItem("access_TOKEN"),
             "Content-Type": "multipart/form-data",
+            // ...payload.getHeaders(),
           },
         })
         .then((res) => {
           console.log("til 생성 response");
-          console.log(res);
+          console.log(res.data.id);
           commit("SET_BOOLEANVALUE");
           // commit("SET_OPEN_TIL", res.data.tilId);
 
@@ -188,10 +194,13 @@ export const tilStore = {
         });
     },
 
-    updateTil({ dispatch, getters, state }, payload) {
+    updateTil({ dispatch, state }, payload) {
       http
         .put("til/", payload, {
-          headers: getters.authHeader,
+          headers: {
+            ACCESS_TOKEN: localStorage.getItem("access_TOKEN"),
+            "Content-Type": "multipart/form-data",
+          },
         }) // payload: Til 데이터
         .then((res) => {
           const credentials = {
@@ -253,21 +262,19 @@ export const tilStore = {
         .catch((err) => console.error(err.response));
     },
 
-    searchTil({ commit, getters }, payload) {
+    searchTil({ commit, getters }, keyword) {
       // paylod => keyword, userId
       http
-        .get("til/search", {
-          params: payload,
+        .get("til/search/" + keyword, {
           headers: getters.authHeader,
         })
         .then((res) => commit("SET_TIL_LIST", res.data))
         .catch((err) => console.error(err.response));
     },
-    searchMyTil({ commit, getters }, payload) {
+    searchMyTil({ commit, getters }, keyword) {
       // paylod => keyword, userId
       http
-        .get("til/search/my", {
-          params: payload,
+        .get("til/search/my/" + keyword, {
           headers: getters.authHeader,
         })
         .then((res) => commit("SET_TIL_LIST", res.data))
