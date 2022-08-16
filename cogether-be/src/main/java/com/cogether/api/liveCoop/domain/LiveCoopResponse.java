@@ -35,6 +35,7 @@ public class LiveCoopResponse {
         private int duration;
         private String title;
         private String content;
+        private int chatRoomId;
         private boolean inProgress;
 
         public static GetLiveCoop build(LiveCoop liveCoop) {
@@ -48,6 +49,7 @@ public class LiveCoopResponse {
                     .duration(liveCoop.getDuration())
                     .title(liveCoop.getTitle())
                     .content(liveCoop.getContent())
+                    .chatRoomId(liveCoop.getChatRoom().getId())
                     .inProgress(liveCoop.isInProgress())
                     .build();
         }
