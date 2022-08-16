@@ -27,7 +27,7 @@
             <img
               src="@/assets/register_button.png"
               alt="회원가입"
-              style="max-width: 5vw; margin-bottom: 1vh"
+              style="max-width: 6vw; margin-bottom: 1vh"
           /></router-link>
         </div>
       </div>

@@ -39,7 +39,7 @@
             <img
               src="@/assets/register_button.png"
               alt="회원가입"
-              style="max-width: 5vw; margin-bottom: 1vh"
+              style="max-width: 6vw; margin-bottom: 1vh"
           /></router-link>
         </div>
       </div>
@@ -51,8 +51,11 @@
         </div>
         <div>
           <router-link class="link" :to="{ name: 'PassWordSeek' }">
-            비밀번호 찾기
-          </router-link>
+            <img
+              src="@/assets/password_seek_button.png"
+              alt="비밀번호 찾기"
+              style="max-width: 6vw; margin-bottom: 1vh"
+          /></router-link>
         </div>
       </div>
     </div>

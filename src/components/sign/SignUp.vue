@@ -193,7 +193,12 @@
             </div>
           </div>
           <div class="mt-2 d-flex justify-content-between">
-            <button class="submit" @click="changePage">Prev</button>
+            <img
+              @click="changePage"
+              src="@/assets/prev_button.png"
+              alt="이전"
+              style="max-width: 7vw; cursor: pointer"
+            />
             <img
               @click="goRegister"
               src="@/assets/register_button.png"
@@ -214,7 +219,7 @@
             <img
               src="@/assets/login_button.png"
               alt="로그인"
-              style="max-width: 5vw; margin-bottom: 1vh"
+              style="max-width: 6vw; margin-bottom: 1vh"
           /></router-link>
         </div>
       </div>
