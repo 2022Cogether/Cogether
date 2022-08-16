@@ -1,5 +1,6 @@
 package com.cogether.api.liveCoop.domain;
 
+import com.cogether.api.chat.domain.ChatRoom;
 import com.cogether.api.user.domain.User;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,6 +24,10 @@ public class LiveCoop {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id")
+    private ChatRoom chatRoom;
 
     @Column(name = "mem_num", nullable = false)
     private int memNum;
