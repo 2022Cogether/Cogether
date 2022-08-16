@@ -18,8 +18,8 @@ public class LiveCoopController {
 
     @PostMapping("/livecoop")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<LiveCoopResponse.OnlyLiveCoopId> createLiveCoop(@RequestBody LiveCoopRequest.CreateLiveCoop request) {
-        LiveCoopResponse.OnlyLiveCoopId response = liveCoopService.createLiveCoop(request);
+    public ResponseEntity<LiveCoopResponse.OnlyLiveCoopChatRoomId> createLiveCoop(@RequestBody LiveCoopRequest.CreateLiveCoop request) {
+        LiveCoopResponse.OnlyLiveCoopChatRoomId response = liveCoopService.createLiveCoop(request);
         return ResponseEntity.ok().body(response);
     }
 
@@ -51,8 +51,8 @@ public class LiveCoopController {
 
     @PostMapping("/livecoop/member")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<LiveCoopResponse.OnlyLiveCoopMemberId> createLiveCoopMember(@RequestBody LiveCoopRequest.CreateLiveCoopMember request) {
-        LiveCoopResponse.OnlyLiveCoopMemberId response = liveCoopService.createLiveCoopMember(request);
+    public ResponseEntity<LiveCoopResponse.OnlyLiveCoopChatRoomId> createLiveCoopMember(@RequestBody LiveCoopRequest.CreateLiveCoopMember request) {
+        LiveCoopResponse.OnlyLiveCoopChatRoomId response = liveCoopService.createLiveCoopMember(request);
         return ResponseEntity.ok().body(response);
     }
 
