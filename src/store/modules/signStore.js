@@ -1,4 +1,17 @@
 import http from "@/api/http";
+import Swal from "sweetalert2";
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: "bottom-end",
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener("mouseenter", Swal.stopTimer);
+    toast.addEventListener("mouseleave", Swal.resumeTimer);
+  },
+});
 
 export const signStore = {
   state: {
@@ -102,7 +115,10 @@ export const signStore = {
           commit("SET_BOOLEANVALUE");
         })
         .catch((err) => {
-          alert("로그인 에러!");
+          Toast.fire({
+            icon: "warning",
+            title: "잘못된 정보를 입력하셨습니다.",
+          });
           console.error(err.response.data);
         });
     },
@@ -139,7 +155,6 @@ export const signStore = {
             commit("SET_CURRENT_USER", res.data);
           })
           .catch((err) => {
-            alert("현 사용자 정보 저장 중 에러 발생");
             console.log("현 사용자 정보 저장 중 에러 발생");
             console.error(err.response.data);
             if (err.response.status === 401) {
@@ -148,7 +163,7 @@ export const signStore = {
             }
           });
       } else {
-        alert("현재 이 유저가 아닌 거 같습니다..");
+        console.log("현재 이 유저가 아닌 거 같습니다..");
       }
     },
 
@@ -163,7 +178,6 @@ export const signStore = {
           commit("SET_ANOTHER_USER", res.data);
         })
         .catch((err) => {
-          alert("다른 사용자 정보 불러오는 중 에러 발생");
           console.log("다른 사용자 정보 저장 중 에러 발생");
           commit("SET_BOOLEANVALUE");
           console.error(err.response.data);
@@ -184,7 +198,10 @@ export const signStore = {
           console.log("비밀번호 검증 성공");
         })
         .catch((err) => {
-          alert("비밀번호 검증 실패");
+          Toast.fire({
+            icon: "warning",
+            title: "비밀번호가 잘못되었습니다.",
+          });
           console.error(err.response.data);
         });
     },
@@ -200,11 +217,17 @@ export const signStore = {
           }
         )
         .then(() => {
-          alert("임시 비밀번호를 발급했습니다, 로그인해 주세요!");
+          Toast.fire({
+            icon: "success",
+            title: "임시 비밀번호를 발급했습니다, 로그인해 주세요!",
+          });
           commit("SET_BOOLEANVALUE");
         })
         .catch((err) => {
-          alert("에러로 임시 비밀번호를 보내지 못했습니다!");
+          Toast.fire({
+            icon: "error",
+            title: "에러로 임시 비밀번호를 보내지 못했습니다!",
+          });
           console.error(err.response.data);
         });
     },
@@ -223,10 +246,16 @@ export const signStore = {
           }
         )
         .then(() => {
-          alert("비밀번호를 변경했습니다!");
+          Toast.fire({
+            icon: "success",
+            title: "비밀번호를 변경했습니다!",
+          });
         })
         .catch((err) => {
-          alert("비밀번호 변경 에러입니다.");
+          Toast.fire({
+            icon: "error",
+            title: "비밀번호 변경 에러입니다.",
+          });
           console.error(err.response.data);
         });
     },
@@ -237,10 +266,16 @@ export const signStore = {
         .get("verify/nickname/" + nickName)
         .then(({ data }) => {
           if (!data) {
-            alert("사용가능한 닉네임입니다");
+            Toast.fire({
+              icon: "success",
+              title: "사용가능한 닉네임입니다.",
+            });
             commit("SET_BOOLEANVALUE");
           } else {
-            alert("중복된 닉네임입니다");
+            Toast.fire({
+              icon: "warning",
+              title: "중복된 닉네임입니다.",
+            });
           }
         })
         .catch((e) => {
@@ -258,12 +293,18 @@ export const signStore = {
             console.log("사용가능한 이메일!");
             commit("SET_BOOLEANVALUE");
           } else {
-            alert("이미 가입된 이메일입니다!");
+            Toast.fire({
+              icon: "warning",
+              title: "이미 가입된 이메일입니다!",
+            });
             console.log("중복된 이메일!");
           }
         })
         .catch((e) => {
-          alert("이메일 체크에 실패하였습니다!");
+          Toast.fire({
+            icon: "warning",
+            title: "이메일 체크에 실패하였습니다!",
+          });
           console.log("이메일 중복 체크 에러: " + e);
         });
     },
@@ -285,7 +326,10 @@ export const signStore = {
           commit("SET_BOOLEANVALUE");
         })
         .catch((e) => {
-          alert("인증 코드를 보내지 못했습니다!");
+          Toast.fire({
+            icon: "warning",
+            title: "인증 코드를 보내지 못했습니다!",
+          });
           console.log("인증 번호 전송 에러: " + e);
         });
     },
@@ -316,17 +360,26 @@ export const signStore = {
             localStorage.removeItem("access_TOKEN");
             localStorage.removeItem("refresh_TOKEN");
             localStorage.removeItem("userId");
-            alert("성공적으로 logout!");
+            Toast.fire({
+              icon: "success",
+              title: "로그아웃 하셨습니다.",
+            });
             commit("SET_CURRENT_USER", {});
             commit("SET_TOKEN", "");
             commit("SET_LOGIN_USERID", "");
             commit("SET_BOOLEANVALUE");
           } else {
-            alert("인증 실패로 logout 실패!");
+            Toast.fire({
+              icon: "error",
+              title: "로그아웃에 실패했습니다.",
+            });
           }
         })
         .catch((err) => {
-          alert("실패적으로 logout!");
+          Toast.fire({
+            icon: "error",
+            title: "로그아웃에 실패했습니다.",
+          });
           console.error(err.response);
         });
     },
@@ -338,7 +391,10 @@ export const signStore = {
         })
         .then((res) => {
           if (res.data.status === 200) {
-            alert("회원 탈퇴되었습니다!");
+            Toast.fire({
+              icon: "success",
+              title: "회원 탈퇴되었습니다.",
+            });
             localStorage.removeItem("access_TOKEN");
             localStorage.removeItem("refresh_TOKEN");
             localStorage.removeItem("userId");
@@ -347,11 +403,14 @@ export const signStore = {
             commit("SET_LOGIN_USERID", "");
             commit("SET_BOOLEANVALUE");
           } else {
-            alert("200이 아닌 다른 값이 반환되었습니다");
+            console.log("200이 아닌 다른 값이 반환되었습니다");
           }
         })
         .catch((err) => {
-          alert("회원 탈퇴 에러입니다.");
+          Toast.fire({
+            icon: "error",
+            title: "회원 탈퇴 에러입니다.",
+          });
           console.error(err.response.data);
         });
     },
@@ -366,7 +425,10 @@ export const signStore = {
           dispatch("fetchCurrentUser", state.loginUserId);
         })
         .catch((err) => {
-          alert("회원 정보 수정 에러입니다.");
+          Toast.fire({
+            icon: "error",
+            title: "회원 정보 수정 에러입니다.",
+          });
           console.error(err.response.data);
         });
     },
@@ -384,7 +446,7 @@ export const signStore = {
           console.log("이미지 수정 성공");
         })
         .catch((err) => {
-          alert("회원 이미지 추가 에러입니다.");
+          console.log("회원 이미지 추가 에러입니다.");
           console.error(err.response.data);
         });
     },

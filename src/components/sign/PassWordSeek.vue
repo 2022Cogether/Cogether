@@ -39,6 +39,7 @@
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import router from "@/router";
+import Swal from "sweetalert2";
 
 export default {
   name: "PassWordSeek",
@@ -59,7 +60,21 @@ export default {
           router.push({ name: "SignIn" });
         }
       } else {
-        alert("올바른 형식의 이메일을 입력해주세요!");
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "bottom-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener("mouseenter", Swal.stopTimer);
+            toast.addEventListener("mouseleave", Swal.resumeTimer);
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: "올바른 형식의 이메일을 입력해주세요.",
+        });
       }
     }
 

@@ -343,7 +343,10 @@ export default {
           (element) => element !== val
         );
       } else {
-        alert("입력되지 않은 스킬입니다!");
+        Toast.fire({
+          icon: "warning",
+          title: "입력되지 않은 스킬입니다.",
+        });
       }
     };
 

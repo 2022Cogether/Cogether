@@ -32,7 +32,7 @@ export default {
 }
 
 .main-area {
-  padding-top: 7vh;
+  padding-top: 12vh;
 }
 
 .left,

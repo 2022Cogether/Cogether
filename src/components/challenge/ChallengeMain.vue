@@ -176,6 +176,9 @@ export default {
   }
 }
 
+.tab1 {
+  background-color: red;
+}
 button {
   background-color: transparent;
 }

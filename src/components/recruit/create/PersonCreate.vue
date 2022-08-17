@@ -41,7 +41,7 @@ export default {
         text: "작성 중인 글은 저장되지 않습니다.",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#2a9d8f",
         cancelButtonColor: "#d33",
         confirmButtonText: "확인",
         cancelButtonText: "취소",
