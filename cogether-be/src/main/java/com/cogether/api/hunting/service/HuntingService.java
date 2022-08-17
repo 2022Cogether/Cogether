@@ -34,6 +34,8 @@ public class HuntingService {
         User user = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
         Hunting hunting = request.toEntity(user);
         Hunting savedHunting = huntingRepository.save(hunting);
+        user.setExp(user.getExp() + 5);
+        userRepository.save(user);
         return HuntingResponse.OnlyHuntingId.build(savedHunting);
     }
 
