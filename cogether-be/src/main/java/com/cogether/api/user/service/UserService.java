@@ -21,10 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * 1.로그인
@@ -67,46 +64,32 @@ public class UserService {
     public TokenResponse signUp(UserRequest userRequest) {
 
         //user 테이블 레코드 저장
-        User user =
-                userRepository.save(
-                        User.builder()
-                                .password(passwordEncoder.encode(userRequest.getPassword()))  // 사용자 비밀번호 암호화해서 DB에 저장
-                                .email(userRequest.getEmail())      //사용자 이메일
-                                .nickname(userRequest.getNickname())//사용자 닉네임
-                                .createdAt(LocalDateTime.now()) // 가입날자
-                                .resign(false)  // 탈퇴 여부
-                                .comp(false) // 경쟁모드 참가여부
-                                .admin(false)
-                                .etcUrl(userRequest.getEtc_url())   //기타 사이트
-                                .gitUrl(userRequest.getGit_url())   //깃 url
-                                .notionUrl((userRequest.getNotion_url()))   //노션url
-                                .exp(0) // 경험치
-                                .imgUrl(userRequest.getImg_url())   // 프로필
-                                .intro(userRequest.getIntro())// 한줄소개
-                                .verified(true)    // 이메일 인증여부
-                                .imgUrl("https://cogethera801.s3.ap-northeast-2.amazonaws.com/%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84.png")
-                                .build());
+        User user = userRepository.save(User.builder().password(passwordEncoder.encode(userRequest.getPassword()))  // 사용자 비밀번호 암호화해서 DB에 저장
+                .email(userRequest.getEmail())      //사용자 이메일
+                .nickname(userRequest.getNickname())//사용자 닉네임
+                .createdAt(LocalDateTime.now()) // 가입날자
+                .resign(false)  // 탈퇴 여부
+                .comp(false) // 경쟁모드 참가여부
+                .admin(false).etcUrl(userRequest.getEtc_url())   //기타 사이트
+                .gitUrl(userRequest.getGit_url())   //깃 url
+                .notionUrl((userRequest.getNotion_url()))   //노션url
+                .exp(0) // 경험치
+                .imgUrl(userRequest.getImg_url())   // 프로필
+                .intro(userRequest.getIntro())// 한줄소개
+                .verified(true)    // 이메일 인증여부
+                .imgUrl("https://cogethera801.s3.ap-northeast-2.amazonaws.com/%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84.png").build());
 
         List<String> skills = userRequest.getSkills();
 
         System.out.println(skills.isEmpty());
         if (!skills.isEmpty()) {
             for (String skill : skills) {
-                userSkillRepository.save(UserSkill.builder()
-                        .skillId(skill)
-                        .user(user)
-                        .build());
+                userSkillRepository.save(UserSkill.builder().skillId(skill).user(user).build());
             }
         }
 
 
-        rankingRepository.save(Ranking.builder()
-                .user(user)
-                .tilCnt(0)
-                .week(0)
-                .month(0)
-                .total(0)
-                .build());
+        rankingRepository.save(Ranking.builder().user(user).tilCnt(0).week(0).month(0).total(0).build());
 
         String accessToken = tokenUtils.generateJwtToken(user);
         String refreshToken = tokenUtils.saveRefreshToken(user);
@@ -122,13 +105,8 @@ public class UserService {
     @Transactional
     public TokenResponse signIn(UserRequest userRequest) throws Exception {
 
-        User user =
-                userRepository
-                        .findByEmail(userRequest.getEmail())
-                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        Optional<Auth> authEntity =
-                authRepository
-                        .findByUserId(user.getId());
+        User user = userRepository.findByEmail(userRequest.getEmail()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        Optional<Auth> authEntity = authRepository.findByUserId(user.getId());
 
 //        Auth auth =
 //                authRepository
@@ -172,11 +150,7 @@ public class UserService {
             //리프레시토큰 검증
             if (tokenUtils.isValidRefreshToken(refreshToken)) {
                 accessToken = tokenUtils.generateJwtToken(auth.getUser());
-                return TokenResponse.builder()
-                        .ACCESS_TOKEN(accessToken)
-                        .REFRESH_TOKEN(refreshToken)
-                        .userId(user.getId())
-                        .build();
+                return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).userId(user.getId()).build();
             } else {
                 accessToken = tokenUtils.generateJwtToken(auth.getUser());
                 refreshToken = tokenUtils.saveRefreshToken(user);
@@ -200,44 +174,28 @@ public class UserService {
      * @throws Exception
      */
     @Transactional
-    public TokenResponse reissuanceAccessToken(String token,int id) throws Exception {
+    public TokenResponse reissuanceAccessToken(String token, int id) throws Exception {
 
-       User user= userRepository
-                .findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        Auth auth =
-                authRepository
-                        .findByUserId(user.getId()).orElseThrow(() -> new IllegalArgumentException("Token 이 존재하지 않습니다."));
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        Auth auth = authRepository.findByUserId(user.getId()).orElseThrow(() -> new IllegalArgumentException("Token 이 존재하지 않습니다."));
 
 
-        String accessToken ;
-        String refreshToken =token;
+        String accessToken;
+        String refreshToken = token;
 
 
         if (tokenUtils.isValidRefreshToken(token) && token.equals(auth.getRefreshToken())) {
-                accessToken = tokenUtils.generateJwtToken(user);
-                return TokenResponse.builder()
-                        .ACCESS_TOKEN(accessToken)
-                        .REFRESH_TOKEN(refreshToken)
-                        .userId(user.getId())
-                        .build();
-            } else {
-                accessToken = tokenUtils.generateJwtToken(user);
-                refreshToken = tokenUtils.saveRefreshToken(user);
+            accessToken = tokenUtils.generateJwtToken(user);
+            return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).userId(user.getId()).build();
+        } else {
+            accessToken = tokenUtils.generateJwtToken(user);
+            refreshToken = tokenUtils.saveRefreshToken(user);
 
-                auth.refreshUpdate(refreshToken);
-                authRepository.save(auth);
+            auth.refreshUpdate(refreshToken);
+            authRepository.save(auth);
 
-                return TokenResponse.builder()
-                        .ACCESS_TOKEN(accessToken)
-                        .REFRESH_TOKEN(refreshToken)
-                        .userId(user.getId())
-                        .build();
-            }
-
-
-
-
+            return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).userId(user.getId()).build();
+        }
 
 
 //        int id = tokenUtils.getUserIdFromRefreshToken(token);
@@ -305,11 +263,9 @@ public class UserService {
 
         int userId = tokenUtils.getUserIdFromToken(token);
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        Auth auth = authRepository.findByUserId(user.getId()).
-                orElseThrow(() -> new IllegalArgumentException("Token 이 존재하지 않습니다."));
+        Auth auth = authRepository.findByUserId(user.getId()).orElseThrow(() -> new IllegalArgumentException("Token 이 존재하지 않습니다."));
 
         authRepository.delete(auth);
 
@@ -324,16 +280,13 @@ public class UserService {
      * 이메일 중복확인
      */
     public boolean verifyDuplicationOfEmail(String email) {
-        Optional<User> user =
-                userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByEmail(email);
 
         System.out.println(email);
         System.out.println(user.isPresent());
 
-        if (user.isPresent())
-            return true;        // 중복확인
-        else
-            return false;       // 중복없음
+        if (user.isPresent()) return true;        // 중복확인
+        else return false;       // 중복없음
 
     }
 
@@ -341,15 +294,12 @@ public class UserService {
      * 닉네임 중복확인
      */
     public boolean verifyDuplicationOfNickName(String nickname) {
-        Optional<User> user =
-                userRepository.findByNickname(nickname);
+        Optional<User> user = userRepository.findByNickname(nickname);
 
         System.out.println(nickname);
         System.out.println(user.isPresent());
-        if (user.isPresent())
-            return true;        // 중복확인
-        else
-            return false;       // 중복없음
+        if (user.isPresent()) return true;        // 중복확인
+        else return false;       // 중복없음
     }
 
     /**
@@ -360,8 +310,7 @@ public class UserService {
 
         int userId = tokenUtils.getUserIdFromToken(token);
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         Optional<UserSkill> userSkill = userSkillRepository.findById(userId);
 
@@ -405,8 +354,7 @@ public class UserService {
     public User findUserInfo(int userId) throws Exception {
 
 
-        User user = userRepository
-                .findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
 
         return user;
@@ -421,8 +369,7 @@ public class UserService {
         System.out.println(id + " : " + password);
         String encodingPassword = passwordEncoder.encode(password);
 
-        User user = userRepository
-                .findById(userRequest.getId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        User user = userRepository.findById(userRequest.getId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         user.setPassword(encodingPassword);
 
@@ -438,8 +385,7 @@ public class UserService {
 
         int userId = tokenUtils.getUserIdFromToken(token);
 
-        User user = userRepository
-                .findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         user.setResign(true);
 
@@ -453,18 +399,15 @@ public class UserService {
      */
 
     @Transactional
-    public Map<String,Integer> uploadProfileImg(String token, MultipartFile multipartFile)
-    {
-        Map<String, Integer> body= new HashMap<>();
+    public Map<String, Integer> uploadProfileImg(String token, MultipartFile multipartFile) {
+        Map<String, Integer> body = new HashMap<>();
 
-        int id =tokenUtils.getUserIdFromToken(token);
+        int id = tokenUtils.getUserIdFromToken(token);
 
-        User user =userRepository
-                .findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
 
-        if(!multipartFile.isEmpty())
-        {
+        if (!multipartFile.isEmpty()) {
             String img_url = fileUploadService.uploadImage(multipartFile);
             user.setImgUrl(img_url);
             userRepository.save(user);
@@ -473,37 +416,76 @@ public class UserService {
         return body;
     }
 
-    public Map<String, Boolean> verifyPassword(UserRequest userRequest,String token)
-    {
+    public Map<String, Boolean> verifyPassword(UserRequest userRequest, String token) {
 
-        int id =tokenUtils.getUserIdFromToken(token);
+        int id = tokenUtils.getUserIdFromToken(token);
 
-        User user =userRepository
-                .findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         String verifiedPassword = passwordEncoder.encode(userRequest.getPassword());
 
         System.out.println(verifiedPassword);
         System.out.println(user.getPassword());
 
-        if(passwordEncoder.matches(userRequest.getPassword(),user.getPassword()))
-        {
-            Map<String, Boolean> body= new HashMap<>();
-            body.put("verified",true);
+        if (passwordEncoder.matches(userRequest.getPassword(), user.getPassword())) {
+            Map<String, Boolean> body = new HashMap<>();
+            body.put("verified", true);
 
 
             return body;
-        }
-        else
-        {
-            Map<String, Boolean> body= new HashMap<>();
-            body.put("verified",false);
+        } else {
+            Map<String, Boolean> body = new HashMap<>();
+            body.put("verified", false);
             return body;
         }
 
     }
 
+    public List<Map<String, Object>> findNickName(String word) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("%").append(word).append("%");
 
+        List<User> nickNameList = userRepository.findAllByNicknameIsLike(sb.toString());
+
+        List<Map<String, Object>> body = new ArrayList<>();
+
+        if (!nickNameList.isEmpty()) {
+            for (User u : nickNameList) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("id", u.getId());
+                map.put("email", u.getEmail());
+                map.put("nickName", u.getNickname());
+
+                body.add(map);
+            }
+        }
+
+        return body;
+
+    }
+
+    public List<Map<String, Object>> findEmail(String word) {
+        StringBuilder sb = new StringBuilder();
+        System.out.println();
+        sb.append("%").append(word).append("%");
+
+        List<User> emailList = userRepository.findAllByEmailIsLike(sb.toString());
+
+        List<Map<String, Object>> body = new ArrayList<>();
+
+        if (!emailList.isEmpty()) {
+            for (User u : emailList) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("id", u.getId());
+                map.put("nickName", u.getEmail());
+
+                body.add(map);
+            }
+        }
+
+        return body;
+
+    }
 
 
 }
