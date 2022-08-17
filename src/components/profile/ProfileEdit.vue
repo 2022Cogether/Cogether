@@ -480,6 +480,12 @@ export default {
 
       const formData = new FormData();
       formData.append("image", multipartFiles);
+      for (var key of formData.keys()) {
+        console.log(key);
+      }
+      for (var value of formData.values()) {
+        console.log(value);
+      }
       store.dispatch("updateUserImage", formData);
       store.dispatch("updateProfile", payload);
       router.push({

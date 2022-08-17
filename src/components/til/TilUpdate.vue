@@ -22,18 +22,6 @@
       v-model="state.content"
       class="coop-content form-control"
     ></textarea>
-
-    <div class="d-flex justify-content-center">
-      <label class="file-label" for="imageFile">이미지 등록</label>
-      <input
-        @change="imgupload"
-        class="file"
-        id="imageFile"
-        type="file"
-        multiple
-        accept="image/*"
-      />
-    </div>
   </div>
 </template>
 
@@ -54,7 +42,7 @@ export default {
       //사용할 변수들 선언
       title: tilContent.tilTitle,
       content: tilContent.tilContent,
-      multipartFiles: tilContent.imgUrl,
+      multipartFiles: [],
     });
 
     function exit() {
@@ -92,49 +80,21 @@ export default {
       });
     }
 
-    function imgupload(e) {
-      let imageFile = e.target.files; // 업로드한 파일의 데이터가 여기있음.
-      console.log(imageFile);
-      for (let i = 0; i < imageFile.length; i++) {
-        state.multipartFiles.push(imageFile[i]);
-      }
-    }
     function modifyTil() {
-      const formData = new FormData();
-
       const data = {
-        content: tilContent.tilContent,
-        title: tilContent.tilTitle,
-        userId: store.getters.getLoginUserId,
+        content: state.content,
+        title: state.title,
+        tilId: store.getters.getOpenTil,
       };
+      console.log(data);
 
-      formData.append(
-        "data",
-        new Blob([JSON.stringify(data)], {
-          type: "application/json",
-        })
-      );
-
-      // let fileArray = [];
-      for (let i = 0; i < state.multipartFiles.length; i++) {
-        // fileArray.push(state.multipartFiles[i]);
-        formData.append("image", state.multipartFiles[i]);
-      }
-
-      for (var key of formData.keys()) {
-        console.log(key);
-      }
-      for (var value of formData.values()) {
-        console.log(value);
-      }
       //함수 작동 내용
-      store.dispatch("updateTil", formData);
-      if (store.getters.getBooleanValue) {
-        router.go(-1);
-      }
+      store.dispatch("updateTil", data);
+      router.go();
+      router.go(-1);
     }
 
-    return { exit, modifyTil, imgupload, tilContent, deleteTil, state };
+    return { exit, modifyTil, tilContent, deleteTil, state };
   },
   components: {},
 };

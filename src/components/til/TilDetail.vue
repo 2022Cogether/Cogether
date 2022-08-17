@@ -53,30 +53,14 @@
           >
             <div class="carousel-indicators">
               <button
+                v-for="(image, i) in tilContent.imgUrl"
+                :key="i"
                 type="button"
                 :data-bs-target="
                   '#carouselExampleIndicatorsForDetail' + tilContent.tilId
                 "
-                data-bs-slide-to="0"
-                class="active"
-                aria-current="true"
-                aria-label="Slide 1"
-              ></button>
-              <button
-                type="button"
-                :data-bs-target="
-                  '#carouselExampleIndicatorsForDetail' + tilContent.tilId
-                "
-                data-bs-slide-to="1"
-                aria-label="Slide 2"
-              ></button>
-              <button
-                type="button"
-                :data-bs-target="
-                  '#carouselExampleIndicatorsForDetail' + tilContent.tilId
-                "
-                data-bs-slide-to="2"
-                aria-label="Slide 3"
+                :data-bs-slide-to="i"
+                :class="[i == 0 ? 'active' : '']"
               ></button>
             </div>
             <div
@@ -127,7 +111,8 @@
               <input
                 type="checkbox"
                 id="checkbox"
-                :checked="tilContent.like"
+                ref="checkbox"
+                :checked.prop="isLike"
                 @click="sendLike"
               />
               <label for="checkbox">
@@ -204,9 +189,9 @@
         </div>
         <!-- 댓글창 -->
         <div class="til-comment">
-          <h1 class="comments-title">Comments (3)</h1>
+          <h1 class="comments-title">Comments ({{ commentList.length }})</h1>
           <CommentList
-            :comments="tilComments"
+            :comments="commentList"
             :userId="tilContent.userId"
             :tilId="tilContent.tilId"
           />
@@ -238,77 +223,89 @@ export default {
     const store = useStore();
     const getters = computed(() => store.getters);
 
-    const tilContent = computed(() => {
-      return getters.value.getTilContent;
-    });
-    const tilComments = computed(() => {
-      return getters.value.getComments;
-    });
+    const tilContent = ref({});
+    const commentList = ref([]);
     const commentContent = ref("");
+    const isLike = ref(true);
 
     // 사용자가 글쓴이인지 아닌지 확인
-    const isWriter = computed(() => {
-      return tilContent.value.userId == store.getters.getLoginUserId;
-    });
+    let isWriter;
+
+    (async () => {
+      const credentials = {
+        tilId: store.getters.getOpenTil,
+        userId: getters.value.getLoginUserId,
+      };
+      await store.dispatch("fetchTil", credentials);
+
+      tilContent.value = computed(() => {
+        return getters.value.getTilContent;
+      }).value;
+      console.log(tilContent.value);
+      commentList.value = tilContent.value.commentList;
+
+      console.log(tilContent.value.like);
+      isLike.value = tilContent.value.like;
+      console.log("isLike", isLike.value);
+
+      isWriter = computed(() => {
+        return tilContent.value.userId == store.getters.getLoginUserId;
+      });
+    })();
 
     // Til 삭제
     const deleteTil = () => {
       store.dispatch("removeTil", tilContent.value.tilId);
-      if (store.getters.getBooleanValue) {
-        router.push({ name: "mainview" });
-      }
+      router.go();
     };
 
     // 좋아요/좋아요 취소
     const sendLike = () => {
-      if (!tilContent.value.like) {
+      if (!isLike.value) {
         store.dispatch("likeTil", tilContent.value.tilId);
       } else {
         store.dispatch("dislikeTil", tilContent.value.tilId);
       }
       store.commit("SET_TIL_LIKE");
+      isLike.value = !isLike.value;
     };
 
     const onSubmit = () => {
       const payload = {
-        tilPk: tilContent.value.tilId,
+        tilId: tilContent.value.tilId,
         content: commentContent.value,
+        userId: store.getters.getLoginUserId,
       };
       store.dispatch("createComment", payload);
+      commentContent.value = "";
     };
 
     // 모달 바깥을 클릭하면 모달을 닫게 하는 함수
-    const closeModal = (event) => {
+    const closeModal = async (event) => {
       if (
         !document
           .querySelector(".modal")
           .querySelector("." + event.target.className.split(" ")[0]) // 클릭한 박스의 클래스가 modal-card라는 클래스의 하위 클래스인지 아닌지
       ) {
-        store.dispatch("fetchOpenTil", {
+        const credentials = {
           tilId: -1,
           userId: getters.value.getLoginUserId,
-        });
+        };
+        await store.dispatch("fetchOpenTil", credentials);
+        await store.dispatch("fetchTil", credentials);
       }
     };
 
-    // Comment 메소드
-    const getComments = () => {
-      store.dispatch("fetchComments", tilContent.value.tilId);
-    };
-    getComments(); // 시작할 때 til 댓글 가져옴
-
-    // console.log(tilContent.value.comments);
-
     return {
+      isLike,
       isWriter,
       deleteTil,
       tilContent,
-      tilComments,
       commentContent,
+      commentList,
       sendLike,
       onSubmit,
       closeModal,
-      getComments,
     };
   },
 };
@@ -330,6 +327,7 @@ export default {
   margin-bottom: 20px;
   border: 2px solid rgba(219, 219, 218, 0.8);
   border-radius: 10px;
+  background-color: white;
 }
 
 .til-header {

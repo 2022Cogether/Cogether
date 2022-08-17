@@ -43,41 +43,29 @@
     <!-- 첨부 이미지 캐러셀 -->
     <div class="til-body">
       <div
-        :id="'carouselExampleIndicators' + til.tilId"
+        :id="'carouselExampleIndicatorsForDetail' + tilContent.tilId"
         class="carousel slide"
         data-bs-ride="false"
       >
         <div class="carousel-indicators">
           <button
+            v-for="(image, i) in tilContent.imgUrl"
+            :key="i"
             type="button"
-            :data-bs-target="'#carouselExampleIndicators' + til.tilId"
-            data-bs-slide-to="0"
-            class="active"
-            aria-current="true"
-            aria-label="Slide 1"
-          ></button>
-          <button
-            type="button"
-            :data-bs-target="'#carouselExampleIndicators' + til.tilId"
-            data-bs-slide-to="1"
-            aria-label="Slide 2"
-          ></button>
-          <button
-            type="button"
-            :data-bs-target="'#carouselExampleIndicators' + til.tilId"
-            data-bs-slide-to="2"
-            aria-label="Slide 3"
+            :data-bs-target="
+              '#carouselExampleIndicatorsForDetail' + tilContent.tilId
+            "
+            :data-bs-slide-to="i"
+            :class="[i == 0 ? 'active' : '']"
           ></button>
         </div>
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img src="@/assets/test1.jpg" class="d-block w-100" alt="..." />
-          </div>
-          <div class="carousel-item">
-            <img src="@/assets/test2.jpg" class="d-block w-100" alt="..." />
-          </div>
-          <div class="carousel-item">
-            <img src="@/assets/test3.jpg" class="d-block w-100" alt="..." />
+        <div
+          class="carousel-inner"
+          v-for="(image, i) in tilContent.imgUrl"
+          :key="i"
+        >
+          <div :class="['carousel-item', i == 0 ? 'active' : '']">
+            <img :src="image.imgUrl" class="d-block w-100" alt="..." />
           </div>
         </div>
         <button
@@ -228,13 +216,17 @@ export default {
 
     const commentContent = ref("");
 
-    function setNum() {
+    const setNum = async () => {
       const tilNum = props.til.tilId;
-      store.dispatch("fetchOpenTil", {
+      const credentials = {
         tilId: tilNum,
-        userId: getters.value.getCurrentUser,
-      });
-    }
+        userId: getters.value.getLoginUserId,
+      };
+      await store.dispatch("fetchOpenTil", credentials);
+      // await store.dispatch("fetchTil", credentials);
+      // 여기 til props로 보내서 Detail에서 처리하게 해야겠다
+      // isLike 때문
+    };
 
     // 좋아요/좋아요 취소
     const sendLike = () => {
@@ -249,8 +241,9 @@ export default {
 
     const onSubmit = () => {
       const payload = {
-        tilPk: props.til.tilId,
-        content: commentContent,
+        tilId: props.til.tilId,
+        content: commentContent.value,
+        userId: store.getters.getLoginUserId,
       };
       store.dispatch("createComment", payload);
     };

@@ -4,7 +4,6 @@ import { recruitStore } from "@/store/modules/recruitStore.js";
 import { chatStore } from "@/store/modules/chatStore.js";
 import { signStore } from "@/store/modules/signStore.js";
 import { tilStore } from "@/store/modules/tilStore.js";
-import { tilCommentStore } from "@/store/modules/tilCommentStore.js";
 import { skillStore } from "@/store/modules/skillStore.js";
 import { followStore } from "@/store/modules/followStore.js";
 
@@ -18,7 +17,6 @@ export default createStore({
     chatStore,
     signStore,
     tilStore,
-    tilCommentStore,
     recruitStore,
     skillStore,
     followStore,

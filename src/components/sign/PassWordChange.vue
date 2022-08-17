@@ -74,9 +74,7 @@ export default {
 
     const changePwd = () => {
       store.dispatch("certifyPassword", password.value);
-      if (getters.value.getBooleanValue) {
-        store.dispatch("changePassword", newPassword.value);
-      }
+      store.dispatch("changePassword", newPassword.value);
     };
 
     return {

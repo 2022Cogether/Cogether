@@ -6,11 +6,17 @@
           <div class="d-flex justify-content-between">
             <div>
               <span class="be-comment-name">
-                <a href="#">{{ comment.userId }}</a>
+                <router-link
+                  :to="{
+                    name: 'profile',
+                    params: { userId: comment.userId },
+                  }"
+                  >{{ comment.userNickname }}
+                </router-link>
               </span>
               <span class="be-comment-time">
                 <i class="fa fa-clock-o"></i>
-                {{ comment.created_at }}
+                {{ comment.createdAt }}
               </span>
             </div>
             <div>
@@ -31,10 +37,11 @@
             </div>
           </div>
           <p v-if="!isEdit" class="be-comment-text">
-            {{ comment.commentContent }}
+            {{ commentContent }}
           </p>
           <input
             v-else
+            :value="comment.content"
             type="text"
             class="comment-input"
             @keyup.enter.prevent="editComment"
@@ -59,6 +66,7 @@ export default {
     const store = useStore();
 
     const loginUserId = store.getters.getLoginUserId;
+    let commentContent = ref(props.comment.content);
 
     // 유저 인증(isWrite -> 현재 유저가 TIL 글쓴이 isCommenter -> 현재 유저가 이 댓글 작성자)
     const isWriter = computed(() => {
@@ -71,7 +79,7 @@ export default {
     // 코멘트 지우기
     const deleteComment = () => {
       const payload = {
-        commentId: props.comment.commentId,
+        commentId: props.comment.tilCommentId,
         tilId: props.tilId,
       };
       store.dispatch("removeComments", payload);
@@ -85,15 +93,18 @@ export default {
 
     // 코멘트 수정이 보내지면
     const editComment = (event) => {
-      let payload = {};
-      payload.comment = props.comment;
-      payload.comment.content = event.target.value;
-      payload.tilId = props.tilId;
+      let payload = {
+        content: event.target.value,
+        tilCommentId: props.comment.tilCommentId,
+      };
       store.dispatch("updateComment", payload);
+      commentContent.value = event.target.value;
+      onEdit();
     };
 
     return {
       props,
+      commentContent,
       isWriter,
       isCommenter,
       deleteComment,

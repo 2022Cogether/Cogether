@@ -263,8 +263,44 @@ export default {
 
     // TIL 검색 창
     const searchWord = ref("");
-    const onSubmit = () => {
-      store.dispatch("searchMyTil", searchWord.value);
+    const onSubmit = async () => {
+      if (searchWord.value) {
+        const payload = {
+          tilUserId: profileUser.value.id,
+          keyword: searchWord.value,
+        };
+        console.log("payload", payload);
+        await store.dispatch("searchMyTil", payload);
+      } else {
+        await store.dispatch("fetchMyTilList", profileUser.value.id);
+      }
+      tilList.value = [];
+      const tempList = store.getters.getTilList.tilList;
+      for (let i = 0; i < tempList.length; i++) {
+        let tpa = {
+          tilId: tempList[i].tilId,
+          tilTitle: tempList[i].tilTitle,
+          tilContent: tempList[i].tilContent,
+          userId: tempList[i].userId,
+          userImg: tempList[i].userImg,
+          commentList: tempList[i].commentList,
+          createdAt: tempList[i].createdAt,
+          imgUrl: [],
+          like: tempList[i].like,
+          likeCnt: tempList[i].likeCnt,
+          userNickname: tempList[i].userNickname,
+        };
+        // console.log(tempList[i].imgUrl[0]);
+        for (let j = 0; j < tempList[i].imgUrl.length; j++) {
+          console.log(tpa.imgUrl);
+          tpa.imgUrl.push({
+            tilImgId: tempList[i].imgUrl[j].tilImgId,
+            tilId: tempList[i].imgUrl[j].tilId,
+            imgUrl: tempList[i].imgUrl[j].imgUrl,
+          });
+        }
+        tilList.value.push(tpa);
+      }
     };
 
     // 내 프로필인지 아닌지 판단하고 알맞는 자료를 가져와 profile User 변수에 넣기
@@ -321,7 +357,7 @@ export default {
         console.log("제발", profileUser.value["gitUrl"]);
 
         // 페이지가 Created 될 때 list 가져옴
-        await store.dispatch("fetchMyTilList");
+        await store.dispatch("fetchMyTilList", profileUser.value.id);
         const tempList = store.getters.getTilList.tilList;
         for (let i = 0; i < tempList.length; i++) {
           let tpa = {
@@ -374,31 +410,24 @@ export default {
     const isTilOpen = computed(() => {
       return modalNum.value != -1;
     });
-    const setNum = (tilNum) => {
-      store.dispatch("fetchOpenTil", {
+    const setNum = async (tilNum) => {
+      const credentials = {
         tilId: tilNum,
         userId: store.getters.getLoginUserId,
-      });
+      };
+      await store.dispatch("fetchOpenTil", credentials);
+      // await store.dispatch("fetchTil", credentials);
     };
 
     // 팔로우
     const follow = () => {
-      const payload = {
-        toId: store.getters.getLoginUserId,
-        fromId: profileUser.value.id,
-      };
-      console.log(payload);
-      store.dispatch("follow", payload);
-      if (store.getters.getBooleanValue) {
-        isFollow.value = true;
-      }
+      store.dispatch("follow", profileUser.value.id);
+      isFollow.value = true;
     };
     // 언팔로우
     const unfollow = () => {
       store.dispatch("unfollow", profileUser.value.id);
-      if (store.getters.getBooleanValue) {
-        isFollow.value = false;
-      }
+      isFollow.value = false;
     };
 
     // 팔로우 모달창 열기/닫기
