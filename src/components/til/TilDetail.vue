@@ -237,9 +237,7 @@ export default {
     // Til 삭제
     const deleteTil = () => {
       store.dispatch("removeTil", tilContent.value.tilId);
-      if (store.getters.getBooleanValue) {
-        router.push({ name: "mainview" });
-      }
+      router.go();
     };
 
     // 좋아요/좋아요 취소
@@ -314,6 +312,7 @@ export default {
   margin-bottom: 20px;
   border: 2px solid rgba(219, 219, 218, 0.8);
   border-radius: 10px;
+  background-color: white;
 }
 
 .til-header {

@@ -90,6 +90,7 @@ export const tilStore = {
   actions: {
     // 피드 상세 조회할 tilId를 store에 세팅
     fetchOpenTil({ commit, dispatch }, credentials) {
+      // alert("여기는?");
       commit("SET_OPEN_TIL", credentials.tilId);
       dispatch("fetchTil", credentials);
     },
@@ -184,18 +185,15 @@ export const tilStore = {
         });
     },
 
-    updateTil({ dispatch, state }, payload) {
+    updateTil({ dispatch, getters }, payload) {
       http
         .put("til/", payload, {
-          headers: {
-            ACCESS_TOKEN: localStorage.getItem("access_TOKEN"),
-            "Content-Type": "multipart/form-data",
-          },
-        }) // payload: Til 데이터
-        .then((res) => {
+          headers: getters.authHeader,
+        })
+        .then(() => {
+          console.log("됐나?");
           const credentials = {
-            tilId: res.data.tilId,
-            userId: state.loginUserId,
+            tilId: payload.tilId,
           };
 
           dispatch("fetchOpenTil", credentials);
@@ -205,19 +203,18 @@ export const tilStore = {
 
     removeTil({ commit, getters }, tilPk) {
       http
-        .delete("til/delete/" + tilPk, {
+        .delete("til/" + tilPk, {
           headers: getters.authHeader,
         })
-        .then((res) => {
-          if (res.status === 200) {
-            alert("삭제 성공!");
-            commit("SET_TIL", {});
-            commit("SET_BOOLEANVALUE");
-          }
+        .then(() => {
+          alert("삭제 성공!");
+          commit("SET_OPEN_TIL", -1);
+          commit("SET_TIL", {});
+          commit("SET_BOOLEANVALUE");
         })
         .catch((err) => {
           alert("삭제 실패??");
-          console.error(err.response.data);
+          console.log(err);
         });
     },
 
