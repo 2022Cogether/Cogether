@@ -31,7 +31,7 @@ public class TokenUtils {
                 .setSubject(user.getEmail())  // 토큰 용도??v JWT payload 에 저장되는 정보단위
                 .setHeader(createHeader())  //header 설정
                 .setClaims(createClaims(user)) //claims 설정
-                .setExpiration(createExpireDate(1000 * 60 * 60 *2)) // 토큰 만료시간 2hour
+                .setExpiration(createExpireDate(1000 * 60 * 60 *24)) // 토큰 만료시간 24hour
                 .signWith(SignatureAlgorithm.HS256, createSigningKey(SECRET_KEY)) //HS256 , key로 sign
                 .compact(); // 토큰 생성
     }
