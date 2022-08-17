@@ -1,6 +1,7 @@
 package com.cogether.api.study.domain;
 
 import lombok.*;
+
 import javax.persistence.*;
 
 @Getter
@@ -24,7 +25,7 @@ public class StudySkill {
     @Column(name = "skill_name", nullable = false)
     private String skillName;
 
-    public static StudySkill toEntity(Study study, String skillName){
+    public static StudySkill toEntity(Study study, String skillName) {
         return StudySkill.builder()
                 .study(study)
                 .skillName(skillName)

@@ -12,7 +12,7 @@ public class ProjectRequest {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class Create_Project{
+    public static class Create_Project {
         private int userId;
         private LocalDateTime start;
         private int total_mem;
@@ -21,7 +21,8 @@ public class ProjectRequest {
         private String title;
         private String content;
         private List<String> skillList;
-        public Project toEntity(User user){
+
+        public Project toEntity(User user) {
             return Project.builder()
                     .user(user)
                     .start(start)
@@ -39,11 +40,11 @@ public class ProjectRequest {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class Create_ProjectScrap{
+    public static class Create_ProjectScrap {
         private int projectId;
         private int userId;
 
-        public ProjectScrap toEntity(Project project, User user){
+        public ProjectScrap toEntity(Project project, User user) {
             return ProjectScrap.builder()
                     .project(project)
                     .user(user)

@@ -27,28 +27,30 @@ public class ProjectService {
     private final UserRepository userRepository;
     private final TokenUtils tokenUtils;
 
-    public ProjectResponse.OnlyId create(ProjectRequest.Create_Project create_project){
+    public ProjectResponse.OnlyId create(ProjectRequest.Create_Project create_project) {
         User user = userRepository.findById(create_project.getUserId()).orElseThrow(UserNotFoundException::new);
         Project project = create_project.toEntity(user);
         Project savedProject = projectRepository.save(project);
         List<String> list = create_project.getSkillList();
-        for (int i = 0; i < list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             String skill = list.get(i);
             ProjectSkill projectSkill = ProjectSkill.toEntity(savedProject, skill);
             projectSkillRepository.save(projectSkill);
         }
+        user.setExp(user.getExp() + 10);
+        userRepository.save(user);
         return ProjectResponse.OnlyId.build(savedProject);
     }
 
-    public ProjectResponse.OnlyId delete(int projectId){
+    public ProjectResponse.OnlyId delete(int projectId) {
         Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
         List<ProjectSkill> list = projectSkillRepository.findAllByProject_Id(projectId);
         List<ProjectScrap> scrapList = projectScrapRepository.findAllByProject_Id(projectId);
-        for (int i = 0 ; i<list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             ProjectSkill projectSkill = list.get(i);
             projectSkillRepository.deleteById(projectSkill.getId());
         }
-        for (int i = 0; i < scrapList.size(); i++){
+        for (int i = 0; i < scrapList.size(); i++) {
             ProjectScrap projectScrap = scrapList.get(i);
             projectScrapRepository.deleteById(projectScrap.getId());
         }
@@ -56,7 +58,7 @@ public class ProjectService {
         return ProjectResponse.OnlyId.build(project);
     }
 
-    public ProjectResponse.ProjectAll getProjectDetail(int projectId, String token){
+    public ProjectResponse.ProjectAll getProjectDetail(int projectId, String token) {
         int userId = tokenUtils.getUserIdFromToken(token);
         Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
@@ -64,14 +66,14 @@ public class ProjectService {
         int check = projectScrapRepository.countAllByProjectAndUser(project, user);
         int scrapId = 0;
         boolean isScrap = false;
-        if(check == 1){
+        if (check == 1) {
             scrapId = projectScrapRepository.findByProject_IdAndUser_Id(projectId, userId).getId();
             isScrap = true;
         }
-        return ProjectResponse.ProjectAll.build(project, list, scrapId,isScrap);
+        return ProjectResponse.ProjectAll.build(project, list, scrapId, isScrap);
     }
 
-    public ProjectResponse.ProjectList getProjectList(String token){
+    public ProjectResponse.ProjectList getProjectList(String token) {
         int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<ProjectResponse.ProjectAll> projectList = new ArrayList<>();
@@ -82,13 +84,13 @@ public class ProjectService {
                 return o2.getCreatedAt().compareTo(o1.getCreatedAt());
             }
         });
-        for (int i = 0; i < list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             Project project = list.get(i);
             List<ProjectSkill> projectSkillList = projectSkillRepository.findAllByProject_Id(project.getId());
             int check = projectScrapRepository.countAllByProjectAndUser(project, user);
             int scrapId = 0;
             boolean isScrap = false;
-            if(check == 1){
+            if (check == 1) {
                 scrapId = projectScrapRepository.findByProject_IdAndUser_Id(project.getId(), userId).getId();
                 isScrap = true;
             }
@@ -97,7 +99,7 @@ public class ProjectService {
         return ProjectResponse.ProjectList.build(projectList);
     }
 
-    public ProjectResponse.OnlyProjectScrapId createScrap(ProjectRequest.Create_ProjectScrap create_projectScrap){
+    public ProjectResponse.OnlyProjectScrapId createScrap(ProjectRequest.Create_ProjectScrap create_projectScrap) {
         User user = userRepository.findById(create_projectScrap.getUserId()).orElseThrow(UserNotFoundException::new);
         Project project = projectRepository.findById(create_projectScrap.getProjectId()).orElseThrow(ProjectNotFoundException::new);
         ProjectScrap projectScrap = create_projectScrap.toEntity(project, user);
@@ -105,24 +107,24 @@ public class ProjectService {
         return ProjectResponse.OnlyProjectScrapId.build(savedProjectScrap);
     }
 
-    public ProjectResponse.OnlyProjectScrapId deleteScrap(int projectScrapId){
+    public ProjectResponse.OnlyProjectScrapId deleteScrap(int projectScrapId) {
         ProjectScrap projectScrap = projectScrapRepository.findById(projectScrapId).orElseThrow(ProjectNotFoundException::new);
         projectScrapRepository.deleteById(projectScrapId);
         return ProjectResponse.OnlyProjectScrapId.build(projectScrap);
     }
 
-    public ProjectResponse.ProjectList getMyProjectList(String token){
+    public ProjectResponse.ProjectList getMyProjectList(String token) {
         int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<ProjectResponse.ProjectAll> projectList = new ArrayList<>();
         List<Project> list = projectRepository.findAllByUserOrderByCreatedAtDesc(user);
-        for (int i = 0; i < list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             Project project = list.get(i);
             List<ProjectSkill> projectSkillList = projectSkillRepository.findAllByProject_Id(project.getId());
             int check = projectScrapRepository.countAllByProjectAndUser(project, user);
             int scrapId = 0;
             boolean isScrap = false;
-            if(check == 1){
+            if (check == 1) {
                 scrapId = projectScrapRepository.findByProject_IdAndUser_Id(project.getId(), userId).getId();
                 isScrap = true;
             }
