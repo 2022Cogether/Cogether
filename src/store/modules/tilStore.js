@@ -3,58 +3,9 @@ import http from "@/api/http";
 export const tilStore = {
   state: {
     openTil: -1, // 모달창으로 디테일이 열릴 til의 번호, -1이면 안 열린 상태!
-    tilList: [
-      {
-        pk: 12,
-        created_at: "2022-03-31",
-        title: "til 마지막글",
-        content:
-          "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        user_id: 1004,
-        isLike: true,
-      },
-      {
-        pk: 100,
-        created_at: "2022-03-30",
-        title: "til 마지막에서 두번째 글",
-        content:
-          "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        user_id: 1004,
-        isLike: false,
-      },
-      {
-        pk: 1000,
-        created_at: "2022-03-29",
-        title: "til 마지막에서 세번째 글",
-        content:
-          "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        user_id: 1004,
-        isLike: true,
-      },
-    ],
-    tilContent: {
-      pk: 5,
-      created_at: "2020-02-29",
-      title: "til 1번글",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      user_id: 1004,
-      isLike: true,
-      comments: [
-        {
-          pk: 100,
-          created_at: "2020-02-20",
-          content: "굳굳",
-          user_id: "2000",
-        },
-        {
-          pk: 1000,
-          created_at: "2022-02-20",
-          content: "배드배드",
-          user_id: "1004",
-        },
-      ],
-    },
+    tilList: [],
+    tilContent: {},
+    // commentId: -1,
   },
   getters: {
     getOpenTil(state) {
@@ -69,6 +20,15 @@ export const tilStore = {
     getTilContent(state) {
       return state.tilContent;
     },
+
+    // 코멘트
+    // getComments(state) {
+    //   for (let i; i < state.tilContent.commentList.length; i++) {
+    //     if (state.tilContent.commentList[i].tilCommentId == state.commentId) {
+    //       return state.tilContent.commentList[i];
+    //     }
+    //   }
+    // },
   },
   mutations: {
     SET_OPEN_TIL: (state, tilNum) => {
@@ -96,6 +56,36 @@ export const tilStore = {
         }
       });
     },
+
+    // 코멘트
+    // SET_COMMENT_ID: (state, commentId) => {
+    //   state.commentId = commentId;
+    // },
+
+    // ADD_COMMENT: (state, comment) => {
+    //   state.tilContent.commentList.push(comment);
+    // },
+    PUT_COMMENT: (state, commentLoad) => {
+      for (let i; i < state.tilContent.commentList.length; i++) {
+        if (
+          state.tilContent.commentList[i].tilCommentId == commentLoad.commentId
+        ) {
+          state.tilContent.commentList[i].content = commentLoad.content;
+          break;
+        }
+      }
+    },
+    // DEL_COMMENT: (state, commentId) => {
+    //   console.log("commentList", state.tilContent.commentList);
+    //   for (let i = 0; i < state.tilContent.commentList.length; i++) {
+    //     if (state.tilContent.commentList[i].tilCommentId == commentId) {
+    //       delete state.tilContent.commentList[i];
+    //       alert("댓글 삭제 성공!");
+    //       console.log("commentList", state.tilContent.commentList);
+    //       break;
+    //     }
+    //   }
+    // },
   },
   actions: {
     // 피드 상세 조회할 tilId를 store에 세팅
@@ -281,15 +271,65 @@ export const tilStore = {
         .catch((err) => console.error(err.response));
     },
 
-    createComment({ commit, getters }, payload) {
+    // TIL 코멘트
+    createComment({ dispatch, getters }, payload) {
       http
-        .post("/til/commment", payload, {
+        .post("/til/comment", payload, {
+          headers: getters.authHeader,
+        })
+        .then(() => {
+          // commit("ADD_COMMENT", {
+          //   ...payload,
+          //   tilCommentId: res.data.id,
+          // });
+          // console.log(state.tilContent.commentList);
+          dispatch("fetchTil", {
+            tilId: getters.getOpenTil,
+          });
+        })
+        .catch((err) => console.error(err.response));
+    },
+
+    removeComments({ getters, dispatch }, payload) {
+      http
+        .delete("til/comment/" + payload.commentId, {
           headers: getters.authHeader,
         })
         .then((res) => {
-          commit("SET_TIL", res.data);
+          if (res.status === 200) {
+            alert("삭제 성공!");
+            // dispatch("fetchTil", { tilId: payload.tilId });
+            // console.log("res.data", res.data);
+            // commit("DEL_COMMENT", res.data.id);
+            dispatch("fetchTil", {
+              tilId: getters.getOpenTil,
+            });
+          }
         })
-        .catch((err) => console.error(err.response));
+        .catch((err) => {
+          alert("삭제 실패??");
+          console.error(err.response.data);
+        });
+    },
+
+    updateComment({ commit, getters }, payload) {
+      console.log("payload", payload);
+      http
+        .put("til/comment", payload, {
+          headers: getters.authHeader,
+        })
+        .then((res) => {
+          alert("수정 성공!");
+          console.log("update res data", res.data.id);
+          commit("PUT_COMMENT", {
+            commentId: res.data.id,
+            content: payload.content,
+          });
+        })
+        .catch((err) => {
+          alert("수정 실패??");
+          console.error(err.response);
+        });
     },
   },
 };

@@ -53,30 +53,14 @@
           >
             <div class="carousel-indicators">
               <button
+                v-for="(image, i) in tilContent.imgUrl"
+                :key="i"
                 type="button"
                 :data-bs-target="
                   '#carouselExampleIndicatorsForDetail' + tilContent.tilId
                 "
-                data-bs-slide-to="0"
-                class="active"
-                aria-current="true"
-                aria-label="Slide 1"
-              ></button>
-              <button
-                type="button"
-                :data-bs-target="
-                  '#carouselExampleIndicatorsForDetail' + tilContent.tilId
-                "
-                data-bs-slide-to="1"
-                aria-label="Slide 2"
-              ></button>
-              <button
-                type="button"
-                :data-bs-target="
-                  '#carouselExampleIndicatorsForDetail' + tilContent.tilId
-                "
-                data-bs-slide-to="2"
-                aria-label="Slide 3"
+                :data-bs-slide-to="i"
+                :class="[i == 0 ? 'active' : '']"
               ></button>
             </div>
             <div
@@ -204,9 +188,11 @@
         </div>
         <!-- 댓글창 -->
         <div class="til-comment">
-          <h1 class="comments-title">Comments (3)</h1>
+          <h1 class="comments-title">
+            Comments ({{ tilContent.commentList.length }})
+          </h1>
           <CommentList
-            :comments="tilComments"
+            :comments="tilContent.commentList"
             :userId="tilContent.userId"
             :tilId="tilContent.tilId"
           />
@@ -241,9 +227,6 @@ export default {
     const tilContent = computed(() => {
       return getters.value.getTilContent;
     });
-    const tilComments = computed(() => {
-      return getters.value.getComments;
-    });
     const commentContent = ref("");
 
     // 사용자가 글쓴이인지 아닌지 확인
@@ -271,10 +254,12 @@ export default {
 
     const onSubmit = () => {
       const payload = {
-        tilPk: tilContent.value.tilId,
+        tilId: tilContent.value.tilId,
         content: commentContent.value,
+        userId: store.getters.getLoginUserId,
       };
       store.dispatch("createComment", payload);
+      commentContent.value = "";
     };
 
     // 모달 바깥을 클릭하면 모달을 닫게 하는 함수
@@ -303,7 +288,6 @@ export default {
       isWriter,
       deleteTil,
       tilContent,
-      tilComments,
       commentContent,
       sendLike,
       onSubmit,

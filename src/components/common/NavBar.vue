@@ -37,7 +37,6 @@
           <font-awesome-icon class="fs-3" icon="fa-solid fa-user" />
         </a>
         <div v-if="userId" class="dropdown-menu">
-          {{ connect() }}
           <router-link
             class="dropdown-item"
             :to="{
