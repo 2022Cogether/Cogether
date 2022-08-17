@@ -10,14 +10,27 @@ export const challengeStore = {
     competeRank: " - ",
     competePeople: null,
     rooms: [],
+    room: null,
     roomId: null,
     roomUserId: null,
     timeStarted: false,
     competedInterval: false,
     enterCoop: false,
+    coopMembers: [],
+    coopMemberId: null,
+    stompClientCoop: null,
   },
   getters: {
     //변수 호출
+    getStompClientCoop(state) {
+      return state.stompClientCoop;
+    },
+    getCoopMemberId(state) {
+      return state.coopMemberId;
+    },
+    getCoopMembers(state) {
+      return state.coopMembers;
+    },
     getIsCompeteStarted(state) {
       return state.isCompeteStarted;
     },
@@ -29,6 +42,9 @@ export const challengeStore = {
     },
     getRooms(state) {
       return state.rooms;
+    },
+    getRoom(state) {
+      return state.room;
     },
     getCompeteTotal(state) {
       return state.competeTotal;
@@ -57,6 +73,12 @@ export const challengeStore = {
   },
   mutations: {
     //변수값 수정
+    SET_STOMP_CLIENT_COOP(state, stompClientCoop) {
+      state.stompClientCoop = stompClientCoop;
+    },
+    SET_COOP_MEMBER_ID(state, coopMemberId) {
+      state.coopMemberId = coopMemberId;
+    },
     SET_IS_COMPETE_STARTED(state, isCompeteStarted) {
       state.isCompeteStarted = isCompeteStarted;
     },
@@ -65,6 +87,9 @@ export const challengeStore = {
     },
     SET_IS_COOP_ROOM_EXPAND(state, isCoopRoomExpand) {
       state.isCoopRoomExpand = isCoopRoomExpand;
+    },
+    SET_ROOM(state, room) {
+      state.room = room;
     },
     SET_ROOMS(state, rooms) {
       state.rooms = rooms;
@@ -89,6 +114,9 @@ export const challengeStore = {
     },
     SET_ENTER_COOP(state, enterCoop) {
       state.enterCoop = enterCoop;
+    },
+    SET_COOP_MEMBERS(state, coopMembers) {
+      state.coopMembers = coopMembers;
     },
   },
   actions: {
@@ -141,6 +169,7 @@ export const challengeStore = {
         .then(({ data }) => {
           console.log(commit);
           console.log(data);
+          commit("SET_ROOM_ID", data.liveCoopId);
         })
         .catch((e) => {
           console.log("에러: " + e);
@@ -174,13 +203,63 @@ export const challengeStore = {
           console.log("에러: " + e);
         });
     },
-    getDetailCoopRooms({ commit, getters }, roomId) {
-      http
+    async getDetailCoopRoom({ commit, getters }, roomId) {
+      await http
         .get("livecoop/" + roomId, {
           headers: getters.authHeader,
         })
         .then(({ data }) => {
-          commit("SET_ROOMS", data);
+          commit("SET_ROOM", data);
+          console.log("방상세정보가져오기 성공");
+          console.log(data);
+        })
+        .catch((e) => {
+          console.log("에러: " + e);
+        });
+    },
+    async CreateCoopMember({ commit, getters }, data) {
+      console.log(commit);
+      return await new Promise((res, rej) => {
+        http
+          .post("livecoop/member", data, {
+            headers: getters.authHeader,
+          })
+          .then(({ data }) => {
+            console.log("방입장 성공");
+            console.log(data);
+            res(data);
+          })
+          .catch((e) => {
+            console.log("에러: " + e);
+            rej(e);
+          });
+      });
+    },
+    async getCoopMembers({ commit, getters }, liveCoopId) {
+      await http
+        .get("livecoop/member/list/" + liveCoopId, {
+          headers: getters.authHeader,
+        })
+        .then(({ data }) => {
+          console.log("방멤버 가져오기 성공");
+          console.log(data);
+          commit("SET_COOP_MEMBERS", data.liveCoopMembers);
+          commit("SET_COOP_MEMBER_ID", data.myLiveCoopMemberId);
+        })
+        .catch((e) => {
+          console.log("에러: " + e);
+        });
+    },
+    async deleteCoopMember({ commit, getters }, coopMemberId) {
+      console.log(commit);
+      await http
+        .delete("livecoop/member/" + coopMemberId, {
+          headers: getters.authHeader,
+        })
+        .then(({ data }) => {
+          console.log("협력멤버 삭제 성공");
+          console.log(data);
+          commit("SET_COOP_MEMBER_ID", null);
         })
         .catch((e) => {
           console.log("에러: " + e);

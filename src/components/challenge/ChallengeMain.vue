@@ -72,6 +72,7 @@ export default {
     const store = useStore();
     const getters = computed(() => store.getters);
     store.dispatch("getCompeteInfo", getters.value.getLoginUserId);
+    store.dispatch("getCoopRooms", getters.value.getLoginUserId);
     const state = reactive({
       tabState: 1,
       tempText: null,
@@ -88,6 +89,7 @@ export default {
     function btnCompete() {
       if (!getters.value.getCompeteInterval) {
         //interval 중복 실행 방지
+        now();
         store.commit("SET_COMPETE_INTERVAL", true);
         const interval = setInterval(() => {
           if (getters.value.getIsCompeteStarted) {

@@ -126,7 +126,7 @@ export default {
         title: "방이 생성되었습니다.",
       });
       //페이지 이동
-      router.push({ name: "ChallengeMain" });
+      router.push({ name: "challenge" });
     }
 
     return { exit, createCoop, state };
