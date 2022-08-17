@@ -249,18 +249,18 @@ export const tilStore = {
         .catch((err) => console.error(err.response));
     },
 
-    searchTil({ commit, getters }, keyword) {
+    async searchTil({ commit, getters }, keyword) {
       // paylod => keyword, userId
-      http
+      await http
         .get("til/search/" + keyword, {
           headers: getters.authHeader,
         })
         .then((res) => commit("SET_TIL_LIST", res.data))
         .catch((err) => console.error(err.response));
     },
-    searchMyTil({ commit, getters }, keyword) {
+    async searchMyTil({ commit, getters }, keyword) {
       // paylod => keyword, userId
-      http
+      await http
         .get("til/search/my/" + keyword, {
           headers: getters.authHeader,
         })
