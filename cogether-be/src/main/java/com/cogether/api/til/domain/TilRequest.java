@@ -2,10 +2,8 @@ package com.cogether.api.til.domain;
 
 import com.cogether.api.user.domain.User;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 public class TilRequest {
@@ -13,12 +11,12 @@ public class TilRequest {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class Create_Til{
+    public static class Create_Til {
         private String title;
         private String content;
         private int userId;
 
-        public Til toEntity(User user){
+        public Til toEntity(User user) {
             return Til.builder()
                     .title(title)
                     .content(content)
@@ -32,12 +30,12 @@ public class TilRequest {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class Update_Til{
+    public static class Update_Til {
         private int tilId;
         private String title;
         private String content;
 
-        public Til toEntity(){
+        public Til toEntity() {
             return Til.builder()
                     .id(tilId)
                     .title(title)
@@ -50,12 +48,12 @@ public class TilRequest {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class Create_TilComment{
+    public static class Create_TilComment {
         private int tilId;
         private String content;
         private int userId;
 
-        public TilComment toEntity(Til til, User user){
+        public TilComment toEntity(Til til, User user) {
             return TilComment.builder()
                     .til(til)
                     .content(content)
@@ -69,12 +67,12 @@ public class TilRequest {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class Update_TilComment{
+    public static class Update_TilComment {
         private int tilCommentId;
         private String content;
         private int userId;
 
-        public TilComment toEntity(User user){
+        public TilComment toEntity(User user) {
             return TilComment.builder()
                     .id(tilCommentId)
                     .content(content)
@@ -87,11 +85,11 @@ public class TilRequest {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class Create_TilLike{
+    public static class Create_TilLike {
         private int tilId;
         private int userId;
 
-        public TilLike toEntity(Til til, User user){
+        public TilLike toEntity(Til til, User user) {
             return TilLike.builder()
                     .til(til)
                     .user(user)

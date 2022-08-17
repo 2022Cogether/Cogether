@@ -29,7 +29,7 @@ public class Project {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime start;
 
-    @Column(name = "total_mem",nullable = false)
+    @Column(name = "total_mem", nullable = false)
     private int totalMem;
 
     @Column(name = "cur_mem", nullable = false)

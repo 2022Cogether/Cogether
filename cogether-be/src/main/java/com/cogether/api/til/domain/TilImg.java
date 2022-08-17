@@ -25,7 +25,7 @@ public class TilImg {
     @Column(name = "url", nullable = false)
     private String url;
 
-    public static TilImg toEntity(Til til, String url){
+    public static TilImg toEntity(Til til, String url) {
         return TilImg.builder()
                 .til(til)
                 .url(url)

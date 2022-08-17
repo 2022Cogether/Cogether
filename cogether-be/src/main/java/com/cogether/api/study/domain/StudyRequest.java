@@ -12,7 +12,7 @@ public class StudyRequest {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class Create_Study{
+    public static class Create_Study {
         private int userId;
         private LocalDateTime start;
         private int total_mem;
@@ -22,7 +22,7 @@ public class StudyRequest {
         private String content;
         private List<String> skillList;
 
-        public Study toEntity(User user){
+        public Study toEntity(User user) {
             return Study.builder()
                     .user(user)
                     .start(start)
@@ -40,11 +40,11 @@ public class StudyRequest {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class Create_StudyScrap{
+    public static class Create_StudyScrap {
         private int studyId;
         private int userId;
 
-        public StudyScrap toEntity(Study study, User user){
+        public StudyScrap toEntity(Study study, User user) {
             return StudyScrap.builder()
                     .study(study)
                     .user(user)

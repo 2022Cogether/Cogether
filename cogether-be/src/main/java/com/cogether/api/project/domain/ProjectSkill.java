@@ -25,7 +25,7 @@ public class ProjectSkill {
     @Column(name = "skill_name", nullable = false)
     private String skillName;
 
-    public static ProjectSkill toEntity(Project project, String skillName){
+    public static ProjectSkill toEntity(Project project, String skillName) {
         return ProjectSkill.builder()
                 .project(project)
                 .skillName(skillName)
