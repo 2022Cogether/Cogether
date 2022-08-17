@@ -1,6 +1,6 @@
 <template>
   <div class="til-list">
-    <TilMainItem v-for="til in tilList" :key="til.pk" :til="til" />
+    <TilMainItem v-for="til in tilList.tilList" :key="til.tilId" :util="til" />
   </div>
   <TilDetail v-if="isOpen" class="isModal" />
   <!-- 나중에 TIL create창으로 URL 추가 -->
@@ -13,7 +13,7 @@
 
 <script>
 import { useStore } from "vuex";
-import { computed, onBeforeUnmount, onMounted } from "vue";
+import { computed, ref } from "vue";
 import TilMainItem from "@/components/til/TilMainItem.vue";
 import TilDetail from "@/components/til/TilDetail.vue";
 
@@ -27,9 +27,15 @@ export default {
     const store = useStore();
     const getters = computed(() => store.getters);
 
-    const tilList = computed(() => {
-      return store.getters.getTilList;
-    });
+    const tilList = ref([]);
+
+    (async () => {
+      await store.dispatch("fetchTilList");
+      tilList.value = computed(() => {
+        return store.getters.getTilList;
+      }).value;
+      console.log("으앙", tilList.value);
+    })();
 
     const modalNum = computed(() => {
       return getters.value.getOpenTil;
@@ -38,57 +44,11 @@ export default {
       return modalNum.value != -1;
     });
 
-    // created 할 때 한 번 발생하고, 이후로 끝까지 스크롤하면 계속 실행되어 til list에 추가하는 방식
-    const getTilList = () => {
-      store.dispatch("fetchTilList");
-    };
-    // const eraseTilList = () => {
-    //   store.dispatch("removeTilList");
-    // };
-
-    // 페이지가 생성될 때 || 페이지에서 나가기 직전 list를 지움
-    // 현재 오작동이 잦아서 고민 중..
-    // eraseTilList();
-    onBeforeUnmount(() => {
-      // eraseTilList();
-    });
-    // 페이지가 Created 될 때 list 가져옴
-    getTilList();
-
-    // // 참조: https://renatello.com/check-if-a-user-has-scrolled-to-the-bottom-in-vue-js/
-    // // 스크롤 거의 하단에 오면 추가 리스트 받아고는 메소드
-    // const scroll = () => {
-    //   window.onscroll = () => {
-    //     let bottomOfWindow =
-    //       Math.max(
-    //         window.pageYOffset,
-    //         document.documentElement.scrollTop,
-    //         document.body.scrollTop
-    //       ) +
-    //         window.innerHeight >
-    //       document.documentElement.offsetHeight;
-
-    //     if (bottomOfWindow) {
-    //       if (window.location.href == "http://localhost:8080/#/") {
-    //         getTilList();
-    //       }
-    //     }
-    //   };
-    // };
-
-    // onMounted(() => {
-    //   scroll();
-    // });
-
     return {
-      getTilList,
-      // eraseTilList,
       scroll,
       modalNum,
       isOpen,
       tilList,
-      onBeforeUnmount,
-      onMounted,
     };
   },
 };

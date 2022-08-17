@@ -12,7 +12,7 @@
             {{ tilContent.tilTitle }}
           </div>
           <div class="til-info">
-            <span class="til-user">{{ tilContent.userId }}</span>
+            <span class="til-user">{{ tilContent.userNickname }}</span>
             <!-- created_at을 통해서 시간 계산 v-if나 함수로 1일 이하면 시간으로 표시 -->
             <span class="til-time">1 시간 전</span>
           </div>
@@ -181,7 +181,7 @@
             </div>
           </div>
           <!-- 좋아요 갯수를 Til로 가늠하는 방법 필요 -->
-          <span class="like-count"> 좋아요 0개 </span>
+          <span class="like-count"> 좋아요 {{ tilContent.likeCnt }}개 </span>
           <!-- v-if: "is_Current_User_Like_This_TIL?" 등으로 sendlike/senddislike 바꾸어야 할 듯 <- currentUser 완성 뒤 -->
           <div class="til-content">
             {{ tilContent.tilContent }}

@@ -23,7 +23,7 @@
     ></textarea>
 
     <div class="d-flex justify-content-center">
-      <label class="file-label" for="imageFile">이미지 등록</label>
+      <label class="file-label mb-2" for="imageFile">이미지 등록</label>
       <input
         @change="imgupload"
         class="file"
@@ -33,13 +33,22 @@
         accept="image/*"
       />
     </div>
+    <div v-for="(imageRoute, idx) in imageRouteList" :key="idx">
+      <div class="column">
+        <font-awesome-icon
+          icon="fa-solid fa-rectangle-xmark"
+          style="cursor: pointer; position: absolute"
+        />
+        <div class="ml-5">{{ imageRoute }}</div>
+      </div>
+    </div>
   </form>
 </template>
 
 <script>
 import Swal from "sweetalert2";
 import router from "@/router";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { useStore } from "vuex";
 
 export default {
@@ -53,6 +62,8 @@ export default {
       content: "",
       multipartFiles: [],
     });
+
+    const imageRouteList = ref([]);
 
     function exit() {
       Swal.fire({
@@ -78,7 +89,9 @@ export default {
       // console.log(url); // 확인
       for (let i = 0; i < imageFile.length; i++) {
         state.multipartFiles.push(imageFile[i]);
+        imageRouteList.value.push(imageFile[i].name);
       }
+      console.log(imageRouteList.value);
     }
     function createTil() {
       const formData = new FormData();
@@ -96,7 +109,10 @@ export default {
         })
       );
 
-      // let fileArray = [];
+      if (state.multipartFiles.length > 5) {
+        alert("이미지가 너무 많다");
+        router.go();
+      }
       for (let i = 0; i < state.multipartFiles.length; i++) {
         // fileArray.push(state.multipartFiles[i]);
         formData.append("image", state.multipartFiles[i]);
@@ -115,7 +131,7 @@ export default {
       }
     }
 
-    return { exit, createTil, imgupload, state };
+    return { exit, createTil, imgupload, state, imageRouteList };
   },
   components: {},
 };

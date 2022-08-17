@@ -9,7 +9,7 @@
         {{ til.tilTitle }}
       </div>
       <div class="til-info">
-        <span class="til-user">삐약이</span>
+        <span class="til-user">{{ til.userNickname }}</span>
         <span class="til-time">1 시간 전</span>
       </div>
 
@@ -43,27 +43,21 @@
     <!-- 첨부 이미지 캐러셀 -->
     <div class="til-body">
       <div
-        :id="'carouselExampleIndicatorsForDetail' + tilContent.tilId"
+        :id="'carouselExampleIndicatorsForDetail' + til.tilId"
         class="carousel slide"
         data-bs-ride="false"
       >
         <div class="carousel-indicators">
           <button
-            v-for="(image, i) in tilContent.imgUrl"
+            v-for="(image, i) in til.imgUrl"
             :key="i"
             type="button"
-            :data-bs-target="
-              '#carouselExampleIndicatorsForDetail' + tilContent.tilId
-            "
+            :data-bs-target="'#carouselExampleIndicatorsForDetail' + til.tilId"
             :data-bs-slide-to="i"
             :class="[i == 0 ? 'active' : '']"
           ></button>
         </div>
-        <div
-          class="carousel-inner"
-          v-for="(image, i) in tilContent.imgUrl"
-          :key="i"
-        >
+        <div class="carousel-inner" v-for="(image, i) in til.imgUrl" :key="i">
           <div :class="['carousel-item', i == 0 ? 'active' : '']">
             <img :src="image.imgUrl" class="d-block w-100" alt="..." />
           </div>
@@ -165,21 +159,7 @@
           </label>
         </div>
       </div>
-      <span class="like-count"> 좋아요 0개 </span>
-      <!-- <div v-if="bookmarked" class="bookmark">
-        <font-awesome-icon
-          @click="bookmarkCheck"
-          icon="fa-solid fa-bookmark"
-          class="icon-bookmark"
-        />
-      </div>
-      <div v-else>
-        <font-awesome-icon
-          @click="bookmarkCheck"
-          icon="fa-regular fa-bookmark"
-          class="icon-bookmark"
-        />
-      </div> -->
+      <span class="like-count"> 좋아요 {{ til.likeCnt }}개 </span>
       <div class="til-content">
         {{ til.tilContent }}
       </div>
@@ -203,21 +183,24 @@ import { useStore } from "vuex";
 export default {
   name: "TilMainItem",
   props: {
-    til: Object,
+    util: Object,
   },
   setup(props) {
     const store = useStore();
     const getters = computed(() => store.getters);
 
+    const til = ref(props.util);
+    console.log("tiltil", til.value);
+
     // 사용자가 글쓴이인지 아닌지 확인
     const isWriter = computed(() => {
-      return props.til.userId == store.getters.getLoginUserId;
+      return til.value.userId == store.getters.getLoginUserId;
     });
 
     const commentContent = ref("");
 
     const setNum = async () => {
-      const tilNum = props.til.tilId;
+      const tilNum = til.value.tilId;
       const credentials = {
         tilId: tilNum,
         userId: getters.value.getLoginUserId,
@@ -227,18 +210,18 @@ export default {
 
     // 좋아요/좋아요 취소
     const sendLike = () => {
-      if (!props.til.like) {
-        store.dispatch("likeTil", props.til.tilId);
+      if (!til.value.like) {
+        store.dispatch("likeTil", til.value.tilId);
       } else {
-        store.dispatch("dislikeTil", props.til.tilId);
+        store.dispatch("dislikeTil", til.value.tilId);
       }
       // props.til.isLike = !props.til.isLike;
-      store.commit("SET_TILLIST_LIKE", props.til.tilId);
+      store.commit("SET_TILLIST_LIKE", til.value.tilId);
     };
 
     const onSubmit = () => {
       const payload = {
-        tilId: props.til.tilId,
+        tilId: til.value.tilId,
         content: commentContent.value,
         userId: store.getters.getLoginUserId,
       };
@@ -246,28 +229,13 @@ export default {
     };
 
     return {
+      til,
       isWriter,
       commentContent,
       sendLike,
       setNum,
       onSubmit,
     };
-  },
-  data() {
-    return {
-      onDetailModal: false,
-      bookmarked: 0,
-    };
-  },
-  methods: {
-    // 나중에 DB랑 연계해서 스크랩 상태인지 아닌지로 method 변경
-    bookmarkCheck() {
-      if (this.bookmarked) {
-        this.bookmarked = 0;
-      } else {
-        this.bookmarked = 1;
-      }
-    },
   },
 };
 </script>
