@@ -2,7 +2,6 @@ package com.cogether.api.email.dto;
 
 import lombok.*;
 
-import javax.persistence.*;
 
 @Setter
 @Getter

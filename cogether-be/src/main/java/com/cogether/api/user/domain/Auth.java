@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Getter
 @Entity
-@Table(name="auth")
+@Table(name = "auth")
 @RequiredArgsConstructor
 public class Auth {
 
@@ -14,11 +14,11 @@ public class Auth {
     @Id
     private int id;
 
-    @Column(name="refresh_token")
+    @Column(name = "refresh_token")
     private String refreshToken;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
