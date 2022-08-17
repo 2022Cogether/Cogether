@@ -67,8 +67,8 @@ export const followStore = {
         });
     },
 
-    fetchFollowerList({ getters, commit }, userId) {
-      http
+    async fetchFollowerList({ getters, commit }, userId) {
+      await http
         .get("follower/" + userId, {
           headers: getters.authHeader,
         })
@@ -119,13 +119,12 @@ export const followStore = {
     },
 
     // 팔로우 언팔로우
-    async follow({ commit, getters }, payload) {
-      await http
-        .post("follow/", payload, {
+    follow({ getters }, userId) {
+      http
+        .post("follow/" + userId, null, {
           headers: getters.authHeader,
         })
         .then(() => {
-          commit("SET_BOOLEANVALUE");
           console.log("팔로우 완료");
         })
         .catch((err) => {
@@ -135,13 +134,12 @@ export const followStore = {
         });
     },
 
-    unfollow({ commit, getters }, userId) {
+    unfollow({ getters }, userId) {
       http
         .delete("follow/" + userId, {
           headers: getters.authHeader,
         })
         .then(() => {
-          commit("SET_BOOLEANVALUE");
           console.log("언팔로우 완료");
         })
         .catch((err) => {

@@ -171,7 +171,7 @@ export const signStore = {
     },
 
     // 비밀번호 검증
-    certifyPassword({ commit, getters }, password) {
+    certifyPassword({ getters }, password) {
       http
         .post(
           "verify/password",
@@ -182,7 +182,6 @@ export const signStore = {
         )
         .then(() => {
           console.log("비밀번호 검증 성공");
-          commit("SET_BOOLEANVALUE");
         })
         .catch((err) => {
           alert("비밀번호 검증 실패");
@@ -217,6 +216,7 @@ export const signStore = {
           "user/password/",
           {
             password: newPassword,
+            id: getters.getLoginUserId,
           },
           {
             headers: getters.authHeader,
@@ -373,7 +373,7 @@ export const signStore = {
 
     updateUserImage(context, formData) {
       http
-        .put("user/info/profileimg/", formData, {
+        .post("user/info/profileimg/", formData, {
           headers: {
             ACCESS_TOKEN: localStorage.getItem("access_TOKEN"),
             "Content-Type": "multipart/form-data",
@@ -394,7 +394,6 @@ export const signStore = {
     async refreshToken({ dispatch, getters }) {
       // headers: { REFRESH_TOKEN: localStorage.getItem("refresh_TOKEN") }
       //accessToken 만료로 재발급 후 재요청시 비동기처리로는 제대로 처리가 안되서 promise로 처리함
-      alert("promise 앞에서서"); // 2
       let promise = new Promise((resolve, reject) => {
         http
           .post("sign/token" + getters.getLoginUserId, null, {
