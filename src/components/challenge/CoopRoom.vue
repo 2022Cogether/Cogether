@@ -3,12 +3,12 @@
     <!-- <button @click="timerStart">타이머</button> -->
     <!-- <div></div> -->
     <span class="title fs-2"> {{ room.title }}</span>
-    <span class="time fs-5 mx-3">{{ room.duration }}분 남음</span>
+    <span class="time fs-5 mx-3">{{ room.duration }} 분</span>
     <span class="tab1">
       <button class="btn-exit" @click="roomExit">나가기</button>
-      <button class="btn-time-expand">연장</button>
-      <button class="btn-end">종료</button>
-      <button class="btn-start">시작</button>
+      <button v-if="room.inProgress" class="btn-time-expand">연장</button>
+      <button v-if="room.inProgress" class="btn-end">종료</button>
+      <button v-else class="btn-start">시작</button>
     </span>
     <div class="tab2">
       <button class="btn-detail">DETAIL</button>
@@ -18,9 +18,11 @@
   <div class="container-code">
     <div class="box-content">
       <div class="code-nav">
-        <button v-show="state.isExpand" class="btn-people">사람</button>
-        <button v-show="state.isExpand" class="btn-people">사람</button>
-        <button v-show="state.isExpand" class="btn-people">사람</button>
+        <span v-for="(person, i) in members" :key="i">
+          <button v-show="state.isExpand" class="btn-people">
+            {{ person.userName }}
+          </button>
+        </span>
         <button
           v-show="!state.isExpand"
           @click="changeExpand"
@@ -58,96 +60,123 @@
 
 <script>
 import router from "@/router";
-import { computed, reactive, ref } from "vue";
+import { computed, reactive } from "vue";
 import { useStore } from "vuex";
-import http from "@/api/http";
 import Swal from "sweetalert2";
 export default {
   name: "CoopRoom",
   setup() {
     const store = useStore();
     const getters = computed(() => store.getters);
+    const roomId = router.currentRoute.value.params.roomNo;
+    store.dispatch("getCoopMembers", roomId);
+    store.dispatch("getDetailCoopRoom", roomId);
+    const members = computed(() => getters.value.getCoopMembers);
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "bottom-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+    const room = computed(() => getters.value.getRoom);
     const state = reactive({
       isExpand: true,
     });
-    const room = reactive({
-      id: null,
-      userId: null,
-      title: null,
-      duration: null,
-      nowMemNum: null,
-      maxMemNum: null,
-      inProgress: null,
-      content: null,
-    });
-    const roomNo = ref(router.currentRoute.value.params.roomNo);
-    http
-      .get(`/livecoop/${roomNo.value}`, {
-        headers: getters.value.authHeader,
-      })
-      .then(({ data }) => {
-        console.log(data);
-        room.id = data.id;
-        room.userId = data.userId;
-        room.title = data.title;
-        room.duration = data.duration;
-        room.nowMemNum = data.nowMemNum;
-        room.maxMemNum = data.maxMemNum;
-        room.inProgress = data.inProgress;
-        room.content = data.content;
-      })
-      .catch((e) => {
-        console.log("에러: " + e);
-      });
 
     function changeExpand() {
       state.isExpand = !state.isExpand;
     }
 
     async function roomExit() {
-      let flag = false;
-      //if추가해야됨. 로그인한 유저가 방장 userId와 같으면
-      await Swal.fire({
-        title: "정말 방을 나가시겠습니까?",
-        text: "현재 있는 방이 삭제됩니다!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "확인",
-        cancelButtonText: "취소",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          flag = true;
-          const Toast = Swal.mixin({
-            toast: true,
-            position: "bottom-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.addEventListener("mouseenter", Swal.stopTimer);
-              toast.addEventListener("mouseleave", Swal.resumeTimer);
-            },
-          });
-          Toast.fire({
-            icon: "success",
-            title: "방이 삭제되었습니다.",
-          });
-        }
-      });
-      if (flag) {
-        await store.dispatch("deleteCoopRoom", room.id);
+      let flag = 0;
+      if (room.value.userId == getters.value.getLoginUserId) {
+        await Swal.fire({
+          title: "정말 방을 나가시겠습니까?",
+          text: "현재 있는 방이 삭제됩니다!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "확인",
+          cancelButtonText: "취소",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            flag = 1;
+            Toast.fire({
+              icon: "success",
+              title: "방이 삭제되었습니다.",
+            });
+          }
+        });
+      } else {
+        await Swal.fire({
+          title: "정말 방을 나가시겠습니까?",
+          text: "",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "확인",
+          cancelButtonText: "취소",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            flag = 2;
+            Toast.fire({
+              icon: "success",
+              title: "방에서 퇴장하였습니다.",
+            });
+          }
+        });
       }
 
+      if (flag == 1) {
+        await store.dispatch("deleteCoopRoom", room.value.id);
+        //방 삭제되었다고 소켓알림
+        const data = {
+          liveCoopId: room.value.id,
+          mode: 4,
+        };
+        getters.value.getStompClientCoop.send(
+          "/receive/coop",
+          JSON.stringify(data),
+          {}
+        );
+      }
       //else 방장 제외 인원
-
+      else if (flag == 2) {
+        store.dispatch("deleteCoopMember", getters.value.getCoopMemberId);
+        //방나갔다고 소켓알림
+        const data = {
+          liveCoopId: room.value.id,
+          mode: 1,
+        };
+        getters.value.getStompClientCoop.send(
+          "/receive/coop",
+          JSON.stringify(data),
+          {}
+        );
+      }
       //공통
-      if (flag) {
+      if (flag != 0) {
+        store.dispatch("getCoopRooms", getters.value.getLoginUserId);
         router.push({ name: "ChallengeMain" });
       }
     }
-    return { store, getters, state, changeExpand, room, roomExit };
+
+    return {
+      store,
+      getters,
+      state,
+      changeExpand,
+      room,
+      roomExit,
+      members,
+    };
   },
   components: {},
 };
