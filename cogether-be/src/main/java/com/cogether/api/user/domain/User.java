@@ -62,7 +62,7 @@ public class User {
     @Column(name="intro", length=100)
     private String intro;
 
-    @Column(name="img_url", length =300)
+    @Column(name="img_url", length =500)
     private String imgUrl;
 
     @Column(name="resign")
