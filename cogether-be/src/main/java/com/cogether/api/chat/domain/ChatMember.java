@@ -32,7 +32,7 @@ public class ChatMember {
     @Column(name = "last_read_chat_id")
     private int lastReadChatId;
 
-    @Column(name="created_at")
+    @Column(name = "created_at")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
 

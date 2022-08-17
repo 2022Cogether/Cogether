@@ -29,6 +29,7 @@ public class HuntingRequest {
     public static class CreateHuntingScrap {
         private int userId;
         private int huntingId;
+
         public HuntingScrap toEntity(User user, Hunting hunting) {
             return HuntingScrap.builder()
                     .user(user)

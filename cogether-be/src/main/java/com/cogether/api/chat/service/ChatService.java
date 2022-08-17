@@ -122,11 +122,6 @@ public class ChatService {
         return ChatResponse.OnlyRoomId.build(savedChatRoom);
     }
 
-    public ChatResponse.GetLiveChatRoom getLiveChatRoom(int chatRoomId) {
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(ChatRoomNotFoundException::new);
-        List<ChatMember> chatMembers = chatMemRepository.findAllByChatRoom(chatRoom);
-        return ChatResponse.GetLiveChatRoom.build(chatRoom, chatMembers);
-    }
 
     public ChatResponse.GetChatRooms getChatRooms(String token) {
         User loginUser = userRepository.findById(tokenUtils.getUserIdFromToken(token)).orElseThrow(UserNotFoundException::new);

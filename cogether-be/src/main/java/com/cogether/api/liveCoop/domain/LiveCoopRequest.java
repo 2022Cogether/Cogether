@@ -39,7 +39,7 @@ public class LiveCoopRequest {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class StartLiveCoop {
-        private  int liveCoopId;
+        private int liveCoopId;
     }
 
     @Getter
@@ -48,7 +48,7 @@ public class LiveCoopRequest {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class CreateLiveCoopMember {
         private int userId;
-        private  int liveCoopId;
+        private int liveCoopId;
     }
 
     @Getter
@@ -56,8 +56,18 @@ public class LiveCoopRequest {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class UpdateLiveCoopMember {
-        private  int liveCoopMemberId;
+        private int liveCoopMemberId;
         private String code;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class SocketLiveCoop {
+        private int liveCoopId;
+        private int mode;
+    }
+
 
 }
