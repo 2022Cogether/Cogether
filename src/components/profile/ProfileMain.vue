@@ -265,9 +265,14 @@ export default {
     const searchWord = ref("");
     const onSubmit = async () => {
       if (searchWord.value) {
-        await store.dispatch("searchMyTil", searchWord.value);
+        const payload = {
+          tilUserId: profileUser.value.id,
+          keyword: searchWord.value,
+        };
+        console.log("payload", payload);
+        await store.dispatch("searchMyTil", payload);
       } else {
-        await store.dispatch("fetchMyTilList");
+        await store.dispatch("fetchMyTilList", profileUser.value.id);
       }
       tilList.value = [];
       const tempList = store.getters.getTilList.tilList;
@@ -352,7 +357,7 @@ export default {
         console.log("제발", profileUser.value["gitUrl"]);
 
         // 페이지가 Created 될 때 list 가져옴
-        await store.dispatch("fetchMyTilList");
+        await store.dispatch("fetchMyTilList", profileUser.value.id);
         const tempList = store.getters.getTilList.tilList;
         for (let i = 0; i < tempList.length; i++) {
           let tpa = {

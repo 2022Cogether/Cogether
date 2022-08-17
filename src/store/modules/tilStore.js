@@ -131,9 +131,9 @@ export const tilStore = {
           console.error(err.response.data);
         });
     },
-    async fetchMyTilList({ commit, getters }) {
+    async fetchMyTilList({ commit, getters }, userId) {
       await http
-        .get("til/list/my/", {
+        .get("til/list/my/" + userId, {
           headers: getters.authHeader,
         })
         .then((res) => {
@@ -258,10 +258,11 @@ export const tilStore = {
         .then((res) => commit("SET_TIL_LIST", res.data))
         .catch((err) => console.error(err.response));
     },
-    async searchMyTil({ commit, getters }, keyword) {
+    async searchMyTil({ commit, getters }, payload) {
       // paylod => keyword, userId
       await http
-        .get("til/search/my/" + keyword, {
+        .get("til/search/my/", {
+          params: payload,
           headers: getters.authHeader,
         })
         .then((res) => commit("SET_TIL_LIST", res.data))
