@@ -181,5 +181,10 @@ public class UserController {
         return ResponseEntity.ok().body(userService.uploadProfileImg(token,multipartFile));
     }
 
+    @GetMapping(value = "verify/password",headers = "ACCESS_TOKEN")
+    public ResponseEntity verifyPassword(@RequestHeader("ACCESS_TOKEN") String token, @RequestBody UserRequest userRequest)
+    {
+        return ResponseEntity.ok().body(userService.verifyPassword(userRequest,token));
+    }
 
 }

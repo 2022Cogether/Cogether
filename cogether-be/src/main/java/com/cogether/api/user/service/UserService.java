@@ -473,5 +473,37 @@ public class UserService {
         return body;
     }
 
+    public Map<String, Boolean> verifyPassword(UserRequest userRequest,String token)
+    {
+
+        int id =tokenUtils.getUserIdFromToken(token);
+
+        User user =userRepository
+                .findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        String verifiedPassword = passwordEncoder.encode(userRequest.getPassword());
+
+        System.out.println(verifiedPassword);
+        System.out.println(user.getPassword());
+
+        if(passwordEncoder.matches(userRequest.getPassword(),user.getPassword()))
+        {
+            Map<String, Boolean> body= new HashMap<>();
+            body.put("verified",true);
+
+
+            return body;
+        }
+        else
+        {
+            Map<String, Boolean> body= new HashMap<>();
+            body.put("verified",false);
+            return body;
+        }
+
+    }
+
+
+
 
 }
