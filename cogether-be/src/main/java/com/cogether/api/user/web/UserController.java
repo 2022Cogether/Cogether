@@ -175,7 +175,7 @@ public class UserController {
     /**
      * 프로필 이미지 서버 업로드
      */
-    @PutMapping(value = "user/info/profileimg",headers = "ACCESS_TOKEN")
+    @PostMapping(value = "user/info/profileimg",headers = "ACCESS_TOKEN")
     public ResponseEntity uploadProfileImg(@RequestHeader("ACCESS_TOKEN") String token, @RequestPart(value = "image",required = false)MultipartFile multipartFile)
     {
         return ResponseEntity.ok().body(userService.uploadProfileImg(token,multipartFile));
