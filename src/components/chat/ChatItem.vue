@@ -6,9 +6,13 @@
       </a>
     </div>
     <div class="chat-content" @click="clickItem">
-      <div class="chat-name">{{ chatRoom.chatMemberName }}</div>
+      <div class="chat-name-box">
+        <div class="chat-name">{{ chatRoom.chatMemberName }}</div>
+        <div v-if="chatRoom.messageCnt > 0" class="msgCntCircle">
+          {{ chatRoom.messageCnt }}
+        </div>
+      </div>
       <div class="chat-text">{{ chatRoom.lastMessage }}</div>
-      <p>{{ chatRoom.messageCnt }}</p>
     </div>
   </div>
 </template>
@@ -20,6 +24,12 @@ export default {
   name: "ChatItem",
   props: ["chatRoom"],
   setup(props) {
+    // const state = reactive({
+    //   lastMessage: props.chatRoom.lastMessage,
+    // });
+    // if (state.lastMessage.length >= 9) {
+    //   state.lastMessage = state.lastMessage.substring(0, 9) + "...";
+    // }
     const store = useStore();
     const getters = computed(() => store.getters);
     function clickItem() {
@@ -58,5 +68,21 @@ export default {
   margin-bottom: 5px;
   display: flex;
   align-items: center;
+}
+
+.chat-name {
+  display: inline-block;
+}
+.msgCntCircle {
+  display: inline-block;
+  margin-left: 5px;
+  height: 1.1rem;
+  width: 1.1rem;
+  border-radius: 50%;
+  color: white;
+  text-align: center;
+  line-height: 1.1rem;
+  background-color: red;
+  font-size: 0.7rem;
 }
 </style>

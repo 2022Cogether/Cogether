@@ -16,8 +16,12 @@
   <hr />
   <div class="box-talk">
     <div v-for="(item, idx) in state.recvList" :key="idx">
-      <p>{{ item.sendUserName }}</p>
-      <p>{{ item.message }}</p>
+      <div v-if="item.sendUserId == state.userId" class="my">
+        {{ item.message }}
+      </div>
+      <div v-else class="other">
+        {{ item.message }}
+      </div>
     </div>
   </div>
   <!-- 입력창 -->
@@ -69,9 +73,6 @@ export default {
           message: state.message,
         };
         getters.value.getStompClient.send("/receive", JSON.stringify(msg), {});
-        // console.log("리시브리스트");
-        // state.recvList.push(msg);
-        // store.commit("SET_RECV_LIST", state.recvList);
       }
     }
 
@@ -105,6 +106,9 @@ export default {
 .box-talk {
   max-height: 450px;
   overflow: auto;
+  /* -webkit-flex-direction: column-reverse; */
+  display: flex;
+  flex-direction: column-reverse;
 }
 .box-talk::-webkit-scrollbar {
   display: none;
@@ -192,5 +196,21 @@ hr {
   border: 0px;
   background-color: transparent;
   width: 30px;
+}
+
+.my {
+  float: right;
+  background-color: yellow;
+  border-radius: 20px;
+  padding: 7px;
+  margin-bottom: 3px;
+}
+
+.other {
+  float: left;
+  background-color: #c1ebe6;
+  border-radius: 20px;
+  padding: 7px;
+  margin-bottom: 3px;
 }
 </style>

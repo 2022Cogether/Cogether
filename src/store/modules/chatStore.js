@@ -7,7 +7,6 @@ export const chatStore = {
     chatRoom: null,
     chatUserId: null,
     stompClient: null,
-    connected: false,
     recvList: [],
     roomList: [],
   },
@@ -24,9 +23,6 @@ export const chatStore = {
     },
     getStompClient(state) {
       return state.stompClient;
-    },
-    getConnected(state) {
-      return state.connected;
     },
     getRecvList(state) {
       return state.recvList;
@@ -49,14 +45,11 @@ export const chatStore = {
     SET_STOMP_CLIENT(state, stompClient) {
       state.stompClient = stompClient;
     },
-    SET_CONNECTED(state, connected) {
-      state.connected = connected;
-    },
     SET_RECV_LIST(state, recvList) {
       state.recvList = recvList;
     },
     APPEND_RECV_LIST(state, data) {
-      state.recvList.push(data);
+      state.recvList.unshift(data);
     },
     SET_ROOM_LIST(state, roomList) {
       state.roomList = roomList;
