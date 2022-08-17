@@ -1,6 +1,7 @@
 package com.cogether.api.user.service;
 
 import com.cogether.api.config.jwt.TokenUtils;
+import com.cogether.api.file.service.FileUploadService;
 import com.cogether.api.rank.domain.Ranking;
 import com.cogether.api.rank.respository.RankingRepository;
 import com.cogether.api.user.domain.Auth;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -50,6 +52,8 @@ public class UserService {
 
     private final RankingRepository rankingRepository;
 
+    private final FileUploadService fileUploadService;
+
     public Optional<User> findByEmail(String userEmail) {
 
         return userRepository.findByEmail(userEmail);
@@ -80,6 +84,7 @@ public class UserService {
                                 .imgUrl(userRequest.getImg_url())   // 프로필
                                 .intro(userRequest.getIntro())// 한줄소개
                                 .verified(true)    // 이메일 인증여부
+                                .imgUrl("https://cogethera801.s3.ap-northeast-2.amazonaws.com/%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84.png")
                                 .build());
 
         List<String> skills = userRequest.getSkills();
@@ -442,6 +447,63 @@ public class UserService {
 
         return userId;
     }
+
+    /**
+     * 프로필 이미지 서버 업로드
+     */
+
+    @Transactional
+    public Map<String,Integer> uploadProfileImg(String token, MultipartFile multipartFile)
+    {
+        Map<String, Integer> body= new HashMap<>();
+
+        int id =tokenUtils.getUserIdFromToken(token);
+
+        User user =userRepository
+                .findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+
+        if(!multipartFile.isEmpty())
+        {
+            String img_url = fileUploadService.uploadImage(multipartFile);
+            user.setImgUrl(img_url);
+            userRepository.save(user);
+        }
+
+        return body;
+    }
+
+    public Map<String, Boolean> verifyPassword(UserRequest userRequest,String token)
+    {
+
+        int id =tokenUtils.getUserIdFromToken(token);
+
+        User user =userRepository
+                .findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        String verifiedPassword = passwordEncoder.encode(userRequest.getPassword());
+
+        System.out.println(verifiedPassword);
+        System.out.println(user.getPassword());
+
+        if(passwordEncoder.matches(userRequest.getPassword(),user.getPassword()))
+        {
+            Map<String, Boolean> body= new HashMap<>();
+            body.put("verified",true);
+
+
+            return body;
+        }
+        else
+        {
+            Map<String, Boolean> body= new HashMap<>();
+            body.put("verified",false);
+            return body;
+        }
+
+    }
+
+
 
 
 }
