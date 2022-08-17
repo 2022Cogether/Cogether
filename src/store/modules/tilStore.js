@@ -47,7 +47,7 @@ export const tilStore = {
 
     // TIL like <-> dislike
     SET_TIL_LIKE: (state) => {
-      state.tilContent.isLike = !state.tilContent.isLike;
+      state.tilContent.like = !state.tilContent.like;
     },
     SET_TILLIST_LIKE: (state, tilPk) => {
       state.tilList.forEach((element, idx) => {
@@ -89,16 +89,15 @@ export const tilStore = {
   },
   actions: {
     // 피드 상세 조회할 tilId를 store에 세팅
-    fetchOpenTil({ commit, dispatch }, credentials) {
+    fetchOpenTil({ commit }, credentials) {
       // alert("여기는?");
       commit("SET_OPEN_TIL", credentials.tilId);
-      dispatch("fetchTil", credentials);
     },
 
     // 피드 상세 조회
-    fetchTil({ commit, getters }, credentials) {
+    async fetchTil({ commit, getters }, credentials) {
       if (credentials.tilId != -1) {
-        http
+        await http
           .get("til/" + credentials.tilId, {
             headers: getters.authHeader,
           })
@@ -185,8 +184,8 @@ export const tilStore = {
         });
     },
 
-    updateTil({ dispatch, getters }, payload) {
-      http
+    async updateTil({ dispatch, getters }, payload) {
+      await http
         .put("til/", payload, {
           headers: getters.authHeader,
         })
@@ -197,6 +196,7 @@ export const tilStore = {
           };
 
           dispatch("fetchOpenTil", credentials);
+          dispatch("fetchTil", credentials);
         })
         .catch((err) => console.error(err.response));
     },
@@ -218,12 +218,13 @@ export const tilStore = {
         });
     },
 
-    likeTil({ commit, getters }, tilPk) {
+    likeTil({ commit, getters }, tilId) {
       http
         .post(
           "til/like/",
           {
-            tilPk: tilPk,
+            tilId: tilId,
+            userId: getters.getLoginUserId,
           },
           {
             headers: getters.authHeader,
@@ -233,17 +234,11 @@ export const tilStore = {
         .catch((err) => console.error(err.response));
     },
 
-    dislikeTil({ commit, getters }, tilPk) {
+    dislikeTil({ commit, getters }, tilId) {
       http
-        .delete(
-          "til/like/",
-          {
-            tilPk: tilPk,
-          },
-          {
-            headers: getters.authHeader,
-          }
-        )
+        .delete("til/like/" + tilId, {
+          headers: getters.authHeader,
+        })
         .then((res) => commit("SET_TIL", res.data))
         // TIL state 모델이 확정나면, 거기서 is_like에 해당할 속성을 직접 바꿀 예정
         .catch((err) => console.error(err.response));

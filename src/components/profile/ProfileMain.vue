@@ -410,11 +410,13 @@ export default {
     const isTilOpen = computed(() => {
       return modalNum.value != -1;
     });
-    const setNum = (tilNum) => {
-      store.dispatch("fetchOpenTil", {
+    const setNum = async (tilNum) => {
+      const credentials = {
         tilId: tilNum,
         userId: store.getters.getLoginUserId,
-      });
+      };
+      await store.dispatch("fetchOpenTil", credentials);
+      // await store.dispatch("fetchTil", credentials);
     };
 
     // 팔로우
