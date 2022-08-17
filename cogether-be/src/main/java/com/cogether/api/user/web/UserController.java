@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -171,5 +172,19 @@ public class UserController {
         return ResponseEntity.ok().headers(headers).build();
     }
 
+    /**
+     * 프로필 이미지 서버 업로드
+     */
+    @PutMapping(value = "user/info/profileimg",headers = "ACCESS_TOKEN")
+    public ResponseEntity uploadProfileImg(@RequestHeader("ACCESS_TOKEN") String token, @RequestPart(value = "image",required = false)MultipartFile multipartFile)
+    {
+        return ResponseEntity.ok().body(userService.uploadProfileImg(token,multipartFile));
+    }
+
+    @GetMapping(value = "verify/password",headers = "ACCESS_TOKEN")
+    public ResponseEntity verifyPassword(@RequestHeader("ACCESS_TOKEN") String token, @RequestBody UserRequest userRequest)
+    {
+        return ResponseEntity.ok().body(userService.verifyPassword(userRequest,token));
+    }
 
 }
