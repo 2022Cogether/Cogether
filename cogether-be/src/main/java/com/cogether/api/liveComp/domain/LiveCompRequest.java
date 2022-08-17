@@ -2,8 +2,6 @@ package com.cogether.api.liveComp.domain;
 
 import lombok.*;
 
-import java.time.LocalTime;
-
 public class LiveCompRequest {
     @Getter
     @Builder

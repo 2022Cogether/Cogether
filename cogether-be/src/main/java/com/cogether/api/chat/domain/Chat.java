@@ -30,7 +30,7 @@ public class Chat {
     @Column
     private String message;
 
-    @Column(name="created_at")
+    @Column(name = "created_at")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
 

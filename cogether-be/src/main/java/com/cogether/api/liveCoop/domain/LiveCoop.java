@@ -47,7 +47,7 @@ public class LiveCoop {
     @Column(name = "in_progress", nullable = false)
     private boolean inProgress;
 
-    @Column(name="created_at")
+    @Column(name = "created_at")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
 
