@@ -86,15 +86,13 @@ export default {
       console.log("CLICKED!!");
     }
 
-    const logout = () => {
+    const logout = async () => {
       const payload = {
         userId: getters.value.getLoginUserId,
         email: getters.value.getCurrentUser.email,
       };
-      store.dispatch("logout", payload);
-      if (store.getters.getBooleanValue) {
-        router.push({ name: "mainview" });
-      }
+      await store.dispatch("logout", payload);
+      router.push({ name: "mainview" });
     };
 
     async function connect() {

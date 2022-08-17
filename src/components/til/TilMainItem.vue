@@ -223,9 +223,6 @@ export default {
         userId: getters.value.getLoginUserId,
       };
       await store.dispatch("fetchOpenTil", credentials);
-      // await store.dispatch("fetchTil", credentials);
-      // 여기 til props로 보내서 Detail에서 처리하게 해야겠다
-      // isLike 때문
     };
 
     // 좋아요/좋아요 취소

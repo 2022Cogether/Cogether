@@ -312,7 +312,7 @@ export const signStore = {
           headers: getters.authHeader,
         })
         .then((res) => {
-          if (res.data.verified) {
+          if (res.data.isLogOut) {
             localStorage.removeItem("access_TOKEN");
             localStorage.removeItem("refresh_TOKEN");
             localStorage.removeItem("userId");
