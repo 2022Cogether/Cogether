@@ -1,6 +1,5 @@
 package com.cogether.api.chat.domain;
 
-import com.cogether.api.user.domain.User;
 import lombok.*;
 
 import java.time.LocalDateTime;

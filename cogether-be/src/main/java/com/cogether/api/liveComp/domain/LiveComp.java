@@ -27,7 +27,7 @@ public class LiveComp {
     @Column(name = "total_time", nullable = false)
     private int totalTime;
 
-    @Column(name="created_at")
+    @Column(name = "created_at")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
 

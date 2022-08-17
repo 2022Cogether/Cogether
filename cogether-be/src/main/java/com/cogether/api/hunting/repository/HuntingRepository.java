@@ -1,8 +1,8 @@
 package com.cogether.api.hunting.repository;
 
+import com.cogether.api.hunting.domain.Hunting;
 import com.cogether.api.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.cogether.api.hunting.domain.Hunting;
 
 import java.util.List;
 

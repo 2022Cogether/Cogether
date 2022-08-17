@@ -6,6 +6,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LiveCoopResponse {
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class SocketLiveCoop {
+        private int mode;
+
+        public static LiveCoopResponse.SocketLiveCoop build(int mode) {
+            return LiveCoopResponse.SocketLiveCoop.builder()
+                    .mode(mode)
+                    .build();
+        }
+    }
+
     @Getter
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -24,14 +39,16 @@ public class LiveCoopResponse {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class OnlyLiveCoopChatRoomId {
+    public static class LiveCoopChatRoomLiveCoopMemberId {
         private int liveCoopId;
         private int chatRoomId;
+        private int liveCoopMemberId;
 
-        public static LiveCoopResponse.OnlyLiveCoopChatRoomId build(int liveCoopId, int chatRoomId) {
-            return OnlyLiveCoopChatRoomId.builder()
+        public static LiveCoopResponse.LiveCoopChatRoomLiveCoopMemberId build(int liveCoopId, int chatRoomId, int liveCoopMemberId) {
+            return LiveCoopChatRoomLiveCoopMemberId.builder()
                     .liveCoopId(liveCoopId)
                     .chatRoomId(chatRoomId)
+                    .liveCoopMemberId(liveCoopMemberId)
                     .build();
         }
     }
@@ -129,10 +146,28 @@ public class LiveCoopResponse {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class GetLiveCoopMembers {
         private List<GetLiveCoopMember> liveCoopMembers;
+        private int myLiveCoopMemberId;
 
-        public static LiveCoopResponse.GetLiveCoopMembers build(List<LiveCoopMember> liveCoopMembers) {
+        public static LiveCoopResponse.GetLiveCoopMembers build(List<LiveCoopMember> liveCoopMembers, LiveCoopMember liveCoopMember) {
             return LiveCoopResponse.GetLiveCoopMembers.builder()
                     .liveCoopMembers(liveCoopMembers.stream().map(LiveCoopResponse.GetLiveCoopMember::build).collect(Collectors.toList()))
+                    .myLiveCoopMemberId(liveCoopMember.getId())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class LiveCoopState {
+        private int liveCoopId;
+        private boolean inProgress;
+
+        public static LiveCoopResponse.LiveCoopState build(LiveCoop liveCoop) {
+            return LiveCoopState.builder()
+                    .liveCoopId(liveCoop.getId())
+                    .inProgress(liveCoop.isInProgress())
                     .build();
         }
     }
