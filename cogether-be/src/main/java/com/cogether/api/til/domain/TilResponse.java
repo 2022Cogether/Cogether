@@ -12,10 +12,10 @@ public class TilResponse {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class OnlyId{
+    public static class OnlyId {
         private int id;
 
-        public static TilResponse.OnlyId build(Til til){
+        public static TilResponse.OnlyId build(Til til) {
             return OnlyId.builder()
                     .id(til.getId())
                     .build();
@@ -26,10 +26,10 @@ public class TilResponse {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class OnlyLikeId{
+    public static class OnlyLikeId {
         private int id;
 
-        public static TilResponse.OnlyLikeId build(TilLike tilLike){
+        public static TilResponse.OnlyLikeId build(TilLike tilLike) {
             return OnlyLikeId.builder()
                     .id(tilLike.getId())
                     .build();
@@ -40,10 +40,10 @@ public class TilResponse {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class OnlyCommentId{
+    public static class OnlyCommentId {
         private int id;
 
-        public static TilResponse.OnlyCommentId build(TilComment tilComment){
+        public static TilResponse.OnlyCommentId build(TilComment tilComment) {
             return OnlyCommentId.builder()
                     .id(tilComment.getId())
                     .build();
@@ -54,12 +54,12 @@ public class TilResponse {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class getTilImg{
+    public static class getTilImg {
         private int tilImgId;
         private int tilId;
         private String imgUrl;
 
-        public static TilResponse.getTilImg build(TilImg tilImg){
+        public static TilResponse.getTilImg build(TilImg tilImg) {
             return getTilImg.builder()
                     .tilImgId(tilImg.getId())
                     .tilId(tilImg.getTil().getId())
@@ -73,7 +73,7 @@ public class TilResponse {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class getTilComment{
+    public static class getTilComment {
         private int tilCommentId;
         private int userId;
         private String userImg;
@@ -81,7 +81,7 @@ public class TilResponse {
         private String content;
         private LocalDateTime createdAt;
 
-        public static TilResponse.getTilComment build(TilComment tilComment){
+        public static TilResponse.getTilComment build(TilComment tilComment) {
             return getTilComment.builder()
                     .tilCommentId(tilComment.getId())
                     .userId(tilComment.getUser().getId())
@@ -98,7 +98,7 @@ public class TilResponse {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class TilAll{
+    public static class TilAll {
         private int tilId;
         private String tilTitle;
         private String tilContent;
@@ -111,7 +111,7 @@ public class TilResponse {
         private int likeCnt;
         private boolean isLike;
 
-        public static TilResponse.TilAll build(Til til, List<TilImg> tilImg, List<TilComment> tilComment, int likeCnt, boolean isLike){
+        public static TilResponse.TilAll build(Til til, List<TilImg> tilImg, List<TilComment> tilComment, int likeCnt, boolean isLike) {
             return TilAll.builder()
                     .tilId(til.getId())
                     .tilTitle(til.getTitle())
@@ -132,10 +132,10 @@ public class TilResponse {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class TilList{
+    public static class TilList {
         private List<TilResponse.TilAll> tilList;
 
-        public static TilResponse.TilList build(List<TilResponse.TilAll> tilAll){
+        public static TilResponse.TilList build(List<TilResponse.TilAll> tilAll) {
             return TilList.builder()
                     .tilList(tilAll)
                     .build();

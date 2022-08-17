@@ -12,10 +12,10 @@ public class ProjectResponse {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class OnlyId{
+    public static class OnlyId {
         private int id;
 
-        public static ProjectResponse.OnlyId build(Project project){
+        public static ProjectResponse.OnlyId build(Project project) {
             return OnlyId.builder()
                     .id(project.getId())
                     .build();
@@ -26,12 +26,12 @@ public class ProjectResponse {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class getProjectSkill{
+    public static class getProjectSkill {
         private int projectSkillId;
         private int projectId;
         private String skillName;
 
-        public static ProjectResponse.getProjectSkill build(ProjectSkill projectSkill){
+        public static ProjectResponse.getProjectSkill build(ProjectSkill projectSkill) {
             return getProjectSkill.builder()
                     .projectSkillId(projectSkill.getId())
                     .projectId(projectSkill.getProject().getId())
@@ -44,7 +44,7 @@ public class ProjectResponse {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class ProjectAll{
+    public static class ProjectAll {
         private int projectId;
         private int userId;
         private String userNickname;
@@ -60,7 +60,7 @@ public class ProjectResponse {
         private int scrapId;
         private boolean isScrap;
 
-        public static ProjectResponse.ProjectAll build(Project project, List<ProjectSkill> projectSkill,int scrapId, boolean isScrap){
+        public static ProjectResponse.ProjectAll build(Project project, List<ProjectSkill> projectSkill, int scrapId, boolean isScrap) {
             return ProjectAll.builder()
                     .projectId(project.getId())
                     .userNickname(project.getUser().getNickname())
@@ -84,10 +84,10 @@ public class ProjectResponse {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class ProjectList{
+    public static class ProjectList {
         private List<ProjectResponse.ProjectAll> projectList;
 
-        public static ProjectResponse.ProjectList build(List<ProjectResponse.ProjectAll> projectAll){
+        public static ProjectResponse.ProjectList build(List<ProjectResponse.ProjectAll> projectAll) {
             return ProjectList.builder()
                     .projectList(projectAll)
                     .build();
@@ -98,10 +98,10 @@ public class ProjectResponse {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class OnlyProjectScrapId{
+    public static class OnlyProjectScrapId {
         private int id;
 
-        public static ProjectResponse.OnlyProjectScrapId build(ProjectScrap projectScrap){
+        public static ProjectResponse.OnlyProjectScrapId build(ProjectScrap projectScrap) {
             return OnlyProjectScrapId.builder()
                     .id(projectScrap.getId())
                     .build();

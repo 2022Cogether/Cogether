@@ -27,28 +27,30 @@ public class StudyService {
     private final UserRepository userRepository;
     private final TokenUtils tokenUtils;
 
-    public StudyResponse.OnlyId create(StudyRequest.Create_Study create_study){
+    public StudyResponse.OnlyId create(StudyRequest.Create_Study create_study) {
         User user = userRepository.findById(create_study.getUserId()).orElseThrow(UserNotFoundException::new);
         Study study = create_study.toEntity(user);
         Study savedStudy = studyRepository.save(study);
         List<String> list = create_study.getSkillList();
-        for (int i = 0; i < list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             String skill = list.get(i);
             StudySkill studySkill = StudySkill.toEntity(study, skill);
             studySkillRepository.save(studySkill);
         }
+        user.setExp(user.getExp() + 10);
+        userRepository.save(user);
         return StudyResponse.OnlyId.build(savedStudy);
     }
 
-    public StudyResponse.OnlyId delete(int studyId){
+    public StudyResponse.OnlyId delete(int studyId) {
         Study study = studyRepository.findById(studyId).orElseThrow(UserNotFoundException::new);
         List<StudySkill> list = studySkillRepository.findAllByStudy_Id(studyId);
         List<StudyScrap> scrapList = studyScrapRepository.findAllByStudy_Id(studyId);
-        for (int i = 0; i < list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             StudySkill studySkill = list.get(i);
             studySkillRepository.deleteById(studySkill.getId());
         }
-        for (int i = 0; i < scrapList.size(); i++){
+        for (int i = 0; i < scrapList.size(); i++) {
             StudyScrap studyScrap = scrapList.get(i);
             studyScrapRepository.deleteById(studyScrap.getId());
         }
@@ -56,7 +58,7 @@ public class StudyService {
         return StudyResponse.OnlyId.build(study);
     }
 
-    public StudyResponse.StudyAll getStudyDetail(int studyId, String token){
+    public StudyResponse.StudyAll getStudyDetail(int studyId, String token) {
         int userId = tokenUtils.getUserIdFromToken(token);
         Study study = studyRepository.findById(studyId).orElseThrow(StudyNotFoundException::new);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
@@ -64,14 +66,14 @@ public class StudyService {
         int check = studyScrapRepository.countAllByStudyAndUser(study, user);
         int scrapId = 0;
         boolean isScrap = false;
-        if(check == 1){
+        if (check == 1) {
             scrapId = studyScrapRepository.findByStudy_IdAndUser_Id(studyId, userId).getId();
             isScrap = true;
         }
-        return StudyResponse.StudyAll.build(study,list,scrapId, isScrap);
+        return StudyResponse.StudyAll.build(study, list, scrapId, isScrap);
     }
 
-    public StudyResponse.StudyList getStudyList(String token){
+    public StudyResponse.StudyList getStudyList(String token) {
         int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<StudyResponse.StudyAll> studyList = new ArrayList<>();
@@ -82,42 +84,42 @@ public class StudyService {
                 return o2.getCreatedAt().compareTo(o1.getCreatedAt());
             }
         });
-        for (int i = 0; i < list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             Study study = list.get(i);
             List<StudySkill> studySkillList = studySkillRepository.findAllByStudy_Id(study.getId());
             int check = studyScrapRepository.countAllByStudyAndUser(study, user);
             int scrapId = 0;
             boolean isScrap = false;
-            if(check == 1){
-                scrapId = studyScrapRepository.findByStudy_IdAndUser_Id(study.getId(),userId).getId();
+            if (check == 1) {
+                scrapId = studyScrapRepository.findByStudy_IdAndUser_Id(study.getId(), userId).getId();
                 isScrap = true;
             }
-            studyList.add(StudyResponse.StudyAll.build(study, studySkillList,scrapId, isScrap));
+            studyList.add(StudyResponse.StudyAll.build(study, studySkillList, scrapId, isScrap));
         }
         return StudyResponse.StudyList.build(studyList);
     }
 
-    public StudyResponse.StudyList getMyStudyList(String token){
+    public StudyResponse.StudyList getMyStudyList(String token) {
         int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<StudyResponse.StudyAll> studyList = new ArrayList<>();
         List<Study> list = studyRepository.findAllByUserOrderByCreatedAtDesc(user);
-        for (int i = 0; i < list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             Study study = list.get(i);
             List<StudySkill> studySkillList = studySkillRepository.findAllByStudy_Id(study.getId());
             int check = studyScrapRepository.countAllByStudyAndUser(study, user);
             int scrapId = 0;
             boolean isScrap = false;
-            if(check == 1){
-                scrapId = studyScrapRepository.findByStudy_IdAndUser_Id(study.getId(),userId).getId();
+            if (check == 1) {
+                scrapId = studyScrapRepository.findByStudy_IdAndUser_Id(study.getId(), userId).getId();
                 isScrap = true;
             }
-            studyList.add(StudyResponse.StudyAll.build(study, studySkillList,scrapId, isScrap));
+            studyList.add(StudyResponse.StudyAll.build(study, studySkillList, scrapId, isScrap));
         }
         return StudyResponse.StudyList.build(studyList);
     }
 
-    public StudyResponse.OnlyStudyScrapId createStudyScrap(StudyRequest.Create_StudyScrap create_studyScrap){
+    public StudyResponse.OnlyStudyScrapId createStudyScrap(StudyRequest.Create_StudyScrap create_studyScrap) {
         User user = userRepository.findById(create_studyScrap.getUserId()).orElseThrow(UserNotFoundException::new);
         Study study = studyRepository.findById(create_studyScrap.getStudyId()).orElseThrow(StudyNotFoundException::new);
         StudyScrap studyScrap = create_studyScrap.toEntity(study, user);
@@ -125,7 +127,7 @@ public class StudyService {
         return StudyResponse.OnlyStudyScrapId.build(savedStudyScrap);
     }
 
-    public StudyResponse.OnlyStudyScrapId deleteStudyScrap(int studyScrapId){
+    public StudyResponse.OnlyStudyScrapId deleteStudyScrap(int studyScrapId) {
         StudyScrap studyScrap = studyScrapRepository.findById(studyScrapId).orElseThrow(StudyNotFoundException::new);
         studyScrapRepository.deleteById(studyScrapId);
         return StudyResponse.OnlyStudyScrapId.build(studyScrap);

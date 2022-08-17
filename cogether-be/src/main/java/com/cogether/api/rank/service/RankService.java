@@ -26,43 +26,43 @@ public class RankService {
     private final FollowRepository followRepository;
     private final TokenUtils tokenUtils;
 
-    public RankingResponse.TilRankList getTilRank(String token, int page){
+    public RankingResponse.TilRankList getTilRank(String token, int page) {
         int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<Ranking> list = rankingRepository.findAllByOrderByTilCntDesc();
         Ranking myRanking = rankingRepository.findByUser_Id(userId);
-        int startIndex = 20*(page-1);
-        int endIndex = 20*(page);
-        if(endIndex > list.size()) {
+        int startIndex = 20 * (page - 1);
+        int endIndex = 20 * (page);
+        if (endIndex > list.size()) {
             endIndex = list.size();
         }
         List<RankingResponse.TilRank> tilRankList = new ArrayList<>();
-        for (int i = startIndex; i < endIndex; i++){
+        for (int i = startIndex; i < endIndex; i++) {
             int rank = 1;
             Ranking ranking = list.get(i);
-            for (int j = 0; j < list.size(); j++){
-                if(list.get(j).getTilCnt() == ranking.getTilCnt()){
+            for (int j = 0; j < list.size(); j++) {
+                if (list.get(j).getTilCnt() == ranking.getTilCnt()) {
                     break;
                 }
-                if(list.get(j).getTilCnt() > ranking.getTilCnt()){
+                if (list.get(j).getTilCnt() > ranking.getTilCnt()) {
                     rank += 1;
                 }
             }
             tilRankList.add(RankingResponse.TilRank.build(rank, ranking.getUser(), ranking.getTilCnt()));
         }
         int myRank = 1;
-        for (int i = 0; i < list.size(); i++){
-            if(list.get(i).getTilCnt() == myRanking.getTilCnt()){
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getTilCnt() == myRanking.getTilCnt()) {
                 break;
             }
-            if (list.get(i).getTilCnt() > myRanking.getTilCnt()){
+            if (list.get(i).getTilCnt() > myRanking.getTilCnt()) {
                 myRank += 1;
             }
         }
         return RankingResponse.TilRankList.build(myRank, user, myRanking.getTilCnt(), tilRankList);
     }
 
-    public RankingResponse.TilRankList getMyTilRank(String token, int page){
+    public RankingResponse.TilRankList getMyTilRank(String token, int page) {
         int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<Follow> followingList = followRepository.findByFollowing(userId);
@@ -70,158 +70,158 @@ public class RankService {
         Ranking myRanking = rankingRepository.findByUser_Id(userId);
         followRankList.add(myRanking);
         List<RankingResponse.TilRank> tilRankList = new ArrayList<>();
-        for (int i = 0; i < followingList.size(); i++){
+        for (int i = 0; i < followingList.size(); i++) {
             int followingId = followingList.get(i).getFromId();
             followRankList.add(rankingRepository.findByUser_Id(followingId));
         }
         Collections.sort(followRankList, new Comparator<Ranking>() {
             @Override
             public int compare(Ranking o1, Ranking o2) {
-                return o2.getTilCnt()-o1.getTilCnt();
+                return o2.getTilCnt() - o1.getTilCnt();
             }
         });
-        int startIndex = 20*(page-1);
-        int endIndex = 20*page;
-        if(endIndex > followRankList.size()){
+        int startIndex = 20 * (page - 1);
+        int endIndex = 20 * page;
+        if (endIndex > followRankList.size()) {
             endIndex = followRankList.size();
         }
-        for (int i = startIndex; i < endIndex; i++){
+        for (int i = startIndex; i < endIndex; i++) {
             int rank = 1;
             Ranking ranking = followRankList.get(i);
-            for (int j = 0; j < followRankList.size(); j++){
-                if(followRankList.get(j).getTilCnt() == ranking.getTilCnt()){
+            for (int j = 0; j < followRankList.size(); j++) {
+                if (followRankList.get(j).getTilCnt() == ranking.getTilCnt()) {
                     break;
                 }
-                if(followRankList.get(j).getTilCnt() > ranking.getTilCnt()){
+                if (followRankList.get(j).getTilCnt() > ranking.getTilCnt()) {
                     rank += 1;
                 }
             }
             tilRankList.add(RankingResponse.TilRank.build(rank, ranking.getUser(), ranking.getTilCnt()));
         }
         int myRank = 1;
-        for (int i = 0; i < followRankList.size(); i++){
-            if(followRankList.get(i).getTilCnt() == myRanking.getTilCnt()){
+        for (int i = 0; i < followRankList.size(); i++) {
+            if (followRankList.get(i).getTilCnt() == myRanking.getTilCnt()) {
                 break;
             }
-            if(followRankList.get(i).getTilCnt() > myRanking.getTilCnt()){
+            if (followRankList.get(i).getTilCnt() > myRanking.getTilCnt()) {
                 myRank += 1;
             }
         }
         return RankingResponse.TilRankList.build(myRank, user, myRanking.getTilCnt(), tilRankList);
     }
 
-    public RankingResponse.ExpRankList getExpRank(String token, int page){
+    public RankingResponse.ExpRankList getExpRank(String token, int page) {
         int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<User> list = userRepository.findAllByOrderByExp();
-        int startIndex = 20*(page-1);
-        int endIndex = 20*(page);
-        if(endIndex > list.size()) {
+        int startIndex = 20 * (page - 1);
+        int endIndex = 20 * (page);
+        if (endIndex > list.size()) {
             endIndex = list.size();
         }
         List<RankingResponse.ExpRank> expRankList = new ArrayList<>();
-        for (int i = startIndex; i < endIndex; i++){
+        for (int i = startIndex; i < endIndex; i++) {
             User u = list.get(i);
             int rank = 1;
-            for (int j = 0; j < list.size(); j++){
-                if(list.get(j).getExp() == u.getExp()){
+            for (int j = 0; j < list.size(); j++) {
+                if (list.get(j).getExp() == u.getExp()) {
                     break;
                 }
-                if(list.get(j).getExp() > u.getExp()){
+                if (list.get(j).getExp() > u.getExp()) {
                     rank += 1;
                 }
             }
             expRankList.add(RankingResponse.ExpRank.build(rank, u));
         }
         int myRank = 1;
-        for (int i = 0; i < list.size(); i++){
-            if(list.get(i).getExp() == user.getExp()){
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getExp() == user.getExp()) {
                 break;
             }
-            if(list.get(i).getExp() > user.getExp()){
+            if (list.get(i).getExp() > user.getExp()) {
                 myRank += 1;
             }
         }
         return RankingResponse.ExpRankList.build(myRank, user, expRankList);
     }
 
-    public RankingResponse.ExpRankList getMyExpRank(String token, int page){
+    public RankingResponse.ExpRankList getMyExpRank(String token, int page) {
         int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<Follow> followList = followRepository.findByFollowing(userId);
         List<User> followUserList = new ArrayList<>();
         followUserList.add(user);
         List<RankingResponse.ExpRank> expRankList = new ArrayList<>();
-        for (int i = 0; i < followUserList.size(); i++){
+        for (int i = 0; i < followUserList.size(); i++) {
             int followId = followList.get(i).getFromId();
             followUserList.add(userRepository.findById(followId).orElseThrow(UserNotFoundException::new));
         }
         Collections.sort(followUserList, new Comparator<User>() {
             @Override
             public int compare(User o1, User o2) {
-                return o2.getExp()-o1.getExp();
+                return o2.getExp() - o1.getExp();
             }
         });
-        int startIndex = 20*(page-1);
-        int endIndex = 20*page;
-        if(endIndex > followUserList.size()){
+        int startIndex = 20 * (page - 1);
+        int endIndex = 20 * page;
+        if (endIndex > followUserList.size()) {
             endIndex = followUserList.size();
         }
-        for (int i = startIndex; i < endIndex; i++){
+        for (int i = startIndex; i < endIndex; i++) {
             int rank = 1;
             User u = followUserList.get(i);
-            for (int j = 0; j < followUserList.size(); j++){
-                if(followUserList.get(j).getExp() == u.getExp()){
+            for (int j = 0; j < followUserList.size(); j++) {
+                if (followUserList.get(j).getExp() == u.getExp()) {
                     break;
                 }
-                if(followUserList.get(j).getExp() > u.getExp()){
+                if (followUserList.get(j).getExp() > u.getExp()) {
                     rank += 1;
                 }
             }
             expRankList.add(RankingResponse.ExpRank.build(rank, u));
         }
         int myRank = 1;
-        for (int i = 0; i < followUserList.size(); i++){
-            if(followUserList.get(i).getExp() == user.getExp()){
+        for (int i = 0; i < followUserList.size(); i++) {
+            if (followUserList.get(i).getExp() == user.getExp()) {
                 break;
             }
-            if(followUserList.get(i).getExp() > user.getExp()){
+            if (followUserList.get(i).getExp() > user.getExp()) {
                 myRank += 1;
             }
         }
         return RankingResponse.ExpRankList.build(myRank, user, expRankList);
     }
 
-    public RankingResponse.LiveCompRankList getTotalRank(String token, int page){
+    public RankingResponse.LiveCompRankList getTotalRank(String token, int page) {
         int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<Ranking> list = rankingRepository.findAllByOrderByTotalDesc();
         List<RankingResponse.LiveCompRank> totalRankList = new ArrayList<>();
         Ranking myRanking = rankingRepository.findByUser_Id(userId);
-        int startIndex = 20*(page-1);
-        int endIndex = 20*page;
-        if(endIndex > list.size()){
+        int startIndex = 20 * (page - 1);
+        int endIndex = 20 * page;
+        if (endIndex > list.size()) {
             endIndex = list.size();
         }
-        for (int i = startIndex; i < endIndex; i++){
+        for (int i = startIndex; i < endIndex; i++) {
             int rank = 1;
             Ranking ranking = list.get(i);
-            for (int j = 0; j < list.size(); j++){
-                if(list.get(j).getTotal() == ranking.getTotal()){
+            for (int j = 0; j < list.size(); j++) {
+                if (list.get(j).getTotal() == ranking.getTotal()) {
                     break;
                 }
-                if(list.get(j).getTotal() > ranking.getTotal()){
+                if (list.get(j).getTotal() > ranking.getTotal()) {
                     rank += 1;
                 }
             }
             totalRankList.add(RankingResponse.LiveCompRank.build(rank, ranking.getUser(), ranking.getTotal()));
         }
         int myRank = 1;
-        for (int i = 0; i < list.size(); i++){
-            if(list.get(i).getTotal() == myRanking.getTotal()){
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getTotal() == myRanking.getTotal()) {
                 break;
             }
-            if(list.get(i).getTotal() > myRanking.getTotal()){
+            if (list.get(i).getTotal() > myRanking.getTotal()) {
                 myRank += 1;
             }
         }
@@ -236,40 +236,40 @@ public class RankService {
         Ranking myRanking = rankingRepository.findByUser_Id(userId);
         followRankList.add(myRanking);
         List<RankingResponse.LiveCompRank> totalRankList = new ArrayList<>();
-        for (int i = 0; i < followList.size(); i++){
+        for (int i = 0; i < followList.size(); i++) {
             int followId = followList.get(i).getFromId();
             followRankList.add(rankingRepository.findByUser_Id(followId));
         }
         Collections.sort(followRankList, new Comparator<Ranking>() {
             @Override
             public int compare(Ranking o1, Ranking o2) {
-                return o2.getTotal()-o1.getTotal();
+                return o2.getTotal() - o1.getTotal();
             }
         });
-        int startIndex = 20*(page-1);
+        int startIndex = 20 * (page - 1);
         int endIndex = 20 * page;
-        if(endIndex > followRankList.size()){
+        if (endIndex > followRankList.size()) {
             endIndex = followRankList.size();
         }
-        for (int i = startIndex; i < endIndex; i++){
+        for (int i = startIndex; i < endIndex; i++) {
             int rank = 1;
             Ranking ranking = followRankList.get(i);
-            for (int j = 0; j < followRankList.size(); j++){
-                if(followRankList.get(j).getTotal() == ranking.getTotal()){
+            for (int j = 0; j < followRankList.size(); j++) {
+                if (followRankList.get(j).getTotal() == ranking.getTotal()) {
                     break;
                 }
-                if(followRankList.get(j).getTotal() > ranking.getTotal()){
+                if (followRankList.get(j).getTotal() > ranking.getTotal()) {
                     rank += 1;
                 }
             }
             totalRankList.add(RankingResponse.LiveCompRank.build(rank, ranking.getUser(), ranking.getTotal()));
         }
         int myRank = 1;
-        for (int i = 0; i < followRankList.size(); i++){
-            if(followRankList.get(i).getTotal() == myRanking.getTotal()){
+        for (int i = 0; i < followRankList.size(); i++) {
+            if (followRankList.get(i).getTotal() == myRanking.getTotal()) {
                 break;
             }
-            if(followRankList.get(i).getTotal() > myRanking.getTotal()){
+            if (followRankList.get(i).getTotal() > myRanking.getTotal()) {
                 myRank += 1;
             }
         }

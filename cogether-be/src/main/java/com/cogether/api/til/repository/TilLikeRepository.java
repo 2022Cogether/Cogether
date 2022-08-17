@@ -8,8 +8,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface TilLikeRepository extends JpaRepository<TilLike, Integer> {
-    Integer countAllByTil (Til til);
+    Integer countAllByTil(Til til);
+
     Integer countAllByTilAndUser(Til til, User user);
+
     TilLike findByTilAndUser(Til til, User user);
 
     List<TilLike> findAllByTil(Til til);

@@ -18,7 +18,7 @@ public class TilComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT UNSIGNED",nullable = false)
+    @Column(columnDefinition = "INT UNSIGNED", nullable = false)
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)

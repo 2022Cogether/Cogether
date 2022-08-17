@@ -9,7 +9,8 @@ import java.util.List;
 
 public interface StudyScrapRepository extends JpaRepository<StudyScrap, Integer> {
 
-    Integer countAllByStudyAndUser (Study study, User user);
+    Integer countAllByStudyAndUser(Study study, User user);
+
     StudyScrap findByStudy_IdAndUser_Id(int studyId, int userId);
 
     List<StudyScrap> findAllByStudy_Id(int studyId);
