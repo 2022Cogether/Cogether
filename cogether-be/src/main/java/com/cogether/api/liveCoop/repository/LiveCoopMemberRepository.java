@@ -10,5 +10,7 @@ import java.util.List;
 public interface LiveCoopMemberRepository extends JpaRepository<LiveCoopMember, Integer> {
     List<LiveCoopMember> findAllByLiveCoop(LiveCoop liveCoop);
 
+    LiveCoopMember findByUser(User user);
+
     int countAllByUser(User user);
 }
