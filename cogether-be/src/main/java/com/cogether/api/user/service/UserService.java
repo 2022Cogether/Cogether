@@ -84,6 +84,7 @@ public class UserService {
                                 .imgUrl(userRequest.getImg_url())   // 프로필
                                 .intro(userRequest.getIntro())// 한줄소개
                                 .verified(true)    // 이메일 인증여부
+                                .imgUrl("https://cogethera801.s3.ap-northeast-2.amazonaws.com/%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84.png")
                                 .build());
 
         List<String> skills = userRequest.getSkills();
