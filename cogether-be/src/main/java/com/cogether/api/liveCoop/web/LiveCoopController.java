@@ -27,8 +27,8 @@ public class LiveCoopController {
 
     @PostMapping("/livecoop")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<LiveCoopResponse.OnlyLiveCoopChatRoomId> createLiveCoop(@RequestBody LiveCoopRequest.CreateLiveCoop request) {
-        LiveCoopResponse.OnlyLiveCoopChatRoomId response = liveCoopService.createLiveCoop(request);
+    public ResponseEntity<LiveCoopResponse.LiveCoopChatRoomLiveCoopMemberId> createLiveCoop(@RequestBody LiveCoopRequest.CreateLiveCoop request) {
+        LiveCoopResponse.LiveCoopChatRoomLiveCoopMemberId response = liveCoopService.createLiveCoop(request);
         return ResponseEntity.ok().body(response);
     }
 
@@ -46,8 +46,15 @@ public class LiveCoopController {
 
     @PatchMapping("/livecoop")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<LiveCoopResponse.OnlyLiveCoopId> startLiveCoop(@RequestBody LiveCoopRequest.StartLiveCoop request) {
-        LiveCoopResponse.OnlyLiveCoopId response = liveCoopService.startLiveCoop(request);
+    public ResponseEntity<LiveCoopResponse.LiveCoopState> startLiveCoop(@RequestBody LiveCoopRequest.StartLiveCoop request) {
+        LiveCoopResponse.LiveCoopState response = liveCoopService.startLiveCoop(request);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PatchMapping("/livecoop/keep")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<LiveCoopResponse.GetLiveCoop> keepLiveCoop(@RequestBody LiveCoopRequest.StartLiveCoop request) {
+        LiveCoopResponse.GetLiveCoop response = liveCoopService.keepLiveCoop(request);
         return ResponseEntity.ok().body(response);
     }
 
@@ -60,8 +67,8 @@ public class LiveCoopController {
 
     @PostMapping("/livecoop/member")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<LiveCoopResponse.OnlyLiveCoopChatRoomId> createLiveCoopMember(@RequestBody LiveCoopRequest.CreateLiveCoopMember request) {
-        LiveCoopResponse.OnlyLiveCoopChatRoomId response = liveCoopService.createLiveCoopMember(request);
+    public ResponseEntity<LiveCoopResponse.LiveCoopChatRoomLiveCoopMemberId> createLiveCoopMember(@RequestBody LiveCoopRequest.CreateLiveCoopMember request) {
+        LiveCoopResponse.LiveCoopChatRoomLiveCoopMemberId response = liveCoopService.createLiveCoopMember(request);
         return ResponseEntity.ok().body(response);
     }
 
@@ -71,9 +78,9 @@ public class LiveCoopController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/livecoop/member/list/{liveCoopId}")
-    public ResponseEntity<LiveCoopResponse.GetLiveCoopMembers> getLiveCoopMembers(@PathVariable int liveCoopId) {
-        LiveCoopResponse.GetLiveCoopMembers response = liveCoopService.getLiveCoopMembers(liveCoopId);
+    @GetMapping(value = "/livecoop/member/list/{liveCoopId}", headers = "ACCESS_TOKEN")
+    public ResponseEntity<LiveCoopResponse.GetLiveCoopMembers> getLiveCoopMembers(@PathVariable int liveCoopId, @RequestHeader("ACCESS_TOKEN") String token) {
+        LiveCoopResponse.GetLiveCoopMembers response = liveCoopService.getLiveCoopMembers(liveCoopId, token);
         return ResponseEntity.ok().body(response);
     }
 
