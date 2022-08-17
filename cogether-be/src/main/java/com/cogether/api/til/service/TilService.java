@@ -158,11 +158,12 @@ public class TilService {
         return TilResponse.TilList.build(tilList);
     }
 
-    public TilResponse.TilList getMyTilList(String token){
+    public TilResponse.TilList getMyTilList(String token,int tilUserId){
         int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        User tilUser = userRepository.findById(tilUserId).orElseThrow(UserNotFoundException::new);
         List<TilResponse.TilAll> tilList = new ArrayList<>();
-        List<Til> list = tilRepository.findAllByUserOrderByCreatedAtDesc(user);
+        List<Til> list = tilRepository.findAllByUserOrderByCreatedAtDesc(tilUser);
         for(int i = 0 ; i < list.size() ; i++){
             Til til = list.get(i);
             List<TilImg> imgList = tilImgRepository.findAllByTil(til);
@@ -178,11 +179,12 @@ public class TilService {
         return TilResponse.TilList.build(tilList);
     }
 
-    public TilResponse.TilList getMySearchTil(String keyword, String token){
+    public TilResponse.TilList getMySearchTil(String keyword, int tilUserId, String token){
         int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        User tilUser = userRepository.findById(tilUserId).orElseThrow(UserNotFoundException::new);
         List<TilResponse.TilAll> tilList = new ArrayList<>();
-        List<Til> list = tilRepository.findAllByTitleContainingIgnoreCaseAndUserOrderByCreatedAtDesc(keyword, user);
+        List<Til> list = tilRepository.findAllByTitleContainingIgnoreCaseAndUserOrderByCreatedAtDesc(keyword, tilUser);
         for(int i = 0 ; i < list.size() ; i++){
             Til til = list.get(i);
             List<TilImg> imgList = tilImgRepository.findAllByTil(til);
