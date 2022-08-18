@@ -80,6 +80,17 @@ export default {
       min: null,
       content: null,
     });
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "bottom-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
     function exit() {
       Swal.fire({
         title: "나가시겠습니까?",
@@ -105,22 +116,16 @@ export default {
         !state.personnel ||
         !state.title
       ) {
+        Toast.fire({
+          icon: "warning",
+          title: "빈 칸이 존재합니다.",
+        });
         return;
       }
       //actions axios 보내기
       await store.dispatch("createCoopRoom", state);
       //sweetalert
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "bottom-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener("mouseenter", Swal.stopTimer);
-          toast.addEventListener("mouseleave", Swal.resumeTimer);
-        },
-      });
+
       Toast.fire({
         icon: "success",
         title: "방이 생성되었습니다.",

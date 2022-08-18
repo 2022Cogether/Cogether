@@ -110,7 +110,7 @@ export const recruitStore = {
     deleteProjectTeamScrap({ commit, getters }, param) {
       console.log(commit);
       http
-        .delete("project/scrap", param, {
+        .delete("project/scrap/" + param, {
           headers: getters.authHeader,
         })
         .then(({ data }) => {
@@ -197,7 +197,7 @@ export const recruitStore = {
     deleteProjectPersonScrap({ commit, getters }, param) {
       console.log(commit);
       http
-        .delete("hunting/scrap", param, {
+        .delete("hunting/scrap/" + param, {
           headers: getters.authHeader,
         })
         .then(({ data }) => {
@@ -287,7 +287,7 @@ export const recruitStore = {
     deleteStudyTeamScrap({ commit, getters }, param) {
       console.log(commit);
       http
-        .delete("study/scrap", param, {
+        .delete("study/scrap/" + param, {
           headers: getters.authHeader,
         })
         .then(({ data }) => {

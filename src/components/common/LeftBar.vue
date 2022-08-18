@@ -75,6 +75,10 @@ a {
   text-decoration: none;
 }
 
+.container {
+  padding-left: 10px;
+}
+
 .left-bar {
   position: fixed;
   left: 0;
@@ -89,6 +93,7 @@ a {
 }
 
 .row:hover {
+  width: 300px;
   background-color: #e6e6e6;
 }
 

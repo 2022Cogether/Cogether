@@ -1,20 +1,24 @@
 <template>
   <div class="team-container">
-    <div class="title-box d-flex justify-content-between">
-      <div
-        class="head d-flex"
-        data-bs-toggle="modal"
-        data-bs-target="#studyDetailInfo"
-        @click="setModal"
-      >
+    <div class="d-flex justify-content-between">
+      <div class="head d-flex">
         <div class="profile-img-box">
-          <img
-            class="profile-img"
-            src="@/assets/logo.png"
-            alt="profile image"
-          />
+          <a :href="`/#/profile/` + studyTeam.userId">
+            <img
+              class="profile-img"
+              :src="studyTeam.userImgurl"
+              alt="profile image"
+            />
+          </a>
         </div>
-        <div class="title fs-3">{{ studyTeam.title }}</div>
+        <div
+          class="title fs-3"
+          data-bs-toggle="modal"
+          data-bs-target="#studyDetailInfo"
+          @click="setModal"
+        >
+          {{ studyTeam.title }}
+        </div>
       </div>
       <div class="d-flex">
         <!-- 삭제 드롭다운 -->
@@ -117,7 +121,7 @@ export default {
       if (state.bookmark) {
         store.dispatch("setStudyTeamScrap", props.studyTeam.studyId);
       } else {
-        store.dispatch("deleteStudyTeamScrap", props.studyTeam.studyId);
+        store.dispatch("deleteStudyTeamScrap", props.studyTeam.scrapId);
       }
     }
 
@@ -126,7 +130,7 @@ export default {
         title: "정말 삭제하시겠습니까?",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#2a9d8f",
         cancelButtonColor: "#d33",
         confirmButtonText: "확인",
         cancelButtonText: "취소",
@@ -149,6 +153,7 @@ export default {
             icon: "success",
             title: "글이 삭제되었습니다.",
           });
+          router.go();
           router.push({ name: "RecruitMain" });
         }
       });
@@ -174,7 +179,6 @@ export default {
   margin-right: 0px;
   float: right;
 }
-
 /* 기술스택 */
 .tech-icon-container {
   position: relative;
@@ -198,7 +202,7 @@ export default {
   width: 23px;
   height: 23px;
 }
-/*  */
+
 .team-container {
   background-color: white;
   border: 1px solid #dbdbda;
@@ -219,12 +223,12 @@ export default {
   border-radius: 70%;
   overflow: hidden;
   margin: 10px;
-  border: 3px solid gold;
+  text-align: center;
 }
 
 .profile-img {
-  width: 45px;
-  height: 45px;
+  width: 100%;
+  height: 100%;
 }
 
 /* Title */

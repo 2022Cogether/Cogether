@@ -29,10 +29,12 @@ export default {
 <style>
 .body {
   font-family: "Noto Sans KR", sans-serif;
+  overflow-x: hidden;
 }
 
 .main-area {
-  padding-top: 12vh;
+  padding-top: 90px;
+  padding-right: 0px;
 }
 
 .left,
@@ -42,6 +44,11 @@ export default {
 
 nav-bar {
   height: 10vh;
+  padding-right: 0px;
+}
+
+.right-bar {
+  padding-right: 0px;
 }
 
 .center {

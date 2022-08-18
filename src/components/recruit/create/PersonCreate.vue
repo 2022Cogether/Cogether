@@ -35,6 +35,17 @@ export default {
       title: null,
       content: null,
     });
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "bottom-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
     function exit() {
       Swal.fire({
         title: "나가시겠습니까?",
@@ -54,22 +65,15 @@ export default {
     }
     async function createRecruitPerson() {
       if (!state.title || !state.content) {
+        Toast.fire({
+          icon: "warning",
+          title: "빈 칸이 존재합니다.",
+        });
         return;
       }
 
       await store.dispatch("createProjectPerson", state);
       //sweetalert
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "bottom-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener("mouseenter", Swal.stopTimer);
-          toast.addEventListener("mouseleave", Swal.resumeTimer);
-        },
-      });
       Toast.fire({
         icon: "success",
         title: "글이 작성되었습니다.",

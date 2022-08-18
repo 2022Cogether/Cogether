@@ -21,7 +21,13 @@
     </div>
     <div class="col-3 align-self-center">
       <font-awesome-icon
+        v-if="!competeState"
         class="fs-3 icons"
+        icon="fa-solid fa-tower-broadcast"
+      />
+      <font-awesome-icon
+        v-if="competeState"
+        class="fs-3 icons compete-icon"
         icon="fa-solid fa-tower-broadcast"
       />
       <font-awesome-icon class="fs-3 icons" icon="fa-solid fa-bell" />
@@ -74,6 +80,7 @@ export default {
     const store = useStore();
     const getters = computed(() => store.getters);
     const currentUser = store.getters.getCurrentUser;
+    const competeState = computed(() => store.getters.getIsCompeteStarted);
 
     const userId = computed(() => {
       return getters.value.getLoginUserId;
@@ -137,12 +144,24 @@ export default {
       store.commit("SET_STOMP_CLIENT", this.stompClient);
     }
 
-    return { isLoggedIn, currentUser, checkOkay, logout, userId, connect };
+    return {
+      isLoggedIn,
+      currentUser,
+      checkOkay,
+      logout,
+      userId,
+      connect,
+      competeState,
+    };
   },
 };
 </script>
 
 <style scoped>
+.compete-icon {
+  color: red;
+}
+
 .logo-area {
   font-size: 2rem;
   font-weight: bold;

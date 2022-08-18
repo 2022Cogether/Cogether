@@ -2,7 +2,11 @@
   <div>
     <!-- 검색바 -->
     <div class="searchbar">
-      <input class="input-search" type="text" v-model="state.tempText" />
+      <input
+        class="input-search"
+        @keydown="searchEnter"
+        v-model="state.tempText"
+      />
       <button class="btn-search" @click="search">
         <font-awesome-icon
           class="searchicon"
@@ -29,20 +33,6 @@
         내 글
       </button>
     </div>
-    <!-- 기술스택 필터 -->
-    <!-- <div class="d-flex">
-      <div class="icon-container">
-        <img
-          src="@/assets/devicon/javascript-original.svg"
-          alt="JS Icon"
-          class="icons"
-        />
-      </div>
-      <button class="plus-icon-box">
-        <font-awesome-icon icon="fa-solid fa-plus" class="scra" />
-      </button>
-    </div> -->
-    <!-- 프로젝트  -->
     <div v-if="state.tabState === 'project'">
       <div class="list-box">
         <PeopleList :searchText="state.searchText" :tabState="state.tabState" />
@@ -53,7 +43,9 @@
     </div>
     <!-- 스터디 -->
     <div v-if="state.tabState === 'study'">
-      <StudyList :searchText="state.searchText" :tabState="state.tabState" />
+      <div class="list-box">
+        <StudyList :searchText="state.searchText" :tabState="state.tabState" />
+      </div>
     </div>
     <!-- 스크랩 -->
     <div v-if="state.tabState === 'scrap'">
@@ -81,7 +73,7 @@
     </div>
     <!-- 글쓰기 -->
     <button class="icon-body" @click="recruitCreate">
-      <font-awesome-icon icon="fa-solid fa-address-book" class="book-icon" />
+      <font-awesome-icon icon="fa-solid fa-pen-clip" class="pen-icon" />
     </button>
   </div>
 </template>
@@ -123,6 +115,12 @@ export default {
     function search() {
       state.searchText = state.tempText;
     }
+
+    function searchEnter(e) {
+      if (e.keyCode == 13) {
+        state.searchText = state.tempText;
+      }
+    }
     return {
       store,
       getters,
@@ -133,6 +131,7 @@ export default {
       search,
       btnTab3,
       btnTab4,
+      searchEnter,
     };
   },
   components: {
@@ -237,7 +236,7 @@ h2 {
   box-shadow: 0px 3px rgba(0, 0, 0, 0.3);
 }
 
-.book-icon {
+.pen-icon {
   font-size: 30px;
 }
 
