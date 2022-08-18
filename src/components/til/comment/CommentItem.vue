@@ -49,7 +49,7 @@
             </div>
           </div>
           <p v-if="!isEdit" class="be-comment-text">
-            {{ commentContent }}
+            {{ props.comment.content }}
           </p>
           <input
             v-else

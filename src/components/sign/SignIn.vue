@@ -18,18 +18,14 @@
           required
           @keyup.enter.prevent="goLogin"
         />
-        <img
-          @click="goLogin"
-          src="@/assets/login_button.png"
-          alt="로그인"
-          style="
-            max-width: 8vw;
-            margin-left: 5vw;
-            margin-top: 2vh;
-            margin-bottom: 1vh;
-            cursor: pointer;
-          "
-        />
+        <div class="d-flex justify-content-center mt-2" style="width: 100%">
+          <img
+            @click="goLogin"
+            src="@/assets/login_button.png"
+            alt="로그인"
+            style="max-width: 7vw; cursor: pointer"
+          />
+        </div>
       </form>
     </div>
     <div class="d-flex justify-content-center mt-3">
@@ -38,12 +34,7 @@
           <p>아직 회원이 아니신가요?</p>
         </div>
         <div>
-          <router-link class="link" to="/sign/signup">
-            <img
-              src="@/assets/register_button.png"
-              alt="회원가입"
-              style="max-width: 6vw; margin-bottom: 1vh"
-          /></router-link>
+          <router-link class="link" to="/sign/signup">회원가입</router-link>
         </div>
       </div>
     </div>
@@ -54,11 +45,8 @@
         </div>
         <div>
           <router-link class="link" :to="{ name: 'PassWordSeek' }">
-            <img
-              src="@/assets/password_seek_button.png"
-              alt="비밀번호 찾기"
-              style="max-width: 6vw; margin-bottom: 1vh"
-          /></router-link>
+            비밀번호 찾기
+          </router-link>
         </div>
       </div>
     </div>
@@ -125,7 +113,7 @@ export default {
 .container {
   border: 1px solid #bdbdbd;
   border-radius: 10px;
-  width: 50%;
+  width: 60%;
   height: auto;
   position: relative;
   margin: 10% auto;
