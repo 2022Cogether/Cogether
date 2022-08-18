@@ -3,8 +3,12 @@
   <div class="chat-nav">
     <!-- 프로필사진 -->
     <div class="chat-profile">
-      <a href="#">
-        <img class="chat-picture" src="@/assets/logo.png" alt="로고" />
+      <a :href="`/#/profile/` + getters.getChatRoom.chatMemberUserId">
+        <img
+          class="chat-picture"
+          :src="getters.getChatRoom.chatMemberImage"
+          alt="로고"
+        />
       </a>
     </div>
     <!-- 이름 및 나가기 버튼-->
@@ -137,15 +141,19 @@ export default {
 
 .chat-profile {
   float: left;
-  width: 15%;
+  width: 50px;
+  height: 50px;
   margin-right: 3%;
+  overflow: hidden;
 }
 
 .chat-picture {
   border-radius: 70%;
   border: 1px solid #dbdbdb;
-  margin: 3%;
+  margin: 0;
   width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .chat-name {
@@ -203,7 +211,7 @@ hr {
   background-color: yellow;
   border-radius: 20px;
   padding: 7px;
-  margin-bottom: 3px;
+  margin-bottom: 5px;
 }
 
 .other {
@@ -211,6 +219,6 @@ hr {
   background-color: #c1ebe6;
   border-radius: 20px;
   padding: 7px;
-  margin-bottom: 3px;
+  margin-bottom: 8px;
 }
 </style>

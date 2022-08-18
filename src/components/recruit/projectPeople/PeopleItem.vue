@@ -2,7 +2,13 @@
   <li class="list-group-item d-flex">
     <!-- 프로필사진 -->
     <div class="profile-img-box">
-      <img class="profile-img" src="@/assets/logo.png" alt="profile image" />
+      <a :href="`/#/profile/` + projectPerson.userId">
+        <img
+          class="profile-img"
+          :src="projectPerson.userImgurl"
+          alt="profile image"
+        />
+      </a>
     </div>
     <!-- 이름과 제목 -->
     <div
@@ -93,10 +99,7 @@ export default {
       if (state.bookmark) {
         store.dispatch("setProjectPersonScrap", props.projectPerson.huntingId);
       } else {
-        store.dispatch(
-          "deleteProjectPersonScrap",
-          props.projectPerson.huntingId
-        );
+        store.dispatch("deleteProjectPersonScrap", props.projectPerson.scrapId);
       }
     }
 
@@ -106,7 +109,7 @@ export default {
         title: "정말 삭제하시겠습니까?",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#2a9d8f",
         cancelButtonColor: "#d33",
         confirmButtonText: "확인",
         cancelButtonText: "취소",
@@ -133,7 +136,7 @@ export default {
         }
       });
       if (flag) {
-        console.log("dd");
+        router.go();
         router.push({ name: "RecruitMain" });
       }
     }
@@ -191,7 +194,6 @@ export default {
   border-radius: 70%;
   overflow: hidden;
   margin: 5px 10px 10px 10px;
-  border: 3px solid gold;
 }
 
 .profile-img {

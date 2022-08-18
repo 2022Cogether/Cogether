@@ -1,20 +1,24 @@
 <template>
   <div class="team-container">
     <div class="d-flex justify-content-between">
-      <div
-        class="head d-flex"
-        data-bs-toggle="modal"
-        data-bs-target="#teamDetailInfo"
-        @click="setModal"
-      >
+      <div class="head d-flex">
         <div class="profile-img-box">
-          <img
-            class="profile-img"
-            src="@/assets/logo.png"
-            alt="profile image"
-          />
+          <a :href="`/#/profile/` + projectTeam.userId">
+            <img
+              class="profile-img"
+              :src="projectTeam.userImgurl"
+              alt="profile image"
+            />
+          </a>
         </div>
-        <div class="title fs-3">{{ projectTeam.title }}</div>
+        <div
+          class="title fs-3"
+          data-bs-toggle="modal"
+          data-bs-target="#teamDetailInfo"
+          @click="setModal"
+        >
+          {{ projectTeam.title }}
+        </div>
       </div>
       <div class="d-flex">
         <!-- 삭제 드롭다운 -->
@@ -47,7 +51,7 @@
             class="bookmark-icon-solid"
           />
         </div>
-        <div v-else class="bookmark-icon-box">
+        <div v-else>
           <font-awesome-icon
             @click="bookmarkCheck"
             icon="fa-regular fa-bookmark"
@@ -121,7 +125,7 @@ export default {
       if (state.bookmark) {
         store.dispatch("setProjectTeamScrap", props.projectTeam.projectId);
       } else {
-        store.dispatch("deleteProjectTeamScrap", props.projectTeam.projectId);
+        store.dispatch("deleteProjectTeamScrap", props.projectTeam.scrapId);
       }
     }
 
@@ -130,7 +134,7 @@ export default {
         title: "정말 삭제하시겠습니까?",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#2a9d8f",
         cancelButtonColor: "#d33",
         confirmButtonText: "확인",
         cancelButtonText: "취소",
@@ -153,6 +157,7 @@ export default {
             icon: "success",
             title: "글이 삭제되었습니다.",
           });
+          router.go();
           router.push({ name: "RecruitMain" });
         }
       });
@@ -167,15 +172,6 @@ export default {
 .head {
   width: 90%;
 }
-
-/* 북마크 */
-.bookmark-icon:hover {
-  cursor: pointer;
-}
-.bookmark-icon-box {
-  float: right;
-}
-
 /* 드롭다운 */
 .dropdown {
   margin-right: 10px;
@@ -187,60 +183,6 @@ export default {
   margin-right: 0px;
   float: right;
 }
-
-.team-container {
-  background-color: white;
-  border: 1px solid #dbdbda;
-  border-radius: 10px;
-  box-shadow: 0px 5px 3px -3px #bdbdbd;
-  margin-bottom: 10px;
-}
-
-.team-container:hover {
-  background-color: #c1ebe6;
-  border: 1px solid #2a9d8f;
-}
-
-/* Profile */
-.profile-img-box {
-  width: 50px;
-  height: 50px;
-  border-radius: 70%;
-  overflow: hidden;
-  margin: 10px;
-  border: 3px solid gold;
-}
-
-.profile-img {
-  width: 45px;
-  height: 45px;
-}
-
-/* Title */
-.title {
-  font-family: "Nanum Gothic", sans-serif;
-  font-weight: 700;
-  margin-top: 12px;
-}
-
-/* Bookmark Icon */
-.bookmark-icon {
-  margin-right: 10px;
-  font-size: 1.7rem;
-}
-
-.bookmark-icon-solid {
-  margin-right: 10px;
-  font-size: 1.7rem;
-  color: #e63946;
-}
-
-/* Group Info */
-.group-info {
-  margin: 0 10px 0;
-  font-size: 14px;
-}
-
 /* 기술스택 */
 .tech-icon-container {
   position: relative;
@@ -263,6 +205,62 @@ export default {
   margin-top: 5px;
   width: 23px;
   height: 23px;
+}
+
+.team-container {
+  background-color: white;
+  border: 1px solid #dbdbda;
+  border-radius: 10px;
+  box-shadow: 0px 5px 3px -3px #bdbdbd;
+  margin-bottom: 10px;
+}
+
+.team-container:hover {
+  background-color: #c1ebe6;
+  border: 1px solid #2a9d8f;
+}
+
+/* Profile */
+.profile-img-box {
+  width: 50px;
+  height: 50px;
+  border-radius: 70%;
+  overflow: hidden;
+  margin: 10px;
+  text-align: center;
+}
+
+.profile-img {
+  width: 100%;
+  height: 100%;
+}
+
+/* Title */
+.title {
+  font-family: "Nanum Gothic", sans-serif;
+  font-weight: 700;
+  margin-top: 12px;
+}
+
+/* 북마크 */
+.bookmark-icon:hover {
+  cursor: pointer;
+}
+.bookmark-icon {
+  margin-right: 10px;
+  font-size: 1.7rem;
+}
+
+.bookmark-icon-solid {
+  margin-right: 10px;
+  font-size: 1.7rem;
+  color: #e63946;
+}
+
+/* Group Info */
+.group-info {
+  margin: 0 10px 0;
+  font-size: 14px;
 }
 
 /* Detail Info */

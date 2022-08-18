@@ -35,19 +35,21 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header justify-content-space-evenly">
-          <div class="d-flex align-items-center">
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
         </div>
         <div class="modal-body">
           <div class="room-detail-box d-flex">
-            <div class="image-box">
-              <img src="@/assets/logo.png" alt="profile image" />
+            <div class="profile-img-box">
+              <img
+                class="profile-img"
+                :src="emitCoop.userImgUrl"
+                alt="profile image"
+              />
             </div>
             <div class="room-detail-info">
               <h5 class="modal-title" id="coopRoomDetailLabel">
@@ -194,20 +196,18 @@ export default {
   margin-right: 10px;
 }
 
-.image-box {
-  width: 75px;
-  height: 75px;
+.profile-img-box {
+  width: 65px;
+  height: 65px;
   border-radius: 70%;
   overflow: hidden;
-  margin-right: 25px;
-  border: 3px solid gold;
+  margin: 10px;
+  text-align: center;
 }
 
-.image-box > img {
+.profile-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  margin: 5px auto;
 }
 
 .room-detail-box {
@@ -239,6 +239,11 @@ export default {
 .modal-footer > .btn {
   background-color: #2a9d8f;
   color: #fff;
+  transition: all 0.2s linear;
+}
+
+.btn:hover {
+  transform: scale(1.1);
 }
 
 .modal-time {
