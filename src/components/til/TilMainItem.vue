@@ -15,7 +15,12 @@
       </div>
       <div class="til-info">
         <span class="til-user">{{ til.userNickname }}</span>
-        <span class="til-time">1 시간 전</span>
+        <span v-if="fromCreated < 24" class="til-time">
+          {{ fromCreated }}시간 전
+        </span>
+        <span v-else class="til-time">
+          {{ parseInt(fromCreated / 24) }}일 전
+        </span>
       </div>
 
       <div v-if="isWriter" class="dropdown">
@@ -288,6 +293,10 @@ export default {
       til.value.like = !til.value.like;
     };
 
+    const fromCreated = parseInt(
+      (new Date() - new Date(til.value.createdAt)) / 3600000
+    );
+
     return {
       likeCnt,
       goUpdate,
@@ -303,6 +312,7 @@ export default {
       isOpen,
       closeModal,
       likeFromDetail,
+      fromCreated,
     };
   },
 };
@@ -373,7 +383,7 @@ export default {
 .til-title {
   position: relative;
   left: 70px;
-  bottom: 12px;
+  bottom: 20px;
   width: 70%;
   font-size: 1.1rem;
   font-weight: bold;
@@ -386,7 +396,7 @@ export default {
 .til-info {
   position: relative;
   left: 70px;
-  top: 50px;
+  bottom: 20px;
 }
 
 .til-user {
