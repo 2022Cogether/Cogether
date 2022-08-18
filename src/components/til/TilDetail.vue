@@ -6,7 +6,17 @@
         <!-- 왼쪽: 프로필, 제목, 글쓴이, 시간/ 오른쪽: 드랍다운 -->
         <div class="til-header">
           <div class="profile-body">
-            <font-awesome-icon class="fs-3" icon="fa-solid fa-user" />
+            <font-awesome-icon
+              v-if="!tilContent.userImg"
+              class="fs-3"
+              icon="fa-solid fa-user"
+            />
+            <img
+              v-else
+              :src="tilContent.userImg"
+              class="fs-3"
+              style="width: 100%"
+            />
           </div>
           <div class="til-title">
             {{ tilContent.tilTitle }}
@@ -325,7 +335,7 @@ export default {
 <style lang="scss" scoped>
 .modal-card {
   background-color: white;
-  width: 70vw;
+  width: 40vw;
   height: auto;
 }
 
@@ -388,6 +398,7 @@ export default {
   justify-content: center;
   align-items: center;
   box-shadow: 0px 3px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
 }
 
 .til-title {
