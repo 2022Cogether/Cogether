@@ -84,6 +84,13 @@ public class HuntingService {
     public HuntingResponse.OnlyHuntingScrapId createScrap(HuntingRequest.CreateHuntingScrap request) {
         User user = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
         Hunting hunting = huntingRepository.findById(request.getHuntingId()).orElseThrow(HuntingNotFoundException::new);
+
+        int cnt = huntingScrapRepository.countAllByUserAndHunting(user, hunting);
+        if (cnt > 0) {
+            HuntingScrap huntingScrap = huntingScrapRepository.findByUserAndHunting(user, hunting);
+            return HuntingResponse.OnlyHuntingScrapId.build(huntingScrap);
+        }
+
         HuntingScrap huntingScrap = request.toEntity(user, hunting);
         HuntingScrap savedHuntingScrap = huntingScrapRepository.save(huntingScrap);
         return HuntingResponse.OnlyHuntingScrapId.build(savedHuntingScrap);
