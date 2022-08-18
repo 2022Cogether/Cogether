@@ -66,26 +66,25 @@
           role="tabpanel"
           aria-labelledby="pills-followings-tab"
         >
-          <ul v-for="following in followingList" :key="following.id">
-            <!--router-link
-              class="profile-data-list"
+          <ul
+            v-for="following in followingList"
+            :key="following.id"
+            class="d-flex wrap justify-content-start"
+          >
+            <font-awesome-icon
+              v-if="isMyProfile"
+              class="mr-3 fa-xl"
+              icon="fa-solid fa-rectangle-xmark"
+              @click="unfollow(following.id, true)"
               style="cursor: pointer"
-              :key="this.$route.path"
-              :to="{ name: 'profile', params: { userId: following.id } }"
-            -->
+            />
             <div
               class="profile-data-list"
-              style="cursor: pointer"
+              style="cursor: pointer; margin-left: 1rem !important"
               @click="goOut(following.id)"
             >
               {{ following.email }}
             </div>
-            <font-awesome-icon
-              v-if="isMyProfile"
-              icon="fa-solid fa-rectangle-xmark"
-              @click="unfollow(following.id, true)"
-              style="cursor: pointer; margin-left: 2vw"
-            />
           </ul>
         </div>
         <div
@@ -94,19 +93,24 @@
           role="tabpanel"
           aria-labelledby="pills-followers-tab"
         >
-          <ul v-for="follower in followerList" :key="follower.id">
+          <ul
+            v-for="follower in followerList"
+            :key="follower.id"
+            class="d-flex wrap justify-content-start"
+          >
             <div
               class="profile-data-list"
-              style="cursor: pointer"
+              style="cursor: pointer; margin-left: 1rem !important"
               @click="goOut(follower.id)"
             >
               {{ follower.email }}
             </div>
             <font-awesome-icon
               v-if="follower.id == store.getters.getLoginUserId"
+              class="fa-xl"
               icon="fa-solid fa-rectangle-xmark"
               @click="unfollow(props.userId, false)"
-              style="cursor: pointer; margin-left: 2vw"
+              style="cursor: pointer; margin-left: 1rem !important"
             />
           </ul>
         </div>
@@ -306,6 +310,7 @@ export default {
 <style lang="scss" scoped>
 .modal-card {
   background-color: white;
+  border-radius: 20px;
   width: 40vw;
   min-width: 250px;
   margin-top: 10vh;
@@ -361,6 +366,7 @@ a {
   color: white !important;
   background-color: #2a9d8f !important;
   border-color: white !important;
+  border-radius: 0;
 }
 
 .btn:active,
