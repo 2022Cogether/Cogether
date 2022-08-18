@@ -15,7 +15,7 @@ public class RankingResponse {
         private int myRank;
         private String userNickname;
         private String userImg;
-        private int myTilCnt;
+        private int myContent;
         private List<TilRank> rankList;
 
         public static RankingResponse.TilRankList build(int myRank, User user, int myTilCnt, List<TilRank> tilRankList) {
@@ -23,7 +23,7 @@ public class RankingResponse {
                     .myRank(myRank)
                     .userNickname(user.getNickname())
                     .userImg(user.getImgUrl())
-                    .myTilCnt(myTilCnt)
+                    .myContent(myTilCnt)
                     .rankList(tilRankList)
                     .build();
         }
@@ -58,7 +58,7 @@ public class RankingResponse {
         private int myRank;
         private String userNickname;
         private String userImg;
-        private int myExp;
+        private int myContent;
         private List<ExpRank> rankList;
 
         public static RankingResponse.ExpRankList build(int myRank, User user, List<ExpRank> expRankList) {
@@ -66,7 +66,7 @@ public class RankingResponse {
                     .myRank(myRank)
                     .userNickname(user.getNickname())
                     .userImg(user.getImgUrl())
-                    .myExp(user.getExp())
+                    .myContent(user.getExp())
                     .rankList(expRankList)
                     .build();
         }
@@ -100,7 +100,7 @@ public class RankingResponse {
         private int myRank;
         private String userNickname;
         private String userImg;
-        private int myLiveComp;
+        private int myContent;
         private List<LiveCompRank> rankList;
 
         public static RankingResponse.LiveCompRankList build(int myRank, User user, int myLiveComp, List<LiveCompRank> liveCompRankList) {
@@ -108,7 +108,7 @@ public class RankingResponse {
                     .myRank(myRank)
                     .userNickname(user.getNickname())
                     .userImg(user.getImgUrl())
-                    .myLiveComp(myLiveComp)
+                    .myContent(myLiveComp)
                     .rankList(liveCompRankList)
                     .build();
         }
