@@ -1,5 +1,6 @@
 <template>
   <div class="room-nav">
+    <div v-show="false">{{ connect() }}</div>
     <!-- <button @click="timerStart">타이머</button> -->
     <!-- <div></div> -->
     <span class="title fs-2"> {{ room.title }}</span>
@@ -47,13 +48,7 @@
   </div>
   <div class="container-chat">
     <div class="box-content">
-      <div class="box-chat"></div>
-      <div class="inputbar">
-        <textarea class="input" cols="30" rows="4"></textarea>
-        <button class="input-submit">
-          <font-awesome-icon icon="fa-solid fa-paper-plane" />
-        </button>
-      </div>
+      <coop-chat-input :room="room" />
     </div>
   </div>
 </template>
@@ -63,14 +58,19 @@ import router from "@/router";
 import { computed, reactive } from "vue";
 import { useStore } from "vuex";
 import Swal from "sweetalert2";
+import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
+import CoopChatInput from "@/components/challenge/CoopChatInput.vue";
 export default {
   name: "CoopRoom",
   setup() {
     const store = useStore();
     const getters = computed(() => store.getters);
     const roomId = router.currentRoute.value.params.roomNo;
+    store.dispatch("getChatList", getters.value.getRoom.chatRoomId);
     store.dispatch("getCoopMembers", roomId);
     store.dispatch("getDetailCoopRoom", roomId);
+
     const members = computed(() => getters.value.getCoopMembers);
     const Toast = Swal.mixin({
       toast: true,
@@ -86,7 +86,38 @@ export default {
     const room = computed(() => getters.value.getRoom);
     const state = reactive({
       isExpand: true,
+      chatRoomId: room.value.chatRoomId,
+      userId: getters.value.getLoginUserId,
     });
+
+    async function connect() {
+      const serverURL = "https://i7a801.p.ssafy.io:8080";
+      let socket = new SockJS(serverURL);
+      this.stompClient = Stomp.over(socket);
+      console.log("협력채팅소켓 연결을 시도합니다.");
+      this.stompClient.connect(
+        {},
+        () => {
+          // 소켓 연결 성공
+          console.log("협력채팅소켓 연결 성공");
+          this.stompClient.subscribe("/send/" + state.chatRoomId, (res) => {
+            const data = JSON.parse(res.body);
+            console.log("수신 메시지: ", res.body);
+            const sendData = {
+              userId: getters.value.getLoginUserId,
+              chatRoomId: state.chatRoomId,
+              chatId: data.chatId,
+            };
+            console.log(sendData);
+            store.commit("APPEND_RECV_LIST", data);
+          });
+        },
+        (error) => {
+          console.log("협력채팅소켓 연결 실패", error);
+        }
+      );
+      store.commit("SET_STOMP_CLIENT", this.stompClient);
+    }
 
     function changeExpand() {
       state.isExpand = !state.isExpand;
@@ -176,9 +207,10 @@ export default {
       room,
       roomExit,
       members,
+      connect,
     };
   },
-  components: {},
+  components: { CoopChatInput },
 };
 </script>
 
@@ -266,35 +298,5 @@ export default {
   border-radius: 10px;
   height: 70vh;
   width: 50vw;
-}
-.box-chat {
-  height: calc(60vh - 70px);
-  width: 100%;
-  background-color: white;
-}
-
-.inputbar {
-  margin-top: 10px;
-  width: 100%;
-  background-color: white;
-}
-
-.input-submit {
-  float: right;
-  border: 0px;
-  background-color: transparent;
-  width: 30px;
-}
-
-.input {
-  border: 0px;
-  width: calc(100% - 30px);
-  max-height: 120px;
-  resize: none;
-  overflow-y: hidden;
-}
-
-.input:focus {
-  outline: none;
 }
 </style>
