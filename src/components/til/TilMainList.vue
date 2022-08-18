@@ -54,6 +54,11 @@ export default {
       console.log("으앙", tilList.value);
     })();
 
+    if (self.name != "reload") {
+      self.name = "reload";
+      self.location.reload(true);
+    } else self.name = "";
+
     const searchWord = ref("");
 
     const onSubmit = async () => {

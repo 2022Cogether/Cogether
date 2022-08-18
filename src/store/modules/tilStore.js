@@ -173,8 +173,8 @@ export const tilStore = {
     //   commit("CLEAN_TIL_LIST");
     // },
 
-    createTil({ commit }, payload) {
-      http
+    async createTil({ commit }, payload) {
+      await http
         .post("til", payload, {
           headers: {
             ACCESS_TOKEN: localStorage.getItem("access_TOKEN"),

@@ -366,6 +366,13 @@ export default {
   max-width: 100px;
 }
 
+.modal {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+}
+
 .modal-card {
   background-color: white;
   width: 40vw;

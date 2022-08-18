@@ -217,14 +217,8 @@
   <!-- TIL -->
   <div class="h4 til-title">My TIL</div>
   <div class="til-container d-flex flex-wrap justify-content-evenly">
-    <ProfileTil
-      v-for="til in tilList"
-      :key="til.tilId"
-      :til="til"
-      @click="setNum(til.tilId)"
-    />
+    <ProfileTil v-for="til in tilList" :key="til.tilId" :util="til" />
   </div>
-  <TilDetail v-if="isTilOpen" class="isModal" />
 </template>
 
 <script>
@@ -234,7 +228,6 @@
 />;
 import ProfileTil from "./ProfileTil.vue";
 import ProfileFollow from "./ProfileFollow.vue";
-import TilDetail from "@/components/til/TilDetail.vue";
 
 import http from "@/api/http";
 import { ref, computed, onMounted, watch } from "vue";
@@ -245,7 +238,6 @@ export default {
   name: "ProfileMain",
   components: {
     ProfileTil,
-    TilDetail,
     ProfileFollow,
   },
   setup() {
