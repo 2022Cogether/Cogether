@@ -30,6 +30,34 @@
             Followers
           </button>
         </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="pills-nicksearch-tab"
+            data-bs-toggle="pill"
+            data-bs-target="#pills-nicksearch"
+            type="button"
+            role="tab"
+            aria-controls="pills-nicksearch"
+            aria-selected="false"
+          >
+            Nick Search
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="pills-emailsearch-tab"
+            data-bs-toggle="pill"
+            data-bs-target="#pills-emailsearch"
+            type="button"
+            role="tab"
+            aria-controls="pills-emailsearch"
+            aria-selected="false"
+          >
+            Email Search
+          </button>
+        </li>
       </ul>
       <div class="tab-content" id="pills-tabContent">
         <div
@@ -42,7 +70,7 @@
             <router-link
               class="profile-data-list"
               style="cursor: pointer"
-              :key="$route.fullPath"
+              :key="this.$route.path"
               :to="{ name: 'profile', params: { userId: following.id } }"
             >
               {{ following.id }}: {{ following.email }}
@@ -50,7 +78,7 @@
             <font-awesome-icon
               v-if="isMyProfile"
               icon="fa-solid fa-rectangle-xmark"
-              @click="unfollow(following.id)"
+              @click="unfollow(following.id, true)"
               style="cursor: pointer; margin-left: 2vw"
             />
           </ul>
@@ -65,7 +93,7 @@
             <router-link
               class="profile-data-list"
               style="cursor: pointer"
-              :key="$route.fullPath"
+              :key="this.$route.path"
               :to="{ name: 'profile', params: { userId: myId } }"
             >
               {{ follower.id }}: {{ follower.email }}
@@ -73,9 +101,81 @@
             <font-awesome-icon
               v-if="follower.id == store.getters.getLoginUserId"
               icon="fa-solid fa-rectangle-xmark"
-              @click="unfollow(follower.id)"
+              @click="unfollow(follower.id, false)"
               style="cursor: pointer; margin-left: 2vw"
             />
+          </ul>
+        </div>
+
+        <div
+          class="tab-pane fade"
+          id="pills-nicksearch"
+          role="tabpanel"
+          aria-labelledby="pills-nicksearch-tab"
+        >
+          <!-- 검색바 -->
+          <div class="search-bar-block">
+            <div class="search-bar">
+              <input
+                class="input-search"
+                type="text"
+                v-model="searchWordNick"
+                @keyup.enter.prevent="onSubmitNick"
+              />
+              <button @click="onSubmitNick" class="btn-search">
+                <font-awesome-icon
+                  icon="fa-solid fa-magnifying-glass"
+                  class="icon-search"
+                />
+              </button>
+            </div>
+          </div>
+
+          <ul v-for="user in userListNick" :key="user.id">
+            <router-link
+              class="profile-data-list"
+              style="cursor: pointer"
+              :key="this.$route.path"
+              :to="{ name: 'profile', params: { userId: user.id } }"
+            >
+              {{ user.id }}: {{ user.nickName }}
+            </router-link>
+          </ul>
+        </div>
+
+        <div
+          class="tab-pane fade"
+          id="pills-emailsearch"
+          role="tabpanel"
+          aria-labelledby="pills-emailsearch-tab"
+        >
+          <!-- 검색바 -->
+          <div class="search-bar-block">
+            <div class="search-bar">
+              <input
+                class="input-search"
+                type="text"
+                v-model="searchWordEmail"
+                @keyup.enter.prevent="onSubmitEmail"
+              />
+              <button @click="onSubmitEmail" class="btn-search">
+                <font-awesome-icon
+                  icon="fa-solid fa-magnifying-glass"
+                  class="icon-search"
+                />
+              </button>
+            </div>
+          </div>
+
+          <ul v-for="user in userListEmail" :key="user.id">
+            <router-link
+              class="profile-data-list"
+              style="cursor: pointer"
+              :key="$route.fullPath"
+              :to="{ name: 'profile', params: { userId: user.id } }"
+            >
+              {{ user.id }}: {{ user.email }}
+            </router-link>
           </ul>
         </div>
       </div>
@@ -83,7 +183,7 @@
   </div>
 </template>
 <script>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import router from "@/router";
@@ -104,6 +204,8 @@ export default {
 
     store.dispatch("fetchFollowingList", props.userId);
     store.dispatch("fetchFollowerList", props.userId);
+    store.dispatch("findNickUser", "");
+    store.dispatch("findEmailUser", "");
 
     // 리스트 받아오기
     let followingList = computed(() => {
@@ -111,6 +213,12 @@ export default {
     });
     let followerList = computed(() => {
       return store.getters.getMyFollowerList;
+    });
+    let userListNick = computed(() => {
+      return store.getters.getUserListNick;
+    });
+    let userListEmail = computed(() => {
+      return store.getters.getUserListEmail;
     });
 
     // 모달 바깥을 클릭하면 모달을 닫게 하는 함수
@@ -126,13 +234,19 @@ export default {
     };
 
     // 언팔로우
-    const unfollow = (userId) => {
-      store.dispatch("unfollow", userId);
-      // if (store.getters.getBooleanValue) {
-      //   followingList = followingList.filter(
-      //     (following) => following.id != userId
-      //   );
-      // }
+    const unfollow = async (userId, isFromFollowing) => {
+      await store.dispatch("unfollow", userId);
+      if (isFromFollowing) {
+        await store.dispatch("fetchFollowingList", props.userId);
+        followingList = computed(() => {
+          return store.getters.getMyFollowingList;
+        });
+      } else {
+        await store.dispatch("fetchFollowerList", props.userId);
+        followerList = computed(() => {
+          return store.getters.getMyFollowerList;
+        });
+      }
     };
 
     // 프로필로
@@ -143,11 +257,30 @@ export default {
       });
     };
 
+    // 검색어
+    const searchWordNick = ref("");
+    const searchWordEmail = ref("");
+
+    const onSubmitNick = async () => {
+      await store.dispatch("findNickUser", searchWordNick.value);
+      console.log(userListNick.value);
+    };
+    const onSubmitEmail = () => {
+      store.dispatch("findEmailUser", searchWordEmail.value);
+    };
+
     return {
       store,
       props,
       route,
       myId,
+
+      searchWordEmail,
+      searchWordNick,
+      onSubmitNick,
+      onSubmitEmail,
+      userListNick,
+      userListEmail,
 
       isMyProfile,
       followingList,
@@ -165,5 +298,53 @@ export default {
   background-color: white;
   width: 70vw;
   height: auto;
+}
+
+.search-bar-block {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+}
+
+.search-bar {
+  border: 1px solid black;
+  background-color: #e6e6e6;
+  display: inline-block;
+  width: 50%;
+  border-radius: 10px;
+}
+
+.btn-search {
+  width: 10%;
+  border: 0px;
+  border-radius: 10px;
+  background-color: #e6e6e6;
+  position: relative;
+  top: 5%;
+  left: 2%;
+}
+
+.input-search {
+  width: 85%;
+  border: 0px;
+  border-radius: 10px 0px 0px 10px;
+
+  padding-right: 3%;
+  margin-right: 1%;
+  background-color: #e6e6e6;
+  line-height: 55px;
+}
+
+.icon-search {
+  font-size: 1.5rem;
+}
+
+input:focus {
+  outline: none;
+}
+
+a {
+  text-decoration: none;
 }
 </style>

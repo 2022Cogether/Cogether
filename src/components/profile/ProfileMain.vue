@@ -263,6 +263,13 @@ export default {
 
     const store = useStore();
     const route = useRoute();
+    console.log("route 사용", route.params);
+    const doit = ref(route.params.userId);
+    console.log("route 사용", doit);
+    watch(doit, (nv, ov) => {
+      console.log("ov", ov);
+      console.log("nv", nv);
+    });
     watch(
       () => route.name,
       () => {

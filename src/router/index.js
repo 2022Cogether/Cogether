@@ -174,7 +174,10 @@ let profileBool = false;
 // let profilePath = "";
 
 router.beforeEach((to, from, next) => {
-  console.log(to);
+  console.log("#to", to);
+  console.log("#from", from);
+  console.log("#from FullPath", from.fullPath, "bvbvbvvv  ");
+  console.log("#to FullPath", to.fullPath, "toooo   ");
   if (
     to.name != "SignIn" &&
     to.name != "SignUp" &&
@@ -191,7 +194,9 @@ router.beforeEach((to, from, next) => {
     // profileBool = true;
     // profilePath = to.fullPath;
     // next({ name: "mainview" });
+    console.log("라우터 변경 감지");
     next();
+    // next();
   } else next();
 });
 
