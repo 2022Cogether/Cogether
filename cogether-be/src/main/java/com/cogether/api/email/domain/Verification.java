@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name="Verification")
+@Table(name = "Verification")
 @Data
 @Builder
 @AllArgsConstructor
@@ -17,9 +17,9 @@ public class Verification {
     @Id
     private int id;
 
-    @Column(name="email")
+    @Column(name = "email")
     private String email;
 
-    @Column(name="code")
+    @Column(name = "code")
     private String code;
 }

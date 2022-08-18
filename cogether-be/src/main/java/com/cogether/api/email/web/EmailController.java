@@ -2,13 +2,8 @@ package com.cogether.api.email.web;
 
 import com.cogether.api.email.dto.EmailRequest;
 import com.cogether.api.email.service.EmailService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -20,10 +15,9 @@ import java.util.Map;
  * 3. 이메일인증 검증
  */
 
-
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path="/api")
+@RequestMapping(path = "/api")
 public class EmailController {
 
     private final EmailService emailService;
@@ -46,16 +40,13 @@ public class EmailController {
      * 인증코드 검증
      */
     @GetMapping("/sign/verify")
-    public ResponseEntity emailVerificationSuccess(@RequestParam("code") String code,@RequestParam("email")String email)
-    {
-        Map<String,Boolean> response=new HashMap<>();
-        if(emailService.findVerificationSignUpCode(email).equals(code))
-        {
-            response.put("verified",true);
+    public ResponseEntity emailVerificationSuccess(@RequestParam("code") String code, @RequestParam("email") String email) {
+        Map<String, Boolean> response = new HashMap<>();
+        if (emailService.findVerificationSignUpCode(email).equals(code)) {
+            response.put("verified", true);
             emailService.deleteVerificationSignUpCode(email);
-        }else
-        {
-            response.put("verified",false);
+        } else {
+            response.put("verified", false);
         }
 
         return ResponseEntity.ok().body(response);

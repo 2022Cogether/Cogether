@@ -1,18 +1,10 @@
 package com.cogether.api.user.web;
 
-import com.cogether.api.config.jwt.TokenUtils;
-import com.cogether.api.user.dto.LoginRequest;
 import com.cogether.api.user.dto.TokenResponse;
 import com.cogether.api.user.dto.UserRequest;
-import com.cogether.api.user.service.SkillService;
 import com.cogether.api.user.service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,8 +26,6 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-
-    private final TokenUtils tokenUtils;
 
     /**
      * 회원가입
@@ -94,12 +84,6 @@ public class UserController {
 
         boolean nickNameIsPresent = userService.verifyDuplicationOfNickName(nickname);
 
-//        Map<String,String> body =new HashMap<>();
-//        body.put("nickname",nickname);
-//        body.put("duplicate",String.valueOf(nickNameIsPresent));
-//
-//        //String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(body);
-
         return nickNameIsPresent ? ResponseEntity.ok().body(true) : ResponseEntity.ok().body(false);
     }
 
@@ -108,9 +92,6 @@ public class UserController {
      */
     @GetMapping(value = "/user/info/{userId}")
     public ResponseEntity findUser(@PathVariable("userId") int userId) throws Exception {
-
-
-        //  System.out.println("헤더값 가져오기"+token);
 
         return ResponseEntity.ok().body(userService.findUserInfo(userId));
     }

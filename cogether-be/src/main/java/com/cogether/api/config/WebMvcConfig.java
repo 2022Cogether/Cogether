@@ -17,21 +17,18 @@ import org.springframework.web.filter.CorsFilter;
 public class WebMvcConfig implements WebMvcConfigurer {
     private final JwtTokenInterceptor jwtTokenInterceptor;
 
-    private final String [] INTERCEPTOR_WHITE_LIST=
-            {"/api/sign/**","/api/verify/**"};
+    private final String[] INTERCEPTOR_WHITE_LIST =
+            {"/api/sign/**", "/api/verify/**"};
 
-    private final String [] INTERCEPTOR_LIST={
-            "/receive/**", "/api/til/**","/api/project/**","/api/study/**","/api/hunting/**","/api/livecoop/**","/api/livecomp/**","/api/follow/**"
-            ,"/api/follower/**","/api/following/**","/api/chat/**","/api/user/**","/api/skills/**"
+    private final String[] INTERCEPTOR_LIST = {
+            "/receive/**", "/api/til/**", "/api/project/**", "/api/study/**", "/api/hunting/**", "/api/livecoop/**", "/api/livecomp/**", "/api/follow/**"
+            , "/api/follower/**", "/api/following/**", "/api/chat/**", "/api/user/**", "/api/skills/**"
     };
 
     public void addInterceptors(InterceptorRegistry registry) {
-        System.out.println("인터셉터 등록");
         registry.addInterceptor(jwtTokenInterceptor).addPathPatterns(INTERCEPTOR_LIST)
                 .excludePathPatterns(INTERCEPTOR_WHITE_LIST);
     }
-
-
 
 
     @Override
@@ -47,7 +44,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //			.allowedOrigins("http://localhost:8080", "http://localhost:8081")
                 .allowedMethods("*")
                 .allowCredentials(false)
-                .exposedHeaders("ACCESS_TOKEN","REFRESH_TOKEN")
+                .exposedHeaders("ACCESS_TOKEN", "REFRESH_TOKEN")
 //			.allowedHeaders("*")
                 .maxAge(6000);
 

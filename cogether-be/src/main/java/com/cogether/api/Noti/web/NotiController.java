@@ -14,19 +14,19 @@ import org.springframework.web.bind.annotation.*;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path="api")
+@RequestMapping(path = "api")
 public class NotiController {
 
-    private NotiService notiService;
+    private final NotiService notiService;
     private final TokenUtils tokenUtils;
 
     /**
      * 알림등록
      */
-    @PostMapping(value = "/noti",headers = "ACCESS_TOKEN")
-    public ResponseEntity postNoti(@RequestBody NotiRequest notiRequest, @RequestHeader("ACCESS_TOKEN") String data) throws Exception{
+    @PostMapping(value = "/noti", headers = "ACCESS_TOKEN")
+    public ResponseEntity postNoti(@RequestBody NotiRequest notiRequest, @RequestHeader("ACCESS_TOKEN") String data) throws Exception {
 
-        int id =tokenUtils.getUserIdFromToken(data);
+        int id = tokenUtils.getUserIdFromToken(data);
         notiRequest.setSendId(id);
 
         return ResponseEntity.ok().body(notiService.registerNoti(notiRequest));
@@ -35,19 +35,22 @@ public class NotiController {
     /**
      * 해당유저 알림리스트 가져오기
      */
-    @GetMapping(value = "/noti/list",headers = "ACCESS_TOKEN")
-    public ResponseEntity getNotiList( @RequestHeader("ACCESS_TOKEN") String data) throws Exception{
+    @GetMapping(value = "/noti/list", headers = "ACCESS_TOKEN")
+    public ResponseEntity getNotiList(@RequestHeader("ACCESS_TOKEN") String data) throws Exception {
 
-        int id =tokenUtils.getUserIdFromToken(data);
+        int id = tokenUtils.getUserIdFromToken(data);
 
 
         return ResponseEntity.ok().body(notiService.getUserNoti(id));
     }
 
-    @PutMapping(value = "/noti",headers = "ACCESS_TOKEN")
-    public ResponseEntity getNotiList(@RequestBody NotiRequest notiRequest, @RequestHeader("ACCESS_TOKEN") String data) throws Exception{
+    /**
+     * 알람 읽기
+     */
+    @PutMapping(value = "/noti", headers = "ACCESS_TOKEN")
+    public ResponseEntity getNotiList(@RequestBody NotiRequest notiRequest, @RequestHeader("ACCESS_TOKEN") String data) throws Exception {
 
-        int id =tokenUtils.getUserIdFromToken(data);
+        int id = tokenUtils.getUserIdFromToken(data);
         notiRequest.setSendId(id);
 
 

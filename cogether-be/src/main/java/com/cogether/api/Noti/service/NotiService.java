@@ -76,13 +76,12 @@ public class NotiService {
 
         LocalDateTime createAt = LocalDateTime.now();
 
-        List<Noti> notis = notiRepository.findAllByUser(toUser);
+        List<Noti> notis = notiRepository.findAllByReceiveId(toUser.getId());
         List<NotiResponse> list = new ArrayList<>();
 
         for (Noti noti : notis) {
             NotiResponse notiResponse = NotiResponse.builder()
-                    .sendId(toUser.getId())
-                    .receiveId(noti.getReceiveId())
+                    .userId(toUser.getId())
                     .type(noti.getType())
                     .url(noti.getUrl())
                     .contentId(noti.getContentId())
@@ -131,8 +130,7 @@ public class NotiService {
      * 알람 읽기
      */
     @Transactional
-    public int readNoti(NotiRequest notiRequest)
-    {
+    public int readNoti(NotiRequest notiRequest) {
         NotiResponse notiResponse;
         User toUser = userRepository.findById(notiRequest.getSendId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
