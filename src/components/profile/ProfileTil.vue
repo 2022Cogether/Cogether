@@ -1,5 +1,10 @@
 <template>
-  <img :src="props.til.imgUrl[0].imgUrl" alt="My TIL image" />
+  <img
+    v-if="props.til.imgUrl.length != 0"
+    :src="props.til.imgUrl[0].imgUrl"
+    alt="My TIL image"
+  />
+  <img v-else src="" alt="My TIL image" />
 </template>
 
 <script>
@@ -9,8 +14,6 @@ export default {
     til: Object,
   },
   setup(props) {
-    console.log("props til", props.til);
-    console.log(props.til.imgUrl[0].imgUrl);
     return { props };
   },
 };

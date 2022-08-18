@@ -236,7 +236,7 @@ import TilDetail from "@/components/til/TilDetail.vue";
 
 import { ref, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 export default {
   name: "ProfileMain",
@@ -450,6 +450,12 @@ export default {
         }
         console.log("isFollow", isFollow.value);
       })();
+    });
+
+    const router = useRouter();
+
+    watch(userId, () => {
+      router.go();
     });
 
     // 모달 창
