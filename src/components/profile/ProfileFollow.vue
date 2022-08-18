@@ -67,14 +67,19 @@
           aria-labelledby="pills-followings-tab"
         >
           <ul v-for="following in followingList" :key="following.id">
-            <router-link
+            <!--router-link
               class="profile-data-list"
               style="cursor: pointer"
               :key="this.$route.path"
               :to="{ name: 'profile', params: { userId: following.id } }"
+            -->
+            <div
+              class="profile-data-list"
+              style="cursor: pointer"
+              @click="goOut(following.id)"
             >
               {{ following.id }}: {{ following.email }}
-            </router-link>
+            </div>
             <font-awesome-icon
               v-if="isMyProfile"
               icon="fa-solid fa-rectangle-xmark"
@@ -90,14 +95,13 @@
           aria-labelledby="pills-followers-tab"
         >
           <ul v-for="follower in followerList" :key="follower.id">
-            <router-link
+            <div
               class="profile-data-list"
               style="cursor: pointer"
-              :key="this.$route.path"
-              :to="{ name: 'profile', params: { userId: myId } }"
+              @click="goOut(follower.id)"
             >
-              {{ follower.id }}: {{ follower.email }}
-            </router-link>
+              {{ follower.id }}: {{ follower.email }} gogogogog
+            </div>
             <font-awesome-icon
               v-if="follower.id == store.getters.getLoginUserId"
               icon="fa-solid fa-rectangle-xmark"
@@ -132,14 +136,19 @@
           </div>
 
           <ul v-for="user in userListNick" :key="user.id">
-            <router-link
+            <!--router-link
               class="profile-data-list"
               style="cursor: pointer"
               :key="this.$route.path"
               :to="{ name: 'profile', params: { userId: user.id } }"
+            -->
+            <div
+              class="profile-data-list"
+              style="cursor: pointer"
+              @click="goOut(follower.id)"
             >
               {{ user.id }}: {{ user.nickName }}
-            </router-link>
+            </div>
           </ul>
         </div>
 
@@ -168,14 +177,13 @@
           </div>
 
           <ul v-for="user in userListEmail" :key="user.id">
-            <router-link
+            <div
               class="profile-data-list"
               style="cursor: pointer"
-              :key="$route.fullPath"
-              :to="{ name: 'profile', params: { userId: user.id } }"
+              @click="goOut(follower.id)"
             >
               {{ user.id }}: {{ user.email }}
-            </router-link>
+            </div>
           </ul>
         </div>
       </div>
@@ -257,6 +265,10 @@ export default {
       });
     };
 
+    const goOut = (id) => {
+      window.open("http://localhost:8080/#/profile/" + id);
+    };
+
     // 검색어
     const searchWordNick = ref("");
     const searchWordEmail = ref("");
@@ -288,6 +300,7 @@ export default {
       closeModal,
       unfollow,
       goProfile,
+      goOut,
     };
   },
 };

@@ -22,18 +22,18 @@
       <div class="h5 col-3" style="display: inline-block; float: left">
         닉네임
       </div>
-      <div class="input-group mb-3 offset-4">
+      <div class="input-group mb-3 offset-3">
         <input
           type="text"
           maxlength="15"
-          style="background-color: #e2e2e2; border-radius: 5px"
+          style="background-color: #e2e2e2; border-radius: 5px; width: 67%"
           v-model="nickname"
           @keyup="checkNickValid"
         />
         <div class="input-group-append">
           <button
             class="btn"
-            style="background-color: #e2e2e2; border: 1px solid"
+            style="background-color: #e2e2e2; border: 1px solid; width: 100%"
             @click.prevent="certifyNickName"
           >
             중복 체크
@@ -48,12 +48,11 @@
       <div class="h5 col-3" style="display: inline-block; float: left">
         한 줄 소개
       </div>
-      <div class="input-group mb-3 offset-4">
+      <div class="input-group mb-3 offset-3">
         <input
           type="text"
           maxlength="150"
-          size="50"
-          style="background-color: #e2e2e2; border-radius: 5px"
+          style="background-color: #e2e2e2; border-radius: 5px; width: 80%"
           v-model="intro"
         />
       </div>
@@ -172,11 +171,10 @@
       <div class="col-3 h6" style="display: inline-block; float: left">
         Git Hub
       </div>
-      <div class="offset-4">
+      <div class="offset-3">
         <input
           type="text"
-          size="60"
-          style="background-color: #e2e2e2; border-radius: 5px"
+          style="background-color: #e2e2e2; border-radius: 5px; width: 110%"
           v-model="gitUrl"
         />
       </div>
@@ -185,11 +183,10 @@
       <div class="col-3 h6" style="display: inline-block; float: left">
         Tistory
       </div>
-      <div class="offset-4">
+      <div class="offset-3">
         <input
           type="text"
-          size="60"
-          style="background-color: #e2e2e2; border-radius: 5px"
+          style="background-color: #e2e2e2; border-radius: 5px; width: 110%"
           v-model="tistoryUrl"
         />
       </div>
@@ -198,11 +195,10 @@
       <div class="col-3 h6" style="display: inline-block; float: left">
         Velog
       </div>
-      <div class="offset-4">
+      <div class="offset-3">
         <input
           type="text"
-          size="60"
-          style="background-color: #e2e2e2; border-radius: 5px"
+          style="background-color: #e2e2e2; border-radius: 5px; width: 110%"
           v-model="velogUrl"
         />
       </div>
@@ -211,11 +207,11 @@
       <div class="col-3 h6" style="display: inline-block; float: left">
         Notion
       </div>
-      <div class="offset-4">
+      <div class="offset-3">
         <input
           type="text"
           size="60"
-          style="background-color: #e2e2e2; border-radius: 5px"
+          style="background-color: #e2e2e2; border-radius: 5px; width: 110%"
           v-model="notionUrl"
         />
       </div>
@@ -224,11 +220,11 @@
       <div class="col-3 h6" style="display: inline-block; float: left">
         기타 링크
       </div>
-      <div class="offset-4">
+      <div class="offset-3">
         <input
           type="text"
           size="60"
-          style="background-color: #e2e2e2; border-radius: 5px"
+          style="background-color: #e2e2e2; border-radius: 5px; width: 110%"
           v-model="etcUrl"
         />
       </div>

@@ -100,7 +100,7 @@
         v-if="!!gitUrl"
         style="cursor: pointer"
         class="webpage-link-box"
-        :onclick="'location.href=' + gitUrl"
+        @click="goToOut(gitUrl)"
       >
         <img
           src="https://cogethera801.s3.ap-northeast-2.amazonaws.com/devicon/github-original.svg"
@@ -120,7 +120,7 @@
         v-if="!!velogUrl"
         style="cursor: pointer"
         class="webpage-link-box"
-        :onclick="'location.href=' + velogUrl"
+        @click="goToOut(velogUrl)"
       >
         <img
           src="https://velog.velcdn.com/images/velog/profile/9aa07f66-5fcd-41f4-84f2-91d73afcec28/green%20favicon.png"
@@ -140,7 +140,7 @@
         v-if="!!tistoryUrl"
         style="cursor: pointer"
         class="webpage-link-box"
-        :onclick="'location.href=' + tistoryUrl"
+        @click="goToOut(tistoryUrl)"
       >
         <img
           src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=http%3A%2F%2Fcfile27.uf.tistory.com%2Fimage%2F9931DF3D5B9542810872FD"
@@ -160,7 +160,7 @@
         v-if="!!notionUrl"
         style="cursor: pointer"
         class="webpage-link-box"
-        :onclick="'location.href=' + notionUrl"
+        @click="goToOut(notionUrl)"
       >
         <img
           src="https://img.icons8.com/ios/500/notion.png"
@@ -180,7 +180,7 @@
         v-if="!!etcUrl"
         class="webpage-link-box"
         style="cursor: pointer"
-        :onclick="'location.href=' + etcUrl"
+        @click="goToOut(etcUrl)"
       >
         <img
           src="https://pic.onlinewebfonts.com/svg/img_229126.png"
@@ -479,6 +479,10 @@ export default {
       isFollowOpen.value = false;
     };
 
+    const goToOut = (url) => {
+      window.location.href = url;
+    };
+
     return {
       store,
 
@@ -517,6 +521,7 @@ export default {
       velogUrl,
       notionUrl,
       etcUrl,
+      goToOut,
     };
   },
 };
