@@ -68,6 +68,8 @@
       class="isModal"
       :userId="userId"
       @closeModal="closeModal"
+      @minusFollower="minusFollower"
+      @minusFollowing="minusFollowing"
     />
   </div>
   <!-- Tech Stack -->
@@ -234,6 +236,7 @@ import ProfileTil from "./ProfileTil.vue";
 import ProfileFollow from "./ProfileFollow.vue";
 import TilDetail from "@/components/til/TilDetail.vue";
 
+import http from "@/api/http";
 import { ref, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
@@ -256,6 +259,11 @@ export default {
       console.log("ov", ov);
       console.log("nv", nv);
     });
+
+    if (self.name != "reload") {
+      self.name = "reload";
+      self.location.reload(true);
+    } else self.name = "";
     watch(
       () => route.name,
       () => {
@@ -274,12 +282,6 @@ export default {
       return route.params.userId;
     });
     const isLoggedIn = store.getters.isLoggedIn;
-
-    // 팔로 수
-    store.dispatch("fetchFollowingNumber", userId.value);
-    store.dispatch("fetchFollowerNumber", userId.value);
-    const followingNum = store.getters.getFollowingNumber;
-    const followerNum = store.getters.getFollowerNumber;
 
     // 사용하는 기술 가져오기
     store.dispatch("takeUserSkillSet", userId.value);
@@ -464,11 +466,20 @@ export default {
     const follow = () => {
       store.dispatch("follow", profileUser.value.id);
       isFollow.value = true;
+      followerNum.value = followerNum.value + 1;
     };
     // 언팔로우
     const unfollow = () => {
       store.dispatch("unfollow", profileUser.value.id);
       isFollow.value = false;
+      followerNum.value = followerNum.value - 1;
+    };
+
+    const minusFollowing = () => {
+      followingNum.value = followingNum.value - 1;
+    };
+    const minusFollower = () => {
+      followerNum.value = followerNum.value - 1;
     };
 
     // 팔로우 모달창 열기/닫기
@@ -489,6 +500,24 @@ export default {
       store.dispatch("getChatRoomList", getters.value.getLoginUserId);
       store.commit("SET_IS_CHAT_SHOW", !getters.value.getIsChatShow);
     }
+
+    const followingNum = ref(0);
+    const followerNum = ref(0);
+
+    (async () => {
+      await http
+        .get("following/lists/" + userId.value, {
+          headers: store.getters.authHeader,
+        })
+        .then((res) => (followingNum.value = res.data.size))
+        .catch((err) => console.error(err.response));
+      await http
+        .get("follower/lists/" + userId.value, {
+          headers: store.getters.authHeader,
+        })
+        .then((res) => (followerNum.value = res.data.size))
+        .catch((err) => console.error(err.response));
+    })();
 
     return {
       store,
@@ -518,6 +547,8 @@ export default {
       isFollowOpen,
       followOpen,
       closeModal,
+      minusFollowing,
+      minusFollower,
 
       level,
       percentage,

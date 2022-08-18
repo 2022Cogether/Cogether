@@ -4,7 +4,12 @@
     <div class="row">
       <div class="h5 col-3">프로필 사진</div>
       <div class="profile-img-box offset-1">
-        <img :src="imgUrl" alt="profile image" class="profile-img" />
+        <img
+          :src="imgUrl"
+          alt="profile image"
+          class="profile-img"
+          style="width: 100%"
+        />
       </div>
     </div>
     <div class="d-flex justify-content-center">
@@ -26,7 +31,7 @@
         <input
           type="text"
           maxlength="15"
-          style="background-color: #e2e2e2; border-radius: 5px; width: 67%"
+          style="border-radius: 5px; width: 67%"
           v-model="nickname"
           @keyup="checkNickValid"
         />
@@ -57,7 +62,7 @@
         <input
           type="text"
           maxlength="150"
-          style="background-color: #e2e2e2; border-radius: 5px; width: 80%"
+          style="border-radius: 5px; width: 80%"
           v-model="intro"
         />
       </div>
@@ -179,7 +184,7 @@
       <div class="offset-3">
         <input
           type="text"
-          style="background-color: #e2e2e2; border-radius: 5px; width: 110%"
+          style="border-radius: 5px; width: 110%"
           v-model="gitUrl"
         />
       </div>
@@ -191,7 +196,7 @@
       <div class="offset-3">
         <input
           type="text"
-          style="background-color: #e2e2e2; border-radius: 5px; width: 110%"
+          style="border-radius: 5px; width: 110%"
           v-model="tistoryUrl"
         />
       </div>
@@ -203,7 +208,7 @@
       <div class="offset-3">
         <input
           type="text"
-          style="background-color: #e2e2e2; border-radius: 5px; width: 110%"
+          style="border-radius: 5px; width: 110%"
           v-model="velogUrl"
         />
       </div>
@@ -216,7 +221,7 @@
         <input
           type="text"
           size="60"
-          style="background-color: #e2e2e2; border-radius: 5px; width: 110%"
+          style="border-radius: 5px; width: 110%"
           v-model="notionUrl"
         />
       </div>
@@ -229,7 +234,7 @@
         <input
           type="text"
           size="60"
-          style="background-color: #e2e2e2; border-radius: 5px; width: 110%"
+          style="border-radius: 5px; width: 110%"
           v-model="etcUrl"
         />
       </div>
@@ -421,7 +426,7 @@ export default {
     // 닉네임 중복 체크
     const getters = computed(() => store.getters);
     const isNickValid = ref(true);
-    const isNickChecked = ref(false);
+    const isNickChecked = ref(true);
     const checkNickValid = () => {
       isNickValid.value = getters.value.getNickPattern.test(nickname.value);
       if (isNickChecked.value) {

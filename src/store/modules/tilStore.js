@@ -18,7 +18,7 @@ export const tilStore = {
     openTil: -1, // 모달창으로 디테일이 열릴 til의 번호, -1이면 안 열린 상태!
     tilList: [],
     tilContent: {},
-    // commentId: -1,
+    newCommentId: -1,
   },
   getters: {
     getOpenTil(state) {
@@ -32,6 +32,9 @@ export const tilStore = {
     },
     getTilContent(state) {
       return state.tilContent;
+    },
+    getNewCommentId(state) {
+      return state.newCommentId;
     },
 
     // 코멘트
@@ -68,6 +71,10 @@ export const tilStore = {
           state.tilList[idx].isLike = !state.tilList[idx].isLike;
         }
       });
+    },
+
+    SET_NEW_COMMENT_ID: (state, commentId) => {
+      state.newCommentId = commentId;
     },
 
     // 코멘트
@@ -211,8 +218,8 @@ export const tilStore = {
         .catch((err) => console.error(err.response));
     },
 
-    removeTil({ commit, getters }, tilPk) {
-      http
+    async removeTil({ commit, getters }, tilPk) {
+      await http
         .delete("til/" + tilPk, {
           headers: getters.authHeader,
         })
@@ -280,21 +287,22 @@ export const tilStore = {
     },
 
     // TIL 코멘트
-    async createComment({ dispatch, getters }, payload) {
+    async createComment({ commit, getters }, payload) {
       await http
         .post("/til/comment", payload, {
           headers: getters.authHeader,
         })
-        .then(async () => {
+        .then(async (res) => {
           // commit("ADD_COMMENT", {
           //   ...payload,
           //   tilCommentId: res.data.id,
           // });
           // console.log(state.tilContent.commentList);
           //
-          await dispatch("fetchTil", {
-            tilId: getters.getOpenTil,
-          });
+          // await dispatch("fetchTil", {
+          //   tilId: getters.getOpenTil,
+          // });
+          commit("SET_NEW_COMMENT_ID", res.data.id);
         })
         .catch((err) => console.error(err.response));
     },

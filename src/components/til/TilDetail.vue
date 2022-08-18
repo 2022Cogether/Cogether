@@ -19,11 +19,12 @@
           <div class="til-info">
             <span class="til-user">{{ til.userNickname }}</span>
             <!-- created_at을 통해서 시간 계산 v-if나 함수로 1일 이하면 시간으로 표시 -->
-            <span v-if="fromCreated < 24" class="til-time">
-              {{ fromCreated }}시간 전
+            <span v-if="fromCreated < 10" class="til-time">방금전</span>
+            <span v-if="fromCreated < 34 && fromCreated > 9" class="til-time">
+              {{ fromCreated - 9 }}시간 전
             </span>
-            <span v-else class="til-time">
-              {{ parseInt(fromCreated / 24) }}일 전
+            <span v-if="fromCreated > 33" class="til-time">
+              {{ parseInt((fromCreated - 9) / 24) }}일 전
             </span>
           </div>
 
@@ -214,6 +215,7 @@
 <script>
 import CommentList from "@/components/til/comment/CommentList.vue";
 
+import Swal from "sweetalert2";
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import router from "@/router";
@@ -270,10 +272,24 @@ export default {
     })();
 
     // Til 삭제
-    const deleteTil = () => {
-      store.dispatch("removeTil", til.value.tilId);
-      router.go();
-    };
+    function deleteTil() {
+      Swal.fire({
+        title: "삭제하시겠습니까?",
+        text: "삭제한 글은 복구할 수 없습니다.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#2a9d8f",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "확인",
+        cancelButtonText: "취소",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          //취소하고 이동할 페이지
+          await store.dispatch("removeTil", til.value.tilId);
+          router.go();
+        }
+      });
+    }
 
     // 좋아요/좋아요 취소
     const sendLike = () => {
@@ -296,12 +312,12 @@ export default {
         userId: store.getters.getLoginUserId,
       };
       await store.dispatch("createComment", payload);
-      til.value = computed(() => {
-        return getters.value.getTilContent;
-      }).value;
-      console.log(til.value);
-      commentList.value = til.value.commentList;
-      commentContent.value = "";
+      til.value.commentList.push({
+        ...payload,
+        userNickname: "당신",
+        createdAt: new Date(),
+        tilCommentId: store.getters.getNewCommentId,
+      });
     };
 
     // 모달 바깥을 클릭하면 모달을 닫게 하는 함수

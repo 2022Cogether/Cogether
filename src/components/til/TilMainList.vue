@@ -112,7 +112,6 @@ export default {
 
 .search-bar {
   border: 1px solid black;
-  background-color: #e6e6e6;
   display: inline-block;
   width: 50%;
   border-radius: 10px;
@@ -122,7 +121,6 @@ export default {
   width: 10%;
   border: 0px;
   border-radius: 10px;
-  background-color: #e6e6e6;
   position: relative;
   top: 5%;
   left: 2%;
@@ -135,7 +133,6 @@ export default {
 
   padding-right: 3%;
   margin-right: 1%;
-  background-color: #e6e6e6;
   line-height: 55px;
 }
 
