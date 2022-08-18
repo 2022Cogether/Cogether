@@ -66,7 +66,7 @@ public class ProjectService {
         int check = projectScrapRepository.countAllByProjectAndUser(project, user);
         int scrapId = 0;
         boolean isScrap = false;
-        if (check == 1) {
+        if (check > 0) {
             scrapId = projectScrapRepository.findByProject_IdAndUser_Id(projectId, userId).getId();
             isScrap = true;
         }
@@ -90,7 +90,7 @@ public class ProjectService {
             int check = projectScrapRepository.countAllByProjectAndUser(project, user);
             int scrapId = 0;
             boolean isScrap = false;
-            if (check == 1) {
+            if (check > 0) {
                 scrapId = projectScrapRepository.findByProject_IdAndUser_Id(project.getId(), userId).getId();
                 isScrap = true;
             }
@@ -102,6 +102,11 @@ public class ProjectService {
     public ProjectResponse.OnlyProjectScrapId createScrap(ProjectRequest.Create_ProjectScrap create_projectScrap) {
         User user = userRepository.findById(create_projectScrap.getUserId()).orElseThrow(UserNotFoundException::new);
         Project project = projectRepository.findById(create_projectScrap.getProjectId()).orElseThrow(ProjectNotFoundException::new);
+        int check = projectScrapRepository.countAllByProjectAndUser(project, user);
+        if(check > 0){
+            ProjectScrap projectScrap = projectScrapRepository.findByProject_IdAndUser_Id(project.getId(), user.getId());
+            return ProjectResponse.OnlyProjectScrapId.build(projectScrap);
+        }
         ProjectScrap projectScrap = create_projectScrap.toEntity(project, user);
         ProjectScrap savedProjectScrap = projectScrapRepository.save(projectScrap);
         return ProjectResponse.OnlyProjectScrapId.build(savedProjectScrap);
@@ -124,7 +129,7 @@ public class ProjectService {
             int check = projectScrapRepository.countAllByProjectAndUser(project, user);
             int scrapId = 0;
             boolean isScrap = false;
-            if (check == 1) {
+            if (check > 0) {
                 scrapId = projectScrapRepository.findByProject_IdAndUser_Id(project.getId(), userId).getId();
                 isScrap = true;
             }
