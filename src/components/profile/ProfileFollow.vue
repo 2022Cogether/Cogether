@@ -314,7 +314,8 @@ export default {
 <style lang="scss" scoped>
 .modal-card {
   background-color: white;
-  width: 70vw;
+  width: 40vw;
+  min-width: 250px;
   height: auto;
 }
 

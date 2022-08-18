@@ -99,7 +99,7 @@ export default {
         email: getters.value.getCurrentUser.email,
       };
       await store.dispatch("logout", payload);
-      router.push({ name: "mainview" });
+      router.go();
     };
 
     async function connect() {
