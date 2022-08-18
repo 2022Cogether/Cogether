@@ -308,12 +308,13 @@ export default {
   background-color: white;
   width: 40vw;
   min-width: 250px;
-  height: auto;
+  margin-top: 10vh;
+  height: 80vh;
 }
 
 .search-bar-block {
   width: 100%;
-  height: 60px;
+  height: 40px;
   display: flex;
   justify-content: center;
 }
@@ -341,7 +342,7 @@ export default {
 
   padding-right: 3%;
   margin-right: 1%;
-  line-height: 55px;
+  line-height: 35px;
 }
 
 .icon-search {
@@ -354,5 +355,18 @@ input:focus {
 
 a {
   text-decoration: none;
+}
+
+.nav-link {
+  color: white !important;
+  background-color: #2a9d8f !important;
+  border-color: white !important;
+}
+
+.btn:active,
+.active {
+  color: #2a9d8f !important;
+  background-color: white !important;
+  border-color: white !important;
 }
 </style>
