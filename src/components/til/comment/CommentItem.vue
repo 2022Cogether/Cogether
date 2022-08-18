@@ -74,7 +74,7 @@ export default {
     userId: Number,
     tilId: Number,
   },
-  emits: ["delComm"],
+  emits: ["delComm", "editComm"],
   setup(props, { emit }) {
     const store = useStore();
 
@@ -125,6 +125,7 @@ export default {
       store.dispatch("updateComment", payload);
       commentContent.value = event.target.value;
       onEdit();
+      emit("editComm", event, props.comment.tilCommentId, commentContent.value);
     };
 
     return {

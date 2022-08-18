@@ -7,6 +7,7 @@
       :comment="comment"
       :key="comment.commentId"
       @delComm="delComm"
+      @editComm="editComm"
     >
     </comment-item>
   </div>
@@ -32,18 +33,14 @@ export default {
 
     const delComm = (event, tilCommentId) => {
       event;
-      // console.log(tilCommentId);
-      // for (let i = 0; i < commentsList.value.length; i++) {
-      //   if (commentsList.value[i].tilCommentId == tilCommentId) {
-      //     console.log(i);
-      //     console.log(commentsList.value[i]);
-      //     console.log(commentsList.value.splice(i, 1));
-      //     break;
-      //   }
-      // }
       emit("delComm", event, tilCommentId);
     };
-    return { props, delComm, commentsList };
+
+    const editComm = (event, tilCommentId, updateComment) => {
+      event;
+      emit("editComm", event, tilCommentId, updateComment);
+    };
+    return { props, delComm, editComm, commentsList };
   },
 };
 </script>
