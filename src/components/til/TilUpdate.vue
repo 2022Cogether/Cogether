@@ -83,10 +83,10 @@ export default {
         cancelButtonColor: "#d33",
         confirmButtonText: "확인",
         cancelButtonText: "취소",
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
           //취소하고 이동할 페이지
-          store.dispatch("removeTil", store.getters.getOpenTil);
+          await store.dispatch("removeTil", tilContent.value.tilId);
           router.push({ name: "mainview" });
         }
       });

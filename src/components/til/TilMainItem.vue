@@ -15,11 +15,12 @@
       </div>
       <div class="til-info">
         <span class="til-user">{{ til.userNickname }}</span>
-        <span v-if="fromCreated < 24" class="til-time">
-          {{ fromCreated }}시간 전
+        <span v-if="fromCreated < 10" class="til-time">방금전</span>
+        <span v-if="fromCreated < 34 && fromCreated > 9" class="til-time">
+          {{ fromCreated - 9 }}시간 전
         </span>
-        <span v-else class="til-time">
-          {{ parseInt(fromCreated / 24) }}일 전
+        <span v-if="fromCreated > 33" class="til-time">
+          {{ parseInt((fromCreated - 9) / 24) }}일 전
         </span>
       </div>
 
@@ -244,6 +245,12 @@ export default {
         userId: store.getters.getLoginUserId,
       };
       store.dispatch("createComment", payload);
+      til.value.commentList.push({
+        ...payload,
+        userNickname: "당신",
+        createdAt: new Date(),
+        tilCommentId: store.getters.getNewCommentId,
+      });
     };
 
     function deleteTil() {
@@ -256,11 +263,11 @@ export default {
         cancelButtonColor: "#d33",
         confirmButtonText: "확인",
         cancelButtonText: "취소",
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
           //취소하고 이동할 페이지
-          store.dispatch("removeTil", til.value.tilId);
-          router.push({ name: "mainview" });
+          await store.dispatch("removeTil", til.value.tilId);
+          router.go();
         }
       });
     }

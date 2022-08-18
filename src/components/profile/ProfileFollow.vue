@@ -105,7 +105,7 @@
             <font-awesome-icon
               v-if="follower.id == store.getters.getLoginUserId"
               icon="fa-solid fa-rectangle-xmark"
-              @click="unfollow(follower.id, false)"
+              @click="unfollow(props.userId, false)"
               style="cursor: pointer; margin-left: 2vw"
             />
           </ul>
@@ -145,9 +145,9 @@
             <div
               class="profile-data-list"
               style="cursor: pointer"
-              @click="goOut(follower.id)"
+              @click="goOut(user.id)"
             >
-              {{ user.id }}: {{ user.nickName }}
+              {{ user.nickName }}
             </div>
           </ul>
         </div>
@@ -180,9 +180,9 @@
             <div
               class="profile-data-list"
               style="cursor: pointer"
-              @click="goOut(follower.id)"
+              @click="goOut(user.id)"
             >
-              {{ user.id }}: {{ user.email }}
+              {{ user.email }}
             </div>
           </ul>
         </div>
@@ -195,12 +195,13 @@ import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import router from "@/router";
+// import http from "@/api/http";
 // import { useRoute } from "vue-router";
 
 export default {
   name: "ProfileFollow",
   props: ["userId"],
-  emits: ["closeModal"],
+  emits: ["closeModal", "minusFollower", "minusFollowing"],
   setup(props, { emit }) {
     const store = useStore();
     // const route = useRoute();
@@ -243,17 +244,14 @@ export default {
 
     // 언팔로우
     const unfollow = async (userId, isFromFollowing) => {
+      console.log(userId);
       await store.dispatch("unfollow", userId);
       if (isFromFollowing) {
-        await store.dispatch("fetchFollowingList", props.userId);
-        followingList = computed(() => {
-          return store.getters.getMyFollowingList;
-        });
+        await emit("minusFollowing");
+        emit("closeModal");
       } else {
-        await store.dispatch("fetchFollowerList", props.userId);
-        followerList = computed(() => {
-          return store.getters.getMyFollowerList;
-        });
+        await emit("minusFollower");
+        emit("closeModal");
       }
     };
 
