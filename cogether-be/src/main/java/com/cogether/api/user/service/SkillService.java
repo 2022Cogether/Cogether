@@ -3,7 +3,6 @@ package com.cogether.api.user.service;
 import com.cogether.api.config.jwt.TokenUtils;
 import com.cogether.api.user.domain.User;
 import com.cogether.api.user.domain.UserSkill;
-import com.cogether.api.user.dto.UserRequest;
 import com.cogether.api.user.dto.UserSkillResponse;
 import com.cogether.api.user.repository.UserRepository;
 import com.cogether.api.user.repository.UserSkillRepository;
@@ -27,41 +26,33 @@ public class SkillService {
     private final UserSkillRepository userSkillRepository;
 
     private final TokenUtils tokenUtils;
-    public User getUser(int userId) throws Exception
-    {
+
+    public User getUser(int userId) throws Exception {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        System.out.println("진입");
-//        UserRequest userRequest = UserRequest.builder()
-//                .id(user.getId()).email(user.getEmail()).build();
 
         return user;
     }
 
-    public User getUser(String email) throws Exception
-    {
+    public User getUser(String email) throws Exception {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        System.out.println("진입");
-//        UserRequest userRequest = UserRequest.builder()
-//                .id(user.getId()).email(user.getEmail()).build();
 
         return user;
     }
-
 
 
     /**
      * 유저 스킬 등록
+     *
      * @param skills
      * @return
      */
     @Transactional
-    public String addUserSkill(List<String> skills, String token) throws Exception
-    {
-        int id =tokenUtils.getUserIdFromToken(token);
+    public String addUserSkill(List<String> skills, String token) throws Exception {
+        int id = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        for(String skill : skills) {
+        for (String skill : skills) {
             userSkillRepository.save(UserSkill.builder()
                     .user(user)
                     .skillId(skill)
@@ -74,8 +65,7 @@ public class SkillService {
      * 유저 스킬 조회
      * //예쁘게 나옴 제이슨
      */
-    public List<UserSkillResponse> getUserSkillList(int userId)
-    {
+    public List<UserSkillResponse> getUserSkillList(int userId) {
         User user =
                 userRepository
                         .findById(userId)
@@ -86,21 +76,19 @@ public class SkillService {
 
         List<UserSkillResponse> list = new ArrayList<>();
 
-        for(UserSkill skill :skills)
-        {
-            UserSkillResponse userSkillResponse= UserSkillResponse.builder().userSkillId(skill.getId()).skillName(skill.getSkillId()).build();
+        for (UserSkill skill : skills) {
+            UserSkillResponse userSkillResponse = UserSkillResponse.builder().userSkillId(skill.getId()).skillName(skill.getSkillId()).build();
             list.add(userSkillResponse);
         }
 
         return list;
     }
+
     /**
      * 유저 스킬 조회
      * //리스트하나에 String 주르르륵
-     *
      */
-    public List<String> getUserSkillListString(int userId)
-    {
+    public List<String> getUserSkillListString(int userId) {
         User user =
                 userRepository
                         .findById(userId)
@@ -111,8 +99,7 @@ public class SkillService {
 
         List<String> list = new ArrayList<>();
 
-        for(UserSkill skill :skills)
-        {
+        for (UserSkill skill : skills) {
 
             list.add(skill.getSkillId());
         }
@@ -123,21 +110,19 @@ public class SkillService {
 
     /**
      * 유저 스킬 삭제
-     * @param skills
-     * @param userId
+     *
      * @return
      * @throws Exception
      */
     @Transactional
-    public String removeUserSkill(List<String> skills,String token) throws Exception
-    {
+    public String removeUserSkill(List<String> skills, String token) throws Exception {
         int id = tokenUtils.getUserIdFromToken(token);
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        for(String skill : skills) {
-            userSkillRepository.deleteUserSkill(skill,id);
+        for (String skill : skills) {
+            userSkillRepository.deleteUserSkill(skill, id);
         }
 
         return "remove skills";

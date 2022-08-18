@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface FollowRepository extends JpaRepository<Follow, Integer> {
 
     List<Follow> findById(int toId);
+
     @Query("select f from Follow f where f.user.id=:to_id")
     List<Follow> findByFollowing(@Param("to_id") int to_id);
 
@@ -25,6 +26,6 @@ public interface FollowRepository extends JpaRepository<Follow, Integer> {
     @Transactional
     @Modifying
     @Query("delete from Follow f where f.fromId =:fromId AND f.user.id=:toId")
-    void deleteByIdInQuery(@Param("toId") int toId,@Param("fromId") int fromId);
+    void deleteByIdInQuery(@Param("toId") int toId, @Param("fromId") int fromId);
 
 }

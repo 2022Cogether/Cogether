@@ -12,11 +12,9 @@ import com.cogether.api.user.dto.UserRequest;
 import com.cogether.api.user.repository.AuthRepository;
 import com.cogether.api.user.repository.UserRepository;
 import com.cogether.api.user.repository.UserSkillRepository;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
@@ -63,16 +61,18 @@ public class UserService {
     @Transactional
     public TokenResponse signUp(UserRequest userRequest) {
 
-        //user 테이블 레코드 저장
-        User user = userRepository.save(User.builder().password(passwordEncoder.encode(userRequest.getPassword()))  // 사용자 비밀번호 암호화해서 DB에 저장
-                .email(userRequest.getEmail())      //사용자 이메일
-                .nickname(userRequest.getNickname())//사용자 닉네임
-                .createdAt(LocalDateTime.now()) // 가입날자
-                .resign(false)  // 탈퇴 여부
-                .comp(false) // 경쟁모드 참가여부
-                .admin(false).etcUrl(userRequest.getEtc_url())   //기타 사이트
-                .gitUrl(userRequest.getGit_url())   //깃 url
-                .notionUrl((userRequest.getNotion_url()))   //노션url
+        User user = userRepository.save(
+                User.builder().password(passwordEncoder.encode(userRequest.getPassword()))  // 사용자 비밀번호 암호화해서 DB에 저장
+                .email(userRequest.getEmail())
+                .nickname(userRequest.getNickname())
+                .createdAt(LocalDateTime.now())
+                .resign(false)
+                .comp(false)
+                .admin(false)
+                .etcUrl(userRequest.getEtc_url())
+                .gitUrl(userRequest.getGit_url())
+                .velogUrl(userRequest.getVelog_url())
+                .notionUrl((userRequest.getNotion_url()))
                 .exp(0) // 경험치
                 .imgUrl(userRequest.getImg_url())   // 프로필
                 .intro(userRequest.getIntro())// 한줄소개
@@ -81,13 +81,11 @@ public class UserService {
 
         List<String> skills = userRequest.getSkills();
 
-        System.out.println(skills.isEmpty());
         if (!skills.isEmpty()) {
             for (String skill : skills) {
                 userSkillRepository.save(UserSkill.builder().skillId(skill).user(user).build());
             }
         }
-
 
         rankingRepository.save(Ranking.builder().user(user).tilCnt(0).week(0).month(0).total(0).build());
 
@@ -108,9 +106,6 @@ public class UserService {
         User user = userRepository.findByEmail(userRequest.getEmail()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
         Optional<Auth> authEntity = authRepository.findByUserId(user.getId());
 
-//        Auth auth =
-//                authRepository
-//                        .findByUserId(user.getId()).orElseThrow(() -> new IllegalArgumentException("Token 이 존재하지 않습니다."));
 
         if (!passwordEncoder.matches(userRequest.getPassword(), user.getPassword())) {
             throw new Exception("비밀번호가 일치하지 않습니다.");
@@ -118,30 +113,7 @@ public class UserService {
         String accessToken = "";
         String refreshToken = "";
 
-
-//        refreshToken = auth.getRefreshToken();;
-//
-//        if(tokenUtils.isValidRefreshToken(refreshToken))
-//        {
-//            accessToken=tokenUtils.generateJwtToken(auth.getUser());
-//            return TokenResponse.builder()
-//                        .ACCESS_TOKEN(accessToken)
-//                        .REFRESH_TOKEN(refreshToken)
-//                        .userId(user.getId())
-//                        .build();
-//        }else
-//        {
-//            //리프레시 토큰으로 액세스 토큰 발급 받기. . .
-//            accessToken = tokenUtils.generateJwtToken(auth.getUser());
-//            refreshToken = refreshToken;
-//            //auth.refreshUpdate(refreshToken);
-//
-//            return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).userId(user.getId()).build();
-//        }
-
-
         Auth auth = new Auth();
-
 
         if (authEntity.isPresent()) {
             auth = authEntity.get();
@@ -176,8 +148,10 @@ public class UserService {
     @Transactional
     public TokenResponse reissuanceAccessToken(String token, int id) throws Exception {
 
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        Auth auth = authRepository.findByUserId(user.getId()).orElseThrow(() -> new IllegalArgumentException("Token 이 존재하지 않습니다."));
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        Auth auth = authRepository
+                .findByUserId(user.getId()).orElseThrow(() -> new IllegalArgumentException("Token 이 존재하지 않습니다."));
 
 
         String accessToken;
@@ -196,62 +170,6 @@ public class UserService {
 
             return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).userId(user.getId()).build();
         }
-
-
-//        int id = tokenUtils.getUserIdFromRefreshToken(token);
-//        System.out.println(id);
-//        User user =
-//                userRepository
-//                        .findById(id)
-//                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-//        Optional<Auth> authEntiy =
-//                authRepository
-//                        .findByUserId(user.getId());//.orElseThrow(() -> new IllegalArgumentException("Token 이 존재하지 않습니다."));
-//
-//        String accessToken ;
-//        String refreshToken ;
-//
-//        if (authEntiy.isPresent()) {
-//            Auth auth = authEntiy.get();
-//            refreshToken = auth.getRefreshToken();
-//
-//            System.out.println("흠/.");
-//            if (tokenUtils.isValidRefreshToken(token)) {
-//                accessToken = tokenUtils.generateJwtToken(auth.getUser());
-//                return TokenResponse.builder()
-//                        .ACCESS_TOKEN(accessToken)
-//                        .REFRESH_TOKEN(refreshToken)
-//                        .userId(user.getId())
-//                        .build();
-//            } else {
-//                accessToken = tokenUtils.generateJwtToken(user);
-//                refreshToken = tokenUtils.saveRefreshToken(user);
-//
-//                auth.refreshUpdate(refreshToken);
-//                authRepository.save(auth);
-//
-//                return TokenResponse.builder()
-//                        .ACCESS_TOKEN(accessToken)
-//                        .REFRESH_TOKEN(refreshToken)
-//                        .userId(user.getId())
-//                        .build();
-//            }
-//        }
-//        else
-//        {
-//            accessToken = tokenUtils.generateJwtToken(user);
-//            refreshToken = tokenUtils.saveRefreshToken(user);
-//
-//            Auth auth = Auth.builder().user(user).refreshToken(refreshToken).build();
-//
-//            authRepository.save(auth);
-//
-//            return TokenResponse.builder()
-//                    .ACCESS_TOKEN(accessToken)
-//                    .REFRESH_TOKEN(refreshToken)
-//                    .userId(user.getId())
-//                    .build();
-//        }
     }
 
 
@@ -327,25 +245,6 @@ public class UserService {
 
         return "회원정보 변경 완료";
 
-//        Optional<Auth> auth = authRepository.findByUserId(user.get().getId());
-//
-//        String accessToken = "";
-//        String refreshToken = auth.get().getRefreshToken();
-//
-//        if (tokenUtils.isValidRefreshToken(refreshToken)) {
-//            accessToken = tokenUtils.generateJwtToken(auth.get().getUser());
-//            return TokenResponse.builder()
-//                    .ACCESS_TOKEN(accessToken)
-//                    .REFRESH_TOKEN(auth.get().getRefreshToken())
-//                    .build();
-//        } else {
-//            accessToken = tokenUtils.generateJwtToken(auth.get().getUser());
-//            refreshToken = tokenUtils.saveRefreshToken(user.get());
-//            auth.get().refreshUpdate(refreshToken);
-//        }
-//
-//
-//        return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).build();
     }
 
     /**
@@ -477,7 +376,7 @@ public class UserService {
             for (User u : emailList) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("id", u.getId());
-                map.put("nickName", u.getEmail());
+                map.put("email", u.getEmail());
 
                 body.add(map);
             }

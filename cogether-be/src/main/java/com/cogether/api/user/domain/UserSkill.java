@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name="UserSkill")
+@Table(name = "UserSkill")
 @Data
 @Builder
 @AllArgsConstructor
@@ -16,14 +16,14 @@ public class UserSkill {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT UNSIGNED",nullable = false)
+    @Column(columnDefinition = "INT UNSIGNED", nullable = false)
     private int id;
 
     @ManyToOne
-    @JoinColumn(name="user_id") //유저식별자
+    @JoinColumn(name = "user_id") //유저식별자
     private User user;
 
-    @Column(name="skill_id",length=50)  //기술스택식별자
+    @Column(name = "skill_id", length = 50)  //기술스택식별자
     private String skillId;
 
 }

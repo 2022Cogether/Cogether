@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name="Noti")
+@Table(name = "Noti")
 @Data
 @Builder
 @AllArgsConstructor
@@ -18,33 +18,33 @@ import java.time.LocalDateTime;
 public class Noti {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT UNSIGNED",nullable = false)
-    private int id ;
+    @Column(columnDefinition = "INT UNSIGNED", nullable = false)
+    private int id;
 
     @ManyToOne
-    @JoinColumn(name="send_id")
+    @JoinColumn(name = "send_id")
     private User user;
 
-    @Column(name="receive_id",nullable = false)
+    @Column(name = "receive_id", nullable = false)
     private int receiveId;
 
-    @Column(name="type", length=10,nullable = false)
+    @Column(name = "type", length = 10, nullable = false)
     private String type;
 
-    @Column(name="content_id",nullable = false)
+    @Column(name = "content_id", nullable = false)
     private int contentId;
 
-    @Column(name="message", length=200,nullable = false)
+    @Column(name = "message", length = 200, nullable = false)
     private String message;
 
-    @Column(name="url", length = 300,nullable = false)
+    @Column(name = "url", length = 300, nullable = false)
     private String url;
 
-    @Column(name ="create_at")
+    @Column(name = "create_at")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createAt;
 
-    @Column(name="read_at")
+    @Column(name = "read_at")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime readAt;
 }

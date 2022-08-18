@@ -5,7 +5,6 @@ import com.cogether.api.user.repository.UserRepository;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -28,10 +27,10 @@ public class TokenUtils {
     //AccessToken 발급
     public String generateJwtToken(User user) {
         return Jwts.builder()
-                .setSubject(user.getEmail())  // 토큰 용도??v JWT payload 에 저장되는 정보단위
-                .setHeader(createHeader())  //header 설정
-                .setClaims(createClaims(user)) //claims 설정
-                .setExpiration(createExpireDate(1000 * 60 * 60 *24)) // 토큰 만료시간 24hour
+                .setSubject(user.getEmail())
+                .setHeader(createHeader())
+                .setClaims(createClaims(user))
+                .setExpiration(createExpireDate(1000 * 60 * 60 * 24)) // 토큰 만료시간 24hour
                 .signWith(SignatureAlgorithm.HS256, createSigningKey(SECRET_KEY)) //HS256 , key로 sign
                 .compact(); // 토큰 생성
     }
@@ -42,7 +41,7 @@ public class TokenUtils {
                 .setSubject(user.getEmail())
                 .setHeader(createHeaderRefresh())
                 .setClaims(createClaims(user))
-                .setExpiration(createExpireDate(1000 * 60 * 60*24*7 )) // 토큰 만료시간 7일
+                .setExpiration(createExpireDate(1000 * 60 * 60 * 24 * 7)) // 토큰 만료시간 7일
                 .signWith(SignatureAlgorithm.HS256, createSigningKey(REFRESH_KEY))
                 .compact();
     }
@@ -65,6 +64,7 @@ public class TokenUtils {
             return false;
         }
     }
+
     public boolean isValidRefreshToken(String token) {
         try {
             Claims accessClaims = getClaimsToken(token);
@@ -128,6 +128,7 @@ public class TokenUtils {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
     private Claims getClaimsToken(String token) {
         return Jwts.parser()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(REFRESH_KEY))
@@ -135,8 +136,7 @@ public class TokenUtils {
                 .getBody();
     }
 
-    public int getUserIdFromToken(String token)
-    {
+    public int getUserIdFromToken(String token) {
 
 
         Claims claims = Jwts.parser()
@@ -146,31 +146,8 @@ public class TokenUtils {
 
         System.out.println(claims.toString());
 
-        String userEmail =claims.get("userID",String.class);
-        System.out.println("토큰에서 뽑아오익 :" + userEmail);
-
-        User user = userRepository
-                .findByEmail(userEmail)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-
-        int userId = user.getId();
-
-        return userId;
-    }
-    public int getUserIdFromRefreshToken(String token)
-    {
-
-        System.out.println("토큰 뽑아오기");
-
-        Claims claims = Jwts.parser()
-                .setSigningKey(DatatypeConverter.parseBase64Binary(REFRESH_KEY))
-                .parseClaimsJws(token)
-                .getBody();
-
-        System.out.println(claims.toString());
-
-        String userEmail =claims.get("userID",String.class);
-        System.out.println("토큰에서 뽑아오익 :" + userEmail);
+        String userEmail = claims.get("userID", String.class);
+        System.out.println("액세스 토큰에서 이메일 추출 : " + userEmail);
 
         User user = userRepository
                 .findByEmail(userEmail)

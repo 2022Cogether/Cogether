@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name="Follow")
+@Table(name = "Follow")
 @Data
 @Builder
 @AllArgsConstructor
@@ -16,20 +16,20 @@ import javax.persistence.*;
 public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT UNSIGNED",nullable = false)
+    @Column(columnDefinition = "INT UNSIGNED", nullable = false)
     private int id;
 
     @ManyToOne
-    @JoinColumn(name="to_id")
-    private User user;  // 내아이디.. . .ㅍ... . ...ㅍ. . . .
+    @JoinColumn(name = "to_id")
+    private User user;  // 내아이디
 
-    @Column(name="to_email",nullable = false)
+    @Column(name = "to_email", nullable = false)
     private String toEmail;
 
-    @Column(name="from_id",nullable = false)
-    private int fromId;   // 내가 팔로잉 등록함 ㅋ.ㅋ.ㅋ.ㅋ.ㅋ.ㅋ.
+    @Column(name = "from_id", nullable = false)
+    private int fromId;   // 팔로잉 등록대상
 
-    @Column(name="from_email",nullable = false)
+    @Column(name = "from_email", nullable = false)
     private String fromEmail;
 
 }

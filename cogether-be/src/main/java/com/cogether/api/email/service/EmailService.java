@@ -1,7 +1,6 @@
 package com.cogether.api.email.service;
 
 import com.cogether.api.email.domain.Verification;
-import com.cogether.api.email.dto.Email;
 import com.cogether.api.email.repository.EmailRepository;
 import com.cogether.api.user.domain.User;
 import com.cogether.api.user.repository.UserRepository;
@@ -10,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
-import java.util.Date;
 import java.util.Random;
 
 import javax.mail.Message.RecipientType;
@@ -21,7 +19,6 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -30,18 +27,19 @@ public class EmailService {
     private final EmailRepository emailRepository;
     private final UserRepository userRepository;
     @Autowired
-   JavaMailSender emailSender;
+    JavaMailSender emailSender;
 
     public static final String ePw = createKey();
-    public static final String tempPassword=createTempPassword();
+    public static final String tempPassword = createTempPassword();
     private final PasswordEncoder passwordEncoder;
+
     /**
-     * 회원가입 인증메일 보내기 ^&^
+     * 회원가입 인증메일 보내기
      */
-    private MimeMessage createMessageSignUp(String to)throws Exception{
-        System.out.println("보내는 대상 : "+ to);
-        System.out.println("인증 번호 : "+ePw);
-        MimeMessage  message = emailSender.createMimeMessage();
+    private MimeMessage createMessageSignUp(String to) throws Exception {
+        System.out.println("보내는 대상 : " + to);
+        System.out.println("인증 번호 : " + ePw);
+        MimeMessage message = emailSender.createMimeMessage();
 
         message.addRecipients(RecipientType.TO, to);//보내는 대상
         message.setSubject("COGETHER - 회원가입 이메일 인증");//제목
@@ -117,25 +115,25 @@ public class EmailService {
         mailForm += "</tbody>";
         mailForm += "</table>";
         mailForm += "<p1><a href='https://i7a801.p.ssafy.io'><img src='https://cogethera801.s3.ap-northeast-2.amazonaws.com/logo.png' alt='코게더 로고' style='height:32px;'/></a><p1>";
-        mailForm+= "<div width='100'></div>";
+        mailForm += "<div width='100'></div>";
 
-        mailForm +="고객센터 | cogether.service@gmail.com <br>" +"광고문의 | cogether.service@gmail.com <br>";
+        mailForm += "고객센터 | cogether.service@gmail.com <br>" + "광고문의 | cogether.service@gmail.com <br>";
 
-        mailForm+="제휴 및 대외 협력 | cogether.service@gmail.com<br>";
+        mailForm += "제휴 및 대외 협력 | cogether.service@gmail.com<br>";
         mailForm += "대표 | 김진회 고나령 신성은 유지연 박홍철 | 서울특별시 강남구 테헤란로 212 멀티캠퍼스 17층<br>";
         mailForm += "</div>";
         message.setText(mailForm, "UTF-8", "html");
 
-        message.setFrom(new InternetAddress("cogether.service@gmail.com","COGETHER.Support"));//보내는 사람
+        message.setFrom(new InternetAddress("cogether.service@gmail.com", "COGETHER.Support"));//보내는 사람
 
         return message;
     }
 
     private MimeMessage createMessageIssuetemporarypassword
-            (String to)throws Exception{
-        System.out.println("보내는 대상 : "+ to);
-        System.out.println("인증 번호 : "+tempPassword);
-        MimeMessage  message = emailSender.createMimeMessage();
+            (String to) throws Exception {
+        System.out.println("보내는 대상 : " + to);
+        System.out.println("인증 번호 : " + tempPassword);
+        MimeMessage message = emailSender.createMimeMessage();
 
         message.addRecipients(RecipientType.TO, to);//보내는 대상
         message.setSubject("COGETHER - 임시비밀번호 발급");//제목
@@ -175,7 +173,7 @@ public class EmailService {
         mailForm += "<tr>";
         mailForm += "<td></td>";
         mailForm += "<td>";
-        mailForm += "<p style='font-size:16px;'>안녕하세요."+to + " 님. 해당 임시 비밀번호로 로그인한 후 비밀번호 변경을 진행해주세요. ";
+        mailForm += "<p style='font-size:16px;'>안녕하세요." + to + " 님. 해당 임시 비밀번호로 로그인한 후 비밀번호 변경을 진행해주세요. ";
         mailForm += "</td>";
         mailForm += "<td></td>";
         mailForm += "</tr>";
@@ -211,15 +209,15 @@ public class EmailService {
         mailForm += "</tbody>";
         mailForm += "</table>";
         mailForm += "<p1><a href='https://i7a801.p.ssafy.io'><img src='https://cogethera801.s3.ap-northeast-2.amazonaws.com/logo.png' alt='코게더 로고' style='height:32px;'/></a><p1>";
-        mailForm+= "<div width='100'></div>";
+        mailForm += "<div width='100'></div>";
 
-        mailForm +="고객센터 | cogether.service@gmail.com <br>" +"광고문의 | cogether.service@gmail.com <br>";
+        mailForm += "고객센터 | cogether.service@gmail.com <br>" + "광고문의 | cogether.service@gmail.com <br>";
 
-        mailForm+="제휴 및 대외 협력 | cogether.service@gmail.com<br>";
+        mailForm += "제휴 및 대외 협력 | cogether.service@gmail.com<br>";
         mailForm += "대표 | 김진회 고나령 신성은 유지연 박홍철 | 서울특별시 강남구 테헤란로 212 멀티캠퍼스 17층<br>";
         mailForm += "</div>";
         message.setText(mailForm, "utf-8", "html");//내용
-        message.setFrom(new InternetAddress("cogether.service@gmail.com","COGETHER.Support"));//보내는 사람
+        message.setFrom(new InternetAddress("cogether.service@gmail.com", "COGETHER.Support"));//보내는 사람
 
         return message;
     }
@@ -256,13 +254,12 @@ public class EmailService {
     /**
      * 임시비밀번호 생성
      */
-    public static String createTempPassword()
-    {
-        char[] charSet = new char[] {
+    public static String createTempPassword() {
+        char[] charSet = new char[]{
                 '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-                '!', '@', '#', '$', '%', '^', '&' };
+                '!', '@', '#', '$', '%', '^', '&'};
 
         StringBuffer sb = new StringBuffer();
         SecureRandom sr = new SecureRandom();
@@ -270,12 +267,12 @@ public class EmailService {
 
         int idx = 0;
         int len = charSet.length;
-        for (int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             // idx = (int) (len * Math.random());
             idx = sr.nextInt(len);
             sb.append(charSet[idx]);
         }
-        return  sb.toString();
+        return sb.toString();
     }
 
 
@@ -283,23 +280,24 @@ public class EmailService {
      * 회원가입 인증메일 보내기 ^_^
      */
     @Transactional
-    public String sendSimpleMessage(String to)throws Exception {
+    public String sendSimpleMessage(String to) throws Exception {
         System.out.println(to);
         MimeMessage message = createMessageSignUp(to);
-        try{//예외처리
+        try {//예외처리
             emailSender.send(message);
             emailRepository.save(Verification.builder().email(to).code(ePw).build());
-        }catch(MailException es){
+        } catch (MailException es) {
             es.printStackTrace();
             throw new IllegalArgumentException();
         }
         return ePw;
     }
+
     /**
      * 임시비밀번호 보내기
      */
     @Transactional
-    public String sendSimpleMessageTempPassword(String to)throws Exception {
+    public String sendSimpleMessageTempPassword(String to) throws Exception {
         System.out.println(to);
         MimeMessage message = createMessageIssuetemporarypassword(to);
 
@@ -309,19 +307,18 @@ public class EmailService {
         String encodingPassword = passwordEncoder.encode(tempPassword);
 
 
-        try{//예외처리
+        try {//예외처리
             emailSender.send(message);
             user.setPassword(encodingPassword);
             userRepository.save(user);
-        }catch(MailException es){
+        } catch (MailException es) {
             es.printStackTrace();
             throw new IllegalArgumentException();
         }
         return tempPassword;
     }
 
-    public String findVerificationSignUpCode (String email)
-    {
+    public String findVerificationSignUpCode(String email) {
         Verification verification = emailRepository.searchByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 이메일입니다"));
         System.out.println("");
@@ -331,8 +328,7 @@ public class EmailService {
     }
 
     @Transactional
-    public boolean deleteVerificationSignUpCode (String email)
-    {
+    public boolean deleteVerificationSignUpCode(String email) {
         Verification verification = emailRepository.searchByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 이메일입니다"));
 
