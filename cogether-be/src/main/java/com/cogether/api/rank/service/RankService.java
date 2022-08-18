@@ -113,7 +113,7 @@ public class RankService {
     public RankingResponse.ExpRankList getExpRank(String token, int page) {
         int userId = tokenUtils.getUserIdFromToken(token);
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        List<User> list = userRepository.findAllByOrderByExp();
+        List<User> list = userRepository.findAllByOrderByExpDesc();
         int startIndex = 20 * (page - 1);
         int endIndex = 20 * (page);
         if (endIndex > list.size()) {
