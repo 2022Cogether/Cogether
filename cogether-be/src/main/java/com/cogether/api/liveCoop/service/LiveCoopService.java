@@ -36,6 +36,13 @@ public class LiveCoopService {
 
     public LiveCoopResponse.LiveCoopChatRoomLiveCoopMemberId createLiveCoop(LiveCoopRequest.CreateLiveCoop request) {
         User user = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
+
+        int cnt = liveCoopMemberRepository.countAllByUser(user);
+        if (cnt > 0) {
+            LiveCoopMember liveCoopMember = liveCoopMemberRepository.findByUser(user);
+            return LiveCoopResponse.LiveCoopChatRoomLiveCoopMemberId.build(liveCoopMember.getLiveCoop().getId(), liveCoopMember.getLiveCoop().getChatRoom().getId(), liveCoopMember.getId());
+        }
+
         ChatRoom chatRoom = chatService.createLiveChatRoom();
         LiveCoop liveCoop = request.toEntity(user, chatRoom);
         LiveCoop savedLiveCoop = liveCoopRepository.save(liveCoop);
@@ -52,8 +59,9 @@ public class LiveCoopService {
     public LiveCoopResponse.GetLiveCoops getLiveCoops(String token) {
         List<LiveCoop> liveCoops = new ArrayList<>();
         User loginUser = userRepository.findById(tokenUtils.getUserIdFromToken(token)).orElseThrow(UserNotFoundException::new);
-        int cnt = liveCoopMemberRepository.countAllByUser(loginUser);
         boolean enterCoop = false;
+
+        int cnt = liveCoopMemberRepository.countAllByUser(loginUser);
         if (cnt != 0) {
             enterCoop = true;
             LiveCoopMember liveCoopMember = liveCoopMemberRepository.findByUser(loginUser);
@@ -101,10 +109,16 @@ public class LiveCoopService {
 
     public LiveCoopResponse.LiveCoopChatRoomLiveCoopMemberId createLiveCoopMember(LiveCoopRequest.CreateLiveCoopMember request) {
         LiveCoop liveCoop = liveCoopRepository.findById(request.getLiveCoopId()).orElseThrow(LiveCoopNotFoundException::new);
-        if (liveCoop.getNowMemNum() >= liveCoop.getMemNum()) {
+        if (liveCoop.getNowMemNum() >= liveCoop.getMemNum())
             return LiveCoopResponse.LiveCoopChatRoomLiveCoopMemberId.build(0, 0, 0);
-        }
+
         User user = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
+        int cnt = liveCoopMemberRepository.countAllByUser(user);
+        if (cnt > 0) {
+            LiveCoopMember liveCoopMember = liveCoopMemberRepository.findByUser(user);
+            return LiveCoopResponse.LiveCoopChatRoomLiveCoopMemberId.build(liveCoopMember.getLiveCoop().getId(), liveCoopMember.getLiveCoop().getChatRoom().getId(), liveCoopMember.getId());
+        }
+
         liveCoop.setNowMemNum(liveCoop.getNowMemNum() + 1);
         LiveCoop savedLiveCoop = liveCoopRepository.save(liveCoop);
         LiveCoopMember liveCoopMember = LiveCoopMember.toEntity(user, savedLiveCoop);
