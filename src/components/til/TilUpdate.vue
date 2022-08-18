@@ -68,7 +68,7 @@ export default {
         text: "삭제한 글은 복구할 수 없습니다.",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#2a9d8f",
         cancelButtonColor: "#d33",
         confirmButtonText: "확인",
         cancelButtonText: "취소",

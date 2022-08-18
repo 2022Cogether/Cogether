@@ -1,4 +1,17 @@
 import http from "@/api/http";
+import Swal from "sweetalert2";
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: "bottom-end",
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener("mouseenter", Swal.stopTimer);
+    toast.addEventListener("mouseleave", Swal.resumeTimer);
+  },
+});
 
 export const followStore = {
   state: {
@@ -60,7 +73,7 @@ export const followStore = {
           console.log("팔로잉 리스트 불러오기완료");
         })
         .catch((err) => {
-          alert("팔로잉 리스트 불러오기 실패");
+          console.log("팔로잉 리스트 불러오기 실패");
           console.log("팔로잉 리스트 불러오기 실패");
           console.log(err.message);
           console.log(err.response);
@@ -77,7 +90,6 @@ export const followStore = {
           console.log("팔로워 리스트 불러오기완료");
         })
         .catch((err) => {
-          alert("팔로워 리스트 불러오기 실패");
           console.log("팔로워 리스트 불러오기 실패");
           console.log(err.message);
           console.log(err.response);
@@ -94,7 +106,7 @@ export const followStore = {
           console.log("팔로잉 수 체크 완료");
         })
         .catch((err) => {
-          alert("팔로잉 수 체크 실패");
+          console.log("팔로잉 수 체크 실패");
           console.log("팔로잉 수 불러오기 실패");
           console.log(err.message);
           console.log(err.response);
@@ -111,7 +123,6 @@ export const followStore = {
           console.log("팔로워 수 체크 완료");
         })
         .catch((err) => {
-          alert("팔로워 수 체크 실패");
           console.log("팔로워 수 불러오기 실패");
           console.log(err.message);
           console.log(err.response);
@@ -125,10 +136,13 @@ export const followStore = {
           headers: getters.authHeader,
         })
         .then(() => {
-          console.log("팔로우 완료");
+          Toast.fire({
+            icon: "success",
+            title: "해당 유저를 팔로우 했습니다.",
+          });
         })
         .catch((err) => {
-          alert("팔로우 실패");
+          console.log("팔로우 실패");
           console.log(err.message);
           console.log(err.response);
         });
@@ -140,10 +154,12 @@ export const followStore = {
           headers: getters.authHeader,
         })
         .then(() => {
-          console.log("언팔로우 완료");
+          Toast.fire({
+            icon: "success",
+            title: "해당 유저의 팔로우를 취소했습니다.",
+          });
         })
         .catch((err) => {
-          alert("언팔로우 실패");
           console.log(err.message);
           console.log(err.response);
         });

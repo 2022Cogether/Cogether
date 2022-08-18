@@ -44,7 +44,6 @@ export const skillStore = {
           commit("SET_USER_SKILLSET", res.data);
         })
         .catch((err) => {
-          alert("유저 스킬리스트 에러입니다.");
           console.log("유저 스킬리스트 받아오기 에러");
           console.log(err.message);
           console.log(err.response);
@@ -58,7 +57,6 @@ export const skillStore = {
         })
         .then(() => {})
         .catch((err) => {
-          alert("유저 스킬리스트 추가 에러입니다.");
           console.log("유저 스킬리스트 추가하기 에러");
           console.log(err.message);
           console.log(err.response);
@@ -73,7 +71,6 @@ export const skillStore = {
         })
         .then(() => {})
         .catch((err) => {
-          alert("유저 스킬리스트 삭제 에러입니다.");
           console.log("유저 스킬리스트 삭제하기 에러");
           console.log(err.message);
           console.log(err.response);
