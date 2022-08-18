@@ -11,12 +11,24 @@
                     name: 'profile',
                     params: { userId: comment.userId },
                   }"
+                  style="font-weight: bold; color: black; text-decoration: none"
                   >{{ comment.userNickname }}
                 </router-link>
               </span>
-              <span class="be-comment-time">
+              <span v-if="fromCreated < 10" class="be-comment-time">
                 <i class="fa fa-clock-o"></i>
-                {{ comment.createdAt }}
+                방금전
+              </span>
+              <span
+                v-if="fromCreated < 34 && fromCreated > 9"
+                class="be-comment-time"
+              >
+                <i class="fa fa-clock-o"></i>
+                {{ fromCreated - 9 }}시간 전
+              </span>
+              <span v-if="fromCreated > 33" class="be-comment-time">
+                <i class="fa fa-clock-o"></i>
+                {{ parseInt((fromCreated - 9) / 24) }}일 전
               </span>
             </div>
             <div>
@@ -77,14 +89,19 @@ export default {
       return props.comment.userId == loginUserId;
     });
 
+    const fromCreated = parseInt(
+      (new Date() - new Date(props.comment.createdAt)) / 3600000
+    );
+
     // 코멘트 지우기
-    const deleteComment = async () => {
+    const deleteComment = async (event) => {
+      console.log("event", event);
       const payload = {
         commentId: props.comment.tilCommentId,
         tilId: props.tilId,
       };
       await store.dispatch("removeComments", payload);
-      emit("delComm");
+      emit("delComm", event, props.comment.tilCommentId);
     };
 
     // 코멘트 수정 중인지 여부
@@ -113,6 +130,7 @@ export default {
       isEdit,
       onEdit,
       editComment,
+      fromCreated,
     };
   },
 };
@@ -161,9 +179,9 @@ export default {
 .be-comment-text {
   font-size: 13px;
   line-height: 18px;
-  color: #7a8192;
+  color: #393b40;
   display: block;
-  background: #f6f6f7;
+  background: #73d0c5;
   border: 1px solid #edeff2;
   padding: 15px 20px 20px 20px;
 }
