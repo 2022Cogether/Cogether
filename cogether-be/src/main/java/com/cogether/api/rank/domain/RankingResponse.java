@@ -16,7 +16,7 @@ public class RankingResponse {
         private String userNickname;
         private String userImg;
         private int myTilCnt;
-        private List<TilRank> tilRankList;
+        private List<TilRank> rankList;
 
         public static RankingResponse.TilRankList build(int myRank, User user, int myTilCnt, List<TilRank> tilRankList) {
             return TilRankList.builder()
@@ -24,7 +24,7 @@ public class RankingResponse {
                     .userNickname(user.getNickname())
                     .userImg(user.getImgUrl())
                     .myTilCnt(myTilCnt)
-                    .tilRankList(tilRankList)
+                    .rankList(tilRankList)
                     .build();
         }
     }
@@ -37,14 +37,14 @@ public class RankingResponse {
         private int rank;
         private String userNickname;
         private String userImg;
-        private int tilCnt;
+        private int content;
 
         public static RankingResponse.TilRank build(int rank, User user, int tilCnt) {
             return TilRank.builder()
                     .rank(rank)
                     .userNickname(user.getNickname())
                     .userImg(user.getImgUrl())
-                    .tilCnt(tilCnt)
+                    .content(tilCnt)
                     .build();
         }
     }
@@ -59,7 +59,7 @@ public class RankingResponse {
         private String userNickname;
         private String userImg;
         private int myExp;
-        private List<ExpRank> expRankList;
+        private List<ExpRank> rankList;
 
         public static RankingResponse.ExpRankList build(int myRank, User user, List<ExpRank> expRankList) {
             return ExpRankList.builder()
@@ -67,7 +67,7 @@ public class RankingResponse {
                     .userNickname(user.getNickname())
                     .userImg(user.getImgUrl())
                     .myExp(user.getExp())
-                    .expRankList(expRankList)
+                    .rankList(expRankList)
                     .build();
         }
     }
@@ -80,14 +80,14 @@ public class RankingResponse {
         private int rank;
         private String userNickname;
         private String userImg;
-        private int Exp;
+        private int content;
 
         public static RankingResponse.ExpRank build(int rank, User user) {
             return ExpRank.builder()
                     .rank(rank)
                     .userNickname(user.getNickname())
                     .userImg(user.getImgUrl())
-                    .Exp(user.getExp())
+                    .content(user.getExp())
                     .build();
         }
     }
@@ -101,7 +101,7 @@ public class RankingResponse {
         private String userNickname;
         private String userImg;
         private int myLiveComp;
-        private List<LiveCompRank> liveCompRankList;
+        private List<LiveCompRank> rankList;
 
         public static RankingResponse.LiveCompRankList build(int myRank, User user, int myLiveComp, List<LiveCompRank> liveCompRankList) {
             return LiveCompRankList.builder()
@@ -109,7 +109,7 @@ public class RankingResponse {
                     .userNickname(user.getNickname())
                     .userImg(user.getImgUrl())
                     .myLiveComp(myLiveComp)
-                    .liveCompRankList(liveCompRankList)
+                    .rankList(liveCompRankList)
                     .build();
         }
     }
@@ -122,14 +122,14 @@ public class RankingResponse {
         private int rank;
         private String userNickname;
         private String userImg;
-        private int liveComp;
+        private int content;
 
         public static RankingResponse.LiveCompRank build(int rank, User user, int liveComp) {
             return LiveCompRank.builder()
                     .rank(rank)
                     .userNickname(user.getNickname())
                     .userImg(user.getImgUrl())
-                    .liveComp(liveComp)
+                    .content(liveComp)
                     .build();
         }
     }
