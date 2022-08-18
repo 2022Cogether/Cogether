@@ -245,22 +245,7 @@ export default {
     TilDetail,
     ProfileFollow,
   },
-  beforeRouteEnter(to, from) {
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", from);
-  },
   setup() {
-    // window.onload = function () {
-    //   if (!window.location.hash) {
-    //     window.location = window.location + "#loaded";
-    //     window.location.reload();
-    //   }
-    // };
-
-    if (self.name != "reload") {
-      self.name = "reload";
-      self.location.reload(true);
-    } else self.name = "";
-
     const store = useStore();
     const route = useRoute();
     console.log("route 사용", route.params);
