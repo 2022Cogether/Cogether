@@ -10,7 +10,7 @@
         />
         <img v-else :src="til.userImg" class="fs-3" style="width: 100%" />
       </div>
-      <div class="til-title" @click="setNum">
+      <div class="til-title" @click="openModal">
         {{ til.tilTitle }}
       </div>
       <div class="til-info">
@@ -171,6 +171,13 @@
       />
     </div>
   </div>
+  <TilDetail
+    v-if="isOpen"
+    @closeModal="closeModal"
+    class="isModal"
+    @likeFromDetail="likeFromDetail"
+    :util="til"
+  />
 </template>
 
 <script>
@@ -178,19 +185,23 @@ import Swal from "sweetalert2";
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import TilDetail from "@/components/til/TilDetail.vue";
 
 export default {
   name: "TilMainItem",
+  components: {
+    TilDetail,
+  },
   props: {
     util: Object,
   },
   setup(props) {
     const store = useStore();
-    const getters = computed(() => store.getters);
+    // const getters = computed(() => store.getters);
     const router = useRouter();
 
     const til = ref(props.util);
-    console.log("tiltil", til.value);
+    const likeCnt = ref(til.value.likeCnt);
 
     // 사용자가 글쓴이인지 아닌지 확인
     const isWriter = computed(() => {
@@ -199,24 +210,26 @@ export default {
 
     const commentContent = ref("");
 
-    const setNum = async () => {
-      const tilNum = til.value.tilId;
-      const credentials = {
-        tilId: tilNum,
-        userId: getters.value.getLoginUserId,
-      };
-      await store.dispatch("fetchOpenTil", credentials);
+    const openModal = async () => {
+      // const tilNum = til.value.tilId;
+      // const credentials = {
+      //   tilId: tilNum,
+      //   userId: getters.value.getLoginUserId,
+      // };
+      // await store.dispatch("fetchOpenTil", credentials);
+      isOpen.value = true;
     };
 
     // 좋아요/좋아요 취소
     const sendLike = () => {
       if (!til.value.like) {
         store.dispatch("likeTil", til.value.tilId);
+        til.value.likeCnt = til.value.likeCnt + 1;
       } else {
         store.dispatch("dislikeTil", til.value.tilId);
+        til.value.likeCnt = til.value.likeCnt - 1;
       }
-      // props.til.isLike = !props.til.isLike;
-      store.commit("SET_TILLIST_LIKE", til.value.tilId);
+      til.value.like = !til.value.like;
     };
 
     const onSubmit = () => {
@@ -255,21 +268,54 @@ export default {
       });
     };
 
+    // const modalNum = computed(() => {
+    //   return getters.value.getOpenTil;
+    // });
+    // const isOpen = computed(() => {
+    //   return modalNum.value != -1;
+    // });
+
+    const isOpen = ref(false);
+    const closeModal = () => {
+      isOpen.value = false;
+    };
+    const likeFromDetail = () => {
+      if (!til.value.like) {
+        til.value.likeCnt = til.value.likeCnt + 1;
+      } else {
+        til.value.likeCnt = til.value.likeCnt - 1;
+      }
+      til.value.like = !til.value.like;
+    };
+
     return {
+      likeCnt,
       goUpdate,
       til,
       isWriter,
       commentContent,
       deleteTil,
       sendLike,
-      setNum,
+      openModal,
       onSubmit,
+
+      // modalNum,
+      isOpen,
+      closeModal,
+      likeFromDetail,
     };
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.isModal {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.05);
+  display: flex;
+}
+
 .til-item {
   position: relative;
   margin-left: auto;
