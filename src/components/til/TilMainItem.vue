@@ -180,7 +180,6 @@
   <TilDetail
     v-if="isOpen"
     @closeModal="closeModal"
-    class="isModal"
     @likeFromDetail="likeFromDetail"
     :util="til"
   />
@@ -207,6 +206,7 @@ export default {
     const router = useRouter();
 
     const til = ref(props.util);
+    console.log(til.value);
     const likeCnt = ref(til.value.likeCnt);
 
     // 사용자가 글쓴이인지 아닌지 확인
@@ -326,13 +326,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.isModal {
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.05);
-  display: flex;
-}
-
 .til-item {
   position: relative;
   margin-left: auto;
