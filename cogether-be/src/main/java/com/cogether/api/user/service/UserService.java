@@ -4,11 +4,16 @@ import com.cogether.api.config.jwt.TokenUtils;
 import com.cogether.api.file.service.FileUploadService;
 import com.cogether.api.rank.domain.Ranking;
 import com.cogether.api.rank.respository.RankingRepository;
+import com.cogether.api.til.domain.Til;
+import com.cogether.api.til.domain.TilImg;
+import com.cogether.api.til.repository.TilImgRepository;
+import com.cogether.api.til.repository.TilRepository;
 import com.cogether.api.user.domain.Auth;
 import com.cogether.api.user.domain.User;
 import com.cogether.api.user.domain.UserSkill;
 import com.cogether.api.user.dto.TokenResponse;
 import com.cogether.api.user.dto.UserRequest;
+import com.cogether.api.user.exception.UserNotFoundException;
 import com.cogether.api.user.repository.AuthRepository;
 import com.cogether.api.user.repository.UserRepository;
 import com.cogether.api.user.repository.UserSkillRepository;
@@ -49,6 +54,9 @@ public class UserService {
 
     private final FileUploadService fileUploadService;
 
+    private final TilRepository tilRepository;
+    private final TilImgRepository tilImgRepository;
+
     public Optional<User> findByEmail(String userEmail) {
 
         return userRepository.findByEmail(userEmail);
@@ -88,6 +96,22 @@ public class UserService {
         }
 
         rankingRepository.save(Ranking.builder().user(user).tilCnt(0).week(0).month(0).total(0).build());
+
+        Til til =Til.builder()
+                .content("코게더에 오신 것을 환영 합니다")
+                .createdAt(LocalDateTime.now())
+                .title("코게더에 오신 것을 환영 합니다")
+                .user(user)
+                .build();
+
+        tilRepository.save(til);
+
+        tilImgRepository.save(TilImg.builder()
+                .til(til)
+                .url("https://cogethera801.s3.ap-northeast-2.amazonaws.com/ee25a7da-69d2-441b-b3f1-b78983f28458.png")
+                .build());
+
+
 
         String accessToken = tokenUtils.generateJwtToken(user);
         String refreshToken = tokenUtils.saveRefreshToken(user);
