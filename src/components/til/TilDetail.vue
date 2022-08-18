@@ -19,7 +19,12 @@
           <div class="til-info">
             <span class="til-user">{{ til.userNickname }}</span>
             <!-- created_at을 통해서 시간 계산 v-if나 함수로 1일 이하면 시간으로 표시 -->
-            <span class="til-time">1 시간 전</span>
+            <span v-if="fromCreated < 24" class="til-time">
+              {{ fromCreated }}시간 전
+            </span>
+            <span v-else class="til-time">
+              {{ parseInt(fromCreated / 24) }}일 전
+            </span>
           </div>
 
           <div v-if="isWriter" class="dropdown">
@@ -234,7 +239,9 @@ export default {
     const initLike = ref(true);
 
     const til = ref(props.util);
-    console.log("til value", til.value);
+    const fromCreated = parseInt(
+      (new Date() - new Date(til.value.createdAt)) / 3600000
+    );
 
     // 사용자가 글쓴이인지 아닌지 확인
     const isWriter = ref(false);
@@ -331,6 +338,7 @@ export default {
       initLike,
       likeNum,
       delComm,
+      fromCreated,
     };
   },
 };
