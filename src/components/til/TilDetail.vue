@@ -7,22 +7,17 @@
         <div class="til-header">
           <div class="profile-body">
             <font-awesome-icon
-              v-if="!tilContent.userImg"
+              v-if="!til.userImg"
               class="fs-3"
               icon="fa-solid fa-user"
             />
-            <img
-              v-else
-              :src="tilContent.userImg"
-              class="fs-3"
-              style="width: 100%"
-            />
+            <img v-else :src="til.userImg" class="fs-3" style="width: 100%" />
           </div>
           <div class="til-title">
-            {{ tilContent.tilTitle }}
+            {{ til.tilTitle }}
           </div>
           <div class="til-info">
-            <span class="til-user">{{ tilContent.userNickname }}</span>
+            <span class="til-user">{{ til.userNickname }}</span>
             <!-- created_at을 통해서 시간 계산 v-if나 함수로 1일 이하면 시간으로 표시 -->
             <span class="til-time">1 시간 전</span>
           </div>
@@ -45,7 +40,7 @@
                 class="dropdown-item"
                 :to="{
                   name: 'TilUpdate',
-                  params: { tilPk: tilContent.tilId },
+                  params: { tilPk: til.tilId },
                 }"
                 >내용 수정</router-link
               >
@@ -62,7 +57,7 @@
           >
             <div class="carousel-indicators">
               <button
-                v-for="(image, i) in tilContent.imgUrl"
+                v-for="(image, i) in til.imgUrl"
                 :key="i"
                 type="button"
                 data-bs-target="#carouselExampleIndicatorsForDetail"
@@ -72,7 +67,7 @@
             </div>
             <div
               class="carousel-inner"
-              v-for="(image, i) in tilContent.imgUrl"
+              v-for="(image, i) in til.imgUrl"
               :key="i"
             >
               <div :class="['carousel-item', i == 0 ? 'active' : '']">
@@ -184,21 +179,10 @@
             </div>
           </div>
           <!-- 좋아요 갯수를 Til로 가늠하는 방법 필요 -->
-          <span class="like-count" v-if="isLike && initLike">
-            좋아요 {{ tilContent.likeCnt }}개
-          </span>
-          <span class="like-count" v-if="isLike && !initLike">
-            좋아요 {{ tilContent.likeCnt + 1 }}개
-          </span>
-          <span class="like-count" v-if="!isLike && initLike">
-            좋아요 {{ tilContent.likeCnt - 1 }}개
-          </span>
-          <span class="like-count" v-if="!isLike && !initLike">
-            좋아요 {{ tilContent.likeCnt }}개
-          </span>
+          <span class="like-count">좋아요 {{ likeNum }}개</span>
           <!-- v-if: "is_Current_User_Like_This_TIL?" 등으로 sendlike/senddislike 바꾸어야 할 듯 <- currentUser 완성 뒤 -->
           <div class="til-content">
-            {{ tilContent.tilContent }}
+            {{ til.tilContent }}
           </div>
         </div>
         <!-- 댓글창 -->
@@ -206,8 +190,8 @@
           <h1 class="comments-title">Comments ({{ commentList.length }})</h1>
           <CommentList
             :comments="commentList"
-            :userId="tilContent.userId"
-            :tilId="tilContent.tilId"
+            :userId="til.userId"
+            :tilId="til.tilId"
             @delComm="delComm"
           />
           <input
@@ -231,10 +215,14 @@ import router from "@/router";
 
 export default {
   name: "TilDetail",
+  props: {
+    util: Object,
+  },
+  emits: ["closeModal", "likeFromDetail"],
   components: {
     CommentList,
   },
-  setup() {
+  setup(props, { emit }) {
     const store = useStore();
     const getters = computed(() => store.getters);
 
@@ -242,25 +230,27 @@ export default {
     const commentList = ref([]);
     const commentContent = ref("");
     const isLike = ref(true);
+    const likeNum = ref(0);
     const initLike = ref(true);
+
+    const til = ref(props.util);
+    console.log("til value", til.value);
 
     // 사용자가 글쓴이인지 아닌지 확인
     const isWriter = ref(false);
 
     (async () => {
       const credentials = {
-        tilId: store.getters.getOpenTil,
+        tilId: til.value.tilId,
         userId: getters.value.getLoginUserId,
       };
       await store.dispatch("fetchTil", credentials);
 
-      tilContent.value = computed(() => {
-        return getters.value.getTilContent;
-      }).value;
-      commentList.value = tilContent.value.commentList;
+      commentList.value = til.value.commentList;
 
-      console.log(tilContent.value.like);
-      isLike.value = tilContent.value.like;
+      console.log(til.value.like);
+      isLike.value = til.value.like;
+      likeNum.value = til.value.likeCnt;
       if (isLike.value) {
         initLike.value = true;
       } else {
@@ -268,39 +258,42 @@ export default {
       }
 
       isWriter.value = computed(() => {
-        return tilContent.value.userId == store.getters.getLoginUserId;
+        return til.value.userId == store.getters.getLoginUserId;
       }).value;
     })();
 
     // Til 삭제
     const deleteTil = () => {
-      store.dispatch("removeTil", tilContent.value.tilId);
+      store.dispatch("removeTil", til.value.tilId);
       router.go();
     };
 
     // 좋아요/좋아요 취소
     const sendLike = () => {
       if (!isLike.value) {
-        store.dispatch("likeTil", tilContent.value.tilId);
+        store.dispatch("likeTil", til.value.tilId);
+        likeNum.value = likeNum.value + 1;
       } else {
-        store.dispatch("dislikeTil", tilContent.value.tilId);
+        store.dispatch("dislikeTil", til.value.tilId);
+        likeNum.value = likeNum.value - 1;
       }
-      store.commit("SET_TIL_LIKE");
+      // store.commit("SET_TIL_LIKE");
       isLike.value = !isLike.value;
+      emit("likeFromDetail");
     };
 
     const onSubmit = async () => {
       const payload = {
-        tilId: tilContent.value.tilId,
+        tilId: til.value.tilId,
         content: commentContent.value,
         userId: store.getters.getLoginUserId,
       };
       await store.dispatch("createComment", payload);
-      tilContent.value = computed(() => {
+      til.value = computed(() => {
         return getters.value.getTilContent;
       }).value;
-      console.log(tilContent.value);
-      commentList.value = tilContent.value.commentList;
+      console.log(til.value);
+      commentList.value = til.value.commentList;
       commentContent.value = "";
     };
 
@@ -311,25 +304,21 @@ export default {
           .querySelector(".modal")
           .querySelector("." + event.target.className.split(" ")[0]) // 클릭한 박스의 클래스가 modal-card라는 클래스의 하위 클래스인지 아닌지
       ) {
-        const credentials = {
-          tilId: -1,
-          userId: getters.value.getLoginUserId,
-        };
-        await store.dispatch("fetchOpenTil", credentials);
-        await store.dispatch("fetchTil", credentials);
+        emit("closeModal");
       }
     };
 
     const delComm = async () => {
       await store.dispatch("fetchTil", { tilId: store.getters.getOpenTil });
-      tilContent.value = computed(() => {
+      til.value = computed(() => {
         return getters.value.getTilContent;
       }).value;
-      console.log(tilContent.value);
-      commentList.value = tilContent.value.commentList;
+      console.log(til.value);
+      commentList.value = til.value.commentList;
     };
 
     return {
+      til,
       isLike,
       isWriter,
       deleteTil,
@@ -340,6 +329,7 @@ export default {
       onSubmit,
       closeModal,
       initLike,
+      likeNum,
       delComm,
     };
   },

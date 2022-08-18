@@ -125,11 +125,37 @@ export default {
         state.title == "" ||
         state.multipartFiles.length == 0
       ) {
-        alert("모든 항목을 입력해주세요!");
+        Swal.mixin({
+          toast: true,
+          position: "bottom-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener("mouseenter", Swal.stopTimer);
+            toast.addEventListener("mouseleave", Swal.resumeTimer);
+          },
+        }).fire({
+          icon: "error",
+          title: "모든 항목을 입력해주세요.",
+        });
         return;
       }
       if (state.multipartFiles.length > 5) {
-        alert("이미지가 너무 많다");
+        Swal.mixin({
+          toast: true,
+          position: "bottom-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener("mouseenter", Swal.stopTimer);
+            toast.addEventListener("mouseleave", Swal.resumeTimer);
+          },
+        }).fire({
+          icon: "error",
+          title: "이미지는 5개까지 가능합니다.",
+        });
         return;
       }
       const formData = new FormData();
