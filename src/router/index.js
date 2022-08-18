@@ -191,12 +191,8 @@ router.beforeEach((to, from, next) => {
     from.fullPath != to.fullPath &&
     !profileBool
   ) {
-    // profileBool = true;
-    // profilePath = to.fullPath;
-    // next({ name: "mainview" });
     console.log("라우터 변경 감지");
     next();
-    // next();
   } else next();
 });
 
