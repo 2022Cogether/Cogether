@@ -78,7 +78,7 @@
               style="cursor: pointer"
               @click="goOut(following.id)"
             >
-              {{ following.id }}: {{ following.email }}
+              {{ following.email }}
             </div>
             <font-awesome-icon
               v-if="isMyProfile"
@@ -100,7 +100,7 @@
               style="cursor: pointer"
               @click="goOut(follower.id)"
             >
-              {{ follower.id }}: {{ follower.email }} gogogogog
+              {{ follower.email }}
             </div>
             <font-awesome-icon
               v-if="follower.id == store.getters.getLoginUserId"
