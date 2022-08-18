@@ -38,8 +38,9 @@
         <font-awesome-icon
           icon="fa-solid fa-rectangle-xmark"
           style="cursor: pointer; position: absolute"
+          @click="deleteimage(imageRoute)"
         />
-        <div class="ml-5">{{ imageRoute }}</div>
+        <div style="margin-left: 2rem">{{ imageRoute }}</div>
       </div>
     </div>
   </form>
@@ -82,6 +83,8 @@ export default {
         }
       });
     }
+
+    // 이미지 업로드
     function imgupload(e) {
       let imageFile = e.target.files; // 업로드한 파일의 데이터가 여기있음.
       console.log(imageFile);
@@ -93,7 +96,42 @@ export default {
       }
       console.log(imageRouteList.value);
     }
+
+    // 이미지 삭제
+    const deleteimage = (imageRoute) => {
+      console.log(imageRoute);
+      for (let i = 0; i < state.multipartFiles.length; i++) {
+        console.log(state.multipartFiles[i]);
+        console.log(state.multipartFiles[i].name);
+        if (
+          state.multipartFiles[i] &&
+          state.multipartFiles[i].name == imageRoute
+        ) {
+          console.log(i);
+          console.log(state.multipartFiles[i]);
+          state.multipartFiles.splice(i, 1);
+          console.log(imageRouteList.value[i]);
+          imageRouteList.value.splice(i, 1);
+          console.log(state.multipartFiles);
+          break;
+        }
+      }
+    };
+
+    // TIL 생성
     function createTil() {
+      if (
+        state.content == "" ||
+        state.title == "" ||
+        state.multipartFiles.length == 0
+      ) {
+        alert("모든 항목을 입력해주세요!");
+        return;
+      }
+      if (state.multipartFiles.length > 5) {
+        alert("이미지가 너무 많다");
+        return;
+      }
       const formData = new FormData();
 
       const data = {
@@ -109,10 +147,6 @@ export default {
         })
       );
 
-      if (state.multipartFiles.length > 5) {
-        alert("이미지가 너무 많다");
-        router.go();
-      }
       for (let i = 0; i < state.multipartFiles.length; i++) {
         // fileArray.push(state.multipartFiles[i]);
         formData.append("image", state.multipartFiles[i]);
@@ -126,12 +160,10 @@ export default {
       }
       //함수 작동 내용
       store.dispatch("createTil", formData);
-      if (store.getters.getBooleanValue) {
-        router.go(-1);
-      }
+      router.go(-1);
     }
 
-    return { exit, createTil, imgupload, state, imageRouteList };
+    return { exit, createTil, imgupload, state, imageRouteList, deleteimage };
   },
   components: {},
 };

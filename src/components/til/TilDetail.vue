@@ -47,7 +47,7 @@
         <!-- 첨부 이미지 캐러셀 -->
         <div class="til-body">
           <div
-            :id="'carouselExampleIndicatorsForDetail' + tilContent.tilId"
+            id="carouselExampleIndicatorsForDetail"
             class="carousel slide"
             data-bs-ride="false"
           >
@@ -56,9 +56,7 @@
                 v-for="(image, i) in tilContent.imgUrl"
                 :key="i"
                 type="button"
-                :data-bs-target="
-                  '#carouselExampleIndicatorsForDetail' + tilContent.tilId
-                "
+                data-bs-target="#carouselExampleIndicatorsForDetail"
                 :data-bs-slide-to="i"
                 :class="[i == 0 ? 'active' : '']"
               ></button>
@@ -75,9 +73,7 @@
             <button
               class="carousel-control-prev"
               type="button"
-              :data-bs-target="
-                '#carouselExampleIndicatorsForDetail' + tilContent.tilId
-              "
+              data-bs-target="#carouselExampleIndicatorsForDetail"
               data-bs-slide="prev"
             >
               <span
@@ -89,9 +85,7 @@
             <button
               class="carousel-control-next"
               type="button"
-              :data-bs-target="
-                '#carouselExampleIndicatorsForDetail' + tilContent.tilId
-              "
+              data-bs-target="#carouselExampleIndicatorsForDetail"
               data-bs-slide="next"
             >
               <span

@@ -65,7 +65,7 @@
         <button
           class="carousel-control-prev"
           type="button"
-          :data-bs-target="'#carouselExampleIndicators' + til.tilId"
+          :data-bs-target="'#carouselExampleIndicatorsForDetail' + til.tilId"
           data-bs-slide="prev"
         >
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -74,7 +74,7 @@
         <button
           class="carousel-control-next"
           type="button"
-          :data-bs-target="'#carouselExampleIndicators' + til.tilId"
+          :data-bs-target="'#carouselExampleIndicatorsForDetail' + til.tilId"
           data-bs-slide="next"
         >
           <span class="carousel-control-next-icon" aria-hidden="true"></span>

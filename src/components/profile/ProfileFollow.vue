@@ -39,13 +39,14 @@
           aria-labelledby="pills-followings-tab"
         >
           <ul v-for="following in followingList" :key="following.id">
-            <li
+            <router-link
               class="profile-data-list"
               style="cursor: pointer"
-              @click="goProfile(following.id)"
+              :key="$route.fullPath"
+              :to="{ name: 'profile', params: { userId: following.id } }"
             >
               {{ following.id }}: {{ following.email }}
-            </li>
+            </router-link>
             <font-awesome-icon
               v-if="isMyProfile"
               icon="fa-solid fa-rectangle-xmark"
@@ -61,13 +62,14 @@
           aria-labelledby="pills-followers-tab"
         >
           <ul v-for="follower in followerList" :key="follower.id">
-            <li
+            <router-link
               class="profile-data-list"
               style="cursor: pointer"
-              @click="goProfile(props.userId)"
+              :key="$route.fullPath"
+              :to="{ name: 'profile', params: { userId: myId } }"
             >
               {{ follower.id }}: {{ follower.email }}
-            </li>
+            </router-link>
             <font-awesome-icon
               v-if="follower.id == store.getters.getLoginUserId"
               icon="fa-solid fa-rectangle-xmark"
@@ -83,7 +85,9 @@
 <script>
 import { computed } from "vue";
 import { useStore } from "vuex";
+import { useRoute } from "vue-router";
 import router from "@/router";
+// import { useRoute } from "vue-router";
 
 export default {
   name: "ProfileFollow",
@@ -91,9 +95,12 @@ export default {
   emits: ["closeModal"],
   setup(props, { emit }) {
     const store = useStore();
+    // const route = useRoute();
     const isMyProfile = computed(() => {
       return props.userId == store.getters.getLoginUserId;
     });
+    const route = useRoute();
+    const myId = store.getters.getLoginUserId;
 
     store.dispatch("fetchFollowingList", props.userId);
     store.dispatch("fetchFollowerList", props.userId);
@@ -134,12 +141,13 @@ export default {
         name: "profile",
         params: { userId: userID },
       });
-      router.go();
     };
 
     return {
       store,
       props,
+      route,
+      myId,
 
       isMyProfile,
       followingList,

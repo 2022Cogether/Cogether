@@ -5,6 +5,9 @@ export const signStore = {
     // http에서 성공/실패 여부가 component 로컬 변수에 영향을 줄 때 쓸 변수
     booleanValue: false,
 
+    // 프로필 주소 저장
+    profilePathStock: "",
+
     // frontend에서 이메일, 비번, 닉네임의 유효성을 검사할 정규표현식
     emailPattern:
       /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/,
@@ -32,6 +35,9 @@ export const signStore = {
         state.booleanValue = false;
       }
       return temp;
+    },
+    getProfilePathStock(state) {
+      return state.profilePathStock;
     },
     isLoggedIn(state) {
       return !!state.token;
@@ -65,6 +71,10 @@ export const signStore = {
   mutations: {
     SET_BOOLEANVALUE: (state) => {
       state.booleanValue = true;
+    },
+
+    SET_PROFILE_PATH_STOCK: (state, newPath) => {
+      state.getProfilePathStock = newPath;
     },
 
     SET_TOKEN: (state, token) => (state.token = token),

@@ -234,7 +234,7 @@ import ProfileTil from "./ProfileTil.vue";
 import ProfileFollow from "./ProfileFollow.vue";
 import TilDetail from "@/components/til/TilDetail.vue";
 
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 
@@ -245,9 +245,37 @@ export default {
     TilDetail,
     ProfileFollow,
   },
+  beforeRouteEnter(to, from) {
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", from);
+  },
   setup() {
+    // window.onload = function () {
+    //   if (!window.location.hash) {
+    //     window.location = window.location + "#loaded";
+    //     window.location.reload();
+    //   }
+    // };
+
+    if (self.name != "reload") {
+      self.name = "reload";
+      self.location.reload(true);
+    } else self.name = "";
+
     const store = useStore();
     const route = useRoute();
+    watch(
+      () => route.name,
+      () => {
+        console.debug(
+          `MyCoolComponent - watch route.name changed to ${route.name}`
+        );
+        // Do something here...
+
+        // Optionally you can set immediate: true config for the watcher to run on init
+        //}, { immediate: true });
+      }
+    );
+
     // const getters = computed(() => store.getters);
     const userId = computed(() => {
       return route.params.userId;
