@@ -163,6 +163,7 @@ export default {
       }
       if (flag) {
         store.commit("SET_ROOM_ID", emitCoop.value.id);
+        store.commit("SET_ROOM", emitCoop.value);
         router.push({
           name: "CoopRoom",
           params: { roomNo: emitCoop.value.id },
