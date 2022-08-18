@@ -141,7 +141,7 @@ public class ChatService {
             if (chats.size() > 0) {
                 lastMsg = chats.get(chats.size() - 1).getMessage();
                 if (lastMsg.length() > 9)
-                    lastMsg = lastMsg.substring(0, 9);
+                    lastMsg = lastMsg.substring(0, 9) + "...";
             }
 
             getChatRooms.add(ChatResponse.GetChatRoom.build(chatMember, lastMsg, cnt));
