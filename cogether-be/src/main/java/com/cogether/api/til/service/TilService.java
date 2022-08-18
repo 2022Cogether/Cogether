@@ -91,6 +91,11 @@ public class TilService {
     public TilResponse.OnlyLikeId createLike(TilRequest.Create_TilLike til_Like) {
         User user = userRepository.findById(til_Like.getUserId()).orElseThrow(UserNotFoundException::new);
         Til til = tilRepository.findById(til_Like.getTilId()).orElseThrow(TilNotFoundException::new);
+        int check = tilLikeRepository.countAllByTilAndUser(til, user);
+        if (check > 0) {
+            TilLike tilLike = tilLikeRepository.findByTilAndUser(til, user);
+            return TilResponse.OnlyLikeId.build(tilLike);
+        }
         TilLike tilLike = til_Like.toEntity(til, user);
         TilLike savedTilLike = tilLikeRepository.save(tilLike);
         return TilResponse.OnlyLikeId.build(savedTilLike);
@@ -137,7 +142,7 @@ public class TilService {
         int likeCnt = tilLikeRepository.countAllByTil(til);
         int check = tilLikeRepository.countAllByTilAndUser(til, user);
         boolean isLike = false;
-        if (check == 1) {
+        if (check > 0) {
             isLike = true;
         }
         return TilResponse.TilAll.build(til, imgList, commentList, likeCnt, isLike);
@@ -155,7 +160,7 @@ public class TilService {
             int likeCnt = tilLikeRepository.countAllByTil(til);
             int check = tilLikeRepository.countAllByTilAndUser(til, user);
             boolean isLike = false;
-            if (check == 1) {
+            if (check > 0) {
                 isLike = true;
             }
             tilList.add(TilResponse.TilAll.build(til, imgList, commentList, likeCnt, isLike));
@@ -176,7 +181,7 @@ public class TilService {
             int likeCnt = tilLikeRepository.countAllByTil(til);
             int check = tilLikeRepository.countAllByTilAndUser(til, user);
             boolean isLike = false;
-            if (check == 1) {
+            if (check > 0) {
                 isLike = true;
             }
             tilList.add(TilResponse.TilAll.build(til, imgList, commentList, likeCnt, isLike));
@@ -197,7 +202,7 @@ public class TilService {
             int likeCnt = tilLikeRepository.countAllByTil(til);
             int check = tilLikeRepository.countAllByTilAndUser(til, user);
             boolean isLike = false;
-            if (check == 1) {
+            if (check > 0) {
                 isLike = true;
             }
             tilList.add(TilResponse.TilAll.build(til, imgList, commentList, likeCnt, isLike));
@@ -218,7 +223,7 @@ public class TilService {
             int likeCnt = tilLikeRepository.countAllByTil(myTil);
             int check = tilLikeRepository.countAllByTilAndUser(myTil, user);
             boolean isLike = false;
-            if (check == 1) {
+            if (check > 0) {
                 isLike = true;
             }
             tilList.add(TilResponse.TilAll.build(myTil, myTilImgList, myTilCommentList, likeCnt, isLike));
@@ -233,7 +238,7 @@ public class TilService {
                 int likeCnt = tilLikeRepository.countAllByTil(til);
                 int check = tilLikeRepository.countAllByTilAndUser(til, user);
                 boolean isLike = false;
-                if (check == 1) {
+                if (check > 0) {
                     isLike = true;
                 }
                 tilList.add(TilResponse.TilAll.build(til, imgList, commentList, likeCnt, isLike));
