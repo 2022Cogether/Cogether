@@ -1,4 +1,17 @@
 import http from "@/api/http";
+import Swal from "sweetalert2";
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: "bottom-end",
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener("mouseenter", Swal.stopTimer);
+    toast.addEventListener("mouseleave", Swal.resumeTimer);
+  },
+});
 
 export const tilStore = {
   state: {
@@ -145,7 +158,7 @@ export const tilStore = {
           }
         })
         .catch((err) => {
-          alert("내 리스트가 에러라고??");
+          console.log("내 리스트가 에러라고??");
           console.error(err.response.data);
         });
     },
@@ -178,7 +191,6 @@ export const tilStore = {
           // dispatch("fetchOpenTil", credentials);
         })
         .catch((err) => {
-          alert("TIL 생성 오류!");
           console.log("TIL 생성 오류!");
           console.error(err.response);
         });
@@ -207,13 +219,16 @@ export const tilStore = {
           headers: getters.authHeader,
         })
         .then(() => {
-          alert("삭제 성공!");
+          Toast.fire({
+            icon: "success",
+            title: "글을 삭제했습니다.",
+          });
           commit("SET_OPEN_TIL", -1);
           commit("SET_TIL", {});
           commit("SET_BOOLEANVALUE");
         })
         .catch((err) => {
-          alert("삭제 실패??");
+          console.log("삭제 실패??");
           console.log(err);
         });
     },
@@ -290,7 +305,10 @@ export const tilStore = {
         })
         .then((res) => {
           if (res.status === 200) {
-            alert("삭제 성공!");
+            Toast.fire({
+              icon: "success",
+              title: "댓글을 삭제했습니다.",
+            });
             // dispatch("fetchTil", { tilId: payload.tilId });
             // console.log("res.data", res.data);
             // commit("DEL_COMMENT", res.data.id);
@@ -300,7 +318,7 @@ export const tilStore = {
           }
         })
         .catch((err) => {
-          alert("삭제 실패??");
+          console.log("삭제 실패??");
           console.error(err.response.data);
         });
     },
@@ -312,7 +330,10 @@ export const tilStore = {
           headers: getters.authHeader,
         })
         .then((res) => {
-          alert("수정 성공!");
+          Toast.fire({
+            icon: "success",
+            title: "댓글을 수정했습니다.",
+          });
           console.log("update res data", res.data.id);
           commit("PUT_COMMENT", {
             commentId: res.data.id,
@@ -320,7 +341,7 @@ export const tilStore = {
           });
         })
         .catch((err) => {
-          alert("수정 실패??");
+          console.log("수정 실패??");
           console.error(err.response);
         });
     },
