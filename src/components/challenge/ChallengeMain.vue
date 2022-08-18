@@ -78,6 +78,9 @@ export default {
     const getters = computed(() => store.getters);
     store.dispatch("getCompeteInfo", getters.value.getLoginUserId);
     store.dispatch("getCoopRooms", getters.value.getLoginUserId);
+    if (!getters.value.getEnterCoop) {
+      store.commit("SET_STOMP_CLIENT_COOP_CHAT", null);
+    }
     const state = reactive({
       tabState: 1,
       tempText: null,
@@ -110,7 +113,7 @@ export default {
             store.commit("SET_COMPETE_INTERVAL", false); //interval상태값 끄기
             clearInterval(interval);
           }
-        }, 1000);
+        }, 60000);
       }
       //compete상태 전환
       store.commit(
