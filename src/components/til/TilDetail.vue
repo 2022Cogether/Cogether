@@ -208,6 +208,7 @@
             :comments="commentList"
             :userId="tilContent.userId"
             :tilId="tilContent.tilId"
+            @delComm="delComm"
           />
           <input
             type="text"
@@ -256,7 +257,6 @@ export default {
       tilContent.value = computed(() => {
         return getters.value.getTilContent;
       }).value;
-      console.log(tilContent.value);
       commentList.value = tilContent.value.commentList;
 
       console.log(tilContent.value.like);
@@ -289,13 +289,18 @@ export default {
       isLike.value = !isLike.value;
     };
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
       const payload = {
         tilId: tilContent.value.tilId,
         content: commentContent.value,
         userId: store.getters.getLoginUserId,
       };
-      store.dispatch("createComment", payload);
+      await store.dispatch("createComment", payload);
+      tilContent.value = computed(() => {
+        return getters.value.getTilContent;
+      }).value;
+      console.log(tilContent.value);
+      commentList.value = tilContent.value.commentList;
       commentContent.value = "";
     };
 
@@ -315,6 +320,15 @@ export default {
       }
     };
 
+    const delComm = async () => {
+      await store.dispatch("fetchTil", { tilId: store.getters.getOpenTil });
+      tilContent.value = computed(() => {
+        return getters.value.getTilContent;
+      }).value;
+      console.log(tilContent.value);
+      commentList.value = tilContent.value.commentList;
+    };
+
     return {
       isLike,
       isWriter,
@@ -326,6 +340,7 @@ export default {
       onSubmit,
       closeModal,
       initLike,
+      delComm,
     };
   },
 };

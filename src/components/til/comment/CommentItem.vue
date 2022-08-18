@@ -62,7 +62,8 @@ export default {
     userId: Number,
     tilId: Number,
   },
-  setup(props) {
+  emits: ["delComm"],
+  setup(props, { emit }) {
     const store = useStore();
 
     const loginUserId = store.getters.getLoginUserId;
@@ -77,12 +78,13 @@ export default {
     });
 
     // 코멘트 지우기
-    const deleteComment = () => {
+    const deleteComment = async () => {
       const payload = {
         commentId: props.comment.tilCommentId,
         tilId: props.tilId,
       };
-      store.dispatch("removeComments", payload);
+      await store.dispatch("removeComments", payload);
+      emit("delComm");
     };
 
     // 코멘트 수정 중인지 여부
