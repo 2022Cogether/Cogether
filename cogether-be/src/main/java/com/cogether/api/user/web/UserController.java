@@ -1,5 +1,6 @@
 package com.cogether.api.user.web;
 
+import com.cogether.api.til.service.TilService;
 import com.cogether.api.user.dto.TokenResponse;
 import com.cogether.api.user.dto.UserRequest;
 import com.cogether.api.user.service.UserService;
@@ -26,15 +27,27 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+    private final TilService tilService;
 
     /**
      * 회원가입
      */
     @PostMapping("/sign/signup")
     public ResponseEntity signUp(@RequestBody UserRequest userRequest) {
-        return userService.findByEmail(userRequest.getEmail()).isPresent()
-                ? ResponseEntity.badRequest().build()
-                : ResponseEntity.ok(userService.signUp(userRequest));
+
+        if(userService.findByEmail(userRequest.getEmail()).isPresent())
+        {
+            return ResponseEntity.badRequest().build();
+        }
+        else
+        {
+            TokenResponse body = userService.signUp(userRequest);
+
+            return ResponseEntity.ok(body);
+        }
+
+
+
     }
 
     /**
