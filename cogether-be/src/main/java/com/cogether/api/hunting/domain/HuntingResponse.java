@@ -29,7 +29,7 @@ public class HuntingResponse {
         private int huntingId;
         private int userId;
         private String userNickname;
-        private String userImgUrl;
+        private String userImgurl;
         private String title;
         private String content;
         private boolean scrap;
@@ -41,7 +41,7 @@ public class HuntingResponse {
                     .huntingId(hunting.getId())
                     .userId(hunting.getUser().getId())
                     .userNickname(hunting.getUser().getNickname())
-                    .userImgUrl(hunting.getUser().getImgUrl())
+                    .userImgurl(hunting.getUser().getImgUrl())
                     .title(hunting.getTitle())
                     .content(hunting.getContent())
                     .scrap(scrap)
