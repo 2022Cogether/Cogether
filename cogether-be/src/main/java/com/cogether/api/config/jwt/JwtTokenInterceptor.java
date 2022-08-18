@@ -29,7 +29,6 @@ public class JwtTokenInterceptor implements HandlerInterceptor {
         }
         if (accessToken != null) {
             if (tokenUtils.isValidToken(accessToken)) {
-                System.out.println("컨트롤러 진입");
                 return true;
             }
         }

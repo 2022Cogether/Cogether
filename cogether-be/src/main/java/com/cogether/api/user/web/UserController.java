@@ -1,6 +1,5 @@
 package com.cogether.api.user.web;
 
-import com.cogether.api.config.jwt.TokenUtils;
 import com.cogether.api.user.dto.TokenResponse;
 import com.cogether.api.user.dto.UserRequest;
 import com.cogether.api.user.service.UserService;

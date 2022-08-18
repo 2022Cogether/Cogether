@@ -61,16 +61,18 @@ public class UserService {
     @Transactional
     public TokenResponse signUp(UserRequest userRequest) {
 
-        //user 테이블 레코드 저장
-        User user = userRepository.save(User.builder().password(passwordEncoder.encode(userRequest.getPassword()))  // 사용자 비밀번호 암호화해서 DB에 저장
-                .email(userRequest.getEmail())      //사용자 이메일
-                .nickname(userRequest.getNickname())//사용자 닉네임
-                .createdAt(LocalDateTime.now()) // 가입날자
-                .resign(false)  // 탈퇴 여부
-                .comp(false) // 경쟁모드 참가여부
-                .admin(false).etcUrl(userRequest.getEtc_url())   //기타 사이트
-                .gitUrl(userRequest.getGit_url())   //깃 url
-                .notionUrl((userRequest.getNotion_url()))   //노션url
+        User user = userRepository.save(
+                User.builder().password(passwordEncoder.encode(userRequest.getPassword()))  // 사용자 비밀번호 암호화해서 DB에 저장
+                .email(userRequest.getEmail())
+                .nickname(userRequest.getNickname())
+                .createdAt(LocalDateTime.now())
+                .resign(false)
+                .comp(false)
+                .admin(false)
+                .etcUrl(userRequest.getEtc_url())
+                .gitUrl(userRequest.getGit_url())
+                .velogUrl(userRequest.getVelog_url())
+                .notionUrl((userRequest.getNotion_url()))
                 .exp(0) // 경험치
                 .imgUrl(userRequest.getImg_url())   // 프로필
                 .intro(userRequest.getIntro())// 한줄소개
@@ -79,13 +81,11 @@ public class UserService {
 
         List<String> skills = userRequest.getSkills();
 
-        System.out.println(skills.isEmpty());
         if (!skills.isEmpty()) {
             for (String skill : skills) {
                 userSkillRepository.save(UserSkill.builder().skillId(skill).user(user).build());
             }
         }
-
 
         rankingRepository.save(Ranking.builder().user(user).tilCnt(0).week(0).month(0).total(0).build());
 
@@ -113,9 +113,7 @@ public class UserService {
         String accessToken = "";
         String refreshToken = "";
 
-
         Auth auth = new Auth();
-
 
         if (authEntity.isPresent()) {
             auth = authEntity.get();
@@ -150,8 +148,10 @@ public class UserService {
     @Transactional
     public TokenResponse reissuanceAccessToken(String token, int id) throws Exception {
 
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        Auth auth = authRepository.findByUserId(user.getId()).orElseThrow(() -> new IllegalArgumentException("Token 이 존재하지 않습니다."));
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        Auth auth = authRepository
+                .findByUserId(user.getId()).orElseThrow(() -> new IllegalArgumentException("Token 이 존재하지 않습니다."));
 
 
         String accessToken;
@@ -376,7 +376,7 @@ public class UserService {
             for (User u : emailList) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("id", u.getId());
-                map.put("nickName", u.getEmail());
+                map.put("email", u.getEmail());
 
                 body.add(map);
             }
