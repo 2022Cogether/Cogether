@@ -1,6 +1,5 @@
 package com.cogether.api.user.dto;
 
-import com.cogether.api.user.domain.User;
 import lombok.*;
 
 @Getter

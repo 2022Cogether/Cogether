@@ -13,4 +13,6 @@ public interface NotiRepository extends JpaRepository<Noti, Integer> {
     List<Noti> findAllByUser(User user);
     Optional<Noti> findByContentId(int contentId);
 
+    List<Noti> findAllByReceiveId(int id);
+
 }

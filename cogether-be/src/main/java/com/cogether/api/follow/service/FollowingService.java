@@ -2,12 +2,10 @@ package com.cogether.api.follow.service;
 
 import com.cogether.api.config.jwt.TokenUtils;
 import com.cogether.api.follow.domain.Follow;
-import com.cogether.api.follow.dto.FollowRequest;
 import com.cogether.api.follow.repository.FollowRepository;
 import com.cogether.api.user.domain.User;
 import com.cogether.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -34,6 +32,7 @@ public class FollowingService {
     private final FollowRepository followRepository;
 
     private final TokenUtils tokenUtils;
+
     @Transactional
     public int registFollow(int fromId, String token) {
 
@@ -44,7 +43,7 @@ public class FollowingService {
         User fromUser = userRepository.findById(fromId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        if(followRepository.findFollowId(toUser.getId(),fromUser.getId()).isEmpty()){
+        if (followRepository.findFollowId(toUser.getId(), fromUser.getId()).isEmpty()) {
 
             followRepository.save(Follow.builder()
                     .user(toUser)
@@ -74,9 +73,9 @@ public class FollowingService {
     }
 
 
-    public List<Map<String, String>> loadFollowingList(int fromId ) {
-        List<Follow> list ;
-        String email="";
+    public List<Map<String, String>> loadFollowingList(int fromId) {
+        List<Follow> list;
+        String email = "";
 
         //int id = tokenUtils.getUserIdFromToken(token);
 
@@ -86,23 +85,22 @@ public class FollowingService {
         //System.out.println("유저 아이디"+id);
         list = followRepository.findByFollowing(fromId);
 
-        List<Map<String,String>> followingList = new ArrayList<>();
+        List<Map<String, String>> followingList = new ArrayList<>();
 
-        for(Follow follow : list)
-        {
-            Map<String,String> following =new HashMap<>();
+        for (Follow follow : list) {
+            Map<String, String> following = new HashMap<>();
 
-            following.put("id",Integer.toString(follow.getFromId()));
-            following.put("email",follow.getFromEmail());
+            following.put("id", Integer.toString(follow.getFromId()));
+            following.put("email", follow.getFromEmail());
             followingList.add(following);
         }
 
         return followingList;
     }
 
-    public Map<String, Integer> loadFollowingListSize(int fromId ) {
-        List<Follow> list ;
-        String email="";
+    public Map<String, Integer> loadFollowingListSize(int fromId) {
+        List<Follow> list;
+        String email = "";
 
         //int id = tokenUtils.getUserIdFromToken(token);
 
@@ -114,16 +112,15 @@ public class FollowingService {
 
         int size = list.size();
 
-        Map<String,Integer> body = new HashMap<>();
-        body.put("size",size);
+        Map<String, Integer> body = new HashMap<>();
+        body.put("size", size);
 
         return body;
     }
 
 
-
     public List<Map<String, String>> loadFollowerList(int fromId) {
-        List<Follow> list ;
+        List<Follow> list;
 
 
         User toUser = userRepository.findById(fromId)
@@ -132,16 +129,15 @@ public class FollowingService {
 
         list = followRepository.findByFollower(toUser.getId());
 
-        System.out.println("팔로워 수 : "+list.size());
+        System.out.println("팔로워 수 : " + list.size());
 
-        List<Map<String,String>> followerList = new ArrayList<>();
+        List<Map<String, String>> followerList = new ArrayList<>();
 
-        for(Follow follow : list)
-        {
-            Map<String,String> follower =new HashMap<>();
+        for (Follow follow : list) {
+            Map<String, String> follower = new HashMap<>();
 
-            follower.put("id",Integer.toString(follow.getUser().getId()));
-            follower.put("email",follow.getToEmail());
+            follower.put("id", Integer.toString(follow.getUser().getId()));
+            follower.put("email", follow.getToEmail());
             followerList.add(follower);
         }
 
@@ -149,7 +145,7 @@ public class FollowingService {
     }
 
     public Map<String, Integer> loadFollowerListSize(int fromId) {
-        List<Follow> list ;
+        List<Follow> list;
 
 
         User toUser = userRepository.findById(fromId)
@@ -162,8 +158,8 @@ public class FollowingService {
 
         //List<Map<String,String>> followerList = new ArrayList<>();
 
-        Map<String,Integer> body = new HashMap<>();
-        body.put("size",size);
+        Map<String, Integer> body = new HashMap<>();
+        body.put("size", size);
 
         return body;
     }

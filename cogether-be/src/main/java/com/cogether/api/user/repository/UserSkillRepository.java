@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserSkillRepository extends JpaRepository<UserSkill, Integer> {
 
@@ -15,5 +14,5 @@ public interface UserSkillRepository extends JpaRepository<UserSkill, Integer> {
 
     @Modifying
     @Query("delete from UserSkill u where u.user.id=:userId and u.skillId=:skillId")
-    int deleteUserSkill(String skillId,int userId);
+    int deleteUserSkill(String skillId, int userId);
 }
