@@ -199,6 +199,7 @@
             :userId="til.userId"
             :tilId="til.tilId"
             @delComm="delComm"
+            @editComm="editComm"
           />
           <input
             type="text"
@@ -342,6 +343,15 @@ export default {
       }
     };
 
+    const editComm = async (event, tilCommentId, updateComment) => {
+      for (let i = 0; i < commentList.value.length; i++) {
+        if (commentList.value[i].tilCommentId == tilCommentId) {
+          commentList.value[i].content = updateComment;
+          break;
+        }
+      }
+    };
+
     watch(commentList, () => {
       console.log(commentList.value);
     });
@@ -360,6 +370,7 @@ export default {
       initLike,
       likeNum,
       delComm,
+      editComm,
       fromCreated,
     };
   },
