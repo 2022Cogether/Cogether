@@ -74,8 +74,7 @@ export default {
 .chat-body {
   padding: 1%;
   margin-left: 5%;
-  margin-top: 5%;
-  height: 95%;
+  height: calc(100vh - 130px);
   width: 90%;
   background-color: white;
   border-radius: 10px;

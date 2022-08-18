@@ -75,17 +75,23 @@
           ></button>
         </div>
         <div class="modal-body">
-          <div class="profile-detail-box d-flex">
+          <div class="profile-detail-box">
             <!-- 프로필사진 -->
-            <div class="image-box">
-              <img src="@/assets/logo.png" alt="profile image" />
+            <div class="profile-box d-flex">
+              <div class="profile-img-box">
+                <img
+                  class="profile-img"
+                  :src="emitPerson.userImgurl"
+                  alt="profile image"
+                />
+              </div>
+              <div class="profile-name" id="personDetailInfoLabel">
+                {{ emitPerson.userNickname }}
+              </div>
             </div>
             <!-- 이름 및 한줄소개 -->
             <div class="profile-detail-info">
-              <h5 class="modal-title" id="personDetailInfoLabel">
-                {{ emitPerson.userNickname }}
-              </h5>
-              <p>{{ emitPerson.title }}</p>
+              <div>{{ emitPerson.title }}</div>
             </div>
           </div>
           <!-- 내용 -->
@@ -158,6 +164,10 @@ export default {
 </script>
 
 <style scoped>
+.modal-body {
+  padding-top: 0px;
+}
+
 .list-group {
   max-height: 210px;
   overflow: auto;
@@ -179,29 +189,35 @@ export default {
   background-color: #eff7f6;
 }
 
-.image-box {
-  width: 75px;
-  height: 75px;
+.profile-img-box {
+  width: 65px;
+  height: 65px;
   border-radius: 70%;
   overflow: hidden;
-  margin-right: 25px;
-  border: 3px solid gold;
+  margin: 10px;
+  text-align: center;
 }
 
-.image-box > img {
+.profile-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  margin: 5px auto;
 }
 
 .profile-detail-box {
   margin-left: 80px;
+  width: 300px;
 }
 
-.profile-detail-info > h5 {
+.profile-name {
+  margin-left: 5px;
+  margin-top: 20px;
   font-size: 20px;
   font-weight: 700;
+}
+
+.profile-detail-info {
+  width: 90%;
+  margin: auto;
 }
 
 .user-introduction {
@@ -230,5 +246,12 @@ export default {
 
 .list-group-item:hover {
   background-color: #c1ebe6;
+}
+
+.btn {
+  transition: all 0.2s linear;
+}
+.btn:hover {
+  transform: scale(1.1);
 }
 </style>
