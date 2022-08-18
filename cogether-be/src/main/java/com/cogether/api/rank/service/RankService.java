@@ -152,7 +152,7 @@ public class RankService {
         List<User> followUserList = new ArrayList<>();
         followUserList.add(user);
         List<RankingResponse.ExpRank> expRankList = new ArrayList<>();
-        for (int i = 0; i < followUserList.size(); i++) {
+        for (int i = 0; i < followList.size(); i++) {
             int followId = followList.get(i).getFromId();
             followUserList.add(userRepository.findById(followId).orElseThrow(UserNotFoundException::new));
         }
