@@ -266,7 +266,12 @@ export default {
     };
 
     const goOut = (id) => {
-      window.open("http://localhost:8080/#/profile/" + id);
+      // window.open("http://localhost:8080/#/profile/" + id);
+      router.go();
+      router.push({
+        name: "profile",
+        params: { userId: id },
+      });
     };
 
     // 검색어
