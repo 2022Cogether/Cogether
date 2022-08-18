@@ -5,6 +5,9 @@ export const signStore = {
     // http에서 성공/실패 여부가 component 로컬 변수에 영향을 줄 때 쓸 변수
     booleanValue: false,
 
+    // 프로필 주소 저장
+    profilePathStock: "",
+
     // frontend에서 이메일, 비번, 닉네임의 유효성을 검사할 정규표현식
     emailPattern:
       /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/,
@@ -23,6 +26,10 @@ export const signStore = {
 
     // 다른 유저 정보(다른 유저 profile에 접속할 경우)
     anotherUser: {},
+
+    // 유저들 리스트
+    userListNcik: [],
+    userList: [],
   },
   getters: {
     getBooleanValue(state) {
@@ -32,6 +39,15 @@ export const signStore = {
         state.booleanValue = false;
       }
       return temp;
+    },
+    getProfilePathStock(state) {
+      return state.profilePathStock;
+    },
+    getUserListNick(state) {
+      return state.userListNick;
+    },
+    getUserListEmail(state) {
+      return state.userListEmail;
     },
     isLoggedIn(state) {
       return !!state.token;
@@ -65,6 +81,17 @@ export const signStore = {
   mutations: {
     SET_BOOLEANVALUE: (state) => {
       state.booleanValue = true;
+    },
+
+    SET_USER_LIST_NICK: (state, nextlist) => {
+      state.userListNick = nextlist;
+    },
+    SET_USER_LIST_EMAIL: (state, nextlist) => {
+      state.userListEmail = nextlist;
+    },
+
+    SET_PROFILE_PATH_STOCK: (state, newPath) => {
+      state.getProfilePathStock = newPath;
     },
 
     SET_TOKEN: (state, token) => (state.token = token),
@@ -312,7 +339,7 @@ export const signStore = {
           headers: getters.authHeader,
         })
         .then((res) => {
-          if (res.data.verified) {
+          if (res.data.isLogOut) {
             localStorage.removeItem("access_TOKEN");
             localStorage.removeItem("refresh_TOKEN");
             localStorage.removeItem("userId");
@@ -387,6 +414,28 @@ export const signStore = {
           alert("회원 이미지 추가 에러입니다.");
           console.error(err.response.data);
         });
+    },
+
+    // 유저 검색
+    // 닉네임
+    findNickUser({ getters, commit }, keyword) {
+      http
+        .get("find/nickname/" + keyword, {
+          headers: getters.authHeader,
+        })
+        .then((res) => {
+          commit("SET_USER_LIST_NICK", res.data);
+        })
+        .catch((err) => console.error(err.response));
+    },
+    // 이메일
+    findEmailUser({ getters, commit }, keyword) {
+      http
+        .get("find/email/" + keyword, {
+          headers: getters.authHeader,
+        })
+        .then((res) => commit("SET_USER_LIST_EMAIL", res.data))
+        .catch((err) => console.error(err.response));
     },
 
     // { REFRESH_TOKEN: localStorage.getItem("REFRESH_TOKEN") }

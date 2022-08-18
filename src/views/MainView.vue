@@ -86,4 +86,8 @@ export default {
 .icon-search {
   font-size: 1.5rem;
 }
+
+input:focus {
+  outline: none;
+}
 </style>

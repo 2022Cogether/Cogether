@@ -23,7 +23,7 @@
     ></textarea>
 
     <div class="d-flex justify-content-center">
-      <label class="file-label" for="imageFile">이미지 등록</label>
+      <label class="file-label mb-2" for="imageFile">이미지 등록</label>
       <input
         @change="imgupload"
         class="file"
@@ -33,13 +33,23 @@
         accept="image/*"
       />
     </div>
+    <div v-for="(imageRoute, idx) in imageRouteList" :key="idx">
+      <div class="column">
+        <font-awesome-icon
+          icon="fa-solid fa-rectangle-xmark"
+          style="cursor: pointer; position: absolute"
+          @click="deleteimage(imageRoute)"
+        />
+        <div style="margin-left: 2rem">{{ imageRoute }}</div>
+      </div>
+    </div>
   </form>
 </template>
 
 <script>
 import Swal from "sweetalert2";
 import router from "@/router";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { useStore } from "vuex";
 
 export default {
@@ -53,6 +63,8 @@ export default {
       content: "",
       multipartFiles: [],
     });
+
+    const imageRouteList = ref([]);
 
     function exit() {
       Swal.fire({
@@ -71,6 +83,8 @@ export default {
         }
       });
     }
+
+    // 이미지 업로드
     function imgupload(e) {
       let imageFile = e.target.files; // 업로드한 파일의 데이터가 여기있음.
       console.log(imageFile);
@@ -78,9 +92,46 @@ export default {
       // console.log(url); // 확인
       for (let i = 0; i < imageFile.length; i++) {
         state.multipartFiles.push(imageFile[i]);
+        imageRouteList.value.push(imageFile[i].name);
       }
+      console.log(imageRouteList.value);
     }
+
+    // 이미지 삭제
+    const deleteimage = (imageRoute) => {
+      console.log(imageRoute);
+      for (let i = 0; i < state.multipartFiles.length; i++) {
+        console.log(state.multipartFiles[i]);
+        console.log(state.multipartFiles[i].name);
+        if (
+          state.multipartFiles[i] &&
+          state.multipartFiles[i].name == imageRoute
+        ) {
+          console.log(i);
+          console.log(state.multipartFiles[i]);
+          state.multipartFiles.splice(i, 1);
+          console.log(imageRouteList.value[i]);
+          imageRouteList.value.splice(i, 1);
+          console.log(state.multipartFiles);
+          break;
+        }
+      }
+    };
+
+    // TIL 생성
     function createTil() {
+      if (
+        state.content == "" ||
+        state.title == "" ||
+        state.multipartFiles.length == 0
+      ) {
+        alert("모든 항목을 입력해주세요!");
+        return;
+      }
+      if (state.multipartFiles.length > 5) {
+        alert("이미지가 너무 많다");
+        return;
+      }
       const formData = new FormData();
 
       const data = {
@@ -96,7 +147,6 @@ export default {
         })
       );
 
-      // let fileArray = [];
       for (let i = 0; i < state.multipartFiles.length; i++) {
         // fileArray.push(state.multipartFiles[i]);
         formData.append("image", state.multipartFiles[i]);
@@ -110,12 +160,10 @@ export default {
       }
       //함수 작동 내용
       store.dispatch("createTil", formData);
-      if (store.getters.getBooleanValue) {
-        router.go(-1);
-      }
+      router.go(-1);
     }
 
-    return { exit, createTil, imgupload, state };
+    return { exit, createTil, imgupload, state, imageRouteList, deleteimage };
   },
   components: {},
 };
