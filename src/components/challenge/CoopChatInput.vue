@@ -1,12 +1,22 @@
 <template>
   <div class="box-chat">
     <div class="box-talk">
-      <div v-for="(item, idx) in state.recvList" :key="idx">
+      <div v-for="(item, idx) in state.recvList" :key="idx" class="chat">
         <div v-if="item.sendUserId == state.userId" class="my">
-          {{ item.message }}
+          <div class="myimg chat-profile">
+            <img class="chat-picture" :src="item.sendUserImg" alt="로고" />
+          </div>
+          <div class="mychat">
+            {{ item.message }}
+          </div>
         </div>
         <div v-else class="other">
-          {{ item.message }}
+          <div class="otherimg chat-profile">
+            <img class="chat-picture" :src="item.sendUserImg" alt="로고" />
+          </div>
+          <div class="otherchat">
+            {{ item.message }}
+          </div>
         </div>
       </div>
     </div>
@@ -34,26 +44,30 @@ export default {
   setup(props) {
     const store = useStore();
     const getters = computed(() => store.getters);
+    store.dispatch("getCoopChatList", props.room.chatRoomId);
     const state = reactive({
       chatRoomId: props.room.chatRoomId,
       userId: getters.value.getLoginUserId,
       message: "",
       tempMsg: "",
-      recvList: computed(() => getters.value.getRecvList),
+      recvList: computed(() => getters.value.getCoopRecvList),
     });
-    store.dispatch("getChatList", state.chatRoomId);
     function send() {
       console.log("송신메세지:" + state.message);
       if (
-        getters.value.getStompClient &&
-        getters.value.getStompClient.connected
+        getters.value.getStompClientCoopChat &&
+        getters.value.getStompClientCoopChat.connected
       ) {
-        const msg = {
+        const data = {
           chatRoomId: state.chatRoomId,
           sendUserId: state.userId,
           message: state.message,
         };
-        getters.value.getStompClient.send("/receive", JSON.stringify(msg), {});
+        getters.value.getStompClientCoopChat.send(
+          "/receive",
+          JSON.stringify(data),
+          {}
+        );
       }
     }
 
@@ -113,7 +127,7 @@ export default {
   outline: none;
 }
 
-.my {
+.mychat {
   float: right;
   background-color: yellow;
   border-radius: 20px;
@@ -121,12 +135,22 @@ export default {
   margin-bottom: 5px;
 }
 
-.other {
+.myimg {
+  float: right;
+  margin-left: 5px;
+}
+
+.otherchat {
   float: left;
   background-color: #c1ebe6;
   border-radius: 20px;
   padding: 7px;
   margin-bottom: 8px;
+}
+
+.otherimg {
+  float: left;
+  margin-right: 5px;
 }
 
 .box-talk {
@@ -137,5 +161,25 @@ export default {
 }
 .box-talk::-webkit-scrollbar {
   display: none;
+}
+
+.chat-profile {
+  width: 50px;
+  height: 50px;
+
+  overflow: hidden;
+}
+
+.chat-picture {
+  border-radius: 70%;
+  border: 1px solid #dbdbdb;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chat {
+  margin-bottom: 8px;
 }
 </style>

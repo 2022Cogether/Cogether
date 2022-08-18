@@ -135,8 +135,8 @@ export default {
               title: "방의 인원이 초과되었습니다.",
             });
             router.push({ name: "ChallengeMain" });
-            //아니면 방 참여
           } else {
+            //입장했다고 알림
             const data = {
               liveCoopId: res.liveCoopId,
               mode: 0,

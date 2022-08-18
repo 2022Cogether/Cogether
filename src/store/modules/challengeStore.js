@@ -19,9 +19,14 @@ export const challengeStore = {
     coopMembers: [],
     coopMemberId: null,
     stompClientCoop: null,
+    stompClientCoopChat: null,
+    coopRecvList: [],
   },
   getters: {
     //변수 호출
+    getStompClientCoopChat(state) {
+      return state.stompClientCoopChat;
+    },
     getStompClientCoop(state) {
       return state.stompClientCoop;
     },
@@ -70,9 +75,15 @@ export const challengeStore = {
     getEnterCoop(state) {
       return state.enterCoop;
     },
+    getCoopRecvList(state) {
+      return state.coopRecvList;
+    },
   },
   mutations: {
     //변수값 수정
+    SET_STOMP_CLIENT_COOP_CHAT(state, stompClientCoopChat) {
+      state.stompClientCoopChat = stompClientCoopChat;
+    },
     SET_STOMP_CLIENT_COOP(state, stompClientCoop) {
       state.stompClientCoop = stompClientCoop;
     },
@@ -117,6 +128,12 @@ export const challengeStore = {
     },
     SET_COOP_MEMBERS(state, coopMembers) {
       state.coopMembers = coopMembers;
+    },
+    SET_COOP_RECV_LIST(state, coopRecvList) {
+      state.coopRecvList = coopRecvList;
+    },
+    APPEND_COOP_RECV_LIST(state, data) {
+      state.coopRecvList.unshift(data);
     },
   },
   actions: {
@@ -260,6 +277,22 @@ export const challengeStore = {
           console.log("협력멤버 삭제 성공");
           console.log(data);
           commit("SET_COOP_MEMBER_ID", null);
+        })
+        .catch((e) => {
+          console.log("에러: " + e);
+        });
+    },
+    //협력채팅
+    async getCoopChatList({ commit, getters }, chatRoomId) {
+      console.log(commit);
+      await http
+        .get("livecoop/chat/list/" + chatRoomId, {
+          headers: getters.authHeader,
+        })
+        .then(({ data }) => {
+          console.log("협력채팅리스트가져오기성공");
+          console.log(data);
+          commit("SET_COOP_RECV_LIST", data.chats);
         })
         .catch((e) => {
           console.log("에러: " + e);

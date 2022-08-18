@@ -47,11 +47,12 @@ export default {
   name: "CoopItem",
   props: ["room", "index"],
   setup(props, { emit }) {
-    function setModal() {
-      emit("setModal", props.room, props.index);
-    }
     const store = useStore();
     const getters = computed(() => store.getters);
+    function setModal() {
+      store.commit("SET_ROOM_ID", props.room.id);
+      emit("setModal", props.room, props.index);
+    }
 
     return { getters, setModal };
   },

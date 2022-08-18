@@ -52,7 +52,7 @@
           언팔로우
         </div>
         <div v-else class="btn btn-success col-6" @click="follow">팔로우</div>
-        <div class="btn btn-secondary col-6">메세지</div>
+        <div class="btn btn-secondary col-6" @click="sendDM">메세지</div>
         <div class="btn btn-warning col-12 mt-3 text-white" @click="followOpen">
           팔로우/팔로잉 리스트
         </div>
@@ -247,6 +247,7 @@ export default {
   },
   setup() {
     const store = useStore();
+    const getters = computed(() => store.getters);
     const route = useRoute();
     console.log("route 사용", route.params);
     const doit = ref(route.params.userId);
@@ -483,6 +484,12 @@ export default {
       window.location.href = url;
     };
 
+    async function sendDM() {
+      await store.dispatch("createChatRoom", userId.value);
+      store.dispatch("getChatRoomList", getters.value.getLoginUserId);
+      store.commit("SET_IS_CHAT_SHOW", !getters.value.getIsChatShow);
+    }
+
     return {
       store,
       badgeUrls,
@@ -523,6 +530,7 @@ export default {
       notionUrl,
       etcUrl,
       goToOut,
+      sendDM,
     };
   },
 };

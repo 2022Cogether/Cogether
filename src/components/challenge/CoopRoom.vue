@@ -9,11 +9,11 @@
       <button class="btn-exit" @click="roomExit">나가기</button>
       <button v-if="room.inProgress" class="btn-time-expand">연장</button>
       <button v-if="room.inProgress" class="btn-end">종료</button>
-      <button v-else class="btn-start">시작</button>
+      <!-- <button v-else class="btn-start">시작</button> -->
     </span>
     <div class="tab2">
-      <button class="btn-detail">DETAIL</button>
-      <button class="btn-code">CODE</button>
+      <!-- <button class="btn-detail">DETAIL</button> -->
+      <!-- <button class="btn-code">CODE</button> -->
     </div>
   </div>
   <div class="container-code">
@@ -38,7 +38,8 @@
         >
           <font-awesome-icon icon="fa-solid fa-compress" />
         </button>
-        <button v-show="state.isExpand" class="btn-submit">제출</button>
+        <!-- <button v-show="state.isExpand" class="btn-submit">제출</button> -->
+        <button v-show="state.isExpand" class="btn-submit">메모장</button>
       </div>
       <textarea
         v-show="state.isExpand"
@@ -67,7 +68,8 @@ export default {
     const store = useStore();
     const getters = computed(() => store.getters);
     const roomId = router.currentRoute.value.params.roomNo;
-    store.dispatch("getChatList", getters.value.getRoom.chatRoomId);
+
+    store.dispatch("getCoopChatList", getters.value.getRoom.chatRoomId);
     store.dispatch("getCoopMembers", roomId);
     store.dispatch("getDetailCoopRoom", roomId);
 
@@ -90,17 +92,29 @@ export default {
       userId: getters.value.getLoginUserId,
     });
 
-    async function connect() {
+    var stompClientCoopChat = null;
+    if (getters.value.getStompClientCoopChat == null) {
       const serverURL = "https://i7a801.p.ssafy.io:8080";
       let socket = new SockJS(serverURL);
-      this.stompClient = Stomp.over(socket);
+      stompClientCoopChat = Stomp.over(socket);
+    } else {
+      stompClientCoopChat = computed(
+        () => getters.value.getStompClientCoopChat
+      );
+    }
+
+    async function connect() {
+      if (getters.value.getStompClientCoopChat != null) {
+        return;
+      }
+      // stompClientCoopChat.unsubscribe();
       console.log("협력채팅소켓 연결을 시도합니다.");
-      this.stompClient.connect(
+      stompClientCoopChat.connect(
         {},
         () => {
           // 소켓 연결 성공
           console.log("협력채팅소켓 연결 성공");
-          this.stompClient.subscribe("/send/" + state.chatRoomId, (res) => {
+          stompClientCoopChat.subscribe("/send/" + state.chatRoomId, (res) => {
             const data = JSON.parse(res.body);
             console.log("수신 메시지: ", res.body);
             const sendData = {
@@ -109,14 +123,14 @@ export default {
               chatId: data.chatId,
             };
             console.log(sendData);
-            store.commit("APPEND_RECV_LIST", data);
+            store.commit("APPEND_COOP_RECV_LIST", data);
           });
         },
         (error) => {
           console.log("협력채팅소켓 연결 실패", error);
         }
       );
-      store.commit("SET_STOMP_CLIENT", this.stompClient);
+      store.commit("SET_STOMP_CLIENT_COOP_CHAT", stompClientCoopChat);
     }
 
     function changeExpand() {
@@ -142,6 +156,7 @@ export default {
               icon: "success",
               title: "방이 삭제되었습니다.",
             });
+            store.commit("SET_STOMP_CLIENT_COOP_CHAT", null);
           }
         });
       } else {
@@ -150,7 +165,7 @@ export default {
           text: "",
           icon: "warning",
           showCancelButton: true,
-          confirmButtonColor: "#3085d6",
+          confirmButtonColor: "#2a9d8f",
           cancelButtonColor: "#d33",
           confirmButtonText: "확인",
           cancelButtonText: "취소",
@@ -161,6 +176,7 @@ export default {
               icon: "success",
               title: "방에서 퇴장하였습니다.",
             });
+            store.commit("SET_STOMP_CLIENT_COOP_CHAT", null);
           }
         });
       }
@@ -256,7 +272,7 @@ export default {
 
 .box-code {
   margin-bottom: 20px;
-  height: 400px;
+  height: 300px;
   width: 100%;
   background-color: white;
 }
