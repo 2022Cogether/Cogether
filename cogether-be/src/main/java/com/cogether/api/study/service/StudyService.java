@@ -66,7 +66,7 @@ public class StudyService {
         int check = studyScrapRepository.countAllByStudyAndUser(study, user);
         int scrapId = 0;
         boolean isScrap = false;
-        if (check == 1) {
+        if (check > 0) {
             scrapId = studyScrapRepository.findByStudy_IdAndUser_Id(studyId, userId).getId();
             isScrap = true;
         }
@@ -90,7 +90,7 @@ public class StudyService {
             int check = studyScrapRepository.countAllByStudyAndUser(study, user);
             int scrapId = 0;
             boolean isScrap = false;
-            if (check == 1) {
+            if (check > 0) {
                 scrapId = studyScrapRepository.findByStudy_IdAndUser_Id(study.getId(), userId).getId();
                 isScrap = true;
             }
@@ -110,7 +110,7 @@ public class StudyService {
             int check = studyScrapRepository.countAllByStudyAndUser(study, user);
             int scrapId = 0;
             boolean isScrap = false;
-            if (check == 1) {
+            if (check > 0) {
                 scrapId = studyScrapRepository.findByStudy_IdAndUser_Id(study.getId(), userId).getId();
                 isScrap = true;
             }
@@ -122,6 +122,11 @@ public class StudyService {
     public StudyResponse.OnlyStudyScrapId createStudyScrap(StudyRequest.Create_StudyScrap create_studyScrap) {
         User user = userRepository.findById(create_studyScrap.getUserId()).orElseThrow(UserNotFoundException::new);
         Study study = studyRepository.findById(create_studyScrap.getStudyId()).orElseThrow(StudyNotFoundException::new);
+        int check = studyScrapRepository.countAllByStudyAndUser(study, user);
+        if(check > 0){
+            StudyScrap studyScrap = studyScrapRepository.findByStudy_IdAndUser_Id(study.getId(), user.getId());
+            return StudyResponse.OnlyStudyScrapId.build(studyScrap);
+        }
         StudyScrap studyScrap = create_studyScrap.toEntity(study, user);
         StudyScrap savedStudyScrap = studyScrapRepository.save(studyScrap);
         return StudyResponse.OnlyStudyScrapId.build(savedStudyScrap);
