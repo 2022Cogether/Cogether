@@ -16,6 +16,7 @@
           class="input"
           placeholder="Password"
           required
+          @keyup.enter.prevent="goLogin"
         />
         <img
           @click="goLogin"

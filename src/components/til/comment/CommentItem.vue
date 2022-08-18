@@ -65,7 +65,7 @@
 </template>
 <script>
 import { useStore } from "vuex";
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 
 export default {
   name: "CommentItem",
@@ -79,7 +79,11 @@ export default {
     const store = useStore();
 
     const loginUserId = store.getters.getLoginUserId;
-    let commentContent = ref(props.comment.content);
+    const commentContent = ref(props.comment.content);
+
+    watch(props.comment.content, () => {
+      commentContent.value = props.comment.content;
+    });
 
     // 유저 인증(isWrite -> 현재 유저가 TIL 글쓴이 isCommenter -> 현재 유저가 이 댓글 작성자)
     const isWriter = computed(() => {
@@ -92,6 +96,8 @@ export default {
     const fromCreated = parseInt(
       (new Date() - new Date(props.comment.createdAt)) / 3600000
     );
+
+    // console.log(props.comment.value.content);
 
     // 코멘트 지우기
     const deleteComment = async (event) => {

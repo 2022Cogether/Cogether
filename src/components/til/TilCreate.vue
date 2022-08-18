@@ -119,7 +119,7 @@ export default {
     };
 
     // TIL 생성
-    function createTil() {
+    async function createTil() {
       if (
         state.content == "" ||
         state.title == "" ||
@@ -185,8 +185,8 @@ export default {
         console.log(value);
       }
       //함수 작동 내용
-      store.dispatch("createTil", formData);
-      router.go(-1);
+      await store.dispatch("createTil", formData);
+      router.push({ name: "mainview" });
     }
 
     return { exit, createTil, imgupload, state, imageRouteList, deleteimage };

@@ -216,7 +216,7 @@
 import CommentList from "@/components/til/comment/CommentList.vue";
 
 import Swal from "sweetalert2";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useStore } from "vuex";
 import router from "@/router";
 
@@ -331,14 +331,20 @@ export default {
       }
     };
 
-    const delComm = async () => {
-      await store.dispatch("fetchTil", { tilId: store.getters.getOpenTil });
-      til.value = computed(() => {
-        return getters.value.getTilContent;
-      }).value;
-      console.log(til.value);
-      commentList.value = til.value.commentList;
+    const delComm = async (event, tilCommentId) => {
+      for (let i = 0; i < commentList.value.length; i++) {
+        if (commentList.value[i].tilCommentId == tilCommentId) {
+          console.log(i);
+          console.log(commentList.value[i]);
+          console.log(commentList.value.splice(i, 1));
+          break;
+        }
+      }
     };
+
+    watch(commentList, () => {
+      console.log(commentList.value);
+    });
 
     return {
       til,
@@ -364,6 +370,13 @@ export default {
 .car-imag {
   width: 80%;
   max-width: 100px;
+}
+
+.modal {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
 }
 
 .modal-card {
