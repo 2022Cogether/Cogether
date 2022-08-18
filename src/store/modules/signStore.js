@@ -377,8 +377,8 @@ export const signStore = {
         });
     },
 
-    logout({ commit, getters }) {
-      http
+    async logout({ commit, getters }) {
+      await http
         .delete("sign/signout", {
           headers: getters.authHeader,
         })

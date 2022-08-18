@@ -10,6 +10,7 @@ export default {
   },
   setup(props) {
     console.log("props til", props.til);
+    console.log(props.til.imgUrl[0].imgUrl);
     return { props };
   },
 };
