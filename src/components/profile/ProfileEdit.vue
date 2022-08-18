@@ -33,7 +33,12 @@
         <div class="input-group-append">
           <button
             class="btn"
-            style="background-color: #e2e2e2; border: 1px solid; width: 100%"
+            style="
+              background-color: #e2e2e2;
+              border: 1px solid;
+              width: 100%;
+              z-index: 0;
+            "
             @click.prevent="certifyNickName"
           >
             중복 체크
@@ -230,12 +235,8 @@
       </div>
     </div>
     <div class="mt-5 mb-3 d-flex justify-content-around">
-      <button @click="edit" style="background-color: #2a9d8f; color: white">
-        수정
-      </button>
-      <button @click="back" style="background-color: #2a9d8f; color: white">
-        취소
-      </button>
+      <button @click="edit" class="small-button">수정</button>
+      <button @click="back" class="small-button">취소</button>
     </div>
   </div>
 </template>
@@ -339,7 +340,20 @@ export default {
           (element) => element !== val
         );
       } else {
-        alert("입력되지 않은 스킬입니다!");
+        Swal.mixin({
+          toast: true,
+          position: "bottom-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener("mouseenter", Swal.stopTimer);
+            toast.addEventListener("mouseleave", Swal.resumeTimer);
+          },
+        }).fire({
+          icon: "error",
+          title: "입력되지 않은 스킬입니다.",
+        });
       }
     };
 
@@ -657,5 +671,15 @@ h4 {
 }
 .file {
   display: none;
+}
+
+.small-button {
+  background-color: #5b975b;
+  border-radius: 20%;
+  border: 5px;
+  width: 5rem;
+  height: 3rem;
+  font-size: 1.5rem;
+  color: white;
 }
 </style>

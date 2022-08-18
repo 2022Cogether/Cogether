@@ -19,7 +19,7 @@
   <div class="til-list">
     <TilMainItem v-for="til in tilList.tilList" :key="til.tilId" :util="til" />
   </div>
-  <TilDetail v-if="isOpen" class="isModal" />
+  <!-- <TilDetail v-if="isOpen" class="isModal" @likeFromDetail="likeFromDetail" /> -->
   <!-- 나중에 TIL create창으로 URL 추가 -->
   <router-link :to="{ name: 'TilCreate' }">
     <button class="icon-body">
@@ -32,17 +32,17 @@
 import { useStore } from "vuex";
 import { computed, ref } from "vue";
 import TilMainItem from "@/components/til/TilMainItem.vue";
-import TilDetail from "@/components/til/TilDetail.vue";
+// import TilDetail from "@/components/til/TilDetail.vue";
 
 export default {
   name: "TilMainList",
   components: {
     TilMainItem,
-    TilDetail,
+    // TilDetail,
   },
   setup() {
     const store = useStore();
-    const getters = computed(() => store.getters);
+    // const getters = computed(() => store.getters);
 
     const tilList = ref([]);
 
@@ -53,13 +53,6 @@ export default {
       }).value;
       console.log("으앙", tilList.value);
     })();
-
-    const modalNum = computed(() => {
-      return getters.value.getOpenTil;
-    });
-    const isOpen = computed(() => {
-      return modalNum.value != -1;
-    });
 
     const searchWord = ref("");
 
@@ -75,8 +68,8 @@ export default {
     };
 
     return {
-      modalNum,
-      isOpen,
+      // modalNum,
+      // isOpen,
       tilList,
 
       searchWord,
@@ -87,13 +80,6 @@ export default {
 </script>
 
 <style scoped>
-.isModal {
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.3);
-  display: flex;
-}
-
 .til-list {
   margin-top: 5%;
 }
