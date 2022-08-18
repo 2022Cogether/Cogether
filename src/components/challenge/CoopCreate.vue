@@ -66,12 +66,13 @@
 <script>
 import Swal from "sweetalert2";
 import router from "@/router";
-import { reactive } from "vue";
+import { reactive, computed } from "vue";
 import { useStore } from "vuex";
 export default {
   name: "CoopCreate",
   setup() {
     const store = useStore();
+    const getters = computed(() => store.getters);
     const state = reactive({
       //사용할 변수들 선언
       title: null,
@@ -124,6 +125,7 @@ export default {
       }
       //actions axios 보내기
       await store.dispatch("createCoopRoom", state);
+      store.dispatch("getChatRoomList", getters.value.getLoginUserId);
       //sweetalert
 
       Toast.fire({
