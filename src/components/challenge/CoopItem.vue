@@ -1,10 +1,14 @@
 <template>
   <div class="coop-room-item round">
-    <a href="#"
-      ><img class="coop-profile" src="@/assets/logo.png" alt="로고"
-    /></a>
-    <span class="coop-title fs-5">{{ room.title }}</span>
-    <span class="coop-time fs-6">{{ room.duration }}분</span>
+    <div class="item-header">
+      <div class="profile-img-box">
+        <a :href="`/#/profile/` + room.userId">
+          <img class="profile-img" :src="room.userImgUrl" alt="로고"
+        /></a>
+      </div>
+      <div class="coop-title fs-5">{{ room.title }}</div>
+      <div class="coop-time fs-6">{{ room.duration }}분</div>
+    </div>
     <div class="coop-bottom">
       <span class="coop-people"
         >{{ room.nowMemNum }} / {{ room.maxMemNum }} 명</span
@@ -56,6 +60,23 @@ export default {
 </script>
 
 <style scoped>
+.item-header {
+  display: flex;
+}
+/* Profile Image */
+.profile-img-box {
+  width: 50px;
+  height: 50px;
+  border-radius: 70%;
+  overflow: hidden;
+}
+
+.profile-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .round {
   border: 1px solid black;
   border-radius: 10px;
@@ -74,18 +95,14 @@ export default {
   background-color: white;
 }
 
-.coop-profile {
-  margin: auto;
-  width: 10%;
-}
-
 .coop-title {
   margin-left: 3%;
 }
 
 .coop-time {
-  float: right;
-  margin-right: 2%;
+  position: absolute;
+  right: 15px;
+  /* float: right; */
 }
 
 .coop-bottom {
@@ -100,6 +117,7 @@ export default {
   position: absolute;
   bottom: 7%;
   right: 7%;
+  transition: all 0.15s linear;
 }
 
 .btn-coop-enter:hover {

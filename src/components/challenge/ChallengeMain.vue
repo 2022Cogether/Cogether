@@ -39,7 +39,12 @@
     <div class="coop-nav">
       <div class="coop-nav-name fs-3">협력모드</div>
       <div class="searchbar">
-        <input class="input-search" type="text" v-model="state.tempText" />
+        <input
+          class="input-search"
+          @keypress="searchEnter"
+          type="text"
+          v-model="state.tempText"
+        />
         <button class="btn-search" @click="search">
           <font-awesome-icon
             class="searchicon"
@@ -56,7 +61,7 @@
     <coop-list :tabState="state.tabState" :searchText="state.searchText" />
   </div>
   <button class="icon-body" @click="coopCreate">
-    <font-awesome-icon icon="fa-solid fa-gamepad" class="gamepad-icon" />
+    <font-awesome-icon icon="fa-solid fa-pen-clip" class="pen-icon" />
   </button>
 </template>
 
@@ -151,6 +156,12 @@ export default {
         });
       }
     }
+
+    function searchEnter(e) {
+      if (e.keyCode == 13) {
+        state.searchText = state.tempText;
+      }
+    }
     return {
       store,
       getters,
@@ -162,6 +173,7 @@ export default {
       btnTab3,
       search,
       coopCreate,
+      searchEnter,
     };
   },
   components: {
@@ -197,11 +209,6 @@ button {
   margin: 1%;
 }
 
-.coop-tab:hover {
-  background-color: #2a9d8f;
-  color: white;
-}
-
 .compete-box {
   position: relative;
   height: 150px;
@@ -225,6 +232,7 @@ button {
   border-radius: 5px;
   border: 0px;
   background-color: white;
+  transition: all 0.15s linear;
 }
 
 .btn-compete-box:hover {
@@ -256,7 +264,8 @@ button {
 }
 
 .coop-tab {
-  border: 1px solid black;
+  color: #2a9d8f;
+  border: 2px solid #2a9d8f;
   display: inline-block;
   width: 30%;
   text-align: center;
@@ -264,7 +273,13 @@ button {
   border-radius: 20px;
 }
 
+.coop-tab:hover {
+  background-color: #2a9d8f;
+  color: white;
+}
+
 .coop-tabs {
+  margin-top: 7px;
   display: inline-block;
   float: right;
   width: 40%;
@@ -293,6 +308,7 @@ button {
   padding-right: 20%;
   margin-right: 1%;
   background-color: transparent;
+  outline: none;
 }
 
 .btn-search {
@@ -323,7 +339,7 @@ button {
   box-shadow: 0px 3px rgba(0, 0, 0, 0.3);
 }
 
-.gamepad-icon {
+.pen-icon {
   font-size: 30px;
 }
 </style>

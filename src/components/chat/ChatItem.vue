@@ -1,8 +1,8 @@
 <template>
   <div class="chat-item">
     <div class="chat-profile">
-      <a href="#">
-        <img class="chat-picture" src="@/assets/logo.png" alt="로고" />
+      <a :href="`/#/profile/` + chatRoom.chatMemberUserId">
+        <img class="chat-picture" :src="chatRoom.chatMemberImage" alt="로고" />
       </a>
     </div>
     <div class="chat-content" @click="clickItem">
@@ -44,8 +44,20 @@ export default {
 <style scoped>
 .chat-profile {
   float: left;
-  width: 20%;
+  width: 60px;
+  height: 60px;
   margin-right: 3%;
+  /* padding: 1px; */
+  overflow: hidden;
+}
+
+.chat-picture {
+  object-fit: cover;
+  border-radius: 70%;
+  border: 1px solid #dbdbdb;
+  width: 100%;
+  height: 100%;
+  margin: 0;
 }
 
 .chat-content {
@@ -55,13 +67,6 @@ export default {
 
 .chat-content:hover {
   cursor: pointer;
-}
-
-.chat-picture {
-  border-radius: 70%;
-  border: 1px solid #dbdbdb;
-  margin: 3%;
-  width: 100%;
 }
 
 .chat-item {

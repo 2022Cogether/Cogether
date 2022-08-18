@@ -75,12 +75,16 @@
         </div>
         <div class="modal-body">
           <div class="profile-detail-box d-flex">
-            <div class="image-box">
-              <img src="@/assets/logo.png" alt="profile image" />
+            <div class="profile-img-box">
+              <img
+                class="profile-img"
+                :src="emitStudy.userImgurl"
+                alt="profile image"
+              />
             </div>
             <div class="profile-detail-info">
               <div class="d-flex">
-                <h5 class="modal-title" id="teamDetailInfoLabel">
+                <h5 class="modal-title" id="studyDetailInfoLabel">
                   {{ emitStudy.userNickname }}
                 </h5>
               </div>
@@ -113,11 +117,10 @@
             class="btn"
             data-bs-dismiss="modal"
             aria-label="Close"
+            @click="sendDM"
           >
-            <button type="button" class="btn" @click="sendDM">
-              <font-awesome-icon icon="fa-solid fa-comments" />
-              DM 보내기
-            </button>
+            <font-awesome-icon icon="fa-solid fa-comments" />
+            DM 보내기
           </button>
         </div>
       </div>
@@ -194,19 +197,19 @@ export default {
   background-color: #eff7f6;
 }
 
-.image-box {
-  width: 75px;
-  height: 75px;
+/* Profile Image */
+.profile-img-box {
+  width: 65px;
+  height: 65px;
   border-radius: 70%;
   overflow: hidden;
-  margin-right: 25px;
-  border: 3px solid gold;
+  margin: 10px;
+  text-align: center;
 }
 
-.image-box > img {
-  width: 70px;
-  height: 70px;
-  margin: 5px auto;
+.profile-img {
+  width: 100%;
+  height: 100%;
 }
 
 .modal-header > .bookmark-icon {
@@ -220,6 +223,7 @@ export default {
 
 .modal-body {
   padding: 20px 80px;
+  padding-top: 0px;
 }
 
 .profile-detail-info {
@@ -227,7 +231,9 @@ export default {
 }
 
 .modal-title {
-  font-size: 25px;
+  margin-left: 5px;
+  margin-top: 10px;
+  font-size: 20px;
   font-weight: 700;
 }
 
@@ -271,5 +277,17 @@ export default {
 .modal-footer > .btn {
   background-color: #2a9d8f;
   color: #fff;
+}
+
+.btn {
+  height: 40px;
+  background-color: #2a9d8f;
+  color: #fff;
+  border: 0px;
+  transition: all 0.2s linear;
+}
+
+.btn:hover {
+  transform: scale(1.1);
 }
 </style>
