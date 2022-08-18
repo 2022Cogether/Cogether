@@ -3,7 +3,12 @@
     <!-- 왼쪽: 프로필, 제목, 글쓴이, 시간/ 오른쪽: 드랍다운 -->
     <div class="til-header">
       <div class="profile-body">
-        <font-awesome-icon class="fs-3" icon="fa-solid fa-user" />
+        <font-awesome-icon
+          v-if="!til.userImg"
+          class="fs-3"
+          icon="fa-solid fa-user"
+        />
+        <img v-else :src="til.userImg" class="fs-3" style="width: 100%" />
       </div>
       <div class="til-title" @click="setNum">
         {{ til.tilTitle }}
@@ -13,7 +18,6 @@
         <span class="til-time">1 시간 전</span>
       </div>
 
-      <!-- 일반 어떤 경우에도 보이게 설정했으니 추후 변경 필요 -->
       <div v-if="isWriter" class="dropdown">
         <a
           href=""
@@ -28,14 +32,7 @@
           />
         </a>
         <div class="dropdown-menu">
-          <router-link
-            class="dropdown-item"
-            :to="{
-              name: 'TilUpdate',
-              params: { tilPk: til.tilId },
-            }"
-            >내용 수정</router-link
-          >
+          <div class="dropdown-item" @click="goUpdate">내용 수정</div>
           <div class="dropdown-item" @click="deleteTil">삭제</div>
         </div>
       </div>
@@ -177,8 +174,10 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 export default {
   name: "TilMainItem",
@@ -188,6 +187,7 @@ export default {
   setup(props) {
     const store = useStore();
     const getters = computed(() => store.getters);
+    const router = useRouter();
 
     const til = ref(props.util);
     console.log("tiltil", til.value);
@@ -228,10 +228,39 @@ export default {
       store.dispatch("createComment", payload);
     };
 
+    function deleteTil() {
+      Swal.fire({
+        title: "삭제하시겠습니까?",
+        text: "삭제한 글은 복구할 수 없습니다.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#2a9d8f",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "확인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          //취소하고 이동할 페이지
+          store.dispatch("removeTil", til.value.tilId);
+          router.push({ name: "mainview" });
+        }
+      });
+    }
+
+    const goUpdate = () => {
+      store.dispatch("fetchOpenTil", { tilId: til.value.tilId });
+      router.push({
+        name: "TilUpdate",
+        params: { tilPk: til.value.tilId },
+      });
+    };
+
     return {
+      goUpdate,
       til,
       isWriter,
       commentContent,
+      deleteTil,
       sendLike,
       setNum,
       onSubmit,
@@ -292,7 +321,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0px 3px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
 }
 
 .til-title {

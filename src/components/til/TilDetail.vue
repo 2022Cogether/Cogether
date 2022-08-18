@@ -27,7 +27,6 @@
             <span class="til-time">1 시간 전</span>
           </div>
 
-          <!-- 일반 어떤 경우에도 보이게 설정했으니 추후 변경 필요 -->
           <div v-if="isWriter" class="dropdown">
             <a
               href=""
@@ -77,7 +76,7 @@
               :key="i"
             >
               <div :class="['carousel-item', i == 0 ? 'active' : '']">
-                <img :src="image.imgUrl" class="d-block w-100" alt="..." />
+                <img :src="image.imgUrl" class="d-block w-100 car-image" />
               </div>
             </div>
             <button
@@ -245,7 +244,7 @@ export default {
     const initLike = ref(true);
 
     // 사용자가 글쓴이인지 아닌지 확인
-    let isWriter;
+    const isWriter = ref(false);
 
     (async () => {
       const credentials = {
@@ -268,9 +267,9 @@ export default {
         initLike.value = false;
       }
 
-      isWriter = computed(() => {
+      isWriter.value = computed(() => {
         return tilContent.value.userId == store.getters.getLoginUserId;
-      });
+      }).value;
     })();
 
     // Til 삭제
@@ -333,9 +332,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.car-imag {
+  width: 80%;
+  max-width: 100px;
+}
+
 .modal-card {
   background-color: white;
   width: 40vw;
+  min-width: 250px;
   height: auto;
 }
 
@@ -397,7 +402,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0px 3px rgba(0, 0, 0, 0.3);
   overflow: hidden;
 }
 
