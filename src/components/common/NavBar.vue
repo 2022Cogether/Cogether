@@ -56,6 +56,7 @@
             >비밀번호 변경
           </router-link>
           <a class="dropdown-item" @click.prevent="logout">로그아웃</a>
+          <a class="dropdown-item" @click.prevent="resign">회원탈퇴</a>
         </div>
       </div>
       <!-- <img
@@ -100,6 +101,10 @@ export default {
       };
       await store.dispatch("logout", payload);
       router.go();
+    };
+
+    const resign = () => {
+      router.push({ name: "ReSign" });
     };
 
     async function connect() {
@@ -147,6 +152,7 @@ export default {
       currentUser,
       checkOkay,
       logout,
+      resign,
       userId,
       connect,
       competeState,
