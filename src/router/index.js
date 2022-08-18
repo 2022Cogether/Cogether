@@ -153,6 +153,11 @@ const routes = [
         name: "profileEdit",
         component: () => import("@/components/profile/ProfileEdit.vue"),
       },
+      {
+        path: "pro",
+        name: "pro",
+        compoonent: () => import("@/components/profile/ProPro.vue"),
+      },
     ],
   },
 ];
@@ -165,8 +170,14 @@ const router = createRouter({
 // 네비게이션 가드
 import store from "@/store";
 
+let profileBool = false;
+// let profilePath = "";
+
 router.beforeEach((to, from, next) => {
-  console.log(to);
+  console.log("#to", to);
+  console.log("#from", from);
+  console.log("#from FullPath", from.fullPath, "bvbvbvvv  ");
+  console.log("#to FullPath", to.fullPath, "toooo   ");
   if (
     to.name != "SignIn" &&
     to.name != "SignUp" &&
@@ -174,7 +185,19 @@ router.beforeEach((to, from, next) => {
     !store.getters.isLoggedIn
   )
     next({ name: "SignIn" }); // 아직 TOKEN 없어서 ! 붙여놓았음
-  else next();
+  else if (
+    from.name == "profile" &&
+    to.name == "profile" &&
+    from.fullPath != to.fullPath &&
+    !profileBool
+  ) {
+    // profileBool = true;
+    // profilePath = to.fullPath;
+    // next({ name: "mainview" });
+    console.log("라우터 변경 감지");
+    next();
+    // next();
+  } else next();
 });
 
 export default router;

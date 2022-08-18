@@ -98,6 +98,7 @@
       <!-- git -->
       <div
         v-if="!!gitUrl"
+        style="cursor: pointer"
         class="webpage-link-box"
         :onclick="'location.href=' + gitUrl"
       >
@@ -107,7 +108,7 @@
           class="webpage-link-img"
         />
       </div>
-      <div v-else class="webpage-link-box opacity-50">
+      <div v-else class="webpage-link-box" style="opacity: 0.05">
         <img
           src="https://cogethera801.s3.ap-northeast-2.amazonaws.com/devicon/github-original.svg"
           alt="webpage github icon"
@@ -117,6 +118,7 @@
       <!-- velog -->
       <div
         v-if="!!velogUrl"
+        style="cursor: pointer"
         class="webpage-link-box"
         :onclick="'location.href=' + velogUrl"
       >
@@ -126,7 +128,7 @@
           class="webpage-link-img"
         />
       </div>
-      <div v-else class="webpage-link-box opacity-50">
+      <div v-else class="webpage-link-box" style="opacity: 0.05">
         <img
           src="https://velog.velcdn.com/images/velog/profile/9aa07f66-5fcd-41f4-84f2-91d73afcec28/green%20favicon.png"
           :alt="'webpage velog icon'"
@@ -136,6 +138,7 @@
       <!-- tistory -->
       <div
         v-if="!!tistoryUrl"
+        style="cursor: pointer"
         class="webpage-link-box"
         :onclick="'location.href=' + tistoryUrl"
       >
@@ -145,7 +148,7 @@
           class="webpage-link-img"
         />
       </div>
-      <div v-else class="webpage-link-box opacity-50">
+      <div v-else class="webpage-link-box" style="opacity: 0.05">
         <img
           src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=http%3A%2F%2Fcfile27.uf.tistory.com%2Fimage%2F9931DF3D5B9542810872FD"
           alt="webpage tistory icon"
@@ -155,6 +158,7 @@
       <!-- notion -->
       <div
         v-if="!!notionUrl"
+        style="cursor: pointer"
         class="webpage-link-box"
         :onclick="'location.href=' + notionUrl"
       >
@@ -164,7 +168,7 @@
           class="webpage-link-img"
         />
       </div>
-      <div v-else class="webpage-link-box opacity-50">
+      <div v-else class="webpage-link-box" style="opacity: 0.05">
         <img
           src="https://img.icons8.com/ios/500/notion.png"
           alt="webpage notion icon"
@@ -175,6 +179,7 @@
       <div
         v-if="!!etcUrl"
         class="webpage-link-box"
+        style="cursor: pointer"
         :onclick="'location.href=' + etcUrl"
       >
         <img
@@ -183,7 +188,7 @@
           class="webpage-link-img"
         />
       </div>
-      <div v-else class="webpage-link-box opacity-50">
+      <div v-else class="webpage-link-box" style="opacity: 0.05">
         <img
           src="https://pic.onlinewebfonts.com/svg/img_229126.png"
           alt="webpage etc icon"
@@ -229,7 +234,7 @@ import ProfileTil from "./ProfileTil.vue";
 import ProfileFollow from "./ProfileFollow.vue";
 import TilDetail from "@/components/til/TilDetail.vue";
 
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 
@@ -240,9 +245,44 @@ export default {
     TilDetail,
     ProfileFollow,
   },
+  beforeRouteEnter(to, from) {
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", from);
+  },
   setup() {
+    // window.onload = function () {
+    //   if (!window.location.hash) {
+    //     window.location = window.location + "#loaded";
+    //     window.location.reload();
+    //   }
+    // };
+
+    if (self.name != "reload") {
+      self.name = "reload";
+      self.location.reload(true);
+    } else self.name = "";
+
     const store = useStore();
     const route = useRoute();
+    console.log("route 사용", route.params);
+    const doit = ref(route.params.userId);
+    console.log("route 사용", doit);
+    watch(doit, (nv, ov) => {
+      console.log("ov", ov);
+      console.log("nv", nv);
+    });
+    watch(
+      () => route.name,
+      () => {
+        console.debug(
+          `MyCoolComponent - watch route.name changed to ${route.name}`
+        );
+        // Do something here...
+
+        // Optionally you can set immediate: true config for the watcher to run on init
+        //}, { immediate: true });
+      }
+    );
+
     // const getters = computed(() => store.getters);
     const userId = computed(() => {
       return route.params.userId;
@@ -342,7 +382,7 @@ export default {
         });
 
         // 레벨과 잔여 경험치
-        level.value = parseInt(profileUser.value.exp / 100);
+        level.value = 1 + parseInt(profileUser.value.exp / 100);
         percentage.value = profileUser.value.exp % 100;
 
         imgUrl.value = profileUser.value.imgUrl;

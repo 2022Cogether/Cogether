@@ -86,7 +86,6 @@ export default {
         title: state.title,
         tilId: store.getters.getOpenTil,
       };
-      console.log(data);
 
       //함수 작동 내용
       store.dispatch("updateTil", data);

@@ -12,7 +12,7 @@
             {{ tilContent.tilTitle }}
           </div>
           <div class="til-info">
-            <span class="til-user">{{ tilContent.userId }}</span>
+            <span class="til-user">{{ tilContent.userNickname }}</span>
             <!-- created_at을 통해서 시간 계산 v-if나 함수로 1일 이하면 시간으로 표시 -->
             <span class="til-time">1 시간 전</span>
           </div>
@@ -47,7 +47,7 @@
         <!-- 첨부 이미지 캐러셀 -->
         <div class="til-body">
           <div
-            :id="'carouselExampleIndicatorsForDetail' + tilContent.tilId"
+            id="carouselExampleIndicatorsForDetail"
             class="carousel slide"
             data-bs-ride="false"
           >
@@ -56,9 +56,7 @@
                 v-for="(image, i) in tilContent.imgUrl"
                 :key="i"
                 type="button"
-                :data-bs-target="
-                  '#carouselExampleIndicatorsForDetail' + tilContent.tilId
-                "
+                data-bs-target="#carouselExampleIndicatorsForDetail"
                 :data-bs-slide-to="i"
                 :class="[i == 0 ? 'active' : '']"
               ></button>
@@ -75,9 +73,7 @@
             <button
               class="carousel-control-prev"
               type="button"
-              :data-bs-target="
-                '#carouselExampleIndicatorsForDetail' + tilContent.tilId
-              "
+              data-bs-target="#carouselExampleIndicatorsForDetail"
               data-bs-slide="prev"
             >
               <span
@@ -89,9 +85,7 @@
             <button
               class="carousel-control-next"
               type="button"
-              :data-bs-target="
-                '#carouselExampleIndicatorsForDetail' + tilContent.tilId
-              "
+              data-bs-target="#carouselExampleIndicatorsForDetail"
               data-bs-slide="next"
             >
               <span
@@ -181,7 +175,18 @@
             </div>
           </div>
           <!-- 좋아요 갯수를 Til로 가늠하는 방법 필요 -->
-          <span class="like-count"> 좋아요 0개 </span>
+          <span class="like-count" v-if="isLike && initLike">
+            좋아요 {{ tilContent.likeCnt }}개
+          </span>
+          <span class="like-count" v-if="isLike && !initLike">
+            좋아요 {{ tilContent.likeCnt + 1 }}개
+          </span>
+          <span class="like-count" v-if="!isLike && initLike">
+            좋아요 {{ tilContent.likeCnt - 1 }}개
+          </span>
+          <span class="like-count" v-if="!isLike && !initLike">
+            좋아요 {{ tilContent.likeCnt }}개
+          </span>
           <!-- v-if: "is_Current_User_Like_This_TIL?" 등으로 sendlike/senddislike 바꾸어야 할 듯 <- currentUser 완성 뒤 -->
           <div class="til-content">
             {{ tilContent.tilContent }}
@@ -227,6 +232,7 @@ export default {
     const commentList = ref([]);
     const commentContent = ref("");
     const isLike = ref(true);
+    const initLike = ref(true);
 
     // 사용자가 글쓴이인지 아닌지 확인
     let isWriter;
@@ -246,7 +252,11 @@ export default {
 
       console.log(tilContent.value.like);
       isLike.value = tilContent.value.like;
-      console.log("isLike", isLike.value);
+      if (isLike.value) {
+        initLike.value = true;
+      } else {
+        initLike.value = false;
+      }
 
       isWriter = computed(() => {
         return tilContent.value.userId == store.getters.getLoginUserId;
@@ -306,6 +316,7 @@ export default {
       sendLike,
       onSubmit,
       closeModal,
+      initLike,
     };
   },
 };

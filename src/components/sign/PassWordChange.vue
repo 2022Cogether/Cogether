@@ -37,7 +37,7 @@
         <div v-if="!isNewPwdValid" class="text-danger">
           <p>비밀번호 형식을 지켜주세요</p>
         </div>
-        <button class="submit mt-2">Send PW</button>
+        <button class="submit mt-2 mb-1">Send PW</button>
       </form>
     </div>
   </div>
@@ -46,12 +46,14 @@
 <script>
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 export default {
   name: "PassWordChange",
   setup() {
     const store = useStore();
     const getters = computed(() => store.getters);
+    const router = useRouter();
 
     const password = ref("");
     const password2 = ref("");
@@ -73,8 +75,14 @@ export default {
     };
 
     const changePwd = () => {
-      store.dispatch("certifyPassword", password.value);
-      store.dispatch("changePassword", newPassword.value);
+      if (isNewPwdValid.value) {
+        store.dispatch("certifyPassword", password.value);
+        store.dispatch("changePassword", newPassword.value);
+        router.push({
+          name: "profile",
+          params: { userId: store.getters.getLoginUserId },
+        });
+      }
     };
 
     return {
