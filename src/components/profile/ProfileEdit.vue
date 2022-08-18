@@ -12,7 +12,7 @@
         />
       </div>
     </div>
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center w-75 ms-4">
       <label class="file-label" for="imageFile">이미지 등록</label>
       <input
         @change="imgupload"

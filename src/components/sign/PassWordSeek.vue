@@ -11,10 +11,12 @@
           @keyup="checkValidEmail"
           required
         />
-        <div v-if="!isValidEmail" class="text-danger">
+        <div v-if="!isValidEmail" class="text-danger w-100 mt-1">
           <p>올바른 이메일 주소를 입력해주세요</p>
         </div>
-        <button class="submit mt-2">Send PW</button>
+        <div class="d-flex flex-row-reverse w-100">
+          <button class="submit mt-1">Send PW</button>
+        </div>
       </form>
     </div>
     <div class="d-flex justify-content-center mt-3">
@@ -22,13 +24,8 @@
         <div>
           <p>아직 회원이 아니신가요?</p>
         </div>
-        <div>
-          <router-link class="link" to="/sign/signup">
-            <img
-              src="@/assets/register_button.png"
-              alt="회원가입"
-              style="max-width: 6vw; margin-bottom: 1vh"
-          /></router-link>
+        <div class="mb-3 mt-1">
+          <router-link class="link" to="/sign/signup">회원가입</router-link>
         </div>
       </div>
     </div>
@@ -87,8 +84,8 @@ export default {
 .container {
   border: 1px solid #bdbdbd;
   border-radius: 10px;
-  width: 50%;
-  height: 500px;
+  width: 60%;
+  height: auto;
   position: relative;
   margin: 10% auto;
   background: white;

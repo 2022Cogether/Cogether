@@ -104,7 +104,7 @@ export default {
 .container {
   border: 1px solid #bdbdbd;
   border-radius: 10px;
-  width: 50%;
+  width: 60%;
   height: auto;
   position: relative;
   margin: 10% auto;

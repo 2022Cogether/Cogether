@@ -10,6 +10,7 @@
             class="input"
             placeholder="Email"
             @keyup="checkValidEmail"
+            @keyup.enter.prevent="certifyEmail"
             required
           />
           <div v-if="!isValidEmail" class="text-danger">
@@ -18,7 +19,7 @@
           <div>
             <div v-if="isEmailChecked" class="d-flex justify-content-between">
               <p>사용 가능한 이메일입니다</p>
-              <div class="btn active btn-warning" @clcik.prevent="certifyEmail">
+              <div class="btn active btn-warning" @click.prevent="certifyEmail">
                 재전송
               </div>
             </div>
@@ -40,6 +41,7 @@
                   type="text"
                   class="form-control"
                   placeholder="인증 코드"
+                  @keyup.enter.prevent="sendCode"
                   v-model="code"
                 />
                 <div class="input-group-append">
@@ -84,6 +86,7 @@
             class="input"
             placeholder="Nick Name"
             @keyup="checkNickValid"
+            @keyup.enter.prevent="certifyNickName"
             required
           />
           <div v-if="!isNickValid" class="text-danger">
@@ -105,7 +108,9 @@
             type="checkbox"
             class="checkbox my-3"
             @click="checkTerm"
-          /><label for="terms">이메일 정보 제공에 동의합니다.</label>
+          /><label for="terms" class="ms-2">
+            이메일 정보 제공에 동의합니다.
+          </label>
           <div class="mt-2 d-flex justify-content-center">
             <img
               @click="changePage"
@@ -175,7 +180,7 @@
               </svg>
             </div>
           </div>
-          <div class="row d-flex justify-content-around mt-5">
+          <div class="row d-flex justify-content-around mt-3">
             <div class="col-5" v-for="lang in basicLangSet" :key="lang.id">
               <div
                 class="btn m-1 w-100"
@@ -186,7 +191,7 @@
               </div>
             </div>
           </div>
-          <div class="mt-2 d-flex justify-content-between">
+          <div class="mt-3 ms-2 d-flex justify-content-around">
             <img
               @click="changePage"
               src="@/assets/prev_button.png"
@@ -209,12 +214,7 @@
           <p>혹시 회원이신가요?</p>
         </div>
         <div>
-          <router-link to="/sign/signin" class="link">
-            <img
-              src="@/assets/login_button.png"
-              alt="로그인"
-              style="max-width: 6vw; margin-bottom: 1vh"
-          /></router-link>
+          <router-link to="/sign/signin" class="link">로그인</router-link>
         </div>
       </div>
     </div>
@@ -552,7 +552,7 @@ export default {
 .container {
   border: 1px solid #bdbdbd;
   border-radius: 10px;
-  width: 50%;
+  width: 60%;
   min-width: 300px;
   height: auto;
   position: relative;

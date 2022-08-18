@@ -251,6 +251,7 @@ export default {
         createdAt: new Date(),
         tilCommentId: store.getters.getNewCommentId,
       });
+      commentContent.value = "";
     };
 
     function deleteTil() {

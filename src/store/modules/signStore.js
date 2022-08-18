@@ -124,11 +124,11 @@ export const signStore = {
       localStorage.setItem("userId", userId);
     },
 
-    async login({ commit, dispatch }, credentials) {
+    async login({ commit, dispatch, getters }, credentials) {
       console.log(credentials);
       await http
         .post("sign/signin/", credentials)
-        .then(({ data }) => {
+        .then(async ({ data }) => {
           // console.log(commit);
           const access_TOKEN = data.access_TOKEN;
           const refresh_TOKEN = data.refresh_TOKEN;
@@ -138,8 +138,15 @@ export const signStore = {
           localStorage.setItem("refresh_TOKEN", refresh_TOKEN); // 리플레시 토큰 갱신
 
           dispatch("saveUserId", userId);
-          dispatch("fetchCurrentUser", userId); // 현재 사용자 정보 추가
+          await dispatch("fetchCurrentUser", userId); // 현재 사용자 정보 추가
           commit("SET_BOOLEANVALUE");
+          if (getters.getCurrentUser.resign) {
+            await dispatch("logout");
+            Toast.fire({
+              icon: "error",
+              title: "이미 탈퇴한 회원입니다!",
+            });
+          }
         })
         .catch((err) => {
           Toast.fire({
@@ -212,8 +219,8 @@ export const signStore = {
     },
 
     // 비밀번호 검증
-    certifyPassword({ getters }, password) {
-      http
+    async certifyPassword({ getters }, password) {
+      await http
         .post(
           "verify/password",
           { password: password },
@@ -411,12 +418,13 @@ export const signStore = {
         });
     },
 
-    resign({ commit, getters }) {
-      http
-        .put("sign/resign/", {
+    async resign({ commit, getters, dispatch }) {
+      await http
+        .put("user/resign", {
           headers: getters.authHeader,
         })
-        .then((res) => {
+        .then(async (res) => {
+          console.log("res", res);
           if (res.data.status === 200) {
             Toast.fire({
               icon: "success",
@@ -429,6 +437,11 @@ export const signStore = {
             commit("SET_TOKEN", "");
             commit("SET_LOGIN_USERID", "");
             commit("SET_BOOLEANVALUE");
+            await dispatch("logout");
+            Toast.fire({
+              icon: "success",
+              title: "회원 탈퇴했습니다!",
+            });
           } else {
             console.log("200이 아닌 다른 값이 반환되었습니다");
           }
