@@ -79,7 +79,7 @@ export const tilStore = {
     //   state.tilContent.commentList.push(comment);
     // },
     PUT_COMMENT: (state, commentLoad) => {
-      for (let i; i < state.tilContent.commentList.length; i++) {
+      for (let i = 0; i < state.tilContent.commentList.length; i++) {
         if (
           state.tilContent.commentList[i].tilCommentId == commentLoad.commentId
         ) {
@@ -115,8 +115,6 @@ export const tilStore = {
             headers: getters.authHeader,
           })
           .then((res) => {
-            console.log(res.data);
-            console.log(res.status);
             if (res.status === 200) {
               commit("SET_TIL", res.data);
             }
@@ -265,7 +263,9 @@ export const tilStore = {
         .get("til/search/" + keyword, {
           headers: getters.authHeader,
         })
-        .then((res) => commit("SET_TIL_LIST", res.data))
+        .then((res) => {
+          commit("SET_TIL_LIST", res.data);
+        })
         .catch((err) => console.error(err.response));
     },
     async searchMyTil({ commit, getters }, payload) {
@@ -280,25 +280,26 @@ export const tilStore = {
     },
 
     // TIL 코멘트
-    createComment({ dispatch, getters }, payload) {
-      http
+    async createComment({ dispatch, getters }, payload) {
+      await http
         .post("/til/comment", payload, {
           headers: getters.authHeader,
         })
-        .then(() => {
+        .then(async () => {
           // commit("ADD_COMMENT", {
           //   ...payload,
           //   tilCommentId: res.data.id,
           // });
           // console.log(state.tilContent.commentList);
-          dispatch("fetchTil", {
+          //
+          await dispatch("fetchTil", {
             tilId: getters.getOpenTil,
           });
         })
         .catch((err) => console.error(err.response));
     },
 
-    removeComments({ getters, dispatch }, payload) {
+    removeComments({ getters }, payload) {
       http
         .delete("til/comment/" + payload.commentId, {
           headers: getters.authHeader,
@@ -312,9 +313,6 @@ export const tilStore = {
             // dispatch("fetchTil", { tilId: payload.tilId });
             // console.log("res.data", res.data);
             // commit("DEL_COMMENT", res.data.id);
-            dispatch("fetchTil", {
-              tilId: getters.getOpenTil,
-            });
           }
         })
         .catch((err) => {

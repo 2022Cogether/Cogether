@@ -22,7 +22,7 @@
       <img :src="imgUrl" alt="profile image" class="profile-img" />
     </div>
     <div class="username-box d-flex">
-      <img src="@/assets/gold_badge.png" alt="badge img" class="badge-img" />
+      <img :src="badgeUrls[0]" alt="badge img" class="badge-img" />
       <h3 class="username">{{ nickname }}</h3>
     </div>
   </div>
@@ -236,7 +236,7 @@ import TilDetail from "@/components/til/TilDetail.vue";
 
 import { ref, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 export default {
   name: "ProfileMain",
@@ -362,6 +362,14 @@ export default {
     const etcUrl = ref("");
     const isFollow = ref(false);
 
+    const badgeUrls = [
+      require("@/assets/bronze_badge.png"),
+      require("@/assets/silver_badge.png"),
+      require("@/assets/gold_badge.png"),
+      require("@/assets/diamond_badge.png"),
+      require("@/assets/ruby_badge.png"),
+    ];
+
     onMounted(() => {
       (async () => {
         if (!isMyProfile.value) {
@@ -383,6 +391,7 @@ export default {
 
         // 레벨과 잔여 경험치
         level.value = 1 + parseInt(profileUser.value.exp / 100);
+        if (level.value > 50) level.value = 50;
         percentage.value = profileUser.value.exp % 100;
 
         imgUrl.value = profileUser.value.imgUrl;
@@ -443,6 +452,12 @@ export default {
       })();
     });
 
+    const router = useRouter();
+
+    watch(userId, () => {
+      router.go();
+    });
+
     // 모달 창
     const modalNum = computed(() => {
       return store.getters.getOpenTil;
@@ -485,6 +500,7 @@ export default {
 
     return {
       store,
+      badgeUrls,
 
       userId,
       isLoggedIn,

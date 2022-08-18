@@ -434,6 +434,10 @@ export default {
     };
 
     const edit = () => {
+      if (!isNickValid.value || !isNickChecked.value) {
+        return;
+      }
+
       let editUserSkills = [];
       for (let i = 0; i < userLangSkills.value.length; i++) {
         editUserSkills.push(userLangSkills.value[i]);
@@ -586,8 +590,8 @@ h4 {
   margin-top: 15vh; */
   border: 1px solid #bdbdbd;
   border-radius: 10px;
-  width: 50%;
-  min-width: 300px;
+  width: 40vw;
+  min-width: 250px;
   margin: 10% auto;
   background: white;
   padding: 5px;

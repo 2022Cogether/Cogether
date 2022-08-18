@@ -79,8 +79,7 @@ export default {
         store.dispatch("certifyPassword", password.value);
         store.dispatch("changePassword", newPassword.value);
         router.push({
-          name: "profile",
-          params: { userId: store.getters.getLoginUserId },
+          name: "mainview",
         });
       }
     };

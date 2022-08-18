@@ -18,7 +18,7 @@
           <div>
             <div v-if="isEmailChecked" class="d-flex justify-content-between">
               <p>사용 가능한 이메일입니다</p>
-              <div class="btn active btn-warning" @keyup="certifyEmail">
+              <div class="btn active btn-warning" @clcik.prevent="certifyEmail">
                 재전송
               </div>
             </div>
@@ -106,17 +106,11 @@
             class="checkbox my-3"
             @click="checkTerm"
           /><label for="terms">이메일 정보 제공에 동의합니다.</label>
-          <div class="mt-2 d-flex justify-content-between">
+          <div class="mt-2 d-flex justify-content-center">
             <img
               @click="changePage"
               src="@/assets/next_button.png"
               alt="다음"
-              style="max-width: 7vw; cursor: pointer"
-            />
-            <img
-              @click="goRegister"
-              src="@/assets/register_button.png"
-              alt="회원가입"
               style="max-width: 7vw; cursor: pointer"
             />
           </div>

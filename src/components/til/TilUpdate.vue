@@ -6,8 +6,12 @@
   </div>
   <div>
     <div class="box-register d-flex justify-content-between">
-      <button type="submit" class="btn-delete" @click="deleteTil">삭제</button>
-      <button type="submit" class="btn-modify" @click="modifyTil">수정</button>
+      <button type="submit" class="btn-delete" @click.prevent="deleteTil">
+        삭제
+      </button>
+      <button type="submit" class="btn-modify" @click.prevent="modifyTil">
+        수정
+      </button>
     </div>
     <div class="box-input1">
       <input
@@ -28,7 +32,7 @@
 <script>
 import Swal from "sweetalert2";
 import router from "@/router";
-import { reactive, computed } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "vuex";
 
 export default {
@@ -36,14 +40,21 @@ export default {
   setup() {
     const store = useStore();
     const getters = computed(() => store.getters);
-    const tilContent = getters.value.getTilContent;
+    const tilContent = ref({});
+    const state = ref({});
+    (async () => {
+      await store.dispatch("fetchTil", {
+        tilId: store.getters.getOpenTil,
+      });
+      tilContent.value = getters.value.getTilContent;
 
-    const state = reactive({
-      //사용할 변수들 선언
-      title: tilContent.tilTitle,
-      content: tilContent.tilContent,
-      multipartFiles: [],
-    });
+      state.value = {
+        //사용할 변수들 선언
+        title: tilContent.value.tilTitle,
+        content: tilContent.value.tilContent,
+        multipartFiles: [],
+      };
+    })();
 
     function exit() {
       Swal.fire({
@@ -75,23 +86,23 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           //취소하고 이동할 페이지
-          store.dispatch("mainview");
+          store.dispatch("removeTil", store.getters.getOpenTil);
+          router.push({ name: "mainview" });
         }
       });
     }
 
-    function modifyTil() {
+    const modifyTil = async () => {
       const data = {
-        content: state.content,
-        title: state.title,
+        content: state.value.content,
+        title: state.value.title,
         tilId: store.getters.getOpenTil,
       };
 
       //함수 작동 내용
-      store.dispatch("updateTil", data);
-      router.go();
+      await store.dispatch("updateTil", data);
       router.go(-1);
-    }
+    };
 
     return { exit, modifyTil, tilContent, deleteTil, state };
   },

@@ -6,6 +6,7 @@
       :tilId="props.tilId"
       :comment="comment"
       :key="comment.commentId"
+      @delComm="delComm"
     >
     </comment-item>
   </div>
@@ -19,19 +20,19 @@ export default {
   components: {
     CommentItem,
   },
+  emits: ["delComm"],
   props: {
     comments: Array,
     userId: Number,
     tilId: Number,
   },
-  setup(props) {
-    return { props };
+  setup(props, { emit }) {
+    const delComm = () => {
+      emit("delComm");
+    };
+    return { props, delComm };
   },
 };
 </script>
 
-<style>
-.comment-list {
-  border: 1px solid blue;
-}
-</style>
+<style></style>
