@@ -2,7 +2,7 @@
   <div class="container">
     <div class="name fs-2">COGETHER</div>
     <div class="d-flex justify-content-center">
-      <form id="login" class="input-group" @submit.prevent="withdraw">
+      <form id="resign" class="input-group" @submit.prevent="withdraw">
         <input
           v-model="password"
           type="password"
@@ -10,7 +10,9 @@
           placeholder="Password"
           required
         />
-        <button class="submit mt-2">Withdraw</button>
+        <div class="d-flex flex-row-reverse w-100">
+          <button class="submit mt-3 mb-4">Resign</button>
+        </div>
       </form>
     </div>
   </div>
@@ -19,7 +21,7 @@
 <script>
 import { ref } from "vue";
 import { useStore } from "vuex";
-import router from "@/router";
+// import router from "@/router";
 
 export default {
   name: "ReSign",
@@ -27,14 +29,10 @@ export default {
     const store = useStore();
     const password = ref("");
 
-    function withdraw() {
-      store.dispatch("certifyPassword", password.value);
-      if (store.getters.getBooleanValue) {
-        store.dispatch("resign");
-        if (store.getters.getBooleanValue) {
-          router.push({ name: "mainview" });
-        }
-      }
+    async function withdraw() {
+      await store.dispatch("certifyPassword", password.value);
+      await store.dispatch("resign");
+      // router.push({ name: "mainview" });
     }
 
     return { password, withdraw };
@@ -46,8 +44,8 @@ export default {
 .container {
   border: 1px solid #bdbdbd;
   border-radius: 10px;
-  width: 50%;
-  height: 500px;
+  width: 60%;
+  height: auto;
   position: relative;
   margin: 10% auto;
   background: white;
