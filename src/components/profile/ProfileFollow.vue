@@ -333,6 +333,7 @@ export default {
   min-width: 250px;
   margin-top: 10vh;
   height: 80vh;
+  overflow: hidden;
 }
 
 .search-bar-block {
