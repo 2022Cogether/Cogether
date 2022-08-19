@@ -186,7 +186,7 @@ export default {
       }
       //함수 작동 내용
       await store.dispatch("createTil", formData);
-      router.push({ name: "mainview" });
+      router.go(-1);
     }
 
     return { exit, createTil, imgupload, state, imageRouteList, deleteimage };
