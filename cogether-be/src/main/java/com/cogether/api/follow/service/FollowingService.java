@@ -92,6 +92,8 @@ public class FollowingService {
 
             following.put("id", Integer.toString(follow.getFromId()));
             following.put("email", follow.getFromEmail());
+            User user = userRepository.findByEmail(follow.getFromEmail()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+            following.put("nickname",user.getNickname());
             followingList.add(following);
         }
 
@@ -138,6 +140,10 @@ public class FollowingService {
 
             follower.put("id", Integer.toString(follow.getUser().getId()));
             follower.put("email", follow.getToEmail());
+
+            User user =userRepository.findByEmail(follow.getToEmail())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+            follower.put("nickname",user.getNickname());
             followerList.add(follower);
         }
 
