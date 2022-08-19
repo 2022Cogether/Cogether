@@ -79,11 +79,20 @@
               style="cursor: pointer"
             />
             <div
+              v-if="!following.nickName"
               class="profile-data-list"
               style="cursor: pointer; margin-left: 1rem !important"
               @click="goOut(following.id)"
             >
               {{ following.email }}
+            </div>
+            <div
+              v-else
+              class="profile-data-list"
+              style="cursor: pointer; margin-left: 1rem !important"
+              @click="goOut(following.id)"
+            >
+              {{ following.nickName }}
             </div>
           </ul>
         </div>
@@ -99,11 +108,20 @@
             class="d-flex wrap justify-content-start"
           >
             <div
+              v-if="!follower.nickName"
               class="profile-data-list"
               style="cursor: pointer; margin-left: 1rem !important"
               @click="goOut(follower.id)"
             >
               {{ follower.email }}
+            </div>
+            <div
+              v-else
+              class="profile-data-list"
+              style="cursor: pointer; margin-left: 1rem !important"
+              @click="goOut(follower.id)"
+            >
+              {{ follower.nickName }}
             </div>
             <font-awesome-icon
               v-if="follower.id == store.getters.getLoginUserId"
@@ -363,16 +381,22 @@ a {
 }
 
 .nav-link {
-  color: white !important;
-  background-color: #2a9d8f !important;
+  color: #2a9d8f !important;
+  background-color: white !important;
   border-color: white !important;
   border-radius: 0;
 }
 
-.btn:active,
 .active {
+  color: white !important;
+  background-color: #2a9d8f !important;
+  border-color: white !important;
+}
+
+.tab-pane {
   color: #2a9d8f !important;
   background-color: white !important;
   border-color: white !important;
+  border-radius: 0;
 }
 </style>
