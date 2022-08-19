@@ -315,12 +315,19 @@ export default {
         userId: store.getters.getLoginUserId,
       };
       await store.dispatch("createComment", payload);
+      await store.dispatch("fetchCurrentUser", store.getters.getLoginUserId);
+      console.log(store.getters.getCurrentUser);
+      const name = computed(() => store.getters.getCurrentUser.nickname);
+      const imgU = computed(() => store.getters.getCurrentUser.imgUrl);
+      const commentId = computed(() => store.getters.getNewCommentId);
       til.value.commentList.push({
         ...payload,
-        userNickname: "당신",
+        userNickname: name.value,
         createdAt: new Date(),
-        tilCommentId: store.getters.getNewCommentId,
+        tilCommentId: commentId.value,
+        userImg: imgU.value,
       });
+      commentContent.value = "";
     };
 
     // 모달 바깥을 클릭하면 모달을 닫게 하는 함수
