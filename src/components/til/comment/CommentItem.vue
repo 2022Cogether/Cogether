@@ -14,13 +14,13 @@
                   style="text-decoration: none"
                   ><font-awesome-icon
                     v-if="!props.comment.userImg"
-                    class="fs-3"
+                    class="comimg"
                     icon="fa-solid fa-user"
                   />
                   <img
                     v-else
                     :src="props.comment.userImg"
-                    class="fs-3"
+                    class="comimg"
                     style="width: 100%"
                   />
                 </router-link>
@@ -162,12 +162,17 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
+.comimg {
+  width: 100%;
+  height: 100%;
+}
+
 .profile-body {
   position: relative;
   bottom: 1vh;
-  width: 4vw;
-  height: 4vw;
+  width: 40px;
+  height: 40px;
   background-color: grey;
   color: white;
   border-radius: 50%;
