@@ -8,7 +8,7 @@
     <button type="button" @click="tabB2" class="btn btn-sm">LV</button>
     <button type="button" @click="tabB3" class="btn btn-sm">경쟁</button>
   </div>
-  <div class="dropdown d-flex justify-content-end">
+  <!-- <div class="dropdown d-flex justify-content-end">
     <button
       class="btn btn-sm dropdown-toggle"
       type="button"
@@ -22,7 +22,7 @@
       <li @click="tabC2" class="dropdown-item">주간</li>
       <li @click="tabC3" class="dropdown-item">월간</li>
     </ul>
-  </div>
+  </div> -->
   <RankingList :tabA="state.tabA" :tabB="state.tabB" :tabC="state.tabC" />
 </template>
 

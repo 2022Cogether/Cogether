@@ -8,12 +8,14 @@
           class="fs-3"
           icon="fa-solid fa-user"
         />
-        <img v-else :src="til.userImg" class="fs-3" style="width: 100%" />
+        <a v-else :href="`/#/profile/` + til.userId"
+          ><img :src="til.userImg" class="fs-3" style="width: 100%"
+        /></a>
       </div>
       <div class="til-title" @click="openModal">
         {{ til.tilTitle }}
       </div>
-      <div class="til-info">
+      <div class="til-info" @click="openModal">
         <span class="til-user">{{ til.userNickname }}</span>
         <span v-if="fromCreated < 10" class="til-time">방금전</span>
         <span v-if="fromCreated < 34 && fromCreated > 9" class="til-time">
@@ -62,7 +64,12 @@
         </div>
         <div class="carousel-inner" v-for="(image, i) in til.imgUrl" :key="i">
           <div :class="['carousel-item', i == 0 ? 'active' : '']">
-            <img :src="image.imgUrl" class="d-block w-100" alt="..." />
+            <img
+              :src="image.imgUrl"
+              class="d-block w-100 tilimg"
+              alt="..."
+              @click="openModal"
+            />
           </div>
         </div>
         <button
@@ -327,6 +334,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.tilimg:hover {
+  cursor: pointer;
+}
+.til-info:hover {
+  cursor: pointer;
+}
+
 .til-item {
   position: relative;
   margin-left: auto;
@@ -341,7 +355,7 @@ export default {
 .til-header {
   position: relative;
   background-color: white;
-  height: 15%;
+  height: 10%;
   border-radius: 10px 10px 0px 0px;
 }
 

@@ -11,7 +11,9 @@
               class="fs-3"
               icon="fa-solid fa-user"
             />
-            <img v-else :src="til.userImg" class="fs-3" style="width: 100%" />
+            <a v-else :href="`/#/profile/` + til.userId">
+              <img :src="til.userImg" class="fs-3" style="width: 100%"
+            /></a>
           </div>
           <div class="til-title">
             {{ til.tilTitle }}
