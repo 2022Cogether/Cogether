@@ -113,7 +113,7 @@ export default {
             store.commit("SET_COMPETE_INTERVAL", false); //interval상태값 끄기
             clearInterval(interval);
           }
-        }, 60000);
+        }, 3000);
       }
       //compete상태 전환
       store.commit(

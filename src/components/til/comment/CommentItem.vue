@@ -188,9 +188,10 @@ export default {
   line-height: 18px;
   color: #393b40;
   display: block;
-  background: #73d0c5;
+  background: #c1ebe6;
   border: 1px solid #edeff2;
   padding: 15px 20px 20px 20px;
+  border-radius: 10px;
 }
 
 .comment-input {
