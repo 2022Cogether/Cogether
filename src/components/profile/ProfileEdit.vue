@@ -445,6 +445,23 @@ export default {
     // 이미지 넣기
     let multipartFiles;
     function imgupload(e) {
+      if (e.target.files[0].size > 1000000) {
+        Swal.mixin({
+          toast: true,
+          position: "bottom-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener("mouseenter", Swal.stopTimer);
+            toast.addEventListener("mouseleave", Swal.resumeTimer);
+          },
+        }).fire({
+          icon: "error",
+          title: "1MB 이상의 파일은 올릴 수 없습니다.",
+        });
+        return;
+      }
       multipartFiles = e.target.files[0];
     }
 

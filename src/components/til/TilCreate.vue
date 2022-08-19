@@ -91,6 +91,25 @@ export default {
       // let url = URL.createObjectURL(imageFile[0]); // 파일의 필요한 데이터만을 url 변수에 넣음
       // console.log(url); // 확인
       for (let i = 0; i < imageFile.length; i++) {
+        if (imageFile[i].size > 1000000) {
+          Swal.mixin({
+            toast: true,
+            position: "bottom-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener("mouseenter", Swal.stopTimer);
+              toast.addEventListener("mouseleave", Swal.resumeTimer);
+            },
+          }).fire({
+            icon: "error",
+            title: "1MB 이상의 파일은 올릴 수 없습니다.",
+          });
+          return;
+        }
+      }
+      for (let i = 0; i < imageFile.length; i++) {
         state.multipartFiles.push(imageFile[i]);
         imageRouteList.value.push(imageFile[i].name);
       }

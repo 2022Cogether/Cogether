@@ -95,17 +95,6 @@ export const tilStore = {
         }
       }
     },
-    // DEL_COMMENT: (state, commentId) => {
-    //   console.log("commentList", state.tilContent.commentList);
-    //   for (let i = 0; i < state.tilContent.commentList.length; i++) {
-    //     if (state.tilContent.commentList[i].tilCommentId == commentId) {
-    //       delete state.tilContent.commentList[i];
-    //       alert("댓글 삭제 성공!");
-    //       console.log("commentList", state.tilContent.commentList);
-    //       break;
-    //     }
-    //   }
-    // },
   },
   actions: {
     // 피드 상세 조회할 tilId를 store에 세팅
@@ -168,32 +157,18 @@ export const tilStore = {
         });
     },
 
-    // removeTilList({ commit }) {
-    //   alert("싹 지우고!");
-    //   commit("CLEAN_TIL_LIST");
-    // },
-
     async createTil({ commit }, payload) {
       await http
         .post("til", payload, {
           headers: {
             ACCESS_TOKEN: localStorage.getItem("access_TOKEN"),
             "Content-Type": "multipart/form-data",
-            // ...payload.getHeaders(),
           },
         })
         .then((res) => {
           console.log("til 생성 response");
           console.log(res.data.id);
           commit("SET_BOOLEANVALUE");
-          // commit("SET_OPEN_TIL", res.data.tilId);
-
-          // const credentials = {
-          //   tilId: res.data.tilId,
-          //   userId: state.loginUserId,
-          // };
-
-          // dispatch("fetchOpenTil", credentials);
         })
         .catch((err) => {
           console.log("TIL 생성 오류!");
@@ -207,7 +182,6 @@ export const tilStore = {
           headers: getters.authHeader,
         })
         .then(() => {
-          console.log("됐나?");
           const credentials = {
             tilId: payload.tilId,
           };
@@ -233,7 +207,7 @@ export const tilStore = {
           commit("SET_BOOLEANVALUE");
         })
         .catch((err) => {
-          console.log("삭제 실패??");
+          console.log("삭제 실패");
           console.log(err);
         });
     },
@@ -260,12 +234,10 @@ export const tilStore = {
           headers: getters.authHeader,
         })
         .then((res) => commit("SET_TIL", res.data))
-        // TIL state 모델이 확정나면, 거기서 is_like에 해당할 속성을 직접 바꿀 예정
         .catch((err) => console.error(err.response));
     },
 
     async searchTil({ commit, getters }, keyword) {
-      // paylod => keyword, userId
       await http
         .get("til/search/" + keyword, {
           headers: getters.authHeader,
@@ -293,15 +265,6 @@ export const tilStore = {
           headers: getters.authHeader,
         })
         .then(async (res) => {
-          // commit("ADD_COMMENT", {
-          //   ...payload,
-          //   tilCommentId: res.data.id,
-          // });
-          // console.log(state.tilContent.commentList);
-          //
-          // await dispatch("fetchTil", {
-          //   tilId: getters.getOpenTil,
-          // });
           commit("SET_NEW_COMMENT_ID", res.data.id);
         })
         .catch((err) => console.error(err.response));
@@ -318,13 +281,10 @@ export const tilStore = {
               icon: "success",
               title: "댓글을 삭제했습니다.",
             });
-            // dispatch("fetchTil", { tilId: payload.tilId });
-            // console.log("res.data", res.data);
-            // commit("DEL_COMMENT", res.data.id);
           }
         })
         .catch((err) => {
-          console.log("삭제 실패??");
+          console.log("삭제 실패");
           console.error(err.response.data);
         });
     },
@@ -347,7 +307,7 @@ export const tilStore = {
           });
         })
         .catch((err) => {
-          console.log("수정 실패??");
+          console.log("수정 실패");
           console.error(err.response);
         });
     },

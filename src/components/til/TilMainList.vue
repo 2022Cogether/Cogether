@@ -19,7 +19,6 @@
   <div class="til-list">
     <TilMainItem v-for="til in tilList.tilList" :key="til.tilId" :util="til" />
   </div>
-  <!-- <TilDetail v-if="isOpen" class="isModal" @likeFromDetail="likeFromDetail" /> -->
   <!-- 나중에 TIL create창으로 URL 추가 -->
   <router-link :to="{ name: 'TilCreate' }">
     <button class="icon-body">
@@ -32,30 +31,22 @@
 import { useStore } from "vuex";
 import { computed, ref } from "vue";
 import TilMainItem from "@/components/til/TilMainItem.vue";
-import { useRouter } from "vue-router";
 
 export default {
   name: "TilMainList",
   components: {
     TilMainItem,
   },
-  beforeRouteEnter(to, from) {
-    console.log(from);
-  },
   setup() {
     const store = useStore();
-    const router = useRouter();
 
     const tilList = ref([]);
-
-    console.log("-1-1", router.go(1));
 
     (async () => {
       await store.dispatch("fetchTilList");
       tilList.value = computed(() => {
         return store.getters.getTilList;
       }).value;
-      console.log("으앙", tilList.value);
     })();
 
     if (self.name != "reload") {
@@ -77,8 +68,6 @@ export default {
     };
 
     return {
-      // modalNum,
-      // isOpen,
       tilList,
 
       searchWord,
