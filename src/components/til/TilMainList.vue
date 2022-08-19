@@ -32,19 +32,23 @@
 import { useStore } from "vuex";
 import { computed, ref } from "vue";
 import TilMainItem from "@/components/til/TilMainItem.vue";
-// import TilDetail from "@/components/til/TilDetail.vue";
+import { useRouter } from "vue-router";
 
 export default {
   name: "TilMainList",
   components: {
     TilMainItem,
-    // TilDetail,
+  },
+  beforeRouteEnter(to, from) {
+    console.log(from);
   },
   setup() {
     const store = useStore();
-    // const getters = computed(() => store.getters);
+    const router = useRouter();
 
     const tilList = ref([]);
+
+    console.log("-1-1", router.go(1));
 
     (async () => {
       await store.dispatch("fetchTilList");

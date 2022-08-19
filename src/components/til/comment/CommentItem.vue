@@ -4,7 +4,27 @@
       <div class="be-comment-block">
         <div class="be-comment">
           <div class="d-flex justify-content-between">
-            <div>
+            <div class="d-flex wrap">
+              <div class="profile-body">
+                <router-link
+                  :to="{
+                    name: 'profile',
+                    params: { userId: comment.userId },
+                  }"
+                  style="text-decoration: none"
+                  ><font-awesome-icon
+                    v-if="!props.comment.userImg"
+                    class="fs-3"
+                    icon="fa-solid fa-user"
+                  />
+                  <img
+                    v-else
+                    :src="props.comment.userImg"
+                    class="fs-3"
+                    style="width: 100%"
+                  />
+                </router-link>
+              </div>
               <span class="be-comment-name">
                 <router-link
                   :to="{
@@ -143,6 +163,20 @@ export default {
 };
 </script>
 <style>
+.profile-body {
+  position: relative;
+  bottom: 1vh;
+  width: 4vw;
+  height: 4vw;
+  background-color: grey;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
 .comment-item {
   width: 97%;
 }
