@@ -40,8 +40,8 @@ export default {
 
 <style scoped>
 img {
-  width: 28%;
-  height: auto;
+  width: 13vw;
+  height: 13vw;
   margin: 10px;
 }
 
