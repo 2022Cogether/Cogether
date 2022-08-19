@@ -79,7 +79,7 @@
               style="cursor: pointer"
             />
             <div
-              v-if="!following.nickName"
+              v-if="!following.nickname"
               class="profile-data-list"
               style="cursor: pointer; margin-left: 1rem !important"
               @click="goOut(following.id)"
@@ -92,7 +92,7 @@
               style="cursor: pointer; margin-left: 1rem !important"
               @click="goOut(following.id)"
             >
-              {{ following.nickName }}
+              {{ following.nickname }}
             </div>
           </ul>
         </div>
@@ -108,7 +108,7 @@
             class="d-flex wrap justify-content-start"
           >
             <div
-              v-if="!follower.nickName"
+              v-if="!follower.nickname"
               class="profile-data-list"
               style="cursor: pointer; margin-left: 1rem !important"
               @click="goOut(follower.id)"
@@ -121,7 +121,7 @@
               style="cursor: pointer; margin-left: 1rem !important"
               @click="goOut(follower.id)"
             >
-              {{ follower.nickName }}
+              {{ follower.nickname }}
             </div>
             <font-awesome-icon
               v-if="follower.id == store.getters.getLoginUserId"
