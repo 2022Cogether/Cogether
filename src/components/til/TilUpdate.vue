@@ -69,7 +69,7 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           //취소하고 이동할 페이지
-          router.push({ name: "mainview" });
+          router.go(-1);
         }
       });
     }
@@ -85,9 +85,9 @@ export default {
         cancelButtonText: "취소",
       }).then(async (result) => {
         if (result.isConfirmed) {
-          //취소하고 이동할 페이지
+          //삭제하고 이동할 페이지
           await store.dispatch("removeTil", tilContent.value.tilId);
-          router.push({ name: "mainview" });
+          router.go(-1);
         }
       });
     }
