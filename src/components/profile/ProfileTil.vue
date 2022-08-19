@@ -44,4 +44,8 @@ img {
   height: auto;
   margin: 10px;
 }
+
+img:hover {
+  cursor: pointer;
+}
 </style>
