@@ -180,11 +180,13 @@ Co-op + CODE + TOGETHER의 합성어로서 사용자들의 흥미를 유발해
 | 유저검색                                 | <img src="https://user-images.githubusercontent.com/39465312/209618042-7193c53b-bcdd-4de2-9181-b3eb8d0a75e9.gif" width="300" /> | - 검색창을 이용해 이메일, 닉네임으로 유저를 검색할 수 있습니다                                                                          |
 
 <div id="5"></div>
+
 ## 시스템 아키텍쳐
 
 <img src="https://user-images.githubusercontent.com/39465312/207499683-d6571058-300f-44f5-9cc6-e7705641961d.png" width ="700">
 
 <div id="6"></div>
+
 ## 개체 관계 모델 (ERD)
 
 <img src="https://user-images.githubusercontent.com/39465312/209638912-5cd70f31-f3b1-4da8-ae9b-cefd6b3a5b14.png" width ="700">
